@@ -137,10 +137,6 @@ function AiInterview() {
                   ) : (
                     <MessageContent>{text}</MessageContent>
                   )}
-                  <MessageAvatar
-                    src=""
-                    name={message.role === "user" ? "You" : "AI"}
-                  />
                 </Message>
               );
             })}
@@ -156,8 +152,7 @@ function AiInterview() {
         <div className="border-t border-border bg-background px-4 py-3 md:px-6">
           <div className="mx-auto max-w-3xl">
             <PromptInput
-              onSubmit={(e) => {
-                e.preventDefault();
+              onSubmit={() => {
                 onSubmit();
               }}
             >
