@@ -1,65 +1,51 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { TopBar } from "@/components/top-bar";
-import { Users2, MessageSquare, ShoppingBag, Clock, BookOpen, LayoutGrid, ChevronRight } from "lucide-react";
+import {
+  Users2, MessageSquare, ShoppingBag, Clock, DollarSign, Activity, ChevronRight,
+} from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid,
 } from "recharts";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { computeKpis, newUsers, onlineUsers, events, blogs, type Period } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/admin/")({
   head: () => ({ meta: [{ title: "Admin Dashboard — PlacePro LMS" }] }),
   component: AdminDashboard,
 });
 
-const kpis = [
-  { label: "All Users", value: "200", icon: Users2 },
-  { label: "Conversations", value: "30.10k", icon: MessageSquare },
-  { label: "30 days sales", value: "80", icon: ShoppingBag },
-  { label: "Avg time", value: "50m", icon: Clock },
-  { label: "Courses", value: "12", icon: BookOpen },
-  { label: "Categories", value: "05", icon: LayoutGrid },
+const iconForKpi = (label: string) => {
+  if (label.includes("User")) return Users2;
+  if (label.includes("Conversations")) return MessageSquare;
+  if (label.includes("signups")) return ShoppingBag;
+  if (label.includes("time")) return Clock;
+  if (label.includes("Revenue")) return DollarSign;
+  return Activity;
+};
+
+const periods: { id: Period; label: string }[] = [
+  { id: "7d", label: "7 days" },
+  { id: "30d", label: "30 days" },
+  { id: "90d", label: "90 days" },
 ];
 
-const chart = [
-  { day: "10 Nov", value: 2 },
-  { day: "11 Nov", value: 3 },
-  { day: "12 Nov", value: 2.5 },
-  { day: "13 Nov", value: 2 },
-  { day: "14 Nov", value: 1.8 },
-  { day: "15 Nov", value: 2.2 },
-  { day: "16 Nov", value: 1.6 },
-];
+const tabs = ["New signups", "Revenue", "Product sales", "Active learners"] as const;
+type Tab = typeof tabs[number];
 
-const newUsers = [
-  { name: "James Brown", time: "2 days", initials: "JB" },
-  { name: "Tony Stark", time: "2 days", initials: "TS" },
-  { name: "James Brown", time: "2 days", initials: "JB" },
-  { name: "Mike Banner", time: "2 days", initials: "MB" },
-];
-
-const online = [
-  { name: "Sophia Williams", time: "Join 3 months ago", initials: "SW" },
-  { name: "Arthur Taylor", time: "Join 4 months ago", initials: "AT" },
-  { name: "David Smith", time: "Join 4 months ago", initials: "DS" },
-  { name: "Harry Potter", time: "Join 4 months ago", initials: "HP" },
-  { name: "Frank Gary", time: "Join 4 months ago", initials: "FG" },
-];
-
-const events = [
-  { name: "Mike Banner", status: "Logged In", tone: "success", time: "2 hours ago" },
-  { name: "Nina Smith", status: "Logged Out", tone: "danger", time: "10 hours ago" },
-  { name: "Alex Simitsis", status: "Logged In", tone: "success", time: "12 hours ago" },
-  { name: "Tony Stark", status: "Logged Out", tone: "danger", time: "15 hours ago" },
-];
-
-const blogs = [
-  { title: "How to Sell Online Course On Your Shopify Store", new: true, days: "2 days ago", color: "bg-success" },
-  { title: "16 Canva Black Friday templates for online course creators", new: true, days: "2 days ago", color: "bg-brand" },
-  { title: "The 14-Step Checklist to Prepare Your Online School For Black Friday", days: "2 days ago", color: "bg-muted-foreground" },
-  { title: "From Emergency Remote Training to Long Team Effective & Profitable Online Learning", days: "2 days ago", color: "bg-muted-foreground" },
-];
+const tabKeyMap: Record<Tab, "value" | "revenue" | "learners"> = {
+  "New signups": "value",
+  "Revenue": "revenue",
+  "Product sales": "value",
+  "Active learners": "learners",
+};
 
 function AdminDashboard() {
+  const [period, setPeriod] = useState<Period>("7d");
+  const [tab, setTab] = useState<Tab>("New signups");
+  const { series, kpis } = useMemo(() => computeKpis(period), [period]);
+  const dataKey = tabKeyMap[tab];
+
   return (
     <>
       <TopBar breadcrumb={["Home", "Dashboard"]} />
@@ -69,9 +55,22 @@ function AdminDashboard() {
             <h1 className="text-display text-2xl font-bold">Dashboard</h1>
             <p className="mt-1 text-sm text-muted-foreground">Gain real-time insights into your school's analytics and activities.</p>
           </div>
-          <button className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground shadow-sm hover:opacity-90">
-            Create Course
-          </button>
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1 rounded-full border border-border bg-card p-1 text-xs">
+              {periods.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => setPeriod(p.id)}
+                  className={p.id === period ? "rounded-full bg-foreground px-3 py-1.5 font-semibold text-background" : "rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground"}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+            <button className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground shadow-sm hover:opacity-90">
+              Create Course
+            </button>
+          </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
@@ -79,25 +78,32 @@ function AdminDashboard() {
             {/* KPIs */}
             <div className="rounded-3xl border border-border bg-card p-5">
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {kpis.map((k) => (
-                  <div key={k.label} className="flex items-center gap-3 rounded-2xl border border-border p-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-light text-brand-dark">
-                      <k.icon className="h-5 w-5" />
+                {kpis.map((k) => {
+                  const Icon = iconForKpi(k.label);
+                  return (
+                    <div key={k.label} className="flex items-center gap-3 rounded-2xl border border-border p-3 transition hover:border-brand/40">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-light text-brand-dark">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <div className="text-xs text-muted-foreground">{k.label}</div>
+                        <div className="text-display text-lg font-bold">{k.value}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground">{k.label}</div>
-                      <div className="text-display text-lg font-bold">{k.value}</div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
             {/* Chart */}
             <div className="rounded-3xl border border-border bg-card p-5">
               <div className="flex flex-wrap items-center gap-4 border-b border-border pb-3 text-sm">
-                {["New signups", "Revenue", "Product sales", "Active learners"].map((t, i) => (
-                  <button key={t} className={i === 0 ? "border-b-2 border-foreground pb-2 font-semibold" : "pb-2 text-muted-foreground"}>
+                {tabs.map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setTab(t)}
+                    className={t === tab ? "border-b-2 border-foreground pb-2 font-semibold" : "pb-2 text-muted-foreground hover:text-foreground"}
+                  >
                     {t}
                   </button>
                 ))}
@@ -105,21 +111,22 @@ function AdminDashboard() {
               </div>
               <div className="h-64 pt-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chart}>
+                  <BarChart data={series}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                     <XAxis dataKey="day" tickLine={false} axisLine={false} fontSize={11} stroke="var(--muted-foreground)" />
                     <YAxis tickLine={false} axisLine={false} fontSize={11} stroke="var(--muted-foreground)" />
                     <Tooltip
                       cursor={{ fill: "var(--muted)" }}
-                      contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", background: "var(--foreground)", color: "var(--background)" }}
+                      contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", background: "var(--foreground)", color: "var(--background)", fontSize: 12 }}
+                      labelStyle={{ color: "var(--background)", opacity: 0.7 }}
+                      formatter={(v: number) => [tab === "Revenue" ? `$${v}` : v, tab]}
                     />
-                    <Bar dataKey="value" fill="var(--brand)" radius={[8, 8, 0, 0]} maxBarSize={48} />
+                    <Bar dataKey={dataKey} fill="var(--brand)" radius={[8, 8, 0, 0]} maxBarSize={48} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
-            {/* Bottom row */}
             <div className="grid gap-4 md:grid-cols-2">
               <div className="rounded-3xl border border-border bg-card p-5">
                 <div className="mb-3 flex items-center justify-between">
@@ -167,7 +174,6 @@ function AdminDashboard() {
             </div>
           </div>
 
-          {/* Users panel */}
           <aside className="rounded-3xl border border-border bg-card p-5">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-display text-sm font-semibold">Users</h3>
@@ -190,7 +196,7 @@ function AdminDashboard() {
             </ul>
             <p className="mb-2 mt-5 text-xs font-semibold text-muted-foreground">Online Users</p>
             <ul className="space-y-2">
-              {online.map((u, i) => (
+              {onlineUsers.map((u, i) => (
                 <li key={i} className="flex items-center gap-3">
                   <div className="relative">
                     <Avatar className="h-9 w-9">

@@ -15,6 +15,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminTopicsRouteImport } from './routes/admin.topics'
 import { Route as AdminQuizzesRouteImport } from './routes/admin.quizzes'
@@ -64,6 +65,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/admin/quizzes': typeof AdminQuizzesRoute
   '/admin/topics': typeof AdminTopicsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/chat': typeof ApiChatRoute
   '/admin/': typeof AdminIndexRoute
   '/code/$challengeId': typeof AppCodeChallengeIdRoute
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
@@ -213,6 +220,7 @@ export interface FileRoutesByTo {
   '/admin/quizzes': typeof AdminQuizzesRoute
   '/admin/topics': typeof AdminTopicsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/chat': typeof ApiChatRoute
   '/admin': typeof AdminIndexRoute
   '/code/$challengeId': typeof AppCodeChallengeIdRoute
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
@@ -242,6 +250,7 @@ export interface FileRoutesById {
   '/admin/quizzes': typeof AdminQuizzesRoute
   '/admin/topics': typeof AdminTopicsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/chat': typeof ApiChatRoute
   '/admin/': typeof AdminIndexRoute
   '/_app/code/$challengeId': typeof AppCodeChallengeIdRoute
   '/_app/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
@@ -271,6 +280,7 @@ export interface FileRouteTypes {
     | '/admin/quizzes'
     | '/admin/topics'
     | '/admin/users'
+    | '/api/chat'
     | '/admin/'
     | '/code/$challengeId'
     | '/quizzes/$quizId'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/admin/quizzes'
     | '/admin/topics'
     | '/admin/users'
+    | '/api/chat'
     | '/admin'
     | '/code/$challengeId'
     | '/quizzes/$quizId'
@@ -325,6 +336,7 @@ export interface FileRouteTypes {
     | '/admin/quizzes'
     | '/admin/topics'
     | '/admin/users'
+    | '/api/chat'
     | '/admin/'
     | '/_app/code/$challengeId'
     | '/_app/quizzes/$quizId'
@@ -340,6 +352,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -385,6 +398,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
       id: '/admin/users'
@@ -631,6 +651,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
