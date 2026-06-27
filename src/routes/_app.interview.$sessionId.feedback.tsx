@@ -5,7 +5,7 @@ import {
   generateInterviewFeedback,
   type InterviewFeedback,
 } from "@/lib/interview-feedback.functions";
-import { Loader2, ThumbsUp, AlertTriangle, RotateCcw, ArrowRight } from "lucide-react";
+import { Loader2, ThumbsUp, AlertTriangle, RotateCcw, ArrowRight, Download } from "lucide-react";
 
 export const Route = createFileRoute("/_app/interview/$sessionId/feedback")({
   head: () => ({ meta: [{ title: "Interview feedback — PlacePro LMS" }] }),
@@ -58,6 +58,18 @@ function Feedback() {
       setError("Couldn't read interview transcript.");
     }
   }, [sessionId]);
+
+  const handleDownload = () => {
+    if (!transcript.length) return;
+    const text = transcript.map(t => `${t.role === "interviewer" ? "Interviewer" : "You"}:\n${t.text}`).join("\n\n---\n\n");
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `transcript-${sessionId.slice(0, 8)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <>
@@ -138,6 +150,11 @@ function Feedback() {
           )}
 
           <div className="flex flex-wrap gap-2">
+            {transcript.length > 0 && (
+              <button onClick={handleDownload} className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted">
+                <Download className="h-3 w-3" /> Download Transcript
+              </button>
+            )}
             <Link to="/interview" className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted">
               <RotateCcw className="h-3 w-3" /> New interview
             </Link>

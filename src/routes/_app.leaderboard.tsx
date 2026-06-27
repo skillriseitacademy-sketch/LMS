@@ -3,6 +3,8 @@ import { TopBar } from "@/components/top-bar";
 import { leaderboard } from "@/lib/mock-data";
 import { Flame, Trophy } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useProfile } from "@/lib/store";
+import { useMemo } from "react";
 
 export const Route = createFileRoute("/_app/leaderboard")({
   head: () => ({ meta: [{ title: "Leaderboard — PlacePro LMS" }] }),
@@ -12,8 +14,16 @@ export const Route = createFileRoute("/_app/leaderboard")({
 const tabs = ["This week", "This month", "All time"] as const;
 
 function Leaderboard() {
-  const top3 = leaderboard.slice(0, 3);
-  const rest = leaderboard.slice(3);
+  const { profile } = useProfile();
+  
+  const currentLeaderboard = useMemo(() => {
+    return leaderboard.map(r => 
+      r.you ? { ...r, name: `${profile.name} (You)`, initials: profile.initials } : r
+    );
+  }, [profile]);
+
+  const top3 = currentLeaderboard.slice(0, 3);
+  const rest = currentLeaderboard.slice(3);
 
   return (
     <>

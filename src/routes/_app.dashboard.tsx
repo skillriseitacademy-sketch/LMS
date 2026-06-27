@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, Filter, ChevronRight, Sparkles, ListChecks, Target } from "lucide-react";
 import { TopBar } from "@/components/top-bar";
+import { useQuizHistory } from "@/lib/store";
+import { quizTopics } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — PlacePro LMS" }] }),
@@ -21,6 +23,9 @@ const missions = [
 ];
 
 function Dashboard() {
+  const quizHistory = useQuizHistory();
+  const recentQuizzes = quizHistory.slice(0, 3);
+
   return (
     <>
       <TopBar title="Dashboard" />
@@ -101,6 +106,29 @@ function Dashboard() {
               ))}
             </ul>
           </div>
+
+          {recentQuizzes.length > 0 && (
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <h3 className="text-display text-sm font-semibold">Recent quizzes</h3>
+              <ul className="mt-3 space-y-2">
+                {recentQuizzes.map((q, i) => {
+                  const topic = quizTopics.find(t => t.id === q.quizId);
+                  return (
+                    <li key={i} className="flex items-center gap-3 rounded-xl border border-border p-2.5">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-md bg-brand-light text-brand-dark shrink-0">
+                        <ListChecks className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1 overflow-hidden">
+                        <div className="text-xs font-semibold truncate">{topic?.title || q.quizId}</div>
+                        <div className="text-[10px] text-muted-foreground">{new Date(q.timestamp).toLocaleDateString()}</div>
+                      </div>
+                      <div className="text-xs font-bold text-foreground">{q.score}%</div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
 
           <Link to="/leaderboard" className="block rounded-2xl border border-border bg-brand-light p-5 hover:opacity-90">
             <Sparkles className="h-5 w-5 text-brand-dark" />

@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { TopBar } from "@/components/top-bar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Flame, Trophy, Sparkles, Target, Mic, Code2, ListChecks, ArrowRight } from "lucide-react";
+import { Flame, Trophy, Sparkles, Target, Mic, Code2, ListChecks, ArrowRight, Pencil, Check, X } from "lucide-react";
+import { useProfile, useQuizHistory } from "@/lib/store";
+import { quizTopics } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_app/profile")({
   head: () => ({ meta: [{ title: "Profile — PlacePro LMS" }] }),
@@ -17,18 +20,36 @@ const badges = [
   { name: "Roadmap step", icon: Target, tint: "bg-card-pink" },
 ];
 
-const activity = [
-  { kind: "quiz", title: "Completed React Fundamentals", xp: 80, time: "2h ago" },
+const mockActivity = [
   { kind: "interview", title: "AI mock interview · Frontend", xp: 60, time: "Yesterday" },
   { kind: "code", title: "Solved 'Two Sum'", xp: 25, time: "Yesterday" },
   { kind: "quiz", title: "Completed Async JavaScript", xp: 100, time: "3 days ago" },
 ];
 
 function Profile() {
+  const { profile, saveProfile } = useProfile();
+  const quizHistory = useQuizHistory();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState(profile);
+
+  // Sync form when profile loads/updates from other tabs
+  useEffect(() => { setEditForm(profile); }, [profile]);
+
   const xp = 1240;
   const level = 7;
   const nextLevel = 2000;
   const pct = Math.round((xp / nextLevel) * 100);
+
+  const recentQuizzes = quizHistory.slice(0, 3).map((q) => {
+    const topic = quizTopics.find(t => t.id === q.quizId);
+    return {
+      kind: "quiz",
+      title: `Completed ${topic?.title || q.quizId}`,
+      xp: q.score * 10,
+      time: new Date(q.timestamp).toLocaleDateString(),
+    };
+  });
+  const activity = [...recentQuizzes, ...mockActivity].slice(0, 4);
 
   return (
     <>
@@ -39,11 +60,43 @@ function Profile() {
           <section className="overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-light via-card to-card-yellow p-6">
             <div className="flex flex-wrap items-center gap-5">
               <Avatar className="h-20 w-20 ring-4 ring-background">
-                <AvatarFallback className="bg-brand text-brand-foreground text-xl font-bold">SA</AvatarFallback>
+                <AvatarFallback className="bg-brand text-brand-foreground text-xl font-bold">{profile.initials}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-[240px]">
-                <h1 className="text-display text-2xl font-bold">Sam Adams</h1>
-                <p className="text-sm text-muted-foreground">Frontend track · joined Aug 2025</p>
+                {isEditing ? (
+                  <div className="space-y-2 bg-background p-3 rounded-xl border border-border">
+                    <input
+                      className="w-full bg-transparent text-lg font-bold outline-none"
+                      value={editForm.name}
+                      onChange={e => {
+                        const name = e.target.value;
+                        const initials = name.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase() || "??";
+                        setEditForm({ ...editForm, name, initials });
+                      }}
+                      placeholder="Name"
+                    />
+                    <input
+                      className="w-full bg-transparent text-sm text-muted-foreground outline-none"
+                      value={editForm.headline}
+                      onChange={e => setEditForm({ ...editForm, headline: e.target.value })}
+                      placeholder="Headline"
+                    />
+                    <div className="flex gap-2 pt-1">
+                      <button onClick={() => { saveProfile(editForm); setIsEditing(false); }} className="p-1.5 rounded bg-success/20 text-success hover:bg-success/30"><Check className="h-4 w-4" /></button>
+                      <button onClick={() => { setEditForm(profile); setIsEditing(false); }} className="p-1.5 rounded bg-destructive/20 text-destructive hover:bg-destructive/30"><X className="h-4 w-4" /></button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <h1 className="text-display text-2xl font-bold">{profile.name}</h1>
+                      <button onClick={() => setIsEditing(true)} className="text-muted-foreground hover:text-foreground transition-colors">
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{profile.headline}</p>
+                  </>
+                )}
                 <div className="mt-3 flex flex-wrap gap-2 text-xs">
                   <span className="inline-flex items-center gap-1 rounded-full bg-background px-3 py-1 font-semibold">
                     <Trophy className="h-3 w-3 text-xp-gold" /> Level {level}

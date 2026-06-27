@@ -15,6 +15,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as ApiRoadmapRouteImport } from './routes/api/roadmap'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminTopicsRouteImport } from './routes/admin.topics'
@@ -65,6 +66,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const ApiRoadmapRoute = ApiRoadmapRouteImport.update({
+  id: '/api/roadmap',
+  path: '/api/roadmap',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
@@ -194,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/admin/topics': typeof AdminTopicsRoute
   '/admin/users': typeof AdminUsersRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/roadmap': typeof ApiRoadmapRoute
   '/admin/': typeof AdminIndexRoute
   '/code/$challengeId': typeof AppCodeChallengeIdRoute
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
@@ -221,6 +228,7 @@ export interface FileRoutesByTo {
   '/admin/topics': typeof AdminTopicsRoute
   '/admin/users': typeof AdminUsersRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/roadmap': typeof ApiRoadmapRoute
   '/admin': typeof AdminIndexRoute
   '/code/$challengeId': typeof AppCodeChallengeIdRoute
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
@@ -251,6 +259,7 @@ export interface FileRoutesById {
   '/admin/topics': typeof AdminTopicsRoute
   '/admin/users': typeof AdminUsersRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/roadmap': typeof ApiRoadmapRoute
   '/admin/': typeof AdminIndexRoute
   '/_app/code/$challengeId': typeof AppCodeChallengeIdRoute
   '/_app/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
@@ -281,6 +290,7 @@ export interface FileRouteTypes {
     | '/admin/topics'
     | '/admin/users'
     | '/api/chat'
+    | '/api/roadmap'
     | '/admin/'
     | '/code/$challengeId'
     | '/quizzes/$quizId'
@@ -308,6 +318,7 @@ export interface FileRouteTypes {
     | '/admin/topics'
     | '/admin/users'
     | '/api/chat'
+    | '/api/roadmap'
     | '/admin'
     | '/code/$challengeId'
     | '/quizzes/$quizId'
@@ -337,6 +348,7 @@ export interface FileRouteTypes {
     | '/admin/topics'
     | '/admin/users'
     | '/api/chat'
+    | '/api/roadmap'
     | '/admin/'
     | '/_app/code/$challengeId'
     | '/_app/quizzes/$quizId'
@@ -353,6 +365,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiRoadmapRoute: typeof ApiRoadmapRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -398,6 +411,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/api/roadmap': {
+      id: '/api/roadmap'
+      path: '/api/roadmap'
+      fullPath: '/api/roadmap'
+      preLoaderRoute: typeof ApiRoadmapRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
       id: '/api/chat'
@@ -652,7 +672,18 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiRoadmapRoute: ApiRoadmapRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

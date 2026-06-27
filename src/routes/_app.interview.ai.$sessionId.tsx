@@ -21,7 +21,7 @@ import {
   PromptInputSubmit,
 } from "@/components/ai-elements/prompt-input";
 import { Shimmer } from "@/components/ai-elements/shimmer";
-import { Bot, CircleStop, Square } from "lucide-react";
+import { Bot, CircleStop, Square, AlertCircle, RotateCcw } from "lucide-react";
 
 type InterviewSearch = { role: string };
 
@@ -64,7 +64,7 @@ function AiInterview() {
     [roleInfo.title],
   );
 
-  const { messages, sendMessage, status, stop } = useChat({
+  const { messages, sendMessage, status, stop, error } = useChat({
     id: sessionId,
     messages: initial,
     transport,
@@ -143,6 +143,17 @@ function AiInterview() {
             {status === "submitted" && (
               <div className="px-4 py-2">
                 <Shimmer>Thinking…</Shimmer>
+              </div>
+            )}
+            {(status === "error" || error) && (
+              <div className="px-4 py-2 mt-2">
+                <div className="flex flex-col gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+                  <div className="flex items-center gap-2 font-semibold">
+                    <AlertCircle className="h-4 w-4" />
+                    Failed to send message
+                  </div>
+                  <p className="opacity-90">{error?.message || "A network or server error occurred."}</p>
+                </div>
               </div>
             )}
           </ConversationContent>

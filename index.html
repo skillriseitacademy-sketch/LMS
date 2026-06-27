@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlacePro LMS — Developer Handoff Document</title>
+<style>
+  :root {
+    --brand: #7F77DD;
+    --brand-light: #EEEDFE;
+    --brand-dark: #3C3489;
+    --streak: #D85A30;
+    --xp-gold: #EF9F27;
+    --success: #1D9E75;
+    --danger: #E24B4A;
+    --text: #1A1A2E;
+    --text-muted: #6B7280;
+    --border: #E5E7EB;
+    --surface: #F9FAFB;
+    --white: #FFFFFF;
+    --purple-bg: #EEEDFE;
+    --teal-bg: #E1F5EE;
+    --amber-bg: #FAEEDA;
+    --red-bg: #FCEBEB;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    color: var(--text);
+    background: #F3F4F6;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── COVER PAGE ── */
+  .cover {
+    background: linear-gradient(135deg, #1A1A2E 0%, #3C3489 60%, #7F77DD 100%);
+    color: white;
+    padding: 80px 60px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    page-break-after: always;
+  }
+  .cover-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .cover h1 {
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+  .cover h1 span { color: #FAC775; }
+  .cover-sub {
+    font-size: 20px;
+    opacity: 0.75;
+    margin-bottom: 48px;
+    max-width: 600px;
+  }
+  .cover-meta {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 40px;
+    margin-bottom: 60px;
+    width: fit-content;
+  }
+  .cover-meta-item label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.5;
+    margin-bottom: 4px;
+  }
+  .cover-meta-item span {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .cover-toc {
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 600px;
+  }
+  .cover-toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    opacity: 0.8;
+  }
+  .cover-toc-item .num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ── LAYOUT ── */
+  .wrapper { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
+
+  /* ── SECTION HEADERS ── */
+  .doc-section {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .doc-section-header {
+    background: var(--brand);
+    color: white;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .doc-section-header .section-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .doc-section-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .doc-section-header p {
+    font-size: 13px;
+    opacity: 0.75;
+  }
+  .section-body { padding: 28px; }
+
+  /* ── TYPOGRAPHY ── */
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 24px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  h3:first-child { margin-top: 0; }
+  h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--brand-dark);
+    margin: 16px 0 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  p { margin-bottom: 10px; color: var(--text-muted); font-size: 14px; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── TABLES ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 12px 0;
+  }
+  thead { background: var(--surface); }
+  th {
+    text-align: left;
+    padding: 9px 12px;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--border);
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    color: #374151;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #FAFAFA; }
+  td:first-child { font-weight: 500; color: var(--text); }
+  .schema-table td:first-child { font-family: 'Courier New', monospace; color: var(--brand); font-size: 12px; }
+  .schema-table td:nth-child(2) { font-family: 'Courier New', monospace; color: #6B7280; font-size: 12px; }
+
+  /* ── BADGES / PILLS ── */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .badge-p1 { background: #FEE2E2; color: #991B1B; }
+  .badge-p2 { background: #FEF3C7; color: #92400E; }
+  .badge-p3 { background: #D1FAE5; color: #065F46; }
+  .badge-purple { background: var(--purple-bg); color: var(--brand-dark); }
+  .badge-teal { background: var(--teal-bg); color: #065F46; }
+  .badge-amber { background: var(--amber-bg); color: #92400E; }
+  .badge-blue { background: #EFF6FF; color: #1E40AF; }
+  .badge-pink { background: #FDF2F8; color: #86198F; }
+
+  /* ── CARDS / CALLOUTS ── */
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .card-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .card h5 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .card p { font-size: 13px; margin: 0; }
+
+  .callout {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .callout.info { background: #EFF6FF; border-left: 3px solid #3B82F6; color: #1E40AF; }
+  .callout.warn { background: #FFFBEB; border-left: 3px solid #F59E0B; color: #92400E; }
+  .callout.success { background: var(--teal-bg); border-left: 3px solid var(--success); color: #065F46; }
+  .callout.danger { background: var(--red-bg); border-left: 3px solid var(--danger); color: #991B1B; }
+
+  /* ── CODE BLOCKS ── */
+  pre {
+    background: #1E1E2E;
+    color: #CDD6F4;
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-family: 'Courier New', 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+  code {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    background: #F3F4F6;
+    color: var(--brand-dark);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  pre code { background: none; color: inherit; padding: 0; }
+
+  /* ── FEATURE LIST ── */
+  .feature-list { list-style: none; margin: 10px 0; }
+  .feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: #374151;
+  }
+  .feature-list li:last-child { border-bottom: none; }
+  .feature-list .check { color: var(--success); font-weight: bold; flex-shrink: 0; }
+
+  /* ── STACK LAYERS ── */
+  .stack-layer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 8px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .stack-layer .layer-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brand);
+    background: var(--purple-bg);
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .stack-layer .layer-content h5 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .stack-layer .layer-content p { font-size: 13px; margin: 0; color: var(--text-muted); }
+
+  /* ── SCHEMA SECTION LABELS ── */
+  .table-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 20px 0 6px;
+  }
+  .table-label h4 {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--brand-dark);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .table-label .tl-badge {
+    font-size: 10px;
+    background: var(--purple-bg);
+    color: var(--brand-dark);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  /* ── USER FLOW STEPS ── */
+  .flow-steps { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .flow-step .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .flow-step .step-content h5 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .flow-step .step-content p { font-size: 13px; margin: 0; color: var(--text-muted); }
+
+  /* ── XP TABLE ── */
+  .xp-row td:last-child { font-weight: 700; color: var(--xp-gold); }
+
+  /* ── COLOR SWATCHES ── */
+  .color-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0; }
+  .color-swatch {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .color-swatch .swatch-block { height: 48px; }
+  .color-swatch .swatch-info { padding: 8px 10px; background: white; }
+  .color-swatch .swatch-name { font-size: 11px; font-weight: 600; color: var(--text); }
+  .color-swatch .swatch-hex { font-size: 10px; color: var(--text-muted); font-family: monospace; }
+  .color-swatch .swatch-use { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  /* ── PAGE BREAK ── */
+  @media print {
+    .cover { min-height: 100vh; }
+    .doc-section { page-break-inside: avoid; }
+    body { background: white; }
+    .wrapper { padding: 20px; }
+  }
+
+  /* ── PROMPT BLOCK ── */
+  .prompt-block {
+    background: #1E1E2E;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 12px 0;
+  }
+  .prompt-block .prompt-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #89B4FA;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .prompt-block pre { background: none; padding: 0; margin: 0; color: #CDD6F4; }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     COVER
+══════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-badge">Developer Handoff Document</div>
+  <h1>Place<span>Pro</span> LMS</h1>
+  <p class="cover-sub">AI-powered placement preparation platform — gamified quizzes, mock interviews, live job listings, and career roadmaps</p>
+
+  <div class="cover-meta">
+    <div class="cover-meta-item"><label>Version</label><span>1.0.0</span></div>
+    <div class="cover-meta-item"><label>Status</label><span>Ready to Build</span></div>
+    <div class="cover-meta-item"><label>Database</label><span>Supabase</span></div>
+    <div class="cover-meta-item"><label>AI Engine</label><span>Claude claude-sonnet-4-6</span></div>
+  </div>
+
+  <div class="cover-toc">
+    <div class="cover-toc-item"><div class="num">1</div>Product Requirements (PRD)</div>
+    <div class="cover-toc-item"><div class="num">2</div>Technology Stack</div>
+    <div class="cover-toc-item"><div class="num">3</div>Database Schema (Supabase)</div>
+    <div class="cover-toc-item"><div class="num">4</div>Gamification System</div>
+    <div class="cover-toc-item"><div class="num">5</div>AI Module Specifications</div>
+    <div class="cover-toc-item"><div class="num">6</div>Design System</div>
+    <div class="cover-toc-item"><div class="num">7</div>Page Specifications</div>
+    <div class="cover-toc-item"><div class="num">8</div>API Endpoints</div>
+  </div>
+</div>
+
+<div class="wrapper">
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 1 — PRD
+══════════════════════════════════════════════════════ -->
+<div class="doc-section">
+  <div class="doc-section-header">
+    <div class="section-num">1</div>
+    <div>
+      <h2>Product Requirements Document (PRD)</h2>
+      <p>Vision, user roles, features, and success metrics</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3>Vision & Mission</h3>
+    <p>PlacePro is an AI-powered Learning Management System (LMS) built specifically for placement preparation. It combines gamified quizzes, AI mock interviews, real-time job aggregation from the internet, personalised career roadmaps, a code challenge module, and a resume builder — all in one platform. The platform targets students at every education stage: post-Class 10, post-Intermediate, diploma holders, and graduates.</p>
+
+    <div class="callout info">
+      <div class="callout-icon">💡</div>
+      <div><strong>Tagline:</strong> "From classroom to career — every step, gamified." The core differentiator is the complete loop: learn → practice → interview → apply → track progress — all without leaving the platform.</div>
+    </div>
+
+    <h3>Problem Statement</h3>
+    <div class="card-grid">
+      <div class="card"><h5>Fragmented tools</h5><p>Job boards, resume tools, interview prep, and learning are spread across dozens of apps. Students lose momentum switching between them.</p></div>
+      <div class="card"><h5>No personalised roadmap</h5><p>A Class 10 pass-out or diploma holder has no structured guide from their current state to their goal career.</p></div>
+      <div class="card"><h5>Passive interview prep</h5><p>PDFs and YouTube don't simulate real interviews. No feedback loop on spoken answers, tone, or confidence.</p></div>
+      <div class="card"><h5>Motivation collapse</h5><p>Without streaks, XP, leaderboards, and rewards, students abandon prep platforms within weeks.</p></div>
+    </div>
+
+    <h3>User Roles</h3>
+
+    <h4>Student</h4>
+    <p>Any registered learner. Education level can be Class 10 pass, Intermediate, Diploma, or Graduate.</p>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Take topic-based quizzes generated from admin syllabus</li>
+      <li><span class="check">✓</span> Attempt monthly admin-scheduled quizzes</li>
+      <li><span class="check">✓</span> AI mock interview (camera + mic + proctoring) or manual interview</li>
+      <li><span class="check">✓</span> Browse and apply to live job listings (India + selected countries)</li>
+      <li><span class="check">✓</span> View and follow AI-generated career roadmap</li>
+      <li><span class="check">✓</span> Build resume and get live ATS score + feedback</li>
+      <li><span class="check">✓</span> Solve coding challenges graded by AI</li>
+      <li><span class="check">✓</span> Track XP, streaks, badges, level, and leaderboard rank</li>
+      <li><span class="check">✓</span> View project showcase on landing page</li>
+    </ul>
+
+    <h4>Admin</h4>
+    <p>Platform operators who manage all content, assessments, and configuration.</p>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Manage syllabus topics — upload PDF/text per topic (updatable anytime)</li>
+      <li><span class="check">✓</span> Create and publish monthly quizzes with AI-assisted question generation</li>
+      <li><span class="check">✓</span> Upload project showcase (images, GitHub links, deployed URLs)</li>
+      <li><span class="check">✓</span> Manage user accounts, view platform analytics</li>
+      <li><span class="check">✓</span> Configure ad placements for revenue</li>
+      <li><span class="check">✓</span> Review flagged interview sessions</li>
+      <li><span class="check">✓</span> Set career roles and approve roadmap content</li>
+    </ul>
+
+    <h4>Landing Page Visitor</h4>
+    <p>Unauthenticated visitor. Can view the landing page, project showcase, feature overview. Must sign up or log in to access any learning feature.</p>
+
+    <h3>Student Onboarding Flow</h3>
+    <div class="flow-steps">
+      <div class="flow-step"><div class="step-num">1</div><div class="step-content"><h5>Register</h5><p>Email + password or Google OAuth. Country auto-detected via IP geolocation.</p></div></div>
+      <div class="flow-step"><div class="step-num">2</div><div class="step-content"><h5>Profile setup</h5><p>Select education level (Class 10 / Inter / Diploma / Graduate) and confirm country (with manual override).</p></div></div>
+      <div class="flow-step"><div class="step-num">3</div><div class="step-content"><h5>Career goal</h5><p>Choose a target job role from list or type custom goal. Option: "Suggest for me" → AI recommends based on education level.</p></div></div>
+      <div class="flow-step"><div class="step-num">4</div><div class="step-content"><h5>Topic subscription</h5><p>Pick 1–5 learning tracks (e.g. Cybersecurity, Web Dev, Data Science). Drives quiz question pool.</p></div></div>
+      <div class="flow-step"><div class="step-num">5</div><div class="step-content"><h5>Dashboard</h5><p>Streak starts at Day 1. XP = 0. Daily missions shown. Roadmap generated in background. Duolingo-style "Start your first quiz" nudge.</p></div></div>
+    </div>
+
+    <h3>Feature Priority Matrix</h3>
+    <table>
+      <thead><tr><th>Feature</th><th>Priority</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Topic-based quizzes</td><td><span class="badge badge-p1">P1 — Must Have</span></td><td>Student picks topic → AI generates MCQs from admin syllabus in real time</td></tr>
+        <tr><td>Monthly admin quizzes</td><td><span class="badge badge-p1">P1 — Must Have</span></td><td>Admin schedules quiz; AI generates + admin approves question bank</td></tr>
+        <tr><td>AI mock interview</td><td><span class="badge badge-p1">P1 — Must Have</span></td><td>AI interviewer with TTS voice, mic input, camera/tab/monitor proctoring</td></tr>
+        <tr><td>Manual interview</td><td><span class="badge badge-p1">P1 — Must Have</span></td><td>Real interviewer joins via WebRTC video link; admin-issued invite</td></tr>
+        <tr><td>Live job aggregation</td><td><span class="badge badge-p1">P1 — Must Have</span></td><td>Scrape LinkedIn, Naukri, Internshala, Wellfound + filter by country/role</td></tr>
+        <tr><td>Career roadmap</td><td><span class="badge badge-p1">P1 — Must Have</span></td><td>Country-aware AI roadmap from education level to goal job, with step tracking</td></tr>
+        <tr><td>Streak / XP / Leaderboard</td><td><span class="badge badge-p1">P1 — Must Have</span></td><td>Daily streaks, XP transactions, weekly/monthly/all-time leaderboards</td></tr>
+        <tr><td>Resume builder + ATS</td><td><span class="badge badge-p2">P2 — Should Have</span></td><td>Structured drag-and-drop builder; Claude scores and gives section-level feedback</td></tr>
+        <tr><td>Code challenge module</td><td><span class="badge badge-p2">P2 — Should Have</span></td><td>In-browser Monaco editor, Judge0 execution, Claude qualitative review</td></tr>
+        <tr><td>Project showcase</td><td><span class="badge badge-p2">P2 — Should Have</span></td><td>Admin uploads images + GitHub/deploy links; shown on landing page</td></tr>
+        <tr><td>Badges system</td><td><span class="badge badge-p2">P2 — Should Have</span></td><td>Milestone badges: first quiz, streak milestones, perfect score, etc.</td></tr>
+        <tr><td>Ads system</td><td><span class="badge badge-p3">P3 — Nice to Have</span></td><td>Admin-managed banner ad placements for revenue generation</td></tr>
+        <tr><td>Email notifications</td><td><span class="badge badge-p3">P3 — Nice to Have</span></td><td>Weekly digest, quiz reminders, streak alerts via Resend</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Success Metrics (6-month targets)</h3>
+    <table>
+      <thead><tr><th>Metric</th><th>Target</th></tr></thead>
+      <tbody>
+        <tr><td>Daily Active Users (DAU / MAU ratio)</td><td>≥ 60%</td></tr>
+        <tr><td>Quiz completion rate</td><td>≥ 75%</td></tr>
+        <tr><td>Interview module usage</td><td>≥ 40% of active users per week</td></tr>
+        <tr><td>Job application click-through</td><td>≥ 25%</td></tr>
+        <tr><td>Resume ATS score improvement</td><td>+15 points avg after first revision</td></tr>
+        <tr><td>7-day streak retention</td><td>≥ 50% of users maintain a streak</td></tr>
+        <tr><td>Roadmap step completion</td><td>≥ 1 step per active user per week</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 2 — TECH STACK
+══════════════════════════════════════════════════════ -->
+<div class="doc-section">
+  <div class="doc-section-header">
+    <div class="section-num">2</div>
+    <div>
+      <h2>Technology Stack</h2>
+      <p>Frontend, backend, database, and third-party integrations</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3>Frontend</h3>
+    <table>
+      <thead><tr><th>Layer</th><th>Technology</th><th>Version</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>Framework</td><td>React</td><td>18.x</td><td>Component model fits card-heavy gamified UI</td></tr>
+        <tr><td>Build tool</td><td>Vite</td><td>5.x</td><td>Fast HMR, optimized production builds</td></tr>
+        <tr><td>Language</td><td>TypeScript</td><td>5.x</td><td>Type safety across large feature surface</td></tr>
+        <tr><td>Routing</td><td>React Router</td><td>v6</td><td>Nested routes for dashboard sections</td></tr>
+        <tr><td>Global state</td><td>Zustand</td><td>4.x</td><td>Auth state, XP counter, streak status</td></tr>
+        <tr><td>Server state</td><td>TanStack Query</td><td>v5</td><td>Data fetching, caching, background refetch</td></tr>
+        <tr><td>UI components</td><td>shadcn/ui</td><td>latest</td><td>Accessible components matching mockup style</td></tr>
+        <tr><td>Styling</td><td>Tailwind CSS</td><td>3.x</td><td>Utility-first, fast iteration</td></tr>
+        <tr><td>Charts</td><td>Recharts</td><td>2.x</td><td>Streak heatmap, XP graph, leaderboard charts</td></tr>
+        <tr><td>Code editor</td><td>Monaco Editor</td><td>latest</td><td>VS Code quality in-browser for code challenges</td></tr>
+        <tr><td>Video calls</td><td>Daily.co React SDK</td><td>latest</td><td>Managed WebRTC for manual interviews</td></tr>
+        <tr><td>Animations</td><td>Framer Motion</td><td>11.x</td><td>XP pop, badge unlock, streak animations</td></tr>
+        <tr><td>Icons</td><td>Lucide React</td><td>latest</td><td>Consistent icon set</td></tr>
+        <tr><td>PDF generation</td><td>react-pdf</td><td>latest</td><td>Resume PDF export client-side</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Backend</h3>
+    <table>
+      <thead><tr><th>Layer</th><th>Technology</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Runtime</td><td>Node.js 20 LTS</td><td>All serverless functions</td></tr>
+        <tr><td>Framework</td><td>Express.js (in Vercel functions)</td><td>Lightweight, familiar</td></tr>
+        <tr><td>Deployment</td><td>Vercel serverless</td><td>Zero-ops, auto-scaling, preview deploys per PR</td></tr>
+        <tr><td>Database</td><td>Supabase (PostgreSQL 15)</td><td>Primary data store; RLS for security</td></tr>
+        <tr><td>Auth</td><td>Supabase Auth</td><td>Email/password + Google OAuth; JWT sessions</td></tr>
+        <tr><td>File storage</td><td>Supabase Storage</td><td>Syllabi PDFs, project images, resume files, avatars</td></tr>
+        <tr><td>Realtime</td><td>Supabase Realtime</td><td>Live leaderboard updates, interview session signals</td></tr>
+        <tr><td>Background jobs</td><td>pg-boss (Supabase-backed)</td><td>Quiz scheduling, weekly leaderboard reset, job sync triggers</td></tr>
+        <tr><td>Job scraper</td><td>Node.js + Playwright</td><td>Separate Railway/Render service — NOT on Vercel (exceeds timeout)</td></tr>
+        <tr><td>Code execution</td><td>Judge0 API</td><td>Sandboxed multi-language runner; cloud or self-hosted</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Third-party APIs</h3>
+    <table>
+      <thead><tr><th>Service</th><th>Purpose</th><th>Env var</th></tr></thead>
+      <tbody>
+        <tr><td>Anthropic Claude API</td><td>Quiz gen, interview Q&A, roadmap, ATS score, code review</td><td><code>ANTHROPIC_API_KEY</code></td></tr>
+        <tr><td>ElevenLabs API</td><td>Text-to-speech for AI interviewer voice</td><td><code>ELEVENLABS_API_KEY</code></td></tr>
+        <tr><td>OpenAI Whisper API</td><td>Student answer speech-to-text transcription</td><td><code>OPENAI_API_KEY</code></td></tr>
+        <tr><td>Judge0</td><td>Code execution sandbox</td><td><code>JUDGE0_API_KEY</code></td></tr>
+        <tr><td>Daily.co</td><td>Manual interview video rooms</td><td><code>DAILY_API_KEY</code></td></tr>
+        <tr><td>IP-API / ipinfo.io</td><td>Country detection on signup</td><td><code>IPINFO_TOKEN</code></td></tr>
+        <tr><td>Razorpay</td><td>Premium subscriptions + ad revenue</td><td><code>RAZORPAY_KEY_ID</code>, <code>RAZORPAY_KEY_SECRET</code></td></tr>
+        <tr><td>Resend</td><td>Transactional + marketing email</td><td><code>RESEND_API_KEY</code></td></tr>
+        <tr><td>LinkedIn Jobs API</td><td>Official job listings (where scraping blocked)</td><td><code>LINKEDIN_ACCESS_TOKEN</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>System Architecture</h3>
+    <pre>Browser (React 18 + Vite)
+  │
+  ├─ HTTPS → Vercel Edge CDN (static assets)
+  │
+  └─ HTTPS → Vercel Serverless Functions (/api/*)
+       │  JWT validated via Supabase on every request
+       │  API keys: ANTHROPIC, ELEVENLABS, OPENAI, JUDGE0 — server only, never in browser
+       │
+       ├─ Supabase PostgreSQL (primary database)
+       │    └─ Supabase Realtime (WebSocket → leaderboard, interview signals)
+       │    └─ Supabase Storage (PDFs, images, resume files)
+       │    └─ Supabase Auth (JWT sessions)
+       │
+       ├─ Anthropic Claude API (claude-sonnet-4-6)
+       │    ├─ /api/quiz/generate   → quiz question JSON
+       │    ├─ /api/interview/eval  → answer scoring + feedback
+       │    ├─ /api/roadmap/gen     → career roadmap JSON (cached)
+       │    ├─ /api/resume/ats      → ATS score + section feedback
+       │    └─ /api/code/review     → code quality feedback
+       │
+       ├─ Judge0 (code execution sandbox, isolated container)
+       │
+       └─ Railway VPS (job scraper — separate from Vercel)
+            └─ Playwright scraper → Supabase jobs table (cron: every 2h)</pre>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div><strong>Critical:</strong> The Playwright job scraper CANNOT run on Vercel (10-second function timeout). Deploy it on Railway or Render as a persistent Node.js service with a cron schedule. It only writes to Supabase — the frontend never calls it directly.</div>
+    </div>
+
+    <h3>Environment Variables (complete list)</h3>
+    <pre># Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...  # Server only
+
+# AI / Speech
+ANTHROPIC_API_KEY=sk-ant-...
+ELEVENLABS_API_KEY=...
+OPENAI_API_KEY=sk-...  # Whisper only
+
+# Code execution
+JUDGE0_API_KEY=...
+JUDGE0_BASE_URL=https://judge0-ce.p.rapidapi.com
+
+# Video
+DAILY_API_KEY=...
+
+# Jobs
+LINKEDIN_ACCESS_TOKEN=...
+
+# Payments
+RAZORPAY_KEY_ID=rzp_live_...
+RAZORPAY_KEY_SECRET=...
+
+# Email
+RESEND_API_KEY=re_...
+
+# Geo
+IPINFO_TOKEN=...
+
+# App
+VITE_APP_URL=https://placepro.in
+NODE_ENV=production</pre>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 3 — DATABASE SCHEMA
+══════════════════════════════════════════════════════ -->
+<div class="doc-section">
+  <div class="doc-section-header">
+    <div class="section-num">3</div>
+    <div>
+      <h2>Database Schema</h2>
+      <p>Supabase PostgreSQL — all tables, types, and relationships</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout success">
+      <div class="callout-icon">✓</div>
+      <div>All tables use UUID primary keys generated by <code>gen_random_uuid()</code>. All timestamps are <code>timestamptz</code> (UTC). Row Level Security (RLS) is enabled on every table. Use Supabase migrations for all schema changes.</div>
+    </div>
+
+    <h3>Core — Users & Profiles</h3>
+
+    <div class="table-label"><h4>auth.users</h4><div class="tl-badge">Managed by Supabase Auth</div></div>
+    <p>Do not create this table manually. Supabase Auth owns it. Add a trigger to auto-create a <code>profiles</code> row on new user signup.</p>
+
+    <div class="table-label"><h4>profiles</h4><div class="tl-badge">1:1 with auth.users</div></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK, FK → auth.users(id)</td><td>Mirrors Supabase auth user ID</td></tr>
+        <tr><td>full_name</td><td>text</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>avatar_url</td><td>text</td><td>NULLABLE</td><td>Supabase storage path</td></tr>
+        <tr><td>role</td><td>text</td><td>DEFAULT 'student'</td><td>'student' or 'admin'</td></tr>
+        <tr><td>education_level</td><td>text</td><td>NULLABLE</td><td>'class10', 'inter', 'diploma', 'graduate'</td></tr>
+        <tr><td>country_code</td><td>char(2)</td><td>NULLABLE</td><td>ISO 3166-1 alpha-2 (e.g. 'IN', 'US')</td></tr>
+        <tr><td>target_role_id</td><td>uuid</td><td>FK → career_roles(id), NULLABLE</td><td>Set after onboarding</td></tr>
+        <tr><td>xp_total</td><td>integer</td><td>DEFAULT 0</td><td>Denormalised for leaderboard speed</td></tr>
+        <tr><td>current_streak</td><td>integer</td><td>DEFAULT 0</td><td>Days active in a row</td></tr>
+        <tr><td>longest_streak</td><td>integer</td><td>DEFAULT 0</td><td>All-time personal best</td></tr>
+        <tr><td>last_activity_date</td><td>date</td><td>NULLABLE</td><td>Used to determine streak break</td></tr>
+        <tr><td>level</td><td>integer</td><td>DEFAULT 1</td><td>Computed from xp_total; update via trigger</td></tr>
+        <tr><td>onboarding_complete</td><td>boolean</td><td>DEFAULT false</td><td>Controls redirect on login</td></tr>
+        <tr><td>streak_freeze_count</td><td>integer</td><td>DEFAULT 0</td><td>Available freezes to skip a day</td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+        <tr><td>updated_at</td><td>timestamptz</td><td>DEFAULT now()</td><td>Update via trigger</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-label"><h4>topics</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>name</td><td>text</td><td>UNIQUE, NOT NULL</td><td>e.g. "Cybersecurity"</td></tr>
+        <tr><td>slug</td><td>text</td><td>UNIQUE, NOT NULL</td><td>URL-safe, e.g. "cybersecurity"</td></tr>
+        <tr><td>icon_url</td><td>text</td><td>NULLABLE</td><td>Topic icon image</td></tr>
+        <tr><td>syllabus_storage_path</td><td>text</td><td>NULLABLE</td><td>Supabase storage path to PDF/text</td></tr>
+        <tr><td>syllabus_text_cache</td><td>text</td><td>NULLABLE</td><td>Extracted text from PDF for AI prompts</td></tr>
+        <tr><td>is_active</td><td>boolean</td><td>DEFAULT true</td><td></td></tr>
+        <tr><td>created_by</td><td>uuid</td><td>FK → auth.users(id)</td><td>Admin who created</td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-label"><h4>student_topics</h4><div class="tl-badge">Junction table</div></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>FK → auth.users(id), NOT NULL</td></tr>
+        <tr><td>topic_id</td><td>uuid</td><td>FK → topics(id), NOT NULL</td></tr>
+        <tr><td>enrolled_at</td><td>timestamptz</td><td>DEFAULT now()</td></tr>
+      </tbody>
+    </table>
+    <p>Unique constraint on <code>(user_id, topic_id)</code>.</p>
+
+    <h3>Learning — Quizzes</h3>
+
+    <div class="table-label"><h4>quizzes</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>topic_id</td><td>uuid</td><td>FK → topics(id), NOT NULL</td><td></td></tr>
+        <tr><td>type</td><td>text</td><td>NOT NULL</td><td>'topic_based' or 'monthly'</td></tr>
+        <tr><td>title</td><td>text</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>difficulty</td><td>text</td><td>NOT NULL</td><td>'beginner', 'intermediate', 'advanced'</td></tr>
+        <tr><td>question_count</td><td>integer</td><td>DEFAULT 10</td><td></td></tr>
+        <tr><td>time_limit_seconds</td><td>integer</td><td>DEFAULT 600</td><td>10 minutes default</td></tr>
+        <tr><td>scheduled_at</td><td>timestamptz</td><td>NULLABLE</td><td>For monthly quizzes only</td></tr>
+        <tr><td>is_published</td><td>boolean</td><td>DEFAULT false</td><td></td></tr>
+        <tr><td>ai_generated</td><td>boolean</td><td>DEFAULT false</td><td></td></tr>
+        <tr><td>created_by</td><td>uuid</td><td>FK → auth.users(id)</td><td>Admin</td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-label"><h4>quiz_questions</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>quiz_id</td><td>uuid</td><td>FK → quizzes(id) ON DELETE CASCADE</td><td></td></tr>
+        <tr><td>question_text</td><td>text</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>options</td><td>jsonb</td><td>NOT NULL</td><td>Array of 4 strings ["A","B","C","D"]</td></tr>
+        <tr><td>correct_option_index</td><td>integer</td><td>NOT NULL</td><td>0–3; NEVER exposed to browser before submit</td></tr>
+        <tr><td>explanation</td><td>text</td><td>NULLABLE</td><td>AI-generated explanation shown after answer</td></tr>
+        <tr><td>question_order</td><td>integer</td><td>DEFAULT 0</td><td>Display order</td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-label"><h4>quiz_attempts</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>FK → auth.users(id), NOT NULL</td><td></td></tr>
+        <tr><td>quiz_id</td><td>uuid</td><td>FK → quizzes(id), NOT NULL</td><td></td></tr>
+        <tr><td>answers</td><td>jsonb</td><td>NOT NULL</td><td>[{question_id, selected_index, is_correct}]</td></tr>
+        <tr><td>score</td><td>integer</td><td>NULLABLE</td><td>Number of correct answers; set on completion</td></tr>
+        <tr><td>score_percentage</td><td>numeric(5,2)</td><td>NULLABLE</td><td>0.00–100.00</td></tr>
+        <tr><td>xp_earned</td><td>integer</td><td>DEFAULT 0</td><td></td></tr>
+        <tr><td>is_perfect</td><td>boolean</td><td>DEFAULT false</td><td>All questions correct</td></tr>
+        <tr><td>started_at</td><td>timestamptz</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>completed_at</td><td>timestamptz</td><td>NULLABLE</td><td>Null if abandoned</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Learning — Interviews</h3>
+
+    <div class="table-label"><h4>interview_sessions</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>FK → auth.users(id)</td><td>Student</td></tr>
+        <tr><td>mode</td><td>text</td><td>NOT NULL</td><td>'ai' or 'manual'</td></tr>
+        <tr><td>topic_id</td><td>uuid</td><td>FK → topics(id)</td><td></td></tr>
+        <tr><td>interviewer_id</td><td>uuid</td><td>FK → auth.users(id), NULLABLE</td><td>Null for AI mode</td></tr>
+        <tr><td>daily_room_url</td><td>text</td><td>NULLABLE</td><td>Daily.co room URL for manual mode</td></tr>
+        <tr><td>transcript</td><td>jsonb</td><td>NULLABLE</td><td>[{role:'ai'|'user', content, timestamp}]</td></tr>
+        <tr><td>ai_feedback</td><td>jsonb</td><td>NULLABLE</td><td>{communication:int, technical:int, confidence:int, suggestions:[]}</td></tr>
+        <tr><td>proctor_flags</td><td>jsonb</td><td>DEFAULT '[]'</td><td>[{type, timestamp, details}]</td></tr>
+        <tr><td>xp_earned</td><td>integer</td><td>DEFAULT 0</td><td></td></tr>
+        <tr><td>status</td><td>text</td><td>DEFAULT 'scheduled'</td><td>'scheduled', 'active', 'completed', 'terminated'</td></tr>
+        <tr><td>termination_reason</td><td>text</td><td>NULLABLE</td><td>Reason if status='terminated'</td></tr>
+        <tr><td>started_at</td><td>timestamptz</td><td>NULLABLE</td><td></td></tr>
+        <tr><td>ended_at</td><td>timestamptz</td><td>NULLABLE</td><td></td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Learning — Code Challenges</h3>
+
+    <div class="table-label"><h4>code_challenges</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>title</td><td>text</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>description</td><td>text</td><td>NOT NULL</td><td>Problem statement in Markdown</td></tr>
+        <tr><td>difficulty</td><td>text</td><td>NOT NULL</td><td>'easy', 'medium', 'hard'</td></tr>
+        <tr><td>topic_id</td><td>uuid</td><td>FK → topics(id), NULLABLE</td><td>Optional topic association</td></tr>
+        <tr><td>test_cases</td><td>jsonb</td><td>NOT NULL</td><td>[{input, expected_output, is_hidden}]</td></tr>
+        <tr><td>supported_languages</td><td>text[]</td><td>NOT NULL</td><td>['python', 'javascript', 'java', 'cpp']</td></tr>
+        <tr><td>starter_code</td><td>jsonb</td><td>NULLABLE</td><td>{python: '...', javascript: '...'}</td></tr>
+        <tr><td>xp_reward</td><td>integer</td><td>NOT NULL</td><td>Easy=25, Medium=75, Hard=150</td></tr>
+        <tr><td>is_active</td><td>boolean</td><td>DEFAULT true</td><td></td></tr>
+        <tr><td>created_by</td><td>uuid</td><td>FK → auth.users(id)</td><td>Admin</td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-label"><h4>code_submissions</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>FK → auth.users(id)</td><td></td></tr>
+        <tr><td>challenge_id</td><td>uuid</td><td>FK → code_challenges(id)</td><td></td></tr>
+        <tr><td>language</td><td>text</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>code</td><td>text</td><td>NOT NULL</td><td>Student's submitted code</td></tr>
+        <tr><td>judge0_result</td><td>jsonb</td><td>NULLABLE</td><td>Raw Judge0 response per test case</td></tr>
+        <tr><td>test_cases_passed</td><td>integer</td><td>DEFAULT 0</td><td></td></tr>
+        <tr><td>test_cases_total</td><td>integer</td><td>DEFAULT 0</td><td></td></tr>
+        <tr><td>ai_review</td><td>jsonb</td><td>NULLABLE</td><td>{efficiency, readability, edge_cases, suggestions}</td></tr>
+        <tr><td>passed</td><td>boolean</td><td>DEFAULT false</td><td>All test cases pass</td></tr>
+        <tr><td>xp_earned</td><td>integer</td><td>DEFAULT 0</td><td></td></tr>
+        <tr><td>submitted_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Learning — Resume</h3>
+
+    <div class="table-label"><h4>resumes</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>FK → auth.users(id), UNIQUE</td><td>One resume per student (versioned via updated_at)</td></tr>
+        <tr><td>content</td><td>jsonb</td><td>NOT NULL</td><td>{contact, summary, education:[], experience:[], skills:[], projects:[], certifications:[]}</td></tr>
+        <tr><td>ats_score</td><td>integer</td><td>NULLABLE</td><td>0–100</td></tr>
+        <tr><td>ats_feedback</td><td>jsonb</td><td>NULLABLE</td><td>{section, issue, suggestion} per section</td></tr>
+        <tr><td>target_job_title</td><td>text</td><td>NULLABLE</td><td>Used to tailor ATS analysis</td></tr>
+        <tr><td>pdf_storage_path</td><td>text</td><td>NULLABLE</td><td>Generated PDF path in Supabase storage</td></tr>
+        <tr><td>updated_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Gamification</h3>
+
+    <div class="table-label"><h4>xp_transactions</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>FK → auth.users(id)</td><td></td></tr>
+        <tr><td>amount</td><td>integer</td><td>NOT NULL</td><td>Positive or negative</td></tr>
+        <tr><td>source</td><td>text</td><td>NOT NULL</td><td>'quiz', 'interview', 'code', 'resume', 'job_apply', 'login', 'roadmap', 'mission_bonus'</td></tr>
+        <tr><td>reference_id</td><td>uuid</td><td>NULLABLE</td><td>FK to the source row (quiz_attempts.id, etc.)</td></tr>
+        <tr><td>description</td><td>text</td><td>NULLABLE</td><td>Human-readable label for XP log</td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-label"><h4>badges</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>name</td><td>text</td><td>UNIQUE, NOT NULL</td><td>e.g. "7-Day Streak"</td></tr>
+        <tr><td>description</td><td>text</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>icon_url</td><td>text</td><td>NULLABLE</td><td>Supabase storage path</td></tr>
+        <tr><td>condition_type</td><td>text</td><td>NOT NULL</td><td>'xp_threshold', 'streak_days', 'quiz_perfect', 'interview_completed', 'jobs_applied', 'code_hard_solved'</td></tr>
+        <tr><td>condition_value</td><td>integer</td><td>NOT NULL</td><td>e.g. 1000 for "reach 1000 XP"</td></tr>
+        <tr><td>rarity</td><td>text</td><td>DEFAULT 'common'</td><td>'common', 'rare', 'epic', 'legendary'</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-label"><h4>user_badges</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>FK → auth.users(id)</td></tr>
+        <tr><td>badge_id</td><td>uuid</td><td>FK → badges(id)</td></tr>
+        <tr><td>earned_at</td><td>timestamptz</td><td>DEFAULT now()</td></tr>
+      </tbody>
+    </table>
+    <p>Unique constraint on <code>(user_id, badge_id)</code>.</p>
+
+    <div class="table-label"><h4>streak_history</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>FK → auth.users(id)</td><td></td></tr>
+        <tr><td>date</td><td>date</td><td>NOT NULL</td><td>One row per active day</td></tr>
+        <tr><td>activity_type</td><td>text</td><td>NOT NULL</td><td>What activity kept the streak alive</td></tr>
+        <tr><td>xp_earned_today</td><td>integer</td><td>DEFAULT 0</td><td>Total XP on this day</td></tr>
+      </tbody>
+    </table>
+    <p>Unique constraint on <code>(user_id, date)</code>.</p>
+
+    <div class="table-label"><h4>daily_missions</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>FK → auth.users(id)</td><td></td></tr>
+        <tr><td>date</td><td>date</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>missions</td><td>jsonb</td><td>NOT NULL</td><td>[{type, description, completed: bool}]</td></tr>
+        <tr><td>all_completed</td><td>boolean</td><td>DEFAULT false</td><td></td></tr>
+        <tr><td>bonus_xp_earned</td><td>integer</td><td>NULLABLE</td><td>Set when all_completed=true</td></tr>
+      </tbody>
+    </table>
+    <p>Unique constraint on <code>(user_id, date)</code>.</p>
+
+    <div class="table-label"><h4>leaderboard_snapshots</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>FK → auth.users(id)</td><td></td></tr>
+        <tr><td>period</td><td>text</td><td>NOT NULL</td><td>'weekly', 'monthly', 'alltime'</td></tr>
+        <tr><td>xp_in_period</td><td>integer</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>rank</td><td>integer</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>snapshot_date</td><td>date</td><td>NOT NULL</td><td>Start of the period week/month</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Jobs & Career</h3>
+
+    <div class="table-label"><h4>job_listings</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>title</td><td>text</td><td>NOT NULL</td><td>Job title</td></tr>
+        <tr><td>company</td><td>text</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>location</td><td>text</td><td>NULLABLE</td><td>City / "Remote"</td></tr>
+        <tr><td>country_code</td><td>char(2)</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>source</td><td>text</td><td>NOT NULL</td><td>'linkedin', 'naukri', 'internshala', 'wellfound', 'glassdoor', 'other'</td></tr>
+        <tr><td>external_url</td><td>text</td><td>NOT NULL</td><td>Direct apply link</td></tr>
+        <tr><td>description</td><td>text</td><td>NULLABLE</td><td></td></tr>
+        <tr><td>tags</td><td>text[]</td><td>DEFAULT '{}'</td><td>Skills / keywords for filtering</td></tr>
+        <tr><td>experience_level</td><td>text</td><td>NULLABLE</td><td>'fresher', 'junior', 'mid', 'senior'</td></tr>
+        <tr><td>salary_range</td><td>text</td><td>NULLABLE</td><td>Human-readable e.g. "₹3–5 LPA"</td></tr>
+        <tr><td>posted_at</td><td>timestamptz</td><td>NULLABLE</td><td>Original post date from source</td></tr>
+        <tr><td>scraped_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+        <tr><td>is_active</td><td>boolean</td><td>DEFAULT true</td><td>False when job removed from source</td></tr>
+        <tr><td>external_id</td><td>text</td><td>NULLABLE</td><td>Source's own ID for deduplication</td></tr>
+      </tbody>
+    </table>
+    <p>Unique constraint on <code>(source, external_id)</code> for deduplication.</p>
+
+    <div class="table-label"><h4>career_roles</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>title</td><td>text</td><td>UNIQUE, NOT NULL</td><td>e.g. "Cybersecurity Analyst"</td></tr>
+        <tr><td>category</td><td>text</td><td>NOT NULL</td><td>e.g. "IT Security", "Web Development"</td></tr>
+        <tr><td>description</td><td>text</td><td>NULLABLE</td><td></td></tr>
+        <tr><td>avg_salary_india</td><td>text</td><td>NULLABLE</td><td>e.g. "₹4–8 LPA"</td></tr>
+        <tr><td>demand_level</td><td>text</td><td>DEFAULT 'medium'</td><td>'low', 'medium', 'high', 'very_high'</td></tr>
+        <tr><td>search_keywords</td><td>text[]</td><td>DEFAULT '{}'</td><td>Keywords for matching job listings</td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-label"><h4>roadmap_cache</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>education_level</td><td>text</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>country_code</td><td>char(2)</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>career_role_id</td><td>uuid</td><td>FK → career_roles(id)</td><td></td></tr>
+        <tr><td>roadmap_data</td><td>jsonb</td><td>NOT NULL</td><td>Full AI-generated roadmap object</td></tr>
+        <tr><td>generated_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+        <tr><td>expires_at</td><td>timestamptz</td><td>NOT NULL</td><td>generated_at + 30 days</td></tr>
+      </tbody>
+    </table>
+    <p>Unique constraint on <code>(education_level, country_code, career_role_id)</code>.</p>
+
+    <div class="table-label"><h4>user_roadmap_progress</h4></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>FK → auth.users(id), UNIQUE</td></tr>
+        <tr><td>roadmap_cache_id</td><td>uuid</td><td>FK → roadmap_cache(id)</td></tr>
+        <tr><td>completed_step_ids</td><td>text[]</td><td>DEFAULT '{}'</td></tr>
+        <tr><td>updated_at</td><td>timestamptz</td><td>DEFAULT now()</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-label"><h4>projects</h4><div class="tl-badge">Showcase — landing page</div></div>
+    <table class="schema-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>PK</td><td></td></tr>
+        <tr><td>title</td><td>text</td><td>NOT NULL</td><td></td></tr>
+        <tr><td>description</td><td>text</td><td>NULLABLE</td><td></td></tr>
+        <tr><td>image_storage_path</td><td>text</td><td>NOT NULL</td><td>Supabase storage</td></tr>
+        <tr><td>github_url</td><td>text</td><td>NULLABLE</td><td></td></tr>
+        <tr><td>deployed_url</td><td>text</td><td>NULLABLE</td><td>Live demo button</td></tr>
+        <tr><td>tech_tags</td><td>text[]</td><td>DEFAULT '{}'</td><td></td></tr>
+        <tr><td>display_order</td><td>integer</td><td>DEFAULT 0</td><td>Admin drag-to-reorder</td></tr>
+        <tr><td>is_visible</td><td>boolean</td><td>DEFAULT true</td><td></td></tr>
+        <tr><td>created_by</td><td>uuid</td><td>FK → auth.users(id)</td><td>Admin uploader</td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>DEFAULT now()</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Supabase Trigger: auto-create profile on signup</h3>
+    <pre>-- Run in Supabase SQL Editor
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, role)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
+    'student'
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION handle_new_user();</pre>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 4 — GAMIFICATION
+══════════════════════════════════════════════════════ -->
+<div class="doc-section">
+  <div class="doc-section-header">
+    <div class="section-num">4</div>
+    <div>
+      <h2>Gamification System</h2>
+      <p>XP, streaks, badges, levels, leaderboards, daily missions</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3>XP Earning Table</h3>
+    <table>
+      <thead><tr><th>Action</th><th>XP Earned</th><th>Source value (DB)</th></tr></thead>
+      <tbody class="xp-row">
+        <tr><td>Daily login</td><td>5 XP</td><td>'login'</td></tr>
+        <tr><td>Quiz — each correct answer</td><td>10 XP</td><td>'quiz'</td></tr>
+        <tr><td>Quiz — all answers correct (perfect score bonus)</td><td>+50 XP</td><td>'quiz'</td></tr>
+        <tr><td>Monthly quiz — completed</td><td>200 XP</td><td>'quiz'</td></tr>
+        <tr><td>AI mock interview — completed</td><td>100 XP</td><td>'interview'</td></tr>
+        <tr><td>Manual interview — completed</td><td>80 XP</td><td>'interview'</td></tr>
+        <tr><td>Code challenge — Easy passed</td><td>25 XP</td><td>'code'</td></tr>
+        <tr><td>Code challenge — Medium passed</td><td>75 XP</td><td>'code'</td></tr>
+        <tr><td>Code challenge — Hard passed</td><td>150 XP</td><td>'code'</td></tr>
+        <tr><td>Resume built + ATS score run</td><td>50 XP</td><td>'resume'</td></tr>
+        <tr><td>Job applied via platform</td><td>20 XP</td><td>'job_apply'</td></tr>
+        <tr><td>Roadmap step marked complete</td><td>30 XP</td><td>'roadmap'</td></tr>
+        <tr><td>All 3 daily missions completed</td><td>+30 XP bonus</td><td>'mission_bonus'</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Level System</h3>
+    <table>
+      <thead><tr><th>Level</th><th>Title</th><th>XP Required</th><th>Unlocks</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Newcomer</td><td>0 XP</td><td>Basic quiz, jobs board</td></tr>
+        <tr><td>2</td><td>Apprentice</td><td>500 XP</td><td>AI interview mode, profile frame #1</td></tr>
+        <tr><td>3</td><td>Practitioner</td><td>2,000 XP</td><td>Code challenges (Easy), UI theme unlock</td></tr>
+        <tr><td>4</td><td>Explorer</td><td>5,000 XP</td><td>Code challenges (Medium), profile frame #2</td></tr>
+        <tr><td>5</td><td>Expert</td><td>12,000 XP</td><td>Code challenges (Hard), exclusive badge tier</td></tr>
+        <tr><td>6</td><td>Elite</td><td>30,000 XP</td><td>All features, leaderboard "Elite" crown</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Streak Rules</h3>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Any qualifying activity before midnight local time keeps the streak alive</li>
+      <li><span class="check">✓</span> Qualifying activities: completing a quiz, an interview session, a code challenge, or marking a roadmap step complete</li>
+      <li><span class="check">✓</span> Missing a day resets streak to 0 (unless streak freeze is used)</li>
+      <li><span class="check">✓</span> Streak freeze: 1 free freeze earned at Day 7, Day 30 milestones. Additional freezes purchasable (Razorpay)</li>
+      <li><span class="check">✓</span> Streak calendar shows heatmap of active days (reference: Image 2 from mockups)</li>
+      <li><span class="check">✓</span> Streak milestones: 3, 7, 14, 30, 60, 100 days → badge unlock + flame animation</li>
+    </ul>
+
+    <h3>Badge List (seed data)</h3>
+    <table>
+      <thead><tr><th>Badge Name</th><th>Condition Type</th><th>Value</th><th>Rarity</th></tr></thead>
+      <tbody>
+        <tr><td>First Step</td><td>quiz_completed</td><td>1</td><td>Common</td></tr>
+        <tr><td>7-Day Streak</td><td>streak_days</td><td>7</td><td>Common</td></tr>
+        <tr><td>30-Day Streak</td><td>streak_days</td><td>30</td><td>Rare</td></tr>
+        <tr><td>100-Day Streak</td><td>streak_days</td><td>100</td><td>Legendary</td></tr>
+        <tr><td>Perfect Score</td><td>quiz_perfect</td><td>1</td><td>Common</td></tr>
+        <tr><td>Interview Ready</td><td>interview_completed</td><td>1</td><td>Common</td></tr>
+        <tr><td>Job Hunter</td><td>jobs_applied</td><td>5</td><td>Rare</td></tr>
+        <tr><td>1K Club</td><td>xp_threshold</td><td>1000</td><td>Common</td></tr>
+        <tr><td>10K Legend</td><td>xp_threshold</td><td>10000</td><td>Epic</td></tr>
+        <tr><td>Code Cracker</td><td>code_hard_solved</td><td>1</td><td>Rare</td></tr>
+        <tr><td>Roadmap Pioneer</td><td>roadmap_steps</td><td>5</td><td>Common</td></tr>
+        <tr><td>Resume Pro</td><td>ats_score</td><td>80</td><td>Rare</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Leaderboard Logic</h3>
+    <p>Leaderboard is a materialised view refreshed by a cron job (pg-boss, every Monday 00:00 UTC for weekly, 1st of month for monthly). The <code>leaderboard_snapshots</code> table stores the frozen rank per period. Live leaderboard (during the week) is computed from <code>xp_transactions</code> filtered by <code>created_at >= start_of_period</code> using a SQL window function.</p>
+    <pre>-- Live weekly leaderboard query
+SELECT
+  p.id,
+  p.full_name,
+  p.avatar_url,
+  p.level,
+  SUM(x.amount) AS xp_this_week,
+  RANK() OVER (ORDER BY SUM(x.amount) DESC) AS rank
+FROM xp_transactions x
+JOIN profiles p ON p.id = x.user_id
+WHERE x.created_at >= date_trunc('week', now())
+GROUP BY p.id, p.full_name, p.avatar_url, p.level
+ORDER BY xp_this_week DESC
+LIMIT 100;</pre>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 5 — AI MODULES
+══════════════════════════════════════════════════════ -->
+<div class="doc-section">
+  <div class="doc-section-header">
+    <div class="section-num">5</div>
+    <div>
+      <h2>AI Module Specifications</h2>
+      <p>Claude API integration — prompts, flows, and data contracts</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout info">
+      <div class="callout-icon">ℹ️</div>
+      <div>All Claude API calls go through Vercel serverless functions. The <code>ANTHROPIC_API_KEY</code> is NEVER in the browser bundle. Always use model <code>claude-sonnet-4-6</code> with <code>max_tokens: 2048</code> unless noted.</div>
+    </div>
+
+    <h3>Module 1 — Quiz Question Generation</h3>
+    <p>Endpoint: <code>POST /api/quiz/generate</code></p>
+
+    <div class="prompt-block">
+      <div class="prompt-label">System prompt</div>
+      <pre>You are a quiz question generator for an educational platform.
+Generate exactly {question_count} multiple-choice questions based on the provided syllabus.
+Respond ONLY with a valid JSON array. No preamble, no markdown, no explanation outside the JSON.
+
+Format:
+[
+  {
+    "question": "Question text here",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "correct_index": 1,
+    "explanation": "Why this answer is correct, in 1-2 sentences."
+  }
+]
+
+Rules:
+- Difficulty: {difficulty} (beginner|intermediate|advanced)
+- All questions must come from the provided syllabus only
+- Correct answers should be evenly distributed across A, B, C, D
+- Explanations must be educational and reference the syllabus concept
+- Do not repeat similar questions</pre>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-label">User message</div>
+      <pre>Syllabus content for topic "{topic_name}":
+---
+{syllabus_text}
+---
+Generate {question_count} {difficulty} questions.</pre>
+    </div>
+
+    <h4>Server-side security rule</h4>
+    <p>After generation, store questions in <code>quiz_questions</code> table. The <code>correct_option_index</code> column is excluded from all frontend API responses. Validation happens server-side at <code>POST /api/quiz/submit</code>.</p>
+
+    <h3>Module 2 — AI Interview</h3>
+
+    <h4>Flow</h4>
+    <div class="flow-steps">
+      <div class="flow-step"><div class="step-num">1</div><div class="step-content"><h5>Session start</h5><p><code>POST /api/interview/start</code> → creates <code>interview_sessions</code> row, returns session ID and first AI question as text + base64 audio (ElevenLabs TTS).</p></div></div>
+      <div class="flow-step"><div class="step-num">2</div><div class="step-content"><h5>Student answers</h5><p>Browser records mic audio, sends to <code>POST /api/interview/answer</code> as audio blob. Server transcribes via Whisper API, appends to transcript, generates next question via Claude.</p></div></div>
+      <div class="flow-step"><div class="step-num">3</div><div class="step-content"><h5>Proctoring</h5><p>Browser sends proctor events to <code>POST /api/interview/proctor-event</code> (tab switch, face absent, mic muted). 3 warnings → server sends <code>terminate</code> signal via Supabase Realtime.</p></div></div>
+      <div class="flow-step"><div class="step-num">4</div><div class="step-content"><h5>Session end</h5><p><code>POST /api/interview/complete</code> → Claude evaluates full transcript, returns structured feedback JSON. XP credited. Status set to 'completed'.</p></div></div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-label">Evaluation prompt (on session complete)</div>
+      <pre>You are evaluating a mock job interview for a {topic_name} role.
+
+Interview transcript:
+{transcript_json}
+
+Score the candidate on three dimensions, each 0-100:
+- communication: clarity, coherence, professionalism
+- technical: accuracy of domain knowledge, depth of answers
+- confidence: directness, handling of uncertainty, recovery from mistakes
+
+Also provide:
+- top_strengths: array of 2-3 specific strengths shown
+- areas_to_improve: array of 2-3 specific gaps with actionable advice
+- overall_summary: 2-sentence summary
+
+Respond ONLY with valid JSON:
+{
+  "communication": 72,
+  "technical": 65,
+  "confidence": 80,
+  "top_strengths": ["..."],
+  "areas_to_improve": ["..."],
+  "overall_summary": "..."
+}</pre>
+    </div>
+
+    <h4>Proctoring implementation notes</h4>
+    <table>
+      <thead><tr><th>Event</th><th>Browser detection</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>Tab switch</td><td><code>document.addEventListener('visibilitychange')</code></td><td>Warning toast + proctor_flags log entry</td></tr>
+        <tr><td>No face in camera</td><td>face-api.js running at 2s intervals</td><td>Warning after 5s without face detection</td></tr>
+        <tr><td>Mic muted / silent</td><td>Web Audio API volume detection</td><td>Prompt to unmute after 30s silence</td></tr>
+        <tr><td>3 warnings total</td><td>Client counter; validated server-side</td><td>Session status → 'terminated'</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Module 3 — Career Roadmap Generation</h3>
+    <p>Endpoint: <code>POST /api/roadmap/generate</code>. Check <code>roadmap_cache</code> first (by education_level + country_code + career_role_id). If not expired, return cached. Otherwise call Claude and cache result.</p>
+
+    <div class="prompt-block">
+      <div class="prompt-label">Roadmap generation prompt</div>
+      <pre>Generate a career roadmap for a student in {country_name} who has completed {education_level}
+and wants to become a {career_role_title}.
+
+Return ONLY valid JSON with this exact structure:
+{
+  "total_duration": "18-24 months",
+  "phases": [
+    {
+      "id": "phase_1",
+      "title": "Foundation",
+      "duration": "3 months",
+      "description": "...",
+      "steps": [
+        {
+          "id": "step_1_1",
+          "title": "Learn Python basics",
+          "type": "course|certification|project|job_application",
+          "description": "...",
+          "resources": [{"name":"...", "url":"...", "free": true}],
+          "estimated_time": "4 weeks"
+        }
+      ]
+    }
+  ],
+  "required_qualifications": ["..."],
+  "entry_level_job_titles": ["..."],
+  "avg_salary_range": "..."
+}</pre>
+    </div>
+
+    <h3>Module 4 — ATS Resume Scoring</h3>
+    <p>Endpoint: <code>POST /api/resume/ats</code>. Student's resume JSON + optional target job title sent to Claude. Returns score + section-level feedback.</p>
+
+    <div class="prompt-block">
+      <div class="prompt-label">ATS scoring prompt</div>
+      <pre>You are an ATS (Applicant Tracking System) expert and resume coach.
+Analyse the following resume and score it out of 100 for ATS compatibility.
+
+Resume: {resume_json}
+Target job title: {target_job_title}
+
+Return ONLY valid JSON:
+{
+  "score": 72,
+  "grade": "B",
+  "section_feedback": [
+    {
+      "section": "contact",
+      "score": 90,
+      "issue": null,
+      "suggestion": null
+    },
+    {
+      "section": "skills",
+      "score": 60,
+      "issue": "Missing keyword 'network security' common in this role",
+      "suggestion": "Add specific tools and frameworks you've used"
+    }
+  ],
+  "top_issues": ["..."],
+  "quick_wins": ["..."]
+}</pre>
+    </div>
+
+    <h3>Module 5 — Code Review</h3>
+    <p>Endpoint: <code>POST /api/code/review</code>. Called after Judge0 returns execution results. Claude provides qualitative feedback regardless of whether the code passed tests.</p>
+
+    <div class="prompt-block">
+      <div class="prompt-label">Code review prompt</div>
+      <pre>Review this {language} solution to the following problem.
+
+Problem: {problem_description}
+Student code: {code}
+Test results: {judge0_results}
+
+Provide feedback as JSON:
+{
+  "efficiency": {"rating": "good|fair|poor", "comment": "..."},
+  "readability": {"rating": "good|fair|poor", "comment": "..."},
+  "edge_cases": {"missed": ["..."], "comment": "..."},
+  "better_approach": "Optional: describe a more efficient approach if applicable",
+  "praise": "One specific thing the student did well"
+}</pre>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 6 — DESIGN SYSTEM
+══════════════════════════════════════════════════════ -->
+<div class="doc-section">
+  <div class="doc-section-header">
+    <div class="section-num">6</div>
+    <div>
+      <h2>Design System</h2>
+      <p>Colors, typography, components, and animation — referencing uploaded mockups</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3>Color Palette</h3>
+    <div class="color-grid">
+      <div class="color-swatch"><div class="swatch-block" style="background:#7F77DD"></div><div class="swatch-info"><div class="swatch-name">Brand Primary</div><div class="swatch-hex">#7F77DD</div><div class="swatch-use">CTAs, active nav, XP bar fill</div></div></div>
+      <div class="color-swatch"><div class="swatch-block" style="background:#EEEDFE"></div><div class="swatch-info"><div class="swatch-name">Brand Light</div><div class="swatch-hex">#EEEDFE</div><div class="swatch-use">Active card bg, badge bg</div></div></div>
+      <div class="color-swatch"><div class="swatch-block" style="background:#3C3489"></div><div class="swatch-info"><div class="swatch-name">Brand Dark</div><div class="swatch-hex">#3C3489</div><div class="swatch-use">Text on brand-light bg</div></div></div>
+      <div class="color-swatch"><div class="swatch-block" style="background:#D85A30"></div><div class="swatch-info"><div class="swatch-name">Streak Hot</div><div class="swatch-hex">#D85A30</div><div class="swatch-use">Streak fire icon, hot indicator</div></div></div>
+      <div class="color-swatch"><div class="swatch-block" style="background:#EF9F27"></div><div class="swatch-info"><div class="swatch-name">XP Gold</div><div class="swatch-hex">#EF9F27</div><div class="swatch-use">XP counter, medals, badge borders</div></div></div>
+      <div class="color-swatch"><div class="swatch-block" style="background:#1D9E75"></div><div class="swatch-info"><div class="swatch-name">Success</div><div class="swatch-hex">#1D9E75</div><div class="swatch-use">Correct answer, completed step</div></div></div>
+      <div class="color-swatch"><div class="swatch-block" style="background:#E24B4A"></div><div class="swatch-info"><div class="swatch-name">Danger</div><div class="swatch-hex">#E24B4A</div><div class="swatch-use">Wrong answer, proctor warning</div></div></div>
+      <div class="color-swatch"><div class="swatch-block" style="background:#1A1A2E"></div><div class="swatch-info"><div class="swatch-name">Text Primary</div><div class="swatch-hex">#1A1A2E</div><div class="swatch-use">All primary body text</div></div></div>
+    </div>
+
+    <h4>Card background tints (from mockups)</h4>
+    <div class="color-grid">
+      <div class="color-swatch"><div class="swatch-block" style="background:#FFF0F3"></div><div class="swatch-info"><div class="swatch-name">Card Pink</div><div class="swatch-hex">#FFF0F3</div><div class="swatch-use">UI/UX, Design tracks</div></div></div>
+      <div class="color-swatch"><div class="swatch-block" style="background:#EFF6FF"></div><div class="swatch-info"><div class="swatch-name">Card Blue</div><div class="swatch-hex">#EFF6FF</div><div class="swatch-use">QA, Testing, DevOps</div></div></div>
+      <div class="color-swatch"><div class="swatch-block" style="background:#FEFCE8"></div><div class="swatch-info"><div class="swatch-name">Card Yellow</div><div class="swatch-hex">#FEFCE8</div><div class="swatch-use">Business, HR, Marketing</div></div></div>
+      <div class="color-swatch"><div class="swatch-block" style="background:#F0FDF4"></div><div class="swatch-info"><div class="swatch-name">Card Green</div><div class="swatch-hex">#F0FDF4</div><div class="swatch-use">Frontend, Web Dev</div></div></div>
+    </div>
+
+    <h3>Typography</h3>
+    <table>
+      <thead><tr><th>Role</th><th>Font</th><th>Size</th><th>Weight</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td>Display</td><td>Plus Jakarta Sans</td><td>32–56px</td><td>700</td><td>Landing hero, level-up screen</td></tr>
+        <tr><td>Heading 1</td><td>Plus Jakarta Sans</td><td>22px</td><td>600</td><td>Page titles, section headers</td></tr>
+        <tr><td>Heading 2</td><td>Plus Jakarta Sans</td><td>18px</td><td>500</td><td>Card titles, modal headers</td></tr>
+        <tr><td>Heading 3</td><td>Plus Jakarta Sans</td><td>15px</td><td>600</td><td>Sub-sections, labels</td></tr>
+        <tr><td>Body</td><td>Inter</td><td>14px</td><td>400</td><td>All body copy, descriptions</td></tr>
+        <tr><td>Caption</td><td>Inter</td><td>12px</td><td>400</td><td>Tags, timestamps, muted labels</td></tr>
+        <tr><td>Data / XP numbers</td><td>Plus Jakarta Sans</td><td>24px</td><td>700</td><td>XP counter, score, streak days</td></tr>
+        <tr><td>Code</td><td>JetBrains Mono</td><td>13px</td><td>400</td><td>Code editor, inline code</td></tr>
+      </tbody>
+    </table>
+    <p>Google Fonts import: <code>Plus Jakarta Sans (500, 600, 700)</code>, <code>Inter (400, 500)</code>, <code>JetBrains Mono (400)</code></p>
+
+    <h3>Component Patterns (from mockups)</h3>
+
+    <h4>Course / Topic card (Image 1)</h4>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Pastel background colour per category (pink / blue / yellow / green)</li>
+      <li><span class="check">✓</span> Category tag pill top-left: "Student", "Recommended", "Popular" — text + coloured pill</li>
+      <li><span class="check">✓</span> 3D emoji-style avatar top-right, partially overflowing card edge</li>
+      <li><span class="check">✓</span> Progress bar (filled brand purple) for enrolled courses only</li>
+      <li><span class="check">✓</span> Modules count bottom-left with grid icon</li>
+      <li><span class="check">✓</span> CTA button bottom-right: "Continue" (dark fill) for in-progress, "Apply" or "Enroll" (outlined) for new</li>
+      <li><span class="check">✓</span> Border-radius: 16px. No shadow. Thin 1px border matching tint.</li>
+    </ul>
+
+    <h4>Streak calendar popup (Image 2)</h4>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Triggered by clicking streak badge (flame icon + "N days") in top nav</li>
+      <li><span class="check">✓</span> Two stat cards: Current streak (gray flame) / Longest streak (orange flame)</li>
+      <li><span class="check">✓</span> Monthly calendar grid — active days have filled orange circle, today has ring</li>
+      <li><span class="check">✓</span> Bottom stat row: Days active | Lessons | Quizzes | Minutes</li>
+      <li><span class="check">✓</span> "N insights available" link at bottom (→ opens analytics page)</li>
+    </ul>
+
+    <h4>Admin dashboard (Images 3–4)</h4>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Left sidebar: logo + flat nav links grouped by section</li>
+      <li><span class="check">✓</span> Top breadcrumb: "Home / Dashboard"</li>
+      <li><span class="check">✓</span> KPI metric cards row: All Users, Conversations, 30-day Sales, Avg Time, Courses, Categories</li>
+      <li><span class="check">✓</span> Tab switcher below KPIs: New signups | Revenue | Product sales | Active learners | Latest activity</li>
+      <li><span class="check">✓</span> Bar chart (purple fill) with tooltip on hover showing date + value</li>
+      <li><span class="check">✓</span> Bottom 3-column layout: Blog posts | Events log | Users panel (matches Image 4)</li>
+      <li><span class="check">✓</span> Users panel: "New User" and "Online Users" sections with avatar + name + Contact button</li>
+    </ul>
+
+    <h3>Animation Spec</h3>
+    <table>
+      <thead><tr><th>Moment</th><th>Animation</th><th>Duration</th><th>Library</th></tr></thead>
+      <tbody>
+        <tr><td>Page transition</td><td>Fade + 8px slide up</td><td>200ms ease-out</td><td>Framer Motion</td></tr>
+        <tr><td>Card hover</td><td>translateY(-2px)</td><td>150ms ease</td><td>CSS</td></tr>
+        <tr><td>XP gain popup</td><td>Float up + fade out: "+10 XP"</td><td>800ms</td><td>Framer Motion</td></tr>
+        <tr><td>Badge unlock modal</td><td>Scale 0.8→1 + fade in</td><td>300ms spring</td><td>Framer Motion</td></tr>
+        <tr><td>Level up screen</td><td>Confetti burst + badge morph</td><td>2s</td><td>canvas-confetti</td></tr>
+        <tr><td>Quiz correct answer</td><td>Option turns green, 400ms</td><td>400ms</td><td>CSS</td></tr>
+        <tr><td>Quiz wrong answer</td><td>Option turns red, 400ms shake</td><td>400ms</td><td>CSS + keyframe</td></tr>
+        <tr><td>Progress bar fill</td><td>Width ease from current value</td><td>600ms ease-in-out</td><td>CSS</td></tr>
+        <tr><td>Streak flame pulse</td><td>scale 1→1.12→1 loop</td><td>1.2s loop</td><td>CSS keyframe</td></tr>
+        <tr><td>Streak milestone</td><td>Flame burst + screen glow</td><td>1.5s</td><td>Framer Motion</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Layout Grid</h3>
+    <table>
+      <thead><tr><th>Element</th><th>Width</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Sidebar (collapsed)</td><td>72px</td><td>Icon only, tooltip on hover</td></tr>
+        <tr><td>Sidebar (expanded)</td><td>220px</td><td>Icon + label</td></tr>
+        <tr><td>Main content max</td><td>1280px</td><td>Centered in viewport</td></tr>
+        <tr><td>Card grid (desktop)</td><td>2-column</td><td>On ≥960px viewport</td></tr>
+        <tr><td>Card grid (mobile)</td><td>1-column</td><td>On &lt;768px</td></tr>
+        <tr><td>Admin dashboard bottom</td><td>3-column (40/30/30)</td><td>Chart / Events / Users</td></tr>
+        <tr><td>Filter panel (right)</td><td>240px</td><td>Sticky, slides in from right on mobile</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 7 — PAGE SPECS
+══════════════════════════════════════════════════════ -->
+<div class="doc-section">
+  <div class="doc-section-header">
+    <div class="section-num">7</div>
+    <div>
+      <h2>Page Specifications</h2>
+      <p>Screen-by-screen layout, interactions, and route definitions</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3>Route Map</h3>
+    <table>
+      <thead><tr><th>Route</th><th>Page</th><th>Auth required</th></tr></thead>
+      <tbody>
+        <tr><td>/</td><td>Landing page</td><td>No</td></tr>
+        <tr><td>/login</td><td>Login</td><td>No</td></tr>
+        <tr><td>/signup</td><td>Signup</td><td>No</td></tr>
+        <tr><td>/onboarding</td><td>Onboarding flow (3 steps)</td><td>Yes (new user)</td></tr>
+        <tr><td>/dashboard</td><td>Student home</td><td>Yes</td></tr>
+        <tr><td>/quizzes</td><td>Quiz topic browser</td><td>Yes</td></tr>
+        <tr><td>/quizzes/:quizId</td><td>Active quiz screen</td><td>Yes</td></tr>
+        <tr><td>/quizzes/:quizId/results</td><td>Quiz results</td><td>Yes</td></tr>
+        <tr><td>/interview</td><td>Interview mode selector</td><td>Yes</td></tr>
+        <tr><td>/interview/ai/:sessionId</td><td>AI interview session</td><td>Yes</td></tr>
+        <tr><td>/interview/manual/:sessionId</td><td>Manual interview video</td><td>Yes</td></tr>
+        <tr><td>/interview/:sessionId/feedback</td><td>Post-interview feedback</td><td>Yes</td></tr>
+        <tr><td>/jobs</td><td>Job listings</td><td>Yes</td></tr>
+        <tr><td>/roadmap</td><td>Career roadmap</td><td>Yes</td></tr>
+        <tr><td>/code</td><td>Code challenge browser</td><td>Yes</td></tr>
+        <tr><td>/code/:challengeId</td><td>Active code challenge</td><td>Yes</td></tr>
+        <tr><td>/resume</td><td>Resume builder</td><td>Yes</td></tr>
+        <tr><td>/leaderboard</td><td>Leaderboard</td><td>Yes</td></tr>
+        <tr><td>/profile</td><td>Student profile + badges</td><td>Yes</td></tr>
+        <tr><td>/admin</td><td>Admin dashboard</td><td>Yes (admin only)</td></tr>
+        <tr><td>/admin/topics</td><td>Syllabus management</td><td>Yes (admin only)</td></tr>
+        <tr><td>/admin/quizzes</td><td>Quiz management</td><td>Yes (admin only)</td></tr>
+        <tr><td>/admin/users</td><td>User management</td><td>Yes (admin only)</td></tr>
+        <tr><td>/admin/projects</td><td>Project showcase manager</td><td>Yes (admin only)</td></tr>
+        <tr><td>/admin/analytics</td><td>Platform analytics</td><td>Yes (admin only)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Landing Page</h3>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Hero section: tagline, sub-copy, "Get started free" CTA + "Log in" secondary</li>
+      <li><span class="check">✓</span> Feature tiles: 6 cards — Quiz, Interview, Jobs, Roadmap, Code, Resume</li>
+      <li><span class="check">✓</span> Stats bar: "X students", "Y quizzes taken", "Z jobs applied" — live from DB</li>
+      <li><span class="check">✓</span> Project showcase: card grid with admin-uploaded projects (image, title, tags, GitHub, live demo)</li>
+      <li><span class="check">✓</span> Footer: nav links, social icons, contact</li>
+    </ul>
+
+    <h3>Student Dashboard (main)</h3>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Left sidebar nav: Home, Quizzes, Interview, Jobs, Roadmap, Code, Resume, Leaderboard, Profile</li>
+      <li><span class="check">✓</span> Top bar: streak badge (🔥 N days, clickable popup), bell icon (notifications), XP counter, avatar</li>
+      <li><span class="check">✓</span> Hero card: "Level up your skills" + search bar + filter button</li>
+      <li><span class="check">✓</span> Topic card grid: 2×N cards with progress, CTA, category colours</li>
+      <li><span class="check">✓</span> Right filter panel: Difficulty, Duration, Language checkboxes (matches Image 1)</li>
+      <li><span class="check">✓</span> Daily missions widget (3 tasks with checkboxes)</li>
+      <li><span class="check">✓</span> Level progress bar: current XP / next level XP</li>
+    </ul>
+
+    <h3>Quiz Flow</h3>
+    <div class="card-grid">
+      <div class="card"><h5>Step 1 — Topic select</h5><p>Grid of topic cards with icons + difficulty selector. "Start quiz" button. Shows student's past performance per topic if available.</p></div>
+      <div class="card"><h5>Step 2 — Quiz screen</h5><p>Question N / Total. Timer countdown (red when &lt;30s). 4 option buttons. No back navigation. Tab switch detection active.</p></div>
+      <div class="card"><h5>Step 3 — Answer feedback</h5><p>Immediate green/red flash on selected option. AI explanation shown below correct answer. "Next" button. XP animation on correct.</p></div>
+      <div class="card"><h5>Step 4 — Results</h5><p>Score circle (e.g. 72%). XP earned badge. Per-question breakdown. "Share to leaderboard" button. "Retry" and "New quiz" CTAs.</p></div>
+    </div>
+
+    <h3>AI Interview Flow</h3>
+    <div class="card-grid">
+      <div class="card"><h5>Pre-check</h5><p>Camera / mic permission prompt. Face detection test ("We can see your face ✓"). System check list. "Start interview" button.</p></div>
+      <div class="card"><h5>Interview screen</h5><p>AI avatar (animated) left panel. Student camera right. Current question shown as text. AI voice plays via ElevenLabs. Recording indicator. Proctor status bar (3 icons). Timer.</p></div>
+      <div class="card"><h5>Post-interview feedback</h5><p>3 score rings: Communication / Technical / Confidence. Strengths list. Areas to improve list. Full transcript scroll. XP earned. Retry button.</p></div>
+      <div class="card"><h5>Manual interview</h5><p>Admin issues invite link. Daily.co video call embedded. Interviewer rates answers in side panel. Student sees scorecard only after session ends.</p></div>
+    </div>
+
+    <h3>Jobs Page</h3>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Country selector (auto-detected via IP; override dropdown with flag)</li>
+      <li><span class="check">✓</span> Filter bar: Source (LinkedIn, Naukri, etc.), Role, Experience level, Posted date, Salary range</li>
+      <li><span class="check">✓</span> Search bar: keyword search across title, company, description</li>
+      <li><span class="check">✓</span> Job card: company logo placeholder, title, company, location, source badge, salary, time posted, "Apply" (external link) + "Save" bookmark toggle</li>
+      <li><span class="check">✓</span> Applying via platform logs +20 XP and increments jobs_applied counter</li>
+      <li><span class="check">✓</span> Sidebar: saved jobs, recently viewed, matched jobs for student's roadmap target role</li>
+    </ul>
+
+    <h3>Career Roadmap Page</h3>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Header: "Your path to [Job Title]" + progress bar (X of Y steps complete) + "Edit goal" button</li>
+      <li><span class="check">✓</span> Vertical stepper timeline: phases collapsible. Each step: checkbox, title, type badge (Course/Cert/Project/Job), resources list, estimated time</li>
+      <li><span class="check">✓</span> Completed steps collapse + turn green. Current step highlighted brand purple.</li>
+      <li><span class="check">✓</span> Sidebar: live job listings matching target role (pulled from job_listings by career_roles.search_keywords)</li>
+      <li><span class="check">✓</span> Country detection drives India-specific vs international resource links</li>
+    </ul>
+
+    <h3>Admin Dashboard</h3>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Matches Images 3–4 from uploaded mockups exactly in structure</li>
+      <li><span class="check">✓</span> KPI row: Total Users, Conversations (quiz attempts), 30-day signups, Avg session time, Active courses, Topic categories</li>
+      <li><span class="check">✓</span> Bar chart: New Signups by day (with Revenue / Active Learners tabs)</li>
+      <li><span class="check">✓</span> Events log: latest quiz completions, interview sessions, user registrations with login/logout status</li>
+      <li><span class="check">✓</span> User panel: New users (last 48h) + Online users with Contact button</li>
+      <li><span class="check">✓</span> Syllabus manager: topic list, PDF upload per topic, "Generate sample questions with AI" per topic</li>
+      <li><span class="check">✓</span> Quiz builder: create quiz, set schedule/difficulty/question count, add questions manually or trigger AI generation, preview and publish</li>
+      <li><span class="check">✓</span> Project showcase manager: drag-and-drop card reorder, image upload, GitHub + deploy URL fields, visibility toggle</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 8 — API ENDPOINTS
+══════════════════════════════════════════════════════ -->
+<div class="doc-section">
+  <div class="doc-section-header">
+    <div class="section-num">8</div>
+    <div>
+      <h2>API Endpoints</h2>
+      <p>Vercel serverless functions — all require Bearer JWT unless marked public</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3>Auth</h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>POST</td><td>/api/auth/register</td><td>Create account (Supabase Auth)</td></tr>
+        <tr><td>POST</td><td>/api/auth/login</td><td>Login, returns JWT</td></tr>
+        <tr><td>POST</td><td>/api/auth/logout</td><td>Invalidate session</td></tr>
+        <tr><td>GET</td><td>/api/auth/me</td><td>Current user + profile</td></tr>
+        <tr><td>POST</td><td>/api/auth/onboarding</td><td>Save onboarding data (education, country, topics, goal)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Quizzes</h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td>/api/topics</td><td>List all active topics (public)</td></tr>
+        <tr><td>GET</td><td>/api/quizzes</td><td>List available quizzes for student's subscribed topics</td></tr>
+        <tr><td>POST</td><td>/api/quiz/generate</td><td>AI-generate quiz for topic + difficulty; saves to DB</td></tr>
+        <tr><td>POST</td><td>/api/quiz/start</td><td>Create quiz_attempt row, return questions (no correct_index)</td></tr>
+        <tr><td>POST</td><td>/api/quiz/submit</td><td>Submit answers, server validates, returns score + XP</td></tr>
+        <tr><td>GET</td><td>/api/quiz/history</td><td>Student's past quiz attempts</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Interviews</h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>POST</td><td>/api/interview/start</td><td>Create session, return first AI question + TTS audio (base64)</td></tr>
+        <tr><td>POST</td><td>/api/interview/answer</td><td>Receive audio blob, transcribe, return next question + audio</td></tr>
+        <tr><td>POST</td><td>/api/interview/proctor-event</td><td>Log proctor flag; trigger warning/terminate if threshold hit</td></tr>
+        <tr><td>POST</td><td>/api/interview/complete</td><td>End session, run AI evaluation, return feedback + XP</td></tr>
+        <tr><td>POST</td><td>/api/interview/manual/create</td><td>Admin: create manual session + Daily.co room</td></tr>
+        <tr><td>GET</td><td>/api/interview/:id</td><td>Get session details + feedback (post-completion)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Jobs</h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td>/api/jobs</td><td>List jobs with filters: country, source, role, experience, page</td></tr>
+        <tr><td>POST</td><td>/api/jobs/apply</td><td>Log application (XP += 20); returns external_url for redirect</td></tr>
+        <tr><td>POST</td><td>/api/jobs/save</td><td>Toggle job bookmark for current user</td></tr>
+        <tr><td>GET</td><td>/api/jobs/saved</td><td>Student's saved jobs</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Career & Roadmap</h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td>/api/career-roles</td><td>List all career roles (public)</td></tr>
+        <tr><td>POST</td><td>/api/roadmap/generate</td><td>Generate or fetch cached roadmap for student's profile</td></tr>
+        <tr><td>POST</td><td>/api/roadmap/step/complete</td><td>Mark a step complete; award XP</td></tr>
+        <tr><td>GET</td><td>/api/roadmap/progress</td><td>Student's current roadmap + completed steps</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Code Challenges</h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td>/api/code</td><td>List challenges with filters: difficulty, topic, language</td></tr>
+        <tr><td>GET</td><td>/api/code/:id</td><td>Get challenge details (no hidden test cases)</td></tr>
+        <tr><td>POST</td><td>/api/code/submit</td><td>Run code via Judge0, get AI review, award XP if passed</td></tr>
+        <tr><td>GET</td><td>/api/code/submissions</td><td>Student's past submissions</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Resume</h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td>/api/resume</td><td>Get student's current resume</td></tr>
+        <tr><td>PUT</td><td>/api/resume</td><td>Save / update resume content</td></tr>
+        <tr><td>POST</td><td>/api/resume/ats</td><td>Run ATS score via Claude; update ats_score + ats_feedback</td></tr>
+        <tr><td>POST</td><td>/api/resume/export-pdf</td><td>Generate PDF, save to Supabase storage, return URL</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Gamification</h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td>/api/xp/history</td><td>Student's XP transaction log</td></tr>
+        <tr><td>GET</td><td>/api/badges</td><td>All badges + which ones student has earned</td></tr>
+        <tr><td>GET</td><td>/api/leaderboard</td><td>Query: period (weekly/monthly/alltime), type (global/cohort), page</td></tr>
+        <tr><td>GET</td><td>/api/streak</td><td>Current streak, longest streak, calendar data</td></tr>
+        <tr><td>GET</td><td>/api/missions/today</td><td>Today's daily missions + completion status</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Admin-only endpoints</h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>POST</td><td>/api/admin/topics</td><td>Create topic + upload syllabus</td></tr>
+        <tr><td>PUT</td><td>/api/admin/topics/:id</td><td>Update topic / replace syllabus</td></tr>
+        <tr><td>POST</td><td>/api/admin/quizzes</td><td>Create and publish quiz</td></tr>
+        <tr><td>POST</td><td>/api/admin/quizzes/:id/ai-questions</td><td>AI-generate question bank for admin review</td></tr>
+        <tr><td>GET</td><td>/api/admin/analytics</td><td>Platform stats: DAU, quiz completions, interview sessions, XP distributed</td></tr>
+        <tr><td>POST</td><td>/api/admin/projects</td><td>Upload project to showcase</td></tr>
+        <tr><td>PUT</td><td>/api/admin/projects/:id</td><td>Update / toggle visibility / reorder</td></tr>
+        <tr><td>GET</td><td>/api/admin/users</td><td>User list with filters</td></tr>
+        <tr><td>PUT</td><td>/api/admin/users/:id/role</td><td>Promote / demote user role</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout success">
+      <div class="callout-icon">✓</div>
+      <div>All admin endpoints validate <code>profiles.role === 'admin'</code> server-side using the Supabase service role key. Never rely only on client-side role checks.</div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- end wrapper -->
+
+<div class="doc-footer">
+  <p>PlacePro LMS — Developer Handoff v1.0 &nbsp;·&nbsp; Built with Supabase + Anthropic Claude API &nbsp;·&nbsp; Stack: React + Vite + TypeScript + Vercel</p>
+  <p style="margin-top:8px">This document is the single source of truth. All AI calls use <code>claude-sonnet-4-6</code>. All schema changes via Supabase migrations only.</p>
+</div>
+
+</body>
+</html>

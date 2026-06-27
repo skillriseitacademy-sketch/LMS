@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { TopBar } from "@/components/top-bar";
 import { quizTopics, quizQuestions } from "@/lib/mock-data";
 import { Trophy, Check, X, RotateCcw, Share2 } from "lucide-react";
+import { saveQuizAttempt } from "@/lib/store";
 
 export const Route = createFileRoute("/_app/quizzes/$quizId/results")({
   head: () => ({ meta: [{ title: "Results — PlacePro LMS" }] }),
@@ -17,10 +18,26 @@ function Results() {
 
   useEffect(() => {
     const raw = sessionStorage.getItem(`quiz-result-${quizId}`);
+    const alreadySaved = sessionStorage.getItem(`quiz-saved-${quizId}`);
     if (raw) {
-      try { setAnswers((JSON.parse(raw) as { answers: number[] }).answers); } catch {}
+      try { 
+        const parsed = JSON.parse(raw) as { answers: number[] };
+        setAnswers(parsed.answers); 
+        
+        if (!alreadySaved) {
+          const correctCount = parsed.answers.reduce((s, a, i) => (a === questions[i]?.correctIndex ? s + 1 : s), 0);
+          const calculatedScore = questions.length ? Math.round((correctCount / questions.length) * 100) : 0;
+          
+          saveQuizAttempt({
+            quizId,
+            score: calculatedScore,
+            timestamp: Date.now()
+          });
+          sessionStorage.setItem(`quiz-saved-${quizId}`, "true");
+        }
+      } catch {}
     }
-  }, [quizId]);
+  }, [quizId, questions]);
 
   const correctCount = answers.reduce((s, a, i) => (a === questions[i]?.correctIndex ? s + 1 : s), 0);
   const score = questions.length ? Math.round((correctCount / questions.length) * 100) : 0;

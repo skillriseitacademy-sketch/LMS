@@ -1,16 +1,23 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { TopBar } from "@/components/top-bar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Search, UserPlus } from "lucide-react";
 import { leaderboard, newUsers, onlineUsers } from "@/lib/mock-data";
+import { useProfile } from "@/lib/store";
+
+type Filter = "all" | "online" | "new";
+
+type AdminUsersSearch = { filter?: Filter; period?: string };
 
 export const Route = createFileRoute("/admin/users")({
+  validateSearch: (s: Record<string, unknown>): AdminUsersSearch => ({
+    filter: (s.filter as Filter) || "all",
+    period: (s.period as string) || undefined,
+  }),
   head: () => ({ meta: [{ title: "Users — Admin · PlacePro LMS" }] }),
   component: Users,
 });
-
-type Filter = "all" | "online" | "new";
 
 const filters: { id: Filter; label: string }[] = [
   { id: "all", label: "All" },
@@ -19,20 +26,25 @@ const filters: { id: Filter; label: string }[] = [
 ];
 
 function Users() {
-  const [filter, setFilter] = useState<Filter>("all");
+  const search = useSearch({ from: "/admin/users" });
+  const [filter, setFilter] = useState<Filter>(search.filter || "all");
   const [query, setQuery] = useState("");
+  const { profile } = useProfile();
 
   const users = useMemo(() => {
     const onlineNames = new Set(onlineUsers.map((u) => u.name));
     const newNames = new Set(newUsers.map((u) => u.name));
-    const base = leaderboard.map((u) => ({
-      name: u.name.replace(" (You)", ""),
-      initials: u.initials,
-      xp: u.xp,
-      level: u.level,
-      isOnline: onlineNames.has(u.name),
-      isNew: newNames.has(u.name),
-    }));
+    const base = leaderboard.map((u) => {
+      const isYou = u.name.includes("(You)");
+      return {
+        name: isYou ? profile.name : u.name,
+        initials: isYou ? profile.initials : u.initials,
+        xp: u.xp,
+        level: u.level,
+        isOnline: onlineNames.has(u.name),
+        isNew: newNames.has(u.name),
+      };
+    });
     // Stitch in additional users from new/online lists not on leaderboard
     [...newUsers, ...onlineUsers].forEach((u) => {
       if (!base.some((b) => b.name === u.name)) {
@@ -58,7 +70,10 @@ function Users() {
         <div className="mb-5 flex items-start justify-between gap-4 flex-wrap">
           <div>
             <h1 className="text-display text-2xl font-bold">Users</h1>
-            <p className="mt-1 text-sm text-muted-foreground">{users.length} students match your filters.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {search.period ? `Showing data for the last ${search.period}. ` : ""}
+              {users.length} students match your filters.
+            </p>
           </div>
           <button className="inline-flex items-center gap-1 rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground">
             <UserPlus className="h-3.5 w-3.5" /> Invite student

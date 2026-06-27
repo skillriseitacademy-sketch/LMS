@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { TopBar } from "@/components/top-bar";
 import {
@@ -45,6 +45,7 @@ function AdminDashboard() {
   const [tab, setTab] = useState<Tab>("New signups");
   const { series, kpis } = useMemo(() => computeKpis(period), [period]);
   const dataKey = tabKeyMap[tab];
+  const navigate = useNavigate();
 
   return (
     <>
@@ -80,8 +81,15 @@ function AdminDashboard() {
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {kpis.map((k) => {
                   const Icon = iconForKpi(k.label);
+                  let filterType: "all" | "new" | "online" = "all";
+                  if (k.label.includes("signups") || k.label.includes("New")) filterType = "new";
+                  if (k.label.includes("Active") || k.label.includes("Online")) filterType = "online";
                   return (
-                    <div key={k.label} className="flex items-center gap-3 rounded-2xl border border-border p-3 transition hover:border-brand/40">
+                    <button 
+                      key={k.label} 
+                      onClick={() => navigate({ to: "/admin/users", search: { period, filter: filterType } })}
+                      className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 transition hover:border-brand/40 text-left w-full cursor-pointer"
+                    >
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-light text-brand-dark">
                         <Icon className="h-5 w-5" />
                       </div>
@@ -89,7 +97,7 @@ function AdminDashboard() {
                         <div className="text-xs text-muted-foreground">{k.label}</div>
                         <div className="text-display text-lg font-bold">{k.value}</div>
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
@@ -121,7 +129,14 @@ function AdminDashboard() {
                       labelStyle={{ color: "var(--background)", opacity: 0.7 }}
                       formatter={(v: number) => [tab === "Revenue" ? `$${v}` : v, tab]}
                     />
-                    <Bar dataKey={dataKey} fill="var(--brand)" radius={[8, 8, 0, 0]} maxBarSize={48} />
+                    <Bar 
+                      dataKey={dataKey} 
+                      fill="var(--brand)" 
+                      radius={[8, 8, 0, 0]} 
+                      maxBarSize={48}
+                      onClick={() => navigate({ to: "/admin/users", search: { period, filter: tab === "Active learners" ? "online" : tab === "New signups" ? "new" : "all" } })}
+                      style={{ cursor: "pointer" }}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
