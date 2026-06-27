@@ -9,38 +9,369 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminTopicsRouteImport } from './routes/admin.topics'
+import { Route as AdminQuizzesRouteImport } from './routes/admin.quizzes'
+import { Route as AdminProjectsRouteImport } from './routes/admin.projects'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as AppRoadmapRouteImport } from './routes/_app.roadmap'
+import { Route as AppResumeRouteImport } from './routes/_app.resume'
+import { Route as AppQuizzesRouteImport } from './routes/_app.quizzes'
+import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AppLeaderboardRouteImport } from './routes/_app.leaderboard'
+import { Route as AppJobsRouteImport } from './routes/_app.jobs'
+import { Route as AppInterviewRouteImport } from './routes/_app.interview'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppCodeRouteImport } from './routes/_app.code'
+import { Route as AppQuizzesQuizIdRouteImport } from './routes/_app.quizzes.$quizId'
+import { Route as AppCodeChallengeIdRouteImport } from './routes/_app.code.$challengeId'
+import { Route as AppQuizzesQuizIdResultsRouteImport } from './routes/_app.quizzes.$quizId.results'
+import { Route as AppInterviewManualSessionIdRouteImport } from './routes/_app.interview.manual.$sessionId'
+import { Route as AppInterviewAiSessionIdRouteImport } from './routes/_app.interview.ai.$sessionId'
+import { Route as AppInterviewSessionIdFeedbackRouteImport } from './routes/_app.interview.$sessionId.feedback'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTopicsRoute = AdminTopicsRouteImport.update({
+  id: '/topics',
+  path: '/topics',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminQuizzesRoute = AdminQuizzesRouteImport.update({
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProjectsRoute = AdminProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AppRoadmapRoute = AppRoadmapRouteImport.update({
+  id: '/roadmap',
+  path: '/roadmap',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppResumeRoute = AppResumeRouteImport.update({
+  id: '/resume',
+  path: '/resume',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuizzesRoute = AppQuizzesRouteImport.update({
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLeaderboardRoute = AppLeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppJobsRoute = AppJobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInterviewRoute = AppInterviewRouteImport.update({
+  id: '/interview',
+  path: '/interview',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCodeRoute = AppCodeRouteImport.update({
+  id: '/code',
+  path: '/code',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuizzesQuizIdRoute = AppQuizzesQuizIdRouteImport.update({
+  id: '/$quizId',
+  path: '/$quizId',
+  getParentRoute: () => AppQuizzesRoute,
+} as any)
+const AppCodeChallengeIdRoute = AppCodeChallengeIdRouteImport.update({
+  id: '/$challengeId',
+  path: '/$challengeId',
+  getParentRoute: () => AppCodeRoute,
+} as any)
+const AppQuizzesQuizIdResultsRoute = AppQuizzesQuizIdResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => AppQuizzesQuizIdRoute,
+} as any)
+const AppInterviewManualSessionIdRoute =
+  AppInterviewManualSessionIdRouteImport.update({
+    id: '/manual/$sessionId',
+    path: '/manual/$sessionId',
+    getParentRoute: () => AppInterviewRoute,
+  } as any)
+const AppInterviewAiSessionIdRoute = AppInterviewAiSessionIdRouteImport.update({
+  id: '/ai/$sessionId',
+  path: '/ai/$sessionId',
+  getParentRoute: () => AppInterviewRoute,
+} as any)
+const AppInterviewSessionIdFeedbackRoute =
+  AppInterviewSessionIdFeedbackRouteImport.update({
+    id: '/$sessionId/feedback',
+    path: '/$sessionId/feedback',
+    getParentRoute: () => AppInterviewRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/code': typeof AppCodeRouteWithChildren
+  '/dashboard': typeof AppDashboardRoute
+  '/interview': typeof AppInterviewRouteWithChildren
+  '/jobs': typeof AppJobsRoute
+  '/leaderboard': typeof AppLeaderboardRoute
+  '/profile': typeof AppProfileRoute
+  '/quizzes': typeof AppQuizzesRouteWithChildren
+  '/resume': typeof AppResumeRoute
+  '/roadmap': typeof AppRoadmapRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/projects': typeof AdminProjectsRoute
+  '/admin/quizzes': typeof AdminQuizzesRoute
+  '/admin/topics': typeof AdminTopicsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/': typeof AdminIndexRoute
+  '/code/$challengeId': typeof AppCodeChallengeIdRoute
+  '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
+  '/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
+  '/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
+  '/interview/manual/$sessionId': typeof AppInterviewManualSessionIdRoute
+  '/quizzes/$quizId/results': typeof AppQuizzesQuizIdResultsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/code': typeof AppCodeRouteWithChildren
+  '/dashboard': typeof AppDashboardRoute
+  '/interview': typeof AppInterviewRouteWithChildren
+  '/jobs': typeof AppJobsRoute
+  '/leaderboard': typeof AppLeaderboardRoute
+  '/profile': typeof AppProfileRoute
+  '/quizzes': typeof AppQuizzesRouteWithChildren
+  '/resume': typeof AppResumeRoute
+  '/roadmap': typeof AppRoadmapRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/projects': typeof AdminProjectsRoute
+  '/admin/quizzes': typeof AdminQuizzesRoute
+  '/admin/topics': typeof AdminTopicsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin': typeof AdminIndexRoute
+  '/code/$challengeId': typeof AppCodeChallengeIdRoute
+  '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
+  '/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
+  '/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
+  '/interview/manual/$sessionId': typeof AppInterviewManualSessionIdRoute
+  '/quizzes/$quizId/results': typeof AppQuizzesQuizIdResultsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/_app/code': typeof AppCodeRouteWithChildren
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/interview': typeof AppInterviewRouteWithChildren
+  '/_app/jobs': typeof AppJobsRoute
+  '/_app/leaderboard': typeof AppLeaderboardRoute
+  '/_app/profile': typeof AppProfileRoute
+  '/_app/quizzes': typeof AppQuizzesRouteWithChildren
+  '/_app/resume': typeof AppResumeRoute
+  '/_app/roadmap': typeof AppRoadmapRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/projects': typeof AdminProjectsRoute
+  '/admin/quizzes': typeof AdminQuizzesRoute
+  '/admin/topics': typeof AdminTopicsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/': typeof AdminIndexRoute
+  '/_app/code/$challengeId': typeof AppCodeChallengeIdRoute
+  '/_app/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
+  '/_app/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
+  '/_app/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
+  '/_app/interview/manual/$sessionId': typeof AppInterviewManualSessionIdRoute
+  '/_app/quizzes/$quizId/results': typeof AppQuizzesQuizIdResultsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/signup'
+    | '/code'
+    | '/dashboard'
+    | '/interview'
+    | '/jobs'
+    | '/leaderboard'
+    | '/profile'
+    | '/quizzes'
+    | '/resume'
+    | '/roadmap'
+    | '/admin/analytics'
+    | '/admin/projects'
+    | '/admin/quizzes'
+    | '/admin/topics'
+    | '/admin/users'
+    | '/admin/'
+    | '/code/$challengeId'
+    | '/quizzes/$quizId'
+    | '/interview/$sessionId/feedback'
+    | '/interview/ai/$sessionId'
+    | '/interview/manual/$sessionId'
+    | '/quizzes/$quizId/results'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/code'
+    | '/dashboard'
+    | '/interview'
+    | '/jobs'
+    | '/leaderboard'
+    | '/profile'
+    | '/quizzes'
+    | '/resume'
+    | '/roadmap'
+    | '/admin/analytics'
+    | '/admin/projects'
+    | '/admin/quizzes'
+    | '/admin/topics'
+    | '/admin/users'
+    | '/admin'
+    | '/code/$challengeId'
+    | '/quizzes/$quizId'
+    | '/interview/$sessionId/feedback'
+    | '/interview/ai/$sessionId'
+    | '/interview/manual/$sessionId'
+    | '/quizzes/$quizId/results'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/admin'
+    | '/login'
+    | '/signup'
+    | '/_app/code'
+    | '/_app/dashboard'
+    | '/_app/interview'
+    | '/_app/jobs'
+    | '/_app/leaderboard'
+    | '/_app/profile'
+    | '/_app/quizzes'
+    | '/_app/resume'
+    | '/_app/roadmap'
+    | '/admin/analytics'
+    | '/admin/projects'
+    | '/admin/quizzes'
+    | '/admin/topics'
+    | '/admin/users'
+    | '/admin/'
+    | '/_app/code/$challengeId'
+    | '/_app/quizzes/$quizId'
+    | '/_app/interview/$sessionId/feedback'
+    | '/_app/interview/ai/$sessionId'
+    | '/_app/interview/manual/$sessionId'
+    | '/_app/quizzes/$quizId/results'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  AdminRoute: typeof AdminRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +379,259 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/topics': {
+      id: '/admin/topics'
+      path: '/topics'
+      fullPath: '/admin/topics'
+      preLoaderRoute: typeof AdminTopicsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/quizzes': {
+      id: '/admin/quizzes'
+      path: '/quizzes'
+      fullPath: '/admin/quizzes'
+      preLoaderRoute: typeof AdminQuizzesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/projects': {
+      id: '/admin/projects'
+      path: '/projects'
+      fullPath: '/admin/projects'
+      preLoaderRoute: typeof AdminProjectsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_app/roadmap': {
+      id: '/_app/roadmap'
+      path: '/roadmap'
+      fullPath: '/roadmap'
+      preLoaderRoute: typeof AppRoadmapRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/resume': {
+      id: '/_app/resume'
+      path: '/resume'
+      fullPath: '/resume'
+      preLoaderRoute: typeof AppResumeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/quizzes': {
+      id: '/_app/quizzes'
+      path: '/quizzes'
+      fullPath: '/quizzes'
+      preLoaderRoute: typeof AppQuizzesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/leaderboard': {
+      id: '/_app/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof AppLeaderboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/jobs': {
+      id: '/_app/jobs'
+      path: '/jobs'
+      fullPath: '/jobs'
+      preLoaderRoute: typeof AppJobsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/interview': {
+      id: '/_app/interview'
+      path: '/interview'
+      fullPath: '/interview'
+      preLoaderRoute: typeof AppInterviewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/code': {
+      id: '/_app/code'
+      path: '/code'
+      fullPath: '/code'
+      preLoaderRoute: typeof AppCodeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/quizzes/$quizId': {
+      id: '/_app/quizzes/$quizId'
+      path: '/$quizId'
+      fullPath: '/quizzes/$quizId'
+      preLoaderRoute: typeof AppQuizzesQuizIdRouteImport
+      parentRoute: typeof AppQuizzesRoute
+    }
+    '/_app/code/$challengeId': {
+      id: '/_app/code/$challengeId'
+      path: '/$challengeId'
+      fullPath: '/code/$challengeId'
+      preLoaderRoute: typeof AppCodeChallengeIdRouteImport
+      parentRoute: typeof AppCodeRoute
+    }
+    '/_app/quizzes/$quizId/results': {
+      id: '/_app/quizzes/$quizId/results'
+      path: '/results'
+      fullPath: '/quizzes/$quizId/results'
+      preLoaderRoute: typeof AppQuizzesQuizIdResultsRouteImport
+      parentRoute: typeof AppQuizzesQuizIdRoute
+    }
+    '/_app/interview/manual/$sessionId': {
+      id: '/_app/interview/manual/$sessionId'
+      path: '/manual/$sessionId'
+      fullPath: '/interview/manual/$sessionId'
+      preLoaderRoute: typeof AppInterviewManualSessionIdRouteImport
+      parentRoute: typeof AppInterviewRoute
+    }
+    '/_app/interview/ai/$sessionId': {
+      id: '/_app/interview/ai/$sessionId'
+      path: '/ai/$sessionId'
+      fullPath: '/interview/ai/$sessionId'
+      preLoaderRoute: typeof AppInterviewAiSessionIdRouteImport
+      parentRoute: typeof AppInterviewRoute
+    }
+    '/_app/interview/$sessionId/feedback': {
+      id: '/_app/interview/$sessionId/feedback'
+      path: '/$sessionId/feedback'
+      fullPath: '/interview/$sessionId/feedback'
+      preLoaderRoute: typeof AppInterviewSessionIdFeedbackRouteImport
+      parentRoute: typeof AppInterviewRoute
+    }
   }
 }
 
+interface AppCodeRouteChildren {
+  AppCodeChallengeIdRoute: typeof AppCodeChallengeIdRoute
+}
+
+const AppCodeRouteChildren: AppCodeRouteChildren = {
+  AppCodeChallengeIdRoute: AppCodeChallengeIdRoute,
+}
+
+const AppCodeRouteWithChildren =
+  AppCodeRoute._addFileChildren(AppCodeRouteChildren)
+
+interface AppInterviewRouteChildren {
+  AppInterviewSessionIdFeedbackRoute: typeof AppInterviewSessionIdFeedbackRoute
+  AppInterviewAiSessionIdRoute: typeof AppInterviewAiSessionIdRoute
+  AppInterviewManualSessionIdRoute: typeof AppInterviewManualSessionIdRoute
+}
+
+const AppInterviewRouteChildren: AppInterviewRouteChildren = {
+  AppInterviewSessionIdFeedbackRoute: AppInterviewSessionIdFeedbackRoute,
+  AppInterviewAiSessionIdRoute: AppInterviewAiSessionIdRoute,
+  AppInterviewManualSessionIdRoute: AppInterviewManualSessionIdRoute,
+}
+
+const AppInterviewRouteWithChildren = AppInterviewRoute._addFileChildren(
+  AppInterviewRouteChildren,
+)
+
+interface AppQuizzesQuizIdRouteChildren {
+  AppQuizzesQuizIdResultsRoute: typeof AppQuizzesQuizIdResultsRoute
+}
+
+const AppQuizzesQuizIdRouteChildren: AppQuizzesQuizIdRouteChildren = {
+  AppQuizzesQuizIdResultsRoute: AppQuizzesQuizIdResultsRoute,
+}
+
+const AppQuizzesQuizIdRouteWithChildren =
+  AppQuizzesQuizIdRoute._addFileChildren(AppQuizzesQuizIdRouteChildren)
+
+interface AppQuizzesRouteChildren {
+  AppQuizzesQuizIdRoute: typeof AppQuizzesQuizIdRouteWithChildren
+}
+
+const AppQuizzesRouteChildren: AppQuizzesRouteChildren = {
+  AppQuizzesQuizIdRoute: AppQuizzesQuizIdRouteWithChildren,
+}
+
+const AppQuizzesRouteWithChildren = AppQuizzesRoute._addFileChildren(
+  AppQuizzesRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppCodeRoute: typeof AppCodeRouteWithChildren
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppInterviewRoute: typeof AppInterviewRouteWithChildren
+  AppJobsRoute: typeof AppJobsRoute
+  AppLeaderboardRoute: typeof AppLeaderboardRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppQuizzesRoute: typeof AppQuizzesRouteWithChildren
+  AppResumeRoute: typeof AppResumeRoute
+  AppRoadmapRoute: typeof AppRoadmapRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppCodeRoute: AppCodeRouteWithChildren,
+  AppDashboardRoute: AppDashboardRoute,
+  AppInterviewRoute: AppInterviewRouteWithChildren,
+  AppJobsRoute: AppJobsRoute,
+  AppLeaderboardRoute: AppLeaderboardRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppQuizzesRoute: AppQuizzesRouteWithChildren,
+  AppResumeRoute: AppResumeRoute,
+  AppRoadmapRoute: AppRoadmapRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface AdminRouteChildren {
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminProjectsRoute: typeof AdminProjectsRoute
+  AdminQuizzesRoute: typeof AdminQuizzesRoute
+  AdminTopicsRoute: typeof AdminTopicsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminProjectsRoute: AdminProjectsRoute,
+  AdminQuizzesRoute: AdminQuizzesRoute,
+  AdminTopicsRoute: AdminTopicsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  AdminRoute: AdminRouteWithChildren,
+  LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
