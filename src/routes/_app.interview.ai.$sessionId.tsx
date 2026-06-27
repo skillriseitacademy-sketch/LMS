@@ -2,8 +2,6 @@ import { createFileRoute, useNavigate, useParams, useSearch } from "@tanstack/re
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { useMemo, useState } from "react";
-import { z } from "zod";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { TopBar } from "@/components/top-bar";
 import { interviewRoles } from "@/lib/mock-data";
 import {
@@ -13,7 +11,6 @@ import {
 } from "@/components/ai-elements/conversation";
 import {
   Message,
-  MessageAvatar,
   MessageContent,
   MessageResponse,
 } from "@/components/ai-elements/message";
@@ -26,12 +23,12 @@ import {
 import { Shimmer } from "@/components/ai-elements/shimmer";
 import { Bot, CircleStop, Square } from "lucide-react";
 
-const searchSchema = z.object({
-  role: fallback(z.string(), "frontend").default("frontend"),
-});
+type InterviewSearch = { role: string };
 
 export const Route = createFileRoute("/_app/interview/ai/$sessionId")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (s: Record<string, unknown>): InterviewSearch => ({
+    role: typeof s.role === "string" ? s.role : "frontend",
+  }),
   head: () => ({ meta: [{ title: "AI interview — PlacePro LMS" }] }),
   component: AiInterview,
 });
