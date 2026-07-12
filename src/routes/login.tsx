@@ -87,6 +87,24 @@ export function AuthShell({
     });
   };
 
+  const handleResetPassword = async () => {
+    if (!email) {
+      setError("Please enter your email to receive a password reset link.");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + "/dashboard",
+    });
+    if (resetError) {
+      setError(resetError.message);
+    } else {
+      setError("Check your email for the password reset link! (You can ignore the error styling, this is a success message)");
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4">
       <AuthBackground />
@@ -101,8 +119,8 @@ export function AuthShell({
         <p className="mt-1 text-sm text-muted-foreground">{sub}</p>
 
         {error && (
-          <div className="mt-4 rounded-xl bg-destructive/10 p-3 text-sm text-destructive border border-destructive/20">
-            {error}
+          <div className={`mt-4 rounded-xl p-3 text-sm border ${error.includes("Check your email") ? "bg-green-50 text-green-700 border-green-200" : "bg-destructive/10 text-destructive border-destructive/20"}`}>
+            {error.replace("(You can ignore the error styling, this is a success message)", "")}
           </div>
         )}
 
@@ -131,6 +149,16 @@ export function AuthShell({
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+            
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={handleResetPassword}
+                className="text-xs font-semibold text-brand hover:underline"
+              >
+                Forgot Password?
               </button>
             </div>
           </div>
