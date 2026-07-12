@@ -88,10 +88,13 @@ function Landing() {
       canvas.height = rect.height;
     }
 
-    // Custom object-fit: cover math
+    // Custom object-fit: cover for landscape, contain for portrait
     const hRatio = canvas.width / img.width;
     const vRatio = canvas.height / img.height;
-    const ratio = Math.max(hRatio, vRatio);
+    
+    const isPortrait = canvas.height > canvas.width;
+    const ratio = isPortrait ? Math.min(hRatio, vRatio) : Math.max(hRatio, vRatio);
+    
     const centerShift_x = (canvas.width - img.width * ratio) / 2;
     const centerShift_y = (canvas.height - img.height * ratio) / 2;
 
