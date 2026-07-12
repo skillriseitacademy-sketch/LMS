@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { generateObject } from "ai";
-import { google } from "@ai-sdk/google";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { z } from "zod";
 
 export const Route = createFileRoute("/api/roadmap")({
@@ -9,27 +9,35 @@ export const Route = createFileRoute("/api/roadmap")({
       POST: async ({ request }) => {
         const body = await request.json();
         const { targetJob, country, education } = body;
-        
+
         if (!targetJob || !country || !education) {
-          return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400 });
+          return new Response(JSON.stringify({ error: "Missing required fields" }), {
+            status: 400,
+          });
         }
-        
+
         const key = process.env.GEMINI_API_KEY;
-        if (!key) return new Response(JSON.stringify({ error: "Missing GEMINI_API_KEY" }), { status: 500 });
+        if (!key)
+          return new Response(JSON.stringify({ error: "Missing GEMINI_API_KEY" }), { status: 500 });
 
         try {
+          const google = createGoogleGenerativeAI({ apiKey: key });
           const { object } = await generateObject({
-            model: google("gemini-1.5-flash", { apiKey: key }),
+            model: google("gemini-1.5-flash") as any,
             schema: z.object({
               title: z.string().describe("Title of the career roadmap"),
               description: z.string().describe("A brief summary of what this path entails"),
-              estimatedTime: z.string().describe("Estimated time to complete the roadmap (e.g., '6-12 months')"),
-              steps: z.array(z.object({
-                title: z.string(),
-                description: z.string(),
-                type: z.enum(["education", "skill", "certification", "project", "job_search"]),
-                estimatedDuration: z.string()
-              }))
+              estimatedTime: z
+                .string()
+                .describe("Estimated time to complete the roadmap (e.g., '6-12 months')"),
+              steps: z.array(
+                z.object({
+                  title: z.string(),
+                  description: z.string(),
+                  type: z.enum(["education", "skill", "certification", "project", "job_search"]),
+                  estimatedDuration: z.string(),
+                }),
+              ),
             }),
             prompt: `Generate a detailed step-by-step career roadmap for someone who currently has the following education: "${education}".
             They are located in: "${country}".
@@ -38,11 +46,13 @@ export const Route = createFileRoute("/api/roadmap")({
           });
 
           return new Response(JSON.stringify(object), {
-            headers: { 'Content-Type': 'application/json' }
+            headers: { "Content-Type": "application/json" },
           });
         } catch (error: any) {
           console.error("Roadmap generation failed:", error);
-          return new Response(JSON.stringify({ error: "Failed to generate roadmap" }), { status: 500 });
+          return new Response(JSON.stringify({ error: "Failed to generate roadmap" }), {
+            status: 500,
+          });
         }
       },
     },

@@ -1,5 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Map as MapIcon, Loader2, BookOpen, Target, Globe2, Briefcase, CheckCircle2 } from "lucide-react";
+import {
+  Map as MapIcon,
+  Loader2,
+  BookOpen,
+  Target,
+  Globe2,
+  Briefcase,
+  CheckCircle2,
+} from "lucide-react";
 import { useState } from "react";
 import { TopBar } from "@/components/top-bar";
 import { useAuth } from "@/lib/auth-store";
@@ -42,8 +50,8 @@ function RoadmapPage() {
         body: JSON.stringify({ targetJob, country, education }),
       });
       if (!res.ok) throw new Error("Failed to generate");
-      
-      const data = await res.json() as RoadmapData;
+
+      const data = (await res.json()) as RoadmapData;
       setRoadmap(data);
 
       if (session) {
@@ -53,10 +61,9 @@ function RoadmapPage() {
           target_job: targetJob,
           country,
           education_level: education,
-          roadmap_json: data
+          roadmap_json: data,
         });
       }
-
     } catch (err) {
       console.error(err);
       alert("Something went wrong while generating the roadmap.");
@@ -66,13 +73,19 @@ function RoadmapPage() {
   };
 
   const getStepIcon = (type: string) => {
-    switch(type) {
-      case "education": return <BookOpen className="h-4 w-4 text-brand" />;
-      case "skill": return <Target className="h-4 w-4 text-brand-dark" />;
-      case "certification": return <CheckCircle2 className="h-4 w-4 text-success" />;
-      case "project": return <Briefcase className="h-4 w-4 text-card-purple" />;
-      case "job_search": return <Globe2 className="h-4 w-4 text-card-blue" />;
-      default: return <MapIcon className="h-4 w-4 text-muted-foreground" />;
+    switch (type) {
+      case "education":
+        return <BookOpen className="h-4 w-4 text-brand" />;
+      case "skill":
+        return <Target className="h-4 w-4 text-brand-dark" />;
+      case "certification":
+        return <CheckCircle2 className="h-4 w-4 text-success" />;
+      case "project":
+        return <Briefcase className="h-4 w-4 text-card-purple" />;
+      case "job_search":
+        return <Globe2 className="h-4 w-4 text-card-blue" />;
+      default:
+        return <MapIcon className="h-4 w-4 text-muted-foreground" />;
     }
   };
 
@@ -85,28 +98,66 @@ function RoadmapPage() {
             <MapIcon className="h-6 w-6 text-brand" /> AI Career Roadmap
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Generate a personalized, step-by-step path to your dream job based on your current background.
+            Generate a personalized, step-by-step path to your dream job based on your current
+            background.
           </p>
         </div>
 
         {!roadmap && (
-          <form onSubmit={generateRoadmap} className="rounded-3xl border border-border bg-card p-6 space-y-5">
+          <form
+            onSubmit={generateRoadmap}
+            className="rounded-3xl border border-border bg-card p-6 space-y-5"
+          >
             <div className="grid md:grid-cols-2 gap-5">
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-muted-foreground">Current Education</label>
-                <input required value={education} onChange={e => setEducation(e.target.value)} className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm" placeholder="e.g. 10th standard, B.Tech CS, self-taught..." />
+                <label className="text-xs font-semibold text-muted-foreground">
+                  Current Education
+                </label>
+                <input
+                  required
+                  value={education}
+                  onChange={(e) => setEducation(e.target.value)}
+                  className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm"
+                  placeholder="e.g. 10th standard, B.Tech CS, self-taught..."
+                />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-muted-foreground">Target Country</label>
-                <input required value={country} onChange={e => setCountry(e.target.value)} className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm" placeholder="e.g. India, USA, Remote..." />
+                <label className="text-xs font-semibold text-muted-foreground">
+                  Target Country
+                </label>
+                <input
+                  required
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm"
+                  placeholder="e.g. India, USA, Remote..."
+                />
               </div>
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-muted-foreground">Target Role / Job</label>
-              <input required value={targetJob} onChange={e => setTargetJob(e.target.value)} className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm" placeholder="e.g. Cyber Security Analyst, Frontend Developer..." />
+              <label className="text-xs font-semibold text-muted-foreground">
+                Target Role / Job
+              </label>
+              <input
+                required
+                value={targetJob}
+                onChange={(e) => setTargetJob(e.target.value)}
+                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm"
+                placeholder="e.g. Cyber Security Analyst, Frontend Developer..."
+              />
             </div>
-            <button disabled={loading} type="submit" className="w-full rounded-full bg-brand py-3 text-sm font-semibold text-brand-foreground hover:opacity-90 flex items-center justify-center gap-2">
-              {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Analyzing market & generating path...</> : "Generate My Roadmap"}
+            <button
+              disabled={loading}
+              type="submit"
+              className="w-full rounded-full bg-brand py-3 text-sm font-semibold text-brand-foreground hover:opacity-90 flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Analyzing market & generating path...
+                </>
+              ) : (
+                "Generate My Roadmap"
+              )}
             </button>
           </form>
         )}
@@ -134,14 +185,19 @@ function RoadmapPage() {
                         {step.estimatedDuration}
                       </span>
                     </div>
-                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                      {step.description}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
 
             <div className="flex justify-center pt-4">
-              <button onClick={() => setRoadmap(null)} className="rounded-full border border-border bg-card px-6 py-2.5 text-sm font-medium hover:bg-muted">
+              <button
+                onClick={() => setRoadmap(null)}
+                className="rounded-full border border-border bg-card px-6 py-2.5 text-sm font-medium hover:bg-muted"
+              >
                 Create Another Roadmap
               </button>
             </div>

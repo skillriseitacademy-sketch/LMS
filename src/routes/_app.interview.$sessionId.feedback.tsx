@@ -5,7 +5,16 @@ import {
   generateInterviewFeedback,
   type InterviewFeedback,
 } from "@/lib/interview-feedback.functions";
-import { Loader2, ThumbsUp, AlertTriangle, RotateCcw, ArrowRight, Download } from "lucide-react";
+import {
+  Loader2,
+  ThumbsUp,
+  AlertTriangle,
+  RotateCcw,
+  ArrowRight,
+  Download,
+  Copy,
+  Check,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_app/interview/$sessionId/feedback")({
   head: () => ({ meta: [{ title: "Interview feedback — PlacePro LMS" }] }),
@@ -21,8 +30,15 @@ function ScoreRing({ label, value, color }: { label: string; value: number; colo
       <svg width="96" height="96" viewBox="0 0 96 96" className="-rotate-90">
         <circle cx="48" cy="48" r={r} fill="none" stroke="var(--muted)" strokeWidth="8" />
         <circle
-          cx="48" cy="48" r={r} fill="none" stroke={color} strokeWidth="8" strokeLinecap="round"
-          strokeDasharray={c} strokeDashoffset={offset}
+          cx="48"
+          cy="48"
+          r={r}
+          fill="none"
+          stroke={color}
+          strokeWidth="8"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={offset}
         />
       </svg>
       <div className="-mt-[58px] text-display text-xl font-bold">{value}</div>
@@ -35,8 +51,11 @@ function Feedback() {
   const { sessionId } = useParams({ from: "/_app/interview/$sessionId/feedback" });
   const [feedback, setFeedback] = useState<InterviewFeedback | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [transcript, setTranscript] = useState<{ role: "interviewer" | "candidate"; text: string }[]>([]);
+  const [transcript, setTranscript] = useState<
+    { role: "interviewer" | "candidate"; text: string }[]
+  >([]);
   const [role, setRole] = useState("Frontend Engineer");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const raw = sessionStorage.getItem(`interview-${sessionId}`);
@@ -61,7 +80,9 @@ function Feedback() {
 
   const handleDownload = () => {
     if (!transcript.length) return;
-    const text = transcript.map(t => `${t.role === "interviewer" ? "Interviewer" : "You"}:\n${t.text}`).join("\n\n---\n\n");
+    const text = transcript
+      .map((t) => `${t.role === "interviewer" ? "Interviewer" : "You"}:\n${t.text}`)
+      .join("\n\n---\n\n");
     const blob = new Blob([text], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -69,6 +90,16 @@ function Feedback() {
     a.download = `transcript-${sessionId.slice(0, 8)}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleCopy = () => {
+    if (!transcript.length) return;
+    const text = transcript
+      .map((t) => `${t.role === "interviewer" ? "Interviewer" : "You"}:\n${t.text}`)
+      .join("\n\n---\n\n");
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -97,14 +128,20 @@ function Feedback() {
 
           {feedback && (
             <>
-              <div className="grid grid-cols-3 gap-3 rounded-3xl border border-border bg-card p-6">
-                <ScoreRing label="Communication" value={feedback.communication} color="var(--brand)" />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-3xl border border-border bg-card p-6">
+                <ScoreRing
+                  label="Communication"
+                  value={feedback.communication}
+                  color="var(--brand)"
+                />
                 <ScoreRing label="Technical" value={feedback.technical} color="var(--xp-gold)" />
                 <ScoreRing label="Confidence" value={feedback.confidence} color="var(--success)" />
               </div>
 
               <div className="rounded-3xl border border-border bg-card p-6">
-                <h3 className="text-display text-sm font-semibold uppercase tracking-wide text-muted-foreground">Summary</h3>
+                <h3 className="text-display text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  Summary
+                </h3>
                 <p className="mt-2 text-sm leading-relaxed">{feedback.summary}</p>
               </div>
 
@@ -115,7 +152,10 @@ function Feedback() {
                   </h3>
                   <ul className="mt-3 space-y-2 text-sm">
                     {feedback.strengths.map((s, i) => (
-                      <li key={i} className="flex gap-2"><span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-success" />{s}</li>
+                      <li key={i} className="flex gap-2">
+                        <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
+                        {s}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -125,7 +165,10 @@ function Feedback() {
                   </h3>
                   <ul className="mt-3 space-y-2 text-sm">
                     {feedback.improvements.map((s, i) => (
-                      <li key={i} className="flex gap-2"><span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-streak" />{s}</li>
+                      <li key={i} className="flex gap-2">
+                        <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-streak" />
+                        {s}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -139,7 +182,9 @@ function Feedback() {
               <div className="mt-3 space-y-2 text-sm">
                 {transcript.map((t, i) => (
                   <p key={i}>
-                    <span className={`font-semibold ${t.role === "interviewer" ? "text-brand" : "text-foreground"}`}>
+                    <span
+                      className={`font-semibold ${t.role === "interviewer" ? "text-brand" : "text-foreground"}`}
+                    >
                       {t.role === "interviewer" ? "Interviewer" : "You"}:
                     </span>{" "}
                     <span className="text-foreground/80">{t.text}</span>
@@ -151,14 +196,36 @@ function Feedback() {
 
           <div className="flex flex-wrap gap-2">
             {transcript.length > 0 && (
-              <button onClick={handleDownload} className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted">
-                <Download className="h-3 w-3" /> Download Transcript
-              </button>
+              <>
+                <button
+                  onClick={handleCopy}
+                  className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted transition-colors"
+                >
+                  {copied ? (
+                    <Check className="h-3 w-3 text-success" />
+                  ) : (
+                    <Copy className="h-3 w-3" />
+                  )}
+                  {copied ? "Copied!" : "Copy Text"}
+                </button>
+                <button
+                  onClick={handleDownload}
+                  className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted transition-colors"
+                >
+                  <Download className="h-3 w-3" /> Download TXT
+                </button>
+              </>
             )}
-            <Link to="/interview" className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted">
+            <Link
+              to="/interview"
+              className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted"
+            >
               <RotateCcw className="h-3 w-3" /> New interview
             </Link>
-            <Link to="/dashboard" className="inline-flex items-center gap-1 rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background">
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-1 rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background"
+            >
               Back to dashboard <ArrowRight className="h-3 w-3" />
             </Link>
           </div>

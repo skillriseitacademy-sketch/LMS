@@ -20,18 +20,23 @@ function Results() {
     const raw = sessionStorage.getItem(`quiz-result-${quizId}`);
     const alreadySaved = sessionStorage.getItem(`quiz-saved-${quizId}`);
     if (raw) {
-      try { 
+      try {
         const parsed = JSON.parse(raw) as { answers: number[] };
-        setAnswers(parsed.answers); 
-        
+        setAnswers(parsed.answers);
+
         if (!alreadySaved) {
-          const correctCount = parsed.answers.reduce((s, a, i) => (a === questions[i]?.correctIndex ? s + 1 : s), 0);
-          const calculatedScore = questions.length ? Math.round((correctCount / questions.length) * 100) : 0;
-          
+          const correctCount = parsed.answers.reduce(
+            (s, a, i) => (a === questions[i]?.correctIndex ? s + 1 : s),
+            0,
+          );
+          const calculatedScore = questions.length
+            ? Math.round((correctCount / questions.length) * 100)
+            : 0;
+
           saveQuizAttempt({
             quizId,
             score: calculatedScore,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           });
           sessionStorage.setItem(`quiz-saved-${quizId}`, "true");
         }
@@ -39,7 +44,10 @@ function Results() {
     }
   }, [quizId, questions]);
 
-  const correctCount = answers.reduce((s, a, i) => (a === questions[i]?.correctIndex ? s + 1 : s), 0);
+  const correctCount = answers.reduce(
+    (s, a, i) => (a === questions[i]?.correctIndex ? s + 1 : s),
+    0,
+  );
   const score = questions.length ? Math.round((correctCount / questions.length) * 100) : 0;
   const xp = correctCount * 10;
 
@@ -65,13 +73,23 @@ function Results() {
               <Trophy className="h-4 w-4 text-xp-gold" /> +{xp} XP earned
             </div>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
-              <Link to="/quizzes/$quizId" params={{ quizId }} className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted">
+              <Link
+                to="/quizzes/$quizId"
+                params={{ quizId }}
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted"
+              >
                 <RotateCcw className="h-3 w-3" /> Retry
               </Link>
-              <Link to="/quizzes" className="inline-flex items-center gap-1 rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background">
+              <Link
+                to="/quizzes"
+                className="inline-flex items-center gap-1 rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background"
+              >
                 New quiz
               </Link>
-              <Link to="/leaderboard" className="inline-flex items-center gap-1 rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground">
+              <Link
+                to="/leaderboard"
+                className="inline-flex items-center gap-1 rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground"
+              >
                 <Share2 className="h-3 w-3" /> Share to leaderboard
               </Link>
             </div>
@@ -86,16 +104,25 @@ function Results() {
                 const a = answers[i];
                 const ok = a === q.correctIndex;
                 return (
-                  <li key={q.id} className="flex items-start gap-3 rounded-2xl border border-border p-3">
-                    <span className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${ok ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}`}>
+                  <li
+                    key={q.id}
+                    className="flex items-start gap-3 rounded-2xl border border-border p-3"
+                  >
+                    <span
+                      className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${ok ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}`}
+                    >
                       {ok ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
                     </span>
                     <div className="flex-1">
                       <p className="text-sm font-medium">{q.prompt}</p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Correct: <span className="text-foreground">{q.options[q.correctIndex]}</span>
+                        Correct:{" "}
+                        <span className="text-foreground">{q.options[q.correctIndex]}</span>
                         {a !== undefined && a !== q.correctIndex && (
-                          <> · Your answer: <span className="text-destructive">{q.options[a]}</span></>
+                          <>
+                            {" "}
+                            · Your answer: <span className="text-destructive">{q.options[a]}</span>
+                          </>
                         )}
                       </p>
                     </div>

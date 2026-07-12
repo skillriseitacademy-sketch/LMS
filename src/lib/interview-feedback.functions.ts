@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
-import { generateText, Output } from "ai";
+import { generateObject } from "ai";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { z } from "zod";
-import { createLovableAiGatewayProvider } from "./ai-gateway.server";
 
 const InterviewFeedbackInput = z.object({
   role: z.string(),
@@ -24,21 +24,22 @@ export type InterviewFeedback = z.infer<typeof FeedbackSchema>;
 export const generateInterviewFeedback = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InterviewFeedbackInput.parse(input))
   .handler(async ({ data }) => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("Missing LOVABLE_API_KEY");
+    const key = process.env.GEMINI_API_KEY;
+    if (!key) throw new Error("Missing GEMINI_API_KEY");
 
-    const gateway = createLovableAiGatewayProvider(key);
+    const google = createGoogleGenerativeAI({ apiKey: key });
+
     const transcriptText = data.transcript
       .map((t) => `${t.role === "interviewer" ? "Interviewer" : "Candidate"}: ${t.text}`)
       .join("\n");
 
-    const { output } = await generateText({
-      model: gateway("google/gemini-3-flash-preview"),
-      output: Output.object({ schema: FeedbackSchema }),
+    const { object } = await generateObject({
+      model: google("gemini-1.5-flash"),
+      schema: FeedbackSchema,
       system:
-        "You are an expert interview coach. Score the candidate on communication, technical depth, and confidence (0-100). Be specific and actionable.",
-      prompt: `Role being interviewed for: ${data.role}\n\nTranscript:\n${transcriptText}\n\nReturn a JSON object with the scores, a one-paragraph summary, 3 strengths, and 3 improvements.`,
+        "You are an expert interview coach. Score the candidate on communication (clarity, articulation, listening), technical depth (accuracy, depth, problem-solving), and confidence (tone, assertiveness, composure) on a scale of 0-100. Be specific and actionable in your feedback.",
+      prompt: `Role being interviewed for: ${data.role}\n\nTranscript:\n${transcriptText}\n\nAnalyze the candidate's performance and return scores, a one-paragraph summary, up to 3 key strengths, and up to 3 specific improvements.`,
     });
 
-    return output;
+    return object;
   });

@@ -77,13 +77,13 @@
   --radius: 0.875rem;
 
   /* PlacePro palette */
-  --brand: oklch(0.65 0.14 285);              /* #7F77DD */
+  --brand: oklch(0.65 0.14 285); /* #7F77DD */
   --brand-foreground: oklch(0.99 0 0);
-  --brand-light: oklch(0.96 0.025 285);       /* #EEEDFE */
-  --brand-dark: oklch(0.36 0.13 285);         /* #3C3489 */
-  --streak: oklch(0.65 0.18 38);              /* #D85A30 */
-  --xp-gold: oklch(0.76 0.16 70);             /* #EF9F27 */
-  --success: oklch(0.62 0.13 165);            /* #1D9E75 */
+  --brand-light: oklch(0.96 0.025 285); /* #EEEDFE */
+  --brand-dark: oklch(0.36 0.13 285); /* #3C3489 */
+  --streak: oklch(0.65 0.18 38); /* #D85A30 */
+  --xp-gold: oklch(0.76 0.16 70); /* #EF9F27 */
+  --success: oklch(0.62 0.13 165); /* #1D9E75 */
 
   --card-pink: oklch(0.97 0.018 15);
   --card-blue: oklch(0.97 0.02 250);
@@ -91,7 +91,7 @@
   --card-green: oklch(0.97 0.04 150);
 
   --background: oklch(1 0 0);
-  --foreground: oklch(0.17 0.03 280);         /* #1A1A2E */
+  --foreground: oklch(0.17 0.03 280); /* #1A1A2E */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.17 0.03 280);
   --popover: oklch(1 0 0);
@@ -150,15 +150,29 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
+  * {
+    border-color: var(--color-border);
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-feature-settings: "cv11", "ss01";
   }
-  h1, h2, h3, h4, h5, .font-display { font-family: var(--font-display); letter-spacing: -0.01em; }
-  code, pre, .font-mono { font-family: var(--font-mono); }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  code,
+  pre,
+  .font-mono {
+    font-family: var(--font-mono);
+  }
 }
 
 @utility text-display {
@@ -168,8 +182,13 @@
 }
 
 @keyframes flame-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.12); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
 }
 @utility animate-flame {
   animation: flame-pulse 1.2s ease-in-out infinite;

@@ -8,6 +8,8 @@ import {
   BarChart3,
   ArrowLeft,
   Sparkles,
+  GraduationCap,
+  Mic,
 } from "lucide-react";
 import {
   Sidebar,
@@ -25,8 +27,10 @@ const items = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard, exact: true },
   { title: "Topics", url: "/admin/topics", icon: BookOpen },
   { title: "Quizzes", url: "/admin/quizzes", icon: ListChecks },
-  { title: "Users", url: "/admin/users", icon: Users },
+  { title: "Students", url: "/admin/users", icon: Users },
+  { title: "Teachers", url: "/admin/teachers", icon: GraduationCap },
   { title: "Projects", url: "/admin/projects", icon: FolderGit2 },
+  { title: "Interviews", url: "/admin/interviews", icon: Mic },
   { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
 ];
 
