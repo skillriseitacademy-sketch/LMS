@@ -16,7 +16,7 @@ export const Route = createFileRoute("/api/onboarding/complete")({
           } = await supabase.auth.getUser(token);
           if (authError || !user) return new Response("Unauthorized", { status: 401 });
 
-          const { education_level, course_ids, visibility, username } = await request.json();
+          const { education_level, course_ids, visibility, username, target_jobs } = await request.json();
 
           // Upsert to user_roadmap_progress for education_level?
           // Wait, education_level is on profiles or roadmap? The schema has it on user_roadmap_progress.
@@ -39,12 +39,13 @@ export const Route = createFileRoute("/api/onboarding/complete")({
             return new Response("Database error", { status: 500 });
           }
 
-          // Mark onboarding complete and set visibility and username
+          // Mark onboarding complete and set visibility, username, and skills (target jobs)
           await supabase
             .from("profiles")
             .update({
               onboarding_complete: true,
               visibility: visibility === "private" ? "private" : "public",
+              skills: Array.isArray(target_jobs) ? target_jobs : null,
               ...(username ? { username } : {}),
             })
             .eq("id", user.id);

@@ -31,7 +31,8 @@ export const Route = createFileRoute("/onboarding")({
 function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [educationLevel, setEducationLevel] = useState("Graduate");
+  const [targetJobs, setTargetJobs] = useState<Set<string>>(new Set());
+  const [educationLevel, setEducationLevel] = useState("Graduate (B.Tech / B.Sc)");
   const [topics, setTopics] = useState<any[]>([]);
   const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set());
   const [visibility, setVisibility] = useState<"public" | "private">("public");
@@ -42,7 +43,7 @@ function Onboarding() {
 
   // Debounced username check
   useEffect(() => {
-    if (step !== 3 || !username) {
+    if (step !== 4 || !username) {
       if (!username) setUsernameStatus("idle");
       return;
     }
@@ -98,6 +99,13 @@ function Onboarding() {
     setSelectedTopics(next);
   };
 
+  const toggleJob = (job: string) => {
+    const next = new Set(targetJobs);
+    if (next.has(job)) next.delete(job);
+    else next.add(job);
+    setTargetJobs(next);
+  };
+
   const handleComplete = async () => {
     if (selectedTopics.size === 0) return;
     setLoading(true);
@@ -114,6 +122,7 @@ function Onboarding() {
         Authorization: `Bearer ${session?.access_token}`,
       },
       body: JSON.stringify({
+        target_jobs: Array.from(targetJobs),
         education_level: educationLevel,
         course_ids: Array.from(selectedTopics),
         visibility,
@@ -122,12 +131,16 @@ function Onboarding() {
     });
 
     // Save username locally as well (via supabase client to update profiles)
-    await supabase.from("profiles").update({ visibility, username }).eq("id", session?.user.id);
+    await supabase.from("profiles").update({ 
+      visibility, 
+      username,
+      skills: Array.from(targetJobs) // Save target jobs in skills so it's easily accessible everywhere
+    }).eq("id", session?.user.id);
 
     // Also update local roadmap progress just in case
     await supabase.from("user_roadmap_progress").upsert({
       user_id: session?.user.id,
-      target_job: "Software Engineer",
+      target_job: Array.from(targetJobs).join(", ") || "Software Engineer",
       country: "Global",
       education_level: educationLevel,
       roadmap_json: {},
@@ -151,16 +164,49 @@ function Onboarding() {
         {step === 1 ? (
           <div className="space-y-6">
             <h1 className="text-display text-3xl font-bold">
-              Welcome! What is your education level?
+              What are your target job roles?
+            </h1>
+            <p className="text-muted-foreground">Select one or more roles you are aiming for.</p>
+
+            <div className="grid gap-3 md:grid-cols-2">
+              {["Software Engineer", "Frontend Developer", "Backend Developer", "Full Stack Developer", "Data Scientist", "UI/UX Designer", "Product Manager", "QA Engineer"].map((job) => (
+                <button
+                  key={job}
+                  onClick={() => toggleJob(job)}
+                  className={`rounded-2xl border p-4 text-left transition ${targetJobs.has(job) ? "border-brand bg-brand/10 ring-1 ring-brand" : "border-border hover:bg-muted"}`}
+                >
+                  <span
+                    className={`block font-semibold ${targetJobs.has(job) ? "text-brand-dark" : "text-foreground"}`}
+                  >
+                    {job}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-8 flex justify-end">
+              <button
+                disabled={targetJobs.size === 0}
+                onClick={() => setStep(2)}
+                className="flex items-center gap-2 rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90 disabled:opacity-50"
+              >
+                Next <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        ) : step === 2 ? (
+          <div className="space-y-6">
+            <h1 className="text-display text-3xl font-bold">
+              What is your current education level?
             </h1>
             <p className="text-muted-foreground">This helps us tailor your placement roadmap.</p>
 
             <div className="grid gap-3 md:grid-cols-2">
-              {["Class 10", "Intermediate", "Diploma", "Graduate"].map((level) => (
+              {["Class 10", "Intermediate (12th)", "Diploma", "Graduate (B.Tech / B.Sc)", "Post Graduate"].map((level) => (
                 <button
                   key={level}
                   onClick={() => setEducationLevel(level)}
-                  className={`rounded-2xl border p-4 text-left transition ${educationLevel === level ? "border-brand bg-brand/10" : "border-border hover:bg-muted"}`}
+                  className={`rounded-2xl border p-4 text-left transition ${educationLevel === level ? "border-brand bg-brand/10 ring-1 ring-brand" : "border-border hover:bg-muted"}`}
                 >
                   <span
                     className={`block font-semibold ${educationLevel === level ? "text-brand-dark" : "text-foreground"}`}
@@ -171,16 +217,22 @@ function Onboarding() {
               ))}
             </div>
 
-            <div className="mt-8 flex justify-end">
+            <div className="mt-8 flex justify-between">
               <button
-                onClick={() => setStep(2)}
+                onClick={() => setStep(1)}
+                className="rounded-xl border border-border bg-card px-6 py-2.5 text-sm font-semibold hover:bg-muted"
+              >
+                Back
+              </button>
+              <button
+                onClick={() => setStep(3)}
                 className="flex items-center gap-2 rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90"
               >
                 Next <ArrowRight className="h-4 w-4" />
               </button>
             </div>
           </div>
-        ) : step === 2 ? (
+        ) : step === 3 ? (
           <div className="space-y-6">
             <h1 className="text-display text-3xl font-bold">Choose your courses</h1>
             <p className="text-muted-foreground">
@@ -221,14 +273,14 @@ function Onboarding() {
 
             <div className="mt-8 flex justify-between">
               <button
-                onClick={() => setStep(1)}
+                onClick={() => setStep(2)}
                 className="rounded-xl border border-border bg-card px-6 py-2.5 text-sm font-semibold hover:bg-muted"
               >
                 Back
               </button>
               <button
                 disabled={selectedTopics.size === 0}
-                onClick={() => setStep(3)}
+                onClick={() => setStep(4)}
                 className="flex items-center gap-2 rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90 disabled:opacity-50"
               >
                 Next <ArrowRight className="h-4 w-4" />
@@ -312,7 +364,7 @@ function Onboarding() {
 
             <div className="mt-8 flex justify-between">
               <button
-                onClick={() => setStep(2)}
+                onClick={() => setStep(3)}
                 className="rounded-xl border border-border bg-card px-6 py-2.5 text-sm font-semibold hover:bg-muted"
                 disabled={loading}
               >

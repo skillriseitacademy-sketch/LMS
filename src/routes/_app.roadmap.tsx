@@ -8,7 +8,7 @@ import {
   Briefcase,
   CheckCircle2,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TopBar } from "@/components/top-bar";
 import { useAuth } from "@/lib/auth-store";
 import { supabase } from "@/lib/supabase";
@@ -35,10 +35,43 @@ type RoadmapData = {
 function RoadmapPage() {
   const { session } = useAuth();
   const [targetJob, setTargetJob] = useState("");
-  const [country, setCountry] = useState("");
+  const [country, setCountry] = useState("India");
   const [education, setEducation] = useState("");
   const [loading, setLoading] = useState(false);
   const [roadmap, setRoadmap] = useState<RoadmapData | null>(null);
+
+  useEffect(() => {
+    async function loadProgress() {
+      if (!session) return;
+      const { data, error } = await supabase
+        .from("user_roadmap_progress")
+        .select("*")
+        .eq("user_id", session.id)
+        .single();
+        
+      if (!error && data) {
+        if (data.target_job) setTargetJob(data.target_job);
+        if (data.country) setCountry(data.country);
+        if (data.education_level) setEducation(data.education_level);
+        
+        // If they already generated a roadmap, load it automatically
+        // Note: the schema in supabase.ts uses career_paths, but onboarding upserts into user_roadmap_progress
+        // Let's also check career_paths if they already generated one
+        const { data: pathData } = await supabase
+          .from("career_paths")
+          .select("roadmap_json")
+          .eq("user_id", session.id)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .single();
+          
+        if (pathData?.roadmap_json) {
+          setRoadmap(pathData.roadmap_json as RoadmapData);
+        }
+      }
+    }
+    loadProgress();
+  }, [session]);
 
   const generateRoadmap = async (e: React.FormEvent) => {
     e.preventDefault();
