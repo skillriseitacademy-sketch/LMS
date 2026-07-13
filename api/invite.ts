@@ -48,7 +48,16 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: "Forbidden: Admins only" });
     }
 
-    const { email, role, name, password } = req.body;
+    let body = req.body;
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch (e) {
+        return res.status(400).json({ error: "Invalid JSON body" });
+      }
+    }
+
+    const { email, role, name, password } = body || {};
     if (!email || !role || !name || !password) {
       return res.status(400).json({ error: "Missing required fields" });
     }
@@ -61,7 +70,9 @@ export default async function handler(req, res) {
     });
 
     if (inviteError) {
-      return res.status(400).json({ error: inviteError.message });
+      console.error("Supabase createUser error:", inviteError);
+      const errorMessage = inviteError.message || inviteError.error_description || JSON.stringify(inviteError) || "Failed to create user";
+      return res.status(400).json({ error: errorMessage });
     }
 
     return res.status(200).json({ success: true, user: inviteData.user });
