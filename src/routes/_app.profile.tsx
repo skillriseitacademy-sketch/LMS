@@ -25,12 +25,7 @@ export const Route = createFileRoute("/_app/profile")({
 });
 
 const badges = [
-  { name: "First quiz", icon: ListChecks, tint: "bg-card-blue" },
-  { name: "5-day streak", icon: Flame, tint: "bg-card-pink" },
-  { name: "AI Interview", icon: Mic, tint: "bg-card-yellow" },
-  { name: "Top 20%", icon: Trophy, tint: "bg-card-green" },
-  { name: "Code chal. ×10", icon: Code2, tint: "bg-card-blue" },
-  { name: "Roadmap step", icon: Target, tint: "bg-card-pink" },
+  // Badges will be loaded dynamically later
 ];
 
 
@@ -191,10 +186,10 @@ function Profile() {
           {/* Stats */}
           <section className="mt-5 grid gap-3 grid-cols-2 sm:grid-cols-4">
             {[
-              ["Quizzes", "18"],
-              ["Interviews", "4"],
-              ["Code wins", "26"],
-              ["Hours practised", "38"],
+              ["Quizzes", quizHistory.length.toString()],
+              ["Interviews", "0"],
+              ["Code wins", "0"],
+              ["Hours practised", "0"],
             ].map(([k, v]) => (
               <div key={k} className="rounded-2xl border border-border bg-card p-4">
                 <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{k}</div>
@@ -209,48 +204,59 @@ function Profile() {
               <h3 className="text-display text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 Badges
               </h3>
-              <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {badges.map((b) => (
-                  <div
-                    key={b.name}
-                    className={`${b.tint} rounded-2xl border border-border p-3 text-center`}
-                  >
-                    <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-background/80">
-                      <b.icon className="h-4 w-4 text-brand-dark" />
+              {badges.length > 0 ? (
+                <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {badges.map((b) => (
+                    <div
+                      key={b.name}
+                      className={`${(b as any).tint} rounded-2xl border border-border p-3 text-center`}
+                    >
+                      <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-background/80">
+                        <b.icon className="h-4 w-4 text-brand-dark" />
+                      </div>
+                      <p className="mt-2 text-[11px] font-semibold leading-tight">{b.name}</p>
                     </div>
-                    <p className="mt-2 text-[11px] font-semibold leading-tight">{b.name}</p>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-3 text-sm text-muted-foreground py-6 text-center">
+                  No badges earned yet. Keep learning!
+                </div>
+              )}
             </div>
-
             <div className="rounded-3xl border border-border bg-card p-5">
               <h3 className="text-display text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 Recent activity
               </h3>
-              <ul className="mt-3 space-y-2">
-                {activity.map((a, i) => (
-                  <li
-                    key={i}
-                    className="flex items-center gap-3 rounded-2xl border border-border p-3"
-                  >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-light text-brand-dark">
-                      {a.kind === "quiz" ? (
-                        <ListChecks className="h-4 w-4" />
-                      ) : a.kind === "interview" ? (
-                        <Mic className="h-4 w-4" />
-                      ) : (
-                        <Code2 className="h-4 w-4" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{a.title}</p>
-                      <p className="text-[11px] text-muted-foreground">{a.time}</p>
-                    </div>
-                    <span className="text-[11px] font-semibold text-xp-gold">+{a.xp} XP</span>
-                  </li>
-                ))}
-              </ul>
+              {activity.length > 0 ? (
+                <ul className="mt-3 space-y-2">
+                  {activity.map((a, i) => (
+                    <li
+                      key={i}
+                      className="flex items-center gap-3 rounded-2xl border border-border p-3"
+                    >
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-light text-brand-dark">
+                        {a.kind === "quiz" ? (
+                          <ListChecks className="h-4 w-4" />
+                        ) : a.kind === "interview" ? (
+                          <Mic className="h-4 w-4" />
+                        ) : (
+                          <Code2 className="h-4 w-4" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{a.title}</p>
+                        <p className="text-[11px] text-muted-foreground">{a.time}</p>
+                      </div>
+                      <span className="text-[11px] font-semibold text-xp-gold">+{a.xp} XP</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="mt-3 text-sm text-muted-foreground py-6 text-center">
+                  No recent activity. Start a quiz to see it here!
+                </div>
+              )}
               <Link
                 to="/leaderboard"
                 className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline"

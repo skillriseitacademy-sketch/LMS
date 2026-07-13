@@ -68,6 +68,7 @@ export function useAuth() {
   const logoutSession = async () => {
     await supabase.auth.signOut();
     setSession(null);
+    window.location.href = "/login";
   };
 
   return { session, isLoading, logoutSession };

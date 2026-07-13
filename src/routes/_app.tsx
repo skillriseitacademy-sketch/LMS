@@ -11,6 +11,16 @@ export const Route = createFileRoute("/_app")({
     if (!session) {
       throw redirect({ to: "/login" });
     }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role, onboarding_complete")
+      .eq("id", session.user.id)
+      .single();
+
+    if (profile?.role === "student" && !profile.onboarding_complete) {
+      throw redirect({ to: "/onboarding" });
+    }
   },
   component: AppLayout,
 });
