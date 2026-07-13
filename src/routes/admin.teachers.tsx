@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { TopBar } from "@/components/top-bar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Check, X, UserPlus, Loader2, Eye, EyeOff } from "lucide-react";
-import { supabase, supabaseAdmin } from "@/lib/supabase";
+import { supabase, createUserAdmin } from "@/lib/supabase";
 import {
   Dialog,
   DialogContent,
@@ -100,19 +100,15 @@ function Teachers() {
     setInviteSuccess("");
 
     try {
-      if (!supabaseAdmin) {
-        throw new Error("Admin client not configured. Add VITE_SUPABASE_SERVICE_ROLE_KEY to .env.");
-      }
-
-      const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.createUser({
+      const { user, error } = await createUserAdmin({
         email: inviteEmail,
         password: invitePassword,
-        email_confirm: true,
-        user_metadata: { role: "teacher", name: inviteName },
+        role: "teacher",
+        name: inviteName,
       });
 
-      if (inviteError) {
-        throw new Error(inviteError.message);
+      if (error) {
+        throw new Error(error);
       }
 
       setInviteSuccess("Teacher created successfully!");

@@ -12,13 +12,47 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Admin client for user management (create/delete users).
-// Uses service_role key — only used from admin-protected pages.
-export const supabaseAdmin = supabaseServiceKey
-  ? createClient(supabaseUrl, supabaseServiceKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    })
-  : null;
+/**
+ * Create a new user via Supabase Admin REST API.
+ * Uses fetch directly to avoid dual-client conflicts.
+ */
+export async function createUserAdmin(opts: {
+  email: string;
+  password: string;
+  role: string;
+  name: string;
+}): Promise<{ user: any; error: string | null }> {
+  if (!supabaseServiceKey) {
+    return { user: null, error: "Missing VITE_SUPABASE_SERVICE_ROLE_KEY in environment variables." };
+  }
+
+  try {
+    const res = await fetch(`${supabaseUrl}/auth/v1/admin/users`, {
+      method: "POST",
+      headers: {
+        "apikey": supabaseServiceKey,
+        "Authorization": `Bearer ${supabaseServiceKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: opts.email,
+        password: opts.password,
+        email_confirm: true,
+        user_metadata: { role: opts.role, name: opts.name },
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return { user: null, error: data.msg || data.message || data.error || "Failed to create user" };
+    }
+
+    return { user: data, error: null };
+  } catch (e: any) {
+    return { user: null, error: e.message || "Network error" };
+  }
+}
 
 // ─── Core Tables ─────────────────────────────────────────────────────────────
 

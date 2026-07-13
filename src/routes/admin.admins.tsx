@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { TopBar } from "@/components/top-bar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { UserPlus, Loader2, Search, Eye, EyeOff } from "lucide-react";
-import { supabase, supabaseAdmin } from "@/lib/supabase";
+import { supabase, createUserAdmin } from "@/lib/supabase";
 import {
   Dialog,
   DialogContent,
@@ -58,19 +58,15 @@ function Admins() {
     setInviteSuccess("");
 
     try {
-      if (!supabaseAdmin) {
-        throw new Error("Admin client not configured. Add VITE_SUPABASE_SERVICE_ROLE_KEY to your .env and to Vercel Environment Variables.");
-      }
-
-      const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.createUser({
+      const { user, error } = await createUserAdmin({
         email: inviteEmail,
         password: invitePassword,
-        email_confirm: true,
-        user_metadata: { role: "admin", name: inviteName },
+        role: "admin",
+        name: inviteName,
       });
 
-      if (inviteError) {
-        throw new Error(inviteError.message);
+      if (error) {
+        throw new Error(error);
       }
 
       setInviteSuccess("Admin created successfully!");
