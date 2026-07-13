@@ -35,6 +35,7 @@ import { Route as AdminQuizzesRouteImport } from './routes/admin.quizzes'
 import { Route as AdminProjectsRouteImport } from './routes/admin.projects'
 import { Route as AdminInterviewsRouteImport } from './routes/admin.interviews'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
 import { Route as AppRoomsRouteImport } from './routes/_app.rooms'
 import { Route as AppRoadmapRouteImport } from './routes/_app.roadmap'
 import { Route as AppResumeRouteImport } from './routes/_app.resume'
@@ -61,6 +62,7 @@ import { Route as ApiInterviewStartRouteImport } from './routes/api/interview.st
 import { Route as ApiCoursesEnrolledRouteImport } from './routes/api/courses.enrolled'
 import { Route as ApiCoursesEnrollRouteImport } from './routes/api/courses.enroll'
 import { Route as ApiClassesCreateRouteImport } from './routes/api/classes.create'
+import { Route as ApiAdminInviteRouteImport } from './routes/api/admin.invite'
 import { Route as AppRoomsRoomCodeRouteImport } from './routes/_app.rooms.$roomCode'
 import { Route as AppResumeTemplatesRouteImport } from './routes/_app.resume.templates'
 import { Route as AppResumeCreateRouteImport } from './routes/_app.resume.create'
@@ -208,6 +210,11 @@ const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminsRoute = AdminAdminsRouteImport.update({
+  id: '/admins',
+  path: '/admins',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AppRoomsRoute = AppRoomsRouteImport.update({
   id: '/rooms',
   path: '/rooms',
@@ -338,6 +345,11 @@ const ApiClassesCreateRoute = ApiClassesCreateRouteImport.update({
   path: '/api/classes/create',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminInviteRoute = ApiAdminInviteRouteImport.update({
+  id: '/api/admin/invite',
+  path: '/api/admin/invite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoomsRoomCodeRoute = AppRoomsRoomCodeRouteImport.update({
   id: '/$roomCode',
   path: '/$roomCode',
@@ -446,6 +458,7 @@ export interface FileRoutesByFullPath {
   '/resume': typeof AppResumeRouteWithChildren
   '/roadmap': typeof AppRoadmapRoute
   '/rooms': typeof AppRoomsRouteWithChildren
+  '/admin/admins': typeof AdminAdminsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/interviews': typeof AdminInterviewsRoute
   '/admin/projects': typeof AdminProjectsRoute
@@ -474,6 +487,7 @@ export interface FileRoutesByFullPath {
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
   '/rooms/$roomCode': typeof AppRoomsRoomCodeRoute
+  '/api/admin/invite': typeof ApiAdminInviteRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -511,6 +525,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AppProfileRouteWithChildren
   '/roadmap': typeof AppRoadmapRoute
   '/rooms': typeof AppRoomsRouteWithChildren
+  '/admin/admins': typeof AdminAdminsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/interviews': typeof AdminInterviewsRoute
   '/admin/projects': typeof AdminProjectsRoute
@@ -539,6 +554,7 @@ export interface FileRoutesByTo {
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
   '/rooms/$roomCode': typeof AppRoomsRoomCodeRoute
+  '/api/admin/invite': typeof ApiAdminInviteRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -583,6 +599,7 @@ export interface FileRoutesById {
   '/_app/resume': typeof AppResumeRouteWithChildren
   '/_app/roadmap': typeof AppRoadmapRoute
   '/_app/rooms': typeof AppRoomsRouteWithChildren
+  '/admin/admins': typeof AdminAdminsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/interviews': typeof AdminInterviewsRoute
   '/admin/projects': typeof AdminProjectsRoute
@@ -611,6 +628,7 @@ export interface FileRoutesById {
   '/_app/resume/create': typeof AppResumeCreateRoute
   '/_app/resume/templates': typeof AppResumeTemplatesRoute
   '/_app/rooms/$roomCode': typeof AppRoomsRoomCodeRoute
+  '/api/admin/invite': typeof ApiAdminInviteRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -655,6 +673,7 @@ export interface FileRouteTypes {
     | '/resume'
     | '/roadmap'
     | '/rooms'
+    | '/admin/admins'
     | '/admin/analytics'
     | '/admin/interviews'
     | '/admin/projects'
@@ -683,6 +702,7 @@ export interface FileRouteTypes {
     | '/resume/create'
     | '/resume/templates'
     | '/rooms/$roomCode'
+    | '/api/admin/invite'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -720,6 +740,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/roadmap'
     | '/rooms'
+    | '/admin/admins'
     | '/admin/analytics'
     | '/admin/interviews'
     | '/admin/projects'
@@ -748,6 +769,7 @@ export interface FileRouteTypes {
     | '/resume/create'
     | '/resume/templates'
     | '/rooms/$roomCode'
+    | '/api/admin/invite'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -791,6 +813,7 @@ export interface FileRouteTypes {
     | '/_app/resume'
     | '/_app/roadmap'
     | '/_app/rooms'
+    | '/admin/admins'
     | '/admin/analytics'
     | '/admin/interviews'
     | '/admin/projects'
@@ -819,6 +842,7 @@ export interface FileRouteTypes {
     | '/_app/resume/create'
     | '/_app/resume/templates'
     | '/_app/rooms/$roomCode'
+    | '/api/admin/invite'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -863,6 +887,7 @@ export interface RootRouteChildren {
   ApiSuggestionsRoute: typeof ApiSuggestionsRoute
   ApiUploadRoute: typeof ApiUploadRoute
   OauthConsentRoute: typeof OauthConsentRoute
+  ApiAdminInviteRoute: typeof ApiAdminInviteRoute
   ApiClassesCreateRoute: typeof ApiClassesCreateRoute
   ApiCoursesEnrollRoute: typeof ApiCoursesEnrollRoute
   ApiCoursesEnrolledRoute: typeof ApiCoursesEnrolledRoute
@@ -1058,6 +1083,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/admins': {
+      id: '/admin/admins'
+      path: '/admins'
+      fullPath: '/admin/admins'
+      preLoaderRoute: typeof AdminAdminsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_app/rooms': {
       id: '/_app/rooms'
       path: '/rooms'
@@ -1238,6 +1270,13 @@ declare module '@tanstack/react-router' {
       path: '/api/classes/create'
       fullPath: '/api/classes/create'
       preLoaderRoute: typeof ApiClassesCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/invite': {
+      id: '/api/admin/invite'
+      path: '/api/admin/invite'
+      fullPath: '/api/admin/invite'
+      preLoaderRoute: typeof ApiAdminInviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/rooms/$roomCode': {
@@ -1539,6 +1578,7 @@ const AppRouteChildren: AppRouteChildren = {
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface AdminRouteChildren {
+  AdminAdminsRoute: typeof AdminAdminsRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminInterviewsRoute: typeof AdminInterviewsRoute
   AdminProjectsRoute: typeof AdminProjectsRoute
@@ -1550,6 +1590,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminsRoute: AdminAdminsRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminInterviewsRoute: AdminInterviewsRoute,
   AdminProjectsRoute: AdminProjectsRoute,
@@ -1607,6 +1648,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSuggestionsRoute: ApiSuggestionsRoute,
   ApiUploadRoute: ApiUploadRoute,
   OauthConsentRoute: OauthConsentRoute,
+  ApiAdminInviteRoute: ApiAdminInviteRoute,
   ApiClassesCreateRoute: ApiClassesCreateRoute,
   ApiCoursesEnrollRoute: ApiCoursesEnrollRoute,
   ApiCoursesEnrolledRoute: ApiCoursesEnrolledRoute,

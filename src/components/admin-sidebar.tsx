@@ -10,6 +10,7 @@ import {
   Sparkles,
   GraduationCap,
   Mic,
+  ShieldAlert,
 } from "lucide-react";
 import {
   Sidebar,
@@ -29,6 +30,7 @@ const items = [
   { title: "Quizzes", url: "/admin/quizzes", icon: ListChecks },
   { title: "Students", url: "/admin/users", icon: Users },
   { title: "Teachers", url: "/admin/teachers", icon: GraduationCap },
+  { title: "Admins", url: "/admin/admins", icon: ShieldAlert },
   { title: "Projects", url: "/admin/projects", icon: FolderGit2 },
   { title: "Interviews", url: "/admin/interviews", icon: Mic },
   { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },

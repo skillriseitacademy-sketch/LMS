@@ -2,8 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { TopBar } from "@/components/top-bar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Check, X } from "lucide-react";
+import { Check, X, UserPlus, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/admin/teachers")({
   head: () => ({ meta: [{ title: "Teachers — Admin · PlacePro LMS" }] }),
@@ -23,6 +30,14 @@ type TeacherWithProfile = {
 function Teachers() {
   const [teachers, setTeachers] = useState<TeacherWithProfile[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Invite state
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [inviteName, setInviteName] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviting, setInviting] = useState(false);
+  const [inviteError, setInviteError] = useState("");
+  const [inviteSuccess, setInviteSuccess] = useState("");
 
   const fetchTeachers = async () => {
     setLoading(true);
@@ -76,6 +91,51 @@ function Teachers() {
     fetchTeachers();
   }, []);
 
+  const handleInvite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setInviting(true);
+    setInviteError("");
+    setInviteSuccess("");
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+
+      const res = await fetch("/api/admin/invite", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          email: inviteEmail,
+          name: inviteName,
+          role: "teacher",
+        }),
+      });
+
+      const text = await res.text();
+      if (!res.ok) {
+        throw new Error(text);
+      }
+
+      setInviteSuccess("Teacher invited successfully!");
+      setInviteName("");
+      setInviteEmail("");
+      
+      fetchTeachers();
+      
+      setTimeout(() => {
+        setInviteOpen(false);
+        setInviteSuccess("");
+      }, 2000);
+    } catch (err: any) {
+      setInviteError(err.message);
+    } finally {
+      setInviting(false);
+    }
+  };
+
   const toggleApproval = async (id: string, currentlyApproved: boolean) => {
     const {
       data: { session },
@@ -100,11 +160,67 @@ function Teachers() {
     <>
       <TopBar breadcrumb={["Admin", "Teachers"]} />
       <div className="p-4 md:p-6">
-        <div className="mb-5">
-          <h1 className="text-display text-2xl font-bold">Teacher Approvals</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Manage teacher accounts. Unapproved teachers cannot create live classes or courses.
-          </p>
+        <div className="mb-5 flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <h1 className="text-display text-2xl font-bold">Teacher Approvals</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Manage teacher accounts. Unapproved teachers cannot create live classes or courses.
+            </p>
+          </div>
+          <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+            <DialogTrigger asChild>
+              <button className="inline-flex items-center gap-1 rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground hover:opacity-90">
+                <UserPlus className="h-3.5 w-3.5" /> Invite teacher
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Invite new teacher</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleInvite} className="mt-4 space-y-4">
+                {inviteError && (
+                  <div className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive border border-destructive/20">
+                    {inviteError}
+                  </div>
+                )}
+                {inviteSuccess && (
+                  <div className="rounded-xl bg-green-50 p-3 text-sm text-green-700 border border-green-200">
+                    {inviteSuccess}
+                  </div>
+                )}
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Name</label>
+                  <input
+                    required
+                    type="text"
+                    value={inviteName}
+                    onChange={(e) => setInviteName(e.target.value)}
+                    placeholder="Full Name"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-brand"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Email address</label>
+                  <input
+                    required
+                    type="email"
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    placeholder="name@example.com"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-brand"
+                  />
+                </div>
+                <button
+                  disabled={inviting}
+                  type="submit"
+                  className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90 disabled:opacity-50"
+                >
+                  {inviting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                  {inviting ? "Inviting..." : "Send invite"}
+                </button>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div className="overflow-hidden rounded-3xl border border-border bg-card">
