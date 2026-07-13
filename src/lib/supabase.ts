@@ -38,7 +38,11 @@ export async function createUserAdmin(opts: {
         email: opts.email,
         password: opts.password,
         email_confirm: true,
-        user_metadata: { role: opts.role, name: opts.name },
+        user_metadata: { 
+          role: opts.role, 
+          name: opts.name,
+          username: opts.email.split("@")[0].replace(/[^a-zA-Z0-9_]/g, "").toLowerCase() + Math.floor(1000 + Math.random() * 9000).toString()
+        },
       }),
     });
 
