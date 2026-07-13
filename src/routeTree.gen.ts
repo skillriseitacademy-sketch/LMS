@@ -62,7 +62,6 @@ import { Route as ApiInterviewStartRouteImport } from './routes/api/interview.st
 import { Route as ApiCoursesEnrolledRouteImport } from './routes/api/courses.enrolled'
 import { Route as ApiCoursesEnrollRouteImport } from './routes/api/courses.enroll'
 import { Route as ApiClassesCreateRouteImport } from './routes/api/classes.create'
-import { Route as ApiAdminInviteRouteImport } from './routes/api/admin.invite'
 import { Route as AppRoomsRoomCodeRouteImport } from './routes/_app.rooms.$roomCode'
 import { Route as AppResumeTemplatesRouteImport } from './routes/_app.resume.templates'
 import { Route as AppResumeCreateRouteImport } from './routes/_app.resume.create'
@@ -345,11 +344,6 @@ const ApiClassesCreateRoute = ApiClassesCreateRouteImport.update({
   path: '/api/classes/create',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiAdminInviteRoute = ApiAdminInviteRouteImport.update({
-  id: '/api/admin/invite',
-  path: '/api/admin/invite',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AppRoomsRoomCodeRoute = AppRoomsRoomCodeRouteImport.update({
   id: '/$roomCode',
   path: '/$roomCode',
@@ -487,7 +481,6 @@ export interface FileRoutesByFullPath {
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
   '/rooms/$roomCode': typeof AppRoomsRoomCodeRoute
-  '/api/admin/invite': typeof ApiAdminInviteRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -554,7 +547,6 @@ export interface FileRoutesByTo {
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
   '/rooms/$roomCode': typeof AppRoomsRoomCodeRoute
-  '/api/admin/invite': typeof ApiAdminInviteRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -628,7 +620,6 @@ export interface FileRoutesById {
   '/_app/resume/create': typeof AppResumeCreateRoute
   '/_app/resume/templates': typeof AppResumeTemplatesRoute
   '/_app/rooms/$roomCode': typeof AppRoomsRoomCodeRoute
-  '/api/admin/invite': typeof ApiAdminInviteRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -702,7 +693,6 @@ export interface FileRouteTypes {
     | '/resume/create'
     | '/resume/templates'
     | '/rooms/$roomCode'
-    | '/api/admin/invite'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -769,7 +759,6 @@ export interface FileRouteTypes {
     | '/resume/create'
     | '/resume/templates'
     | '/rooms/$roomCode'
-    | '/api/admin/invite'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -842,7 +831,6 @@ export interface FileRouteTypes {
     | '/_app/resume/create'
     | '/_app/resume/templates'
     | '/_app/rooms/$roomCode'
-    | '/api/admin/invite'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -887,7 +875,6 @@ export interface RootRouteChildren {
   ApiSuggestionsRoute: typeof ApiSuggestionsRoute
   ApiUploadRoute: typeof ApiUploadRoute
   OauthConsentRoute: typeof OauthConsentRoute
-  ApiAdminInviteRoute: typeof ApiAdminInviteRoute
   ApiClassesCreateRoute: typeof ApiClassesCreateRoute
   ApiCoursesEnrollRoute: typeof ApiCoursesEnrollRoute
   ApiCoursesEnrolledRoute: typeof ApiCoursesEnrolledRoute
@@ -1272,13 +1259,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiClassesCreateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/admin/invite': {
-      id: '/api/admin/invite'
-      path: '/api/admin/invite'
-      fullPath: '/api/admin/invite'
-      preLoaderRoute: typeof ApiAdminInviteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_app/rooms/$roomCode': {
       id: '/_app/rooms/$roomCode'
       path: '/$roomCode'
@@ -1648,7 +1628,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSuggestionsRoute: ApiSuggestionsRoute,
   ApiUploadRoute: ApiUploadRoute,
   OauthConsentRoute: OauthConsentRoute,
-  ApiAdminInviteRoute: ApiAdminInviteRoute,
   ApiClassesCreateRoute: ApiClassesCreateRoute,
   ApiCoursesEnrollRoute: ApiCoursesEnrollRoute,
   ApiCoursesEnrolledRoute: ApiCoursesEnrolledRoute,

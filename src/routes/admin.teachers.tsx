@@ -103,7 +103,7 @@ function Teachers() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error("Not authenticated");
 
-      const res = await fetch("/api/admin/invite", {
+      const res = await fetch("/api/invite", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -117,9 +117,15 @@ function Teachers() {
         }),
       });
 
-      const text = await res.text();
+      let data;
+      try {
+        data = await res.json();
+      } catch (e) {
+        throw new Error("Failed to parse server response");
+      }
+
       if (!res.ok) {
-        throw new Error(text);
+        throw new Error(data.error || "Failed to create account");
       }
 
       setInviteSuccess("Teacher created successfully!");
