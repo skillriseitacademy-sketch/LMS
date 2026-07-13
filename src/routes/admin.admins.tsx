@@ -25,6 +25,7 @@ function Admins() {
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteName, setInviteName] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
+  const [invitePassword, setInvitePassword] = useState("");
   const [inviting, setInviting] = useState(false);
   const [inviteError, setInviteError] = useState("");
   const [inviteSuccess, setInviteSuccess] = useState("");
@@ -67,6 +68,7 @@ function Admins() {
         },
         body: JSON.stringify({
           email: inviteEmail,
+          password: invitePassword,
           name: inviteName,
           role: "admin",
         }),
@@ -77,9 +79,10 @@ function Admins() {
         throw new Error(text);
       }
 
-      setInviteSuccess("Admin invited successfully!");
+      setInviteSuccess("Admin created successfully!");
       setInviteName("");
       setInviteEmail("");
+      setInvitePassword("");
       
       // Refresh list
       fetchAdmins();
@@ -112,12 +115,12 @@ function Admins() {
           <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
             <DialogTrigger asChild>
               <button className="inline-flex items-center gap-1 rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground hover:opacity-90">
-                <UserPlus className="h-3.5 w-3.5" /> Invite admin
+                <UserPlus className="h-3.5 w-3.5" /> Create admin
               </button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Invite new admin</DialogTitle>
+                <DialogTitle>Create new admin</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleInvite} className="mt-4 space-y-4">
                 {inviteError && (
@@ -152,13 +155,24 @@ function Admins() {
                     className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-brand"
                   />
                 </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Password</label>
+                  <input
+                    required
+                    type="password"
+                    value={invitePassword}
+                    onChange={(e) => setInvitePassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-brand"
+                  />
+                </div>
                 <button
                   disabled={inviting}
                   type="submit"
                   className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90 disabled:opacity-50"
                 >
                   {inviting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                  {inviting ? "Inviting..." : "Send invite"}
+                  {inviting ? "Creating..." : "Create account"}
                 </button>
               </form>
             </DialogContent>

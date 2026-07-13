@@ -5,6 +5,7 @@ type InviteRequestBody = {
   email: string;
   role: "student" | "teacher" | "admin";
   name: string;
+  password?: string;
 };
 
 export const Route = createFileRoute("/api/admin/invite")({
@@ -37,21 +38,21 @@ export const Route = createFileRoute("/api/admin/invite")({
           }
 
           const body = (await request.json()) as InviteRequestBody;
-          if (!body.email || !body.role || !body.name) {
+          if (!body.email || !body.role || !body.name || !body.password) {
             return new Response("Missing required fields", { status: 400 });
           }
 
-          // Invite user using Supabase Admin API
+          // Create user using Supabase Admin API
           // We pass the role and name in the metadata so our handle_new_user trigger applies them automatically.
-          const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(
-            body.email,
-            {
-              data: {
-                role: body.role,
-                name: body.name,
-              },
-            }
-          );
+          const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.createUser({
+            email: body.email,
+            password: body.password,
+            email_confirm: true,
+            user_metadata: {
+              role: body.role,
+              name: body.name,
+            },
+          });
 
           if (inviteError) {
             return new Response(inviteError.message, { status: 400 });
