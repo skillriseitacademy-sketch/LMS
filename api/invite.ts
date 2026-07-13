@@ -71,8 +71,20 @@ export default async function handler(req, res) {
 
     if (inviteError) {
       console.error("Supabase createUser error:", inviteError);
-      const errorMessage = inviteError.message || inviteError.error_description || JSON.stringify(inviteError) || "Failed to create user";
-      return res.status(400).json({ error: errorMessage });
+      let errorStr = "Failed to create user";
+      if (inviteError.message) {
+        errorStr = inviteError.message;
+      } else if (typeof inviteError === 'string') {
+        errorStr = inviteError;
+      } else if (inviteError instanceof Error) {
+        errorStr = inviteError.toString();
+      } else {
+        try {
+          const str = JSON.stringify(inviteError);
+          errorStr = str !== "{}" ? str : "Empty error object returned from Supabase. Check Vercel logs.";
+        } catch (e) {}
+      }
+      return res.status(400).json({ error: errorStr });
     }
 
     return res.status(200).json({ success: true, user: inviteData.user });
