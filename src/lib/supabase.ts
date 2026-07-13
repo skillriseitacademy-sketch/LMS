@@ -2,15 +2,23 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseServiceKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 console.log("Supabase URL initialized as:", supabaseUrl);
-// console.log("Supabase Anon Key initialized as:", supabaseAnonKey?.substring(0, 10) + "...");
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase environment variables. Please check your .env file.");
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Admin client for user management (create/delete users).
+// Uses service_role key — only used from admin-protected pages.
+export const supabaseAdmin = supabaseServiceKey
+  ? createClient(supabaseUrl, supabaseServiceKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    })
+  : null;
 
 // ─── Core Tables ─────────────────────────────────────────────────────────────
 

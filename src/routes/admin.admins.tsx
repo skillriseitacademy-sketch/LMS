@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { TopBar } from "@/components/top-bar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { UserPlus, Loader2, Search, Eye, EyeOff } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { supabase, supabaseAdmin } from "@/lib/supabase";
 import {
   Dialog,
   DialogContent,
@@ -58,32 +58,19 @@ function Admins() {
     setInviteSuccess("");
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      const res = await fetch("/api/invite", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          email: inviteEmail,
-          password: invitePassword,
-          name: inviteName,
-          role: "admin",
-        }),
-      });
-
-      let data;
-      try {
-        data = await res.json();
-      } catch (e) {
-        throw new Error("Failed to parse server response");
+      if (!supabaseAdmin) {
+        throw new Error("Admin client not configured. Add VITE_SUPABASE_SERVICE_ROLE_KEY to your .env and to Vercel Environment Variables.");
       }
 
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to create account");
+      const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.createUser({
+        email: inviteEmail,
+        password: invitePassword,
+        email_confirm: true,
+        user_metadata: { role: "admin", name: inviteName },
+      });
+
+      if (inviteError) {
+        throw new Error(inviteError.message);
       }
 
       setInviteSuccess("Admin created successfully!");
