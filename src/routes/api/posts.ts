@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
+import { sanitizeText } from "@/lib/sanitize";
 
 export const Route = createFileRoute("/api/posts")({
   server: {
@@ -29,7 +30,9 @@ export const Route = createFileRoute("/api/posts")({
           ref_id?: string;
         };
 
-        if (!body.content?.trim()) {
+        const cleanContent = sanitizeText(body.content, 5000);
+
+        if (!cleanContent) {
           return new Response("content is required", { status: 400 });
         }
 
@@ -37,7 +40,7 @@ export const Route = createFileRoute("/api/posts")({
           .from("posts")
           .insert({
             user_id: user.id,
-            content: body.content.trim(),
+            content: cleanContent,
             media_urls: body.media_urls ?? [],
             visibility: body.visibility ?? "connections",
             type: body.type ?? "text",

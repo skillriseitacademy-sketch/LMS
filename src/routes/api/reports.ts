@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
+import { sanitizeText } from "@/lib/sanitize";
 
 export const Route = createFileRoute("/api/reports")({
   server: {
@@ -26,7 +27,9 @@ export const Route = createFileRoute("/api/reports")({
           reason?: string;
         };
 
-        if (!body.target_type || !body.target_id || !body.reason?.trim()) {
+        const cleanReason = sanitizeText(body.reason, 2000, true);
+
+        if (!body.target_type || !body.target_id || !cleanReason) {
           return new Response("target_type, target_id, and reason are required", { status: 400 });
         }
 
@@ -40,7 +43,7 @@ export const Route = createFileRoute("/api/reports")({
             reporter_id: user.id,
             target_type: body.target_type,
             target_id: body.target_id,
-            reason: body.reason.trim(),
+            reason: cleanReason,
             status: "pending",
           })
           .select()

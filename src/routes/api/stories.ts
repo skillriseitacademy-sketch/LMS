@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
+import { sanitizeText, isValidUrl } from "@/lib/sanitize";
 
 export const Route = createFileRoute("/api/stories")({
   server: {
@@ -93,16 +94,19 @@ export const Route = createFileRoute("/api/stories")({
           story_type?: "status" | "streak" | "achievement" | "media";
         };
 
-        if (!body.content && !body.media_url) {
-          return new Response("content or media_url is required", { status: 400 });
+        const cleanContent = sanitizeText(body.content, 500);
+        const isMediaUrlValid = isValidUrl(body.media_url ?? "");
+
+        if (!cleanContent && !isMediaUrlValid) {
+          return new Response("valid content or media_url is required", { status: 400 });
         }
 
         const { data, error } = await serviceClient
           .from("stories")
           .insert({
             user_id: user.id,
-            content: body.content ?? null,
-            media_url: body.media_url ?? null,
+            content: cleanContent || null,
+            media_url: isMediaUrlValid ? body.media_url : null,
             story_type: body.story_type ?? "status",
           })
           .select()

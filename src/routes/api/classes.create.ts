@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/lib/supabase";
+import { sanitizeText } from "@/lib/sanitize";
 
 export const Route = createFileRoute("/api/classes/create")({
   server: {
@@ -25,7 +26,9 @@ export const Route = createFileRoute("/api/classes/create")({
           if (profile?.role !== "teacher") return new Response("Forbidden", { status: 403 });
 
           const { title, topic_id, start_time, end_time } = await request.json();
-          if (!title || !topic_id || !start_time || !end_time) {
+          const cleanTitle = sanitizeText(title, 200);
+          
+          if (!cleanTitle || !topic_id || !start_time || !end_time) {
             return new Response("Missing required fields", { status: 400 });
           }
 
@@ -63,7 +66,7 @@ export const Route = createFileRoute("/api/classes/create")({
             .insert({
               teacher_id: user.id,
               topic_id,
-              title,
+              title: cleanTitle,
               start_time,
               end_time,
               daily_room_url: room.url,

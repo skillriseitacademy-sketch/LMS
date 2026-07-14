@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
+import { sanitizeText } from "@/lib/sanitize";
 
 export const Route = createFileRoute("/api/posts/$postId/comments")({
   server: {
@@ -54,7 +55,9 @@ export const Route = createFileRoute("/api/posts/$postId/comments")({
         if (authError || !user) return new Response("Unauthorized", { status: 401 });
 
         const body = (await request.json()) as { content?: string };
-        if (!body.content?.trim()) {
+        const cleanContent = sanitizeText(body.content, 2000);
+
+        if (!cleanContent) {
           return new Response("content is required", { status: 400 });
         }
 
@@ -63,7 +66,7 @@ export const Route = createFileRoute("/api/posts/$postId/comments")({
           .insert({
             post_id: params.postId,
             user_id: user.id,
-            content: body.content.trim(),
+            content: cleanContent,
           })
           .select(
             `
