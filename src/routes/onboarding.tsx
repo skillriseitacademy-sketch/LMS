@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Sparkles, ArrowRight, BookOpen } from "lucide-react";
+import { Sparkles, ArrowRight, BookOpen, LogOut } from "lucide-react";
 import { AuthBackground } from "@/components/auth-background";
 
 export const Route = createFileRoute("/onboarding")({
@@ -150,9 +150,25 @@ function Onboarding() {
     window.location.href = "/dashboard";
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate({ to: "/login" });
+  };
+
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 py-12">
       <AuthBackground />
+
+      <div className="absolute top-4 right-4 md:top-8 md:right-8 z-20">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 rounded-xl border border-border bg-card/80 backdrop-blur px-4 py-2 text-sm font-semibold hover:bg-muted transition"
+        >
+          <LogOut className="h-4 w-4" />
+          Log Out
+        </button>
+      </div>
+
       <div className="relative z-10 w-full max-w-3xl rounded-3xl border border-border bg-card/90 backdrop-blur p-8 shadow-xl">
         <div className="flex items-center gap-2 mb-8">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-brand-foreground">
