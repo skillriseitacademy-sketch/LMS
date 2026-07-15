@@ -276,6 +276,18 @@ CREATE TABLE roadmap_cache (
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
+CREATE TABLE roadmap_nodes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  parent_id UUID REFERENCES roadmap_nodes(id) ON DELETE CASCADE,
+  label TEXT NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('education', 'job', 'root')),
+  field TEXT NOT NULL,
+  level TEXT NOT NULL,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+);
+
 CREATE TABLE projects (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -315,6 +327,7 @@ ALTER TABLE job_listings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE career_roles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_roadmap_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE roadmap_cache ENABLE ROW LEVEL SECURITY;
+ALTER TABLE roadmap_nodes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 
 -- ------------------------------------------------------------------------------
@@ -351,6 +364,8 @@ CREATE POLICY "Content viewable by all" ON job_listings FOR SELECT USING (auth.u
 CREATE POLICY "Admins manage job listings" ON job_listings FOR ALL USING (get_user_role() = 'admin');
 CREATE POLICY "Content viewable by all" ON roadmap_cache FOR SELECT USING (auth.uid() IS NOT NULL);
 CREATE POLICY "Admins manage roadmap cache" ON roadmap_cache FOR ALL USING (get_user_role() = 'admin');
+CREATE POLICY "Users view own roadmap nodes" ON roadmap_nodes FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users manage own roadmap nodes" ON roadmap_nodes FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "Content viewable by all" ON leaderboard_snapshots FOR SELECT USING (auth.uid() IS NOT NULL);
 CREATE POLICY "Admins manage leaderboard" ON leaderboard_snapshots FOR ALL USING (get_user_role() = 'admin');
 
