@@ -110,6 +110,22 @@ function RoomView() {
           setGuestStatus('admitted');
           if (!isJoined) initLocalStream();
         } else if (!isJoined && guestStatus === 'prejoin') {
+          // Check if guest is already in the database
+          const { data: participantData } = await supabase
+            .from('room_participants')
+            .select('status')
+            .eq('room_code', roomCode)
+            .eq('user_name', userName)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+          if (participantData?.status === 'admitted') {
+            setGuestStatus('admitted');
+          } else if (participantData?.status === 'waiting') {
+            setGuestStatus('waiting');
+          }
+          
           // Initialize camera on the pre-join screen for guests
           initLocalStream();
         }
@@ -134,6 +150,7 @@ function RoomView() {
         if (payload.new.user_name === userName) {
           if (payload.new.status === 'admitted') {
             setGuestStatus('admitted');
+            sessionStorage.setItem(`auto_join_${roomCode}`, 'true');
             joinRoom();
           } else if (payload.new.status === 'rejected') {
             setGuestStatus('rejected');
@@ -145,6 +162,15 @@ function RoomView() {
 
     return () => { supabase.removeChannel(channel); }
   }, [isHost, guestStatus, roomCode, userName, joinRoom]);
+
+  // Auto-join on refresh if previously joined
+  useEffect(() => {
+    if (localStream && !isJoined && sessionStorage.getItem(`auto_join_${roomCode}`) === 'true') {
+      if (isHost || guestStatus === 'admitted') {
+        joinRoom();
+      }
+    }
+  }, [localStream, isJoined, roomCode, isHost, guestStatus, joinRoom]);
 
   // Realtime subscription for host to see waiting participants
   useEffect(() => {
@@ -178,7 +204,8 @@ function RoomView() {
   }, [isHost, roomCode]);
 
   const handleJoinClick = async () => {
-    if (isHost) {
+    if (isHost || guestStatus === 'admitted') {
+      sessionStorage.setItem(`auto_join_${roomCode}`, 'true');
       joinRoom();
       return;
     }
@@ -330,7 +357,7 @@ function RoomView() {
                 disabled={!localStream}
                 className="w-full py-6 text-lg font-bold rounded-xl bg-brand hover:bg-brand/90 text-brand-foreground shadow-lg shadow-brand/20 transition-all hover:scale-[1.02]"
               >
-                {isHost ? "Join Now" : "Ask to Join"}
+                {isHost || guestStatus === 'admitted' ? "Join Now" : "Ask to Join"}
               </Button>
             )}
             
@@ -477,6 +504,7 @@ function RoomView() {
         <Button
           variant="destructive"
           onClick={() => {
+            sessionStorage.removeItem(`auto_join_${roomCode}`);
             leaveRoom();
             navigate({ to: "/rooms" });
           }}
