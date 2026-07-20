@@ -7,10 +7,11 @@ export interface RemoteStream {
   stream: MediaStream;
 }
 
-export function useWebRTC(roomCode: string, userName: string) {
+export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: () => void) {
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStreams, setRemoteStreams] = useState<Record<string, RemoteStream>>({});
   const [isJoined, setIsJoined] = useState(false);
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
   
   const [isMicMuted, setIsMicMuted] = useState(false);
   const [isCamOff, setIsCamOff] = useState(false);
@@ -24,12 +25,17 @@ export function useWebRTC(roomCode: string, userName: string) {
   const channelRef = useRef<any>(null);
   const myPeerId = useRef(Math.random().toString(36).substring(7));
   const iceServersRef = useRef<RTCIceServer[]>([]);
+  const iceCandidatesQueueRef = useRef<Record<string, RTCIceCandidateInit[]>>({});
+  const iceCandidateTimerRef = useRef<Record<string, NodeJS.Timeout | null>>({});
 
   // Initialize local media
-  const initLocalStream = useCallback(async () => {
-    if (localStreamRef.current) return localStreamRef.current;
+  const initLocalStream = useCallback(async (forcedFacingMode?: 'user' | 'environment') => {
+    const currentFacingMode = forcedFacingMode || facingMode;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: currentFacingMode }, 
+        audio: true 
+      });
       localStreamRef.current = stream;
       setLocalStream(stream);
       setStreamError("");
@@ -39,7 +45,7 @@ export function useWebRTC(roomCode: string, userName: string) {
       setStreamError("Could not access camera or microphone. Please check permissions.");
       return null;
     }
-  }, []);
+  }, [facingMode]);
   
   const toggleMic = useCallback(() => {
     if (!localStreamRef.current) return;
@@ -56,6 +62,41 @@ export function useWebRTC(roomCode: string, userName: string) {
     });
     setIsCamOff(!localStreamRef.current.getVideoTracks()[0]?.enabled);
   }, []);
+
+  const flipCamera = useCallback(async () => {
+    if (!localStreamRef.current) return;
+    const newFacingMode = facingMode === 'user' ? 'environment' : 'user';
+    
+    try {
+      const newStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { exact: newFacingMode } }
+      });
+      
+      const newVideoTrack = newStream.getVideoTracks()[0];
+      const oldVideoTrack = localStreamRef.current.getVideoTracks()[0];
+      
+      if (oldVideoTrack) {
+        oldVideoTrack.stop();
+        localStreamRef.current.removeTrack(oldVideoTrack);
+      }
+      
+      localStreamRef.current.addTrack(newVideoTrack);
+      setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
+      setFacingMode(newFacingMode);
+
+      // Replace track in all peer connections
+      Object.values(peerConnectionsRef.current).forEach(pc => {
+        const sender = pc.getSenders().find(s => s.track?.kind === 'video');
+        if (sender) {
+          sender.replaceTrack(newVideoTrack);
+        }
+      });
+    } catch (err) {
+      console.error("Error flipping camera:", err);
+      // Fallback if 'exact' facingMode fails (e.g. desktop)
+      setFacingMode(newFacingMode);
+    }
+  }, [facingMode]);
 
   const toggleScreenShare = useCallback(async () => {
     if (!localStreamRef.current) return;
@@ -88,7 +129,7 @@ export function useWebRTC(roomCode: string, userName: string) {
     } else {
       // Turn on screen sharing
       try {
-        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
         const screenTrack = screenStream.getVideoTracks()[0];
         
         const cameraTrack = localStreamRef.current.getVideoTracks()[0];
@@ -169,16 +210,26 @@ export function useWebRTC(roomCode: string, userName: string) {
 
     pc.onicecandidate = (event) => {
       if (event.candidate) {
-        console.log(`[WebRTC] Sending ICE candidate to ${peerId}`);
-        channelRef.current?.send({
-          type: 'broadcast',
-          event: 'ice-candidate',
-          payload: {
-            to: peerId,
-            from: myPeerId.current,
-            candidate: event.candidate,
-          }
-        });
+        if (!iceCandidatesQueueRef.current[peerId]) {
+          iceCandidatesQueueRef.current[peerId] = [];
+        }
+        iceCandidatesQueueRef.current[peerId].push(event.candidate);
+
+        if (!iceCandidateTimerRef.current[peerId]) {
+          iceCandidateTimerRef.current[peerId] = setTimeout(() => {
+            channelRef.current?.send({
+              type: 'broadcast',
+              event: 'ice-candidates-batch',
+              payload: {
+                to: peerId,
+                from: myPeerId.current,
+                candidates: iceCandidatesQueueRef.current[peerId]
+              }
+            });
+            iceCandidatesQueueRef.current[peerId] = [];
+            iceCandidateTimerRef.current[peerId] = null;
+          }, 250); // Batch for 250ms
+        }
       }
     };
 
@@ -364,24 +415,18 @@ export function useWebRTC(roomCode: string, userName: string) {
           }
         }
       })
-      .on('broadcast', { event: 'ice-candidate' }, async ({ payload }) => {
-        const { to, from, candidate } = payload;
+      .on('broadcast', { event: 'ice-candidates-batch' }, async ({ payload }) => {
+        const { to, from, candidates } = payload;
         if (to !== myPeerId.current) return;
-        console.log(`[WebRTC] Received ICE candidate from ${from}`);
-
+        
         const pc = peerConnectionsRef.current[from];
-        if (pc) {
-          if (pc.remoteDescription) {
+        for (const candidate of candidates) {
+          if (pc && pc.remoteDescription) {
             await pc.addIceCandidate(new RTCIceCandidate(candidate)).catch(console.error);
           } else {
-            console.log(`[WebRTC] Buffering ICE candidate for ${from} (RemoteDescription not set)`);
             if (!candidateBufferRef.current[from]) candidateBufferRef.current[from] = [];
             candidateBufferRef.current[from].push(candidate);
           }
-        } else {
-          console.log(`[WebRTC] Buffering ICE candidate for ${from} (PeerConnection not ready)`);
-          if (!candidateBufferRef.current[from]) candidateBufferRef.current[from] = [];
-          candidateBufferRef.current[from].push(candidate);
         }
       })
       .on('broadcast', { event: 'leave' }, ({ payload }) => {
@@ -394,6 +439,11 @@ export function useWebRTC(roomCode: string, userName: string) {
             delete next[from];
             return next;
           });
+        }
+      })
+      .on('broadcast', { event: 'end-meeting' }, () => {
+        if (onMeetingEnded) {
+          onMeetingEnded();
         }
       })
       .subscribe(async (status) => {
@@ -457,6 +507,17 @@ export function useWebRTC(roomCode: string, userName: string) {
     }
   }, []);
 
+  const endMeeting = useCallback(() => {
+    if (channelRef.current) {
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'end-meeting',
+        payload: { from: myPeerId.current }
+      });
+    }
+    leaveRoom();
+  }, [leaveRoom]);
+
   useEffect(() => {
     return () => {
       // Auto leave on unmount
@@ -472,11 +533,14 @@ export function useWebRTC(roomCode: string, userName: string) {
     isCamOff,
     isScreenSharing,
     streamError,
+    facingMode,
     initLocalStream,
     joinRoom,
     leaveRoom,
+    endMeeting,
     toggleMic,
     toggleCam,
-    toggleScreenShare
+    toggleScreenShare,
+    flipCamera
   };
 }

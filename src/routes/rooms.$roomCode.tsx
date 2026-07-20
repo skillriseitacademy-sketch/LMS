@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/card";
-import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check, UserPlus, X, Home, Calendar, Bell, Settings, LogOut, MessageSquare, LayoutGrid, Menu, MonitorUp, ChevronLeft, BarChart2 } from "lucide-react";
+import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check, UserPlus, X, Home, Calendar, Bell, Settings, LogOut, MessageSquare, LayoutGrid, Menu, MonitorUp, ChevronLeft, BarChart2, SwitchCamera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-store";
 import { useWebRTC } from "@/hooks/useWebRTC";
@@ -99,8 +99,14 @@ function RoomView() {
     toggleMic,
     toggleCam,
     toggleScreenShare,
-    isScreenSharing
-  } = useWebRTC(roomCode, userName);
+    isScreenSharing,
+    facingMode,
+    flipCamera,
+    endMeeting
+  } = useWebRTC(roomCode, userName, () => {
+    alert("The host has ended the meeting.");
+    navigate({ to: "/rooms" });
+  });
 
   useEffect(() => {
     async function checkRoom() {
@@ -413,10 +419,12 @@ function RoomView() {
 
   // Active Room UI
   const totalParticipants = remoteStreams.length + 1;
-  const gridCols = totalParticipants === 1 ? "grid-cols-1" :
-                   totalParticipants === 2 ? "grid-cols-1 md:grid-cols-2" :
-                   totalParticipants <= 4 ? "grid-cols-1 md:grid-cols-2" :
-                   "grid-cols-1 sm:grid-cols-2 md:grid-cols-3";
+  const gridClass = 
+    totalParticipants === 1 ? "grid-cols-1 grid-rows-1" :
+    totalParticipants === 2 ? "grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1" :
+    totalParticipants <= 4 ? "grid-cols-2 grid-rows-2" :
+    totalParticipants <= 6 ? "grid-cols-2 md:grid-cols-3 grid-rows-3 md:grid-rows-2" :
+    "grid-cols-3 md:grid-cols-4 grid-rows-[repeat(auto-fit,minmax(200px,1fr))]";
 
   return (
     <div className="h-screen flex bg-[#0F1115] text-white overflow-hidden p-3 gap-3">
@@ -445,6 +453,14 @@ function RoomView() {
             className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${isCamOff ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
           >
             {isCamOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
+          </button>
+
+          <button
+            onClick={flipCamera}
+            title="Flip Camera"
+            className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white md:hidden"
+          >
+            {facingMode === 'user' ? <SwitchCamera className="w-5 h-5" /> : <SwitchCamera className="w-5 h-5 opacity-70" />}
           </button>
 
           <button 
@@ -478,9 +494,11 @@ function RoomView() {
           className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-red-500 hover:bg-red-600 flex items-center justify-center transition-all shadow-lg shadow-red-500/20 mt-auto"
           onClick={async () => {
             sessionStorage.removeItem(`auto_join_${roomCode}`);
-            leaveRoom();
             if (isHost) {
               await supabase.from('instant_rooms').update({ is_active: false }).eq('room_code', roomCode);
+              endMeeting();
+            } else {
+              leaveRoom();
             }
             navigate({ to: "/rooms" });
           }}
@@ -539,7 +557,7 @@ function RoomView() {
 
         {/* Video Grid */}
         <div className="flex-1 p-2 pt-0 pb-2">
-          <div className={`w-full h-full grid gap-4 ${gridCols} auto-rows-fr`}>
+          <div className={`w-full h-full grid gap-4 ${gridClass}`}>
             {/* Local User */}
             <div className="relative w-full h-full min-h-[200px]">
               {localStream && <VideoPlayer stream={localStream} muted userName="You" isLocal={true} />}
