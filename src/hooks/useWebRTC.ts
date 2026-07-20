@@ -95,6 +95,17 @@ export function useWebRTC(roomCode: string, userName: string) {
       }));
     };
 
+    pc.onconnectionstatechange = () => {
+      if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed' || pc.connectionState === 'closed') {
+        setRemoteStreams(prev => {
+          const next = { ...prev };
+          delete next[peerId];
+          return next;
+        });
+        delete peerConnectionsRef.current[peerId];
+      }
+    };
+
     peerConnectionsRef.current[peerId] = pc;
     return pc;
   };
@@ -191,6 +202,21 @@ export function useWebRTC(roomCode: string, userName: string) {
           });
         }
       });
+
+    const handleUnload = () => {
+      if (channelRef.current) {
+        channelRef.current.send({
+          type: 'broadcast',
+          event: 'leave',
+          payload: { from: myPeerId.current }
+        });
+      }
+    };
+    window.addEventListener('beforeunload', handleUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload);
+    };
 
   }, [roomCode, userName, isJoined, initLocalStream]);
 

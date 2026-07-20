@@ -17,6 +17,7 @@ function VideoPlayer({ stream, muted = false, userName }: { stream: MediaStream;
   useEffect(() => {
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
+      videoRef.current.play().catch(e => console.error("Video play error:", e));
     }
   }, [stream]);
 
@@ -392,8 +393,8 @@ function RoomView() {
   const totalParticipants = remoteStreams.length + 1;
   const gridCols = totalParticipants === 1 ? "grid-cols-1" :
                    totalParticipants === 2 ? "grid-cols-1 md:grid-cols-2" :
-                   totalParticipants <= 4 ? "grid-cols-2" :
-                   "grid-cols-2 md:grid-cols-3";
+                   totalParticipants <= 4 ? "grid-cols-1 md:grid-cols-2" :
+                   "grid-cols-1 sm:grid-cols-2 md:grid-cols-3";
 
   return (
     <div className="h-screen flex flex-col bg-[#0F1115] text-white">
