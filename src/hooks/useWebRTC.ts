@@ -147,6 +147,14 @@ export function useWebRTC(roomCode: string, userName: string) {
 
   const joinRoom = useCallback(async () => {
     if (isJoined || channelRef.current) return;
+    
+    // Proactively clean up any stale global channels for this room before creating a new one
+    supabase.getChannels().forEach(ch => {
+      if (ch.topic === `realtime:room:${roomCode}`) {
+        supabase.removeChannel(ch);
+      }
+    });
+
     const stream = await initLocalStream();
     if (!stream) return; // Wait for permissions
 
@@ -304,6 +312,7 @@ export function useWebRTC(roomCode: string, userName: string) {
         payload: { from: myPeerId.current }
       });
       supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
     }
     
     Object.values(peerConnectionsRef.current).forEach(pc => pc.close());
