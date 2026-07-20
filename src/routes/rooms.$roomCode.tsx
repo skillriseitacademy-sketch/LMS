@@ -409,7 +409,11 @@ function RoomView() {
       {/* Left Sidebar Navigation */}
       <aside className="flex w-[64px] md:w-[72px] flex-col items-center py-6 bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl justify-between z-20 shrink-0">
         <div className="flex flex-col gap-4 md:gap-5 w-full items-center">
-          <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-brand-foreground shadow-lg shadow-brand/20 mb-2 cursor-pointer hover:scale-105 transition-transform">
+          <div 
+            onClick={() => alert("Screen sharing is coming soon!")}
+            title="Share Screen"
+            className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-brand-foreground shadow-lg shadow-brand/20 mb-2 cursor-pointer hover:scale-105 transition-transform"
+          >
             <MonitorUp className="w-5 h-5" />
           </div>
           
@@ -430,6 +434,7 @@ function RoomView() {
           </button>
 
           <button 
+            onClick={() => alert("Chat room is coming soon!")}
             className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white"
             title="Chat Room"
           >
@@ -438,6 +443,7 @@ function RoomView() {
 
           {isHost && (
             <button 
+              onClick={() => alert("Polling is coming soon!")}
               className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white"
               title="Add Poll"
             >
@@ -445,7 +451,11 @@ function RoomView() {
             </button>
           )}
           
-          <button className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-[#2A2E38] hover:bg-[#323642] flex items-center justify-center transition-all text-white">
+          <button 
+            onClick={() => alert("Settings are coming soon!")}
+            className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-[#2A2E38] hover:bg-[#323642] flex items-center justify-center transition-all text-white"
+            title="Settings"
+          >
             <Settings className="w-5 h-5 text-white/70 hover:text-white transition-colors" />
           </button>
         </div>
