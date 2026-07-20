@@ -64,50 +64,35 @@ export function useR2Upload(options: { context: UploadContext; accept?: string }
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) throw new Error("Not authenticated — please log in again");
 
-        // 2. Ask the server for a pre-signed upload URL
-        const presignRes = await fetch("/api/upload", {
+        // 2. Upload directly to the local dev middleware via multipart/form-data
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("context", context);
+
+        const uploadRes = await fetch("/api/upload", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${session.access_token}`,
           },
-          body: JSON.stringify({
-            filename: file.name,
-            content_type: file.type,
-            size_bytes: file.size,
-            context,
-          }),
+          body: formData,
         });
 
-        if (!presignRes.ok) {
-          let errMsg = `Failed to get upload URL (HTTP ${presignRes.status})`;
+        if (!uploadRes.ok) {
+          let errMsg = `Upload failed (HTTP ${uploadRes.status})`;
           try {
-            const body = await presignRes.json();
+            const body = await uploadRes.json();
             errMsg = body.error ?? errMsg;
           } catch {}
           throw new Error(errMsg);
         }
 
-        const { uploadUrl, publicUrl, key, bucket } = await presignRes.json();
+        const { publicUrl, key, bucket } = await uploadRes.json();
 
-        if (!uploadUrl || !publicUrl) {
-          throw new Error("Server did not return valid upload URLs");
+        if (!publicUrl) {
+          throw new Error("Server did not return a valid public URL");
         }
 
-        // 3. Upload the file directly to Cloudflare R2 using the presigned URL
-        const uploadRes = await fetch(uploadUrl, {
-          method: "PUT",
-          headers: {
-            "Content-Type": file.type,
-          },
-          body: file,
-        });
-
-        if (!uploadRes.ok) {
-          throw new Error(`R2 upload failed with status ${uploadRes.status}`);
-        }
-
-        // 4. Success!
+        // 3. Success!
         onSuccess({
           publicUrl,
           key: key ?? "",

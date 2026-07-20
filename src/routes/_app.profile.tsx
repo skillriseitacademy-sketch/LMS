@@ -55,10 +55,17 @@ function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
 
-  const { openPicker: openAvatarPicker, uploading: avatarUploading } = useR2Upload({
+  const { openPicker: openAvatarPicker, uploading: avatarUploading, error: avatarError } = useR2Upload({
     context: "avatar",
     accept: "image/jpeg,image/png,image/webp",
   });
+
+  useEffect(() => {
+    if (avatarError) {
+      setMessage({ text: avatarError, type: "error" });
+      setTimeout(() => setMessage({ text: "", type: "" }), 5000);
+    }
+  }, [avatarError]);
 
   useEffect(() => {
     async function loadProfile() {
