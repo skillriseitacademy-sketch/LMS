@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/card";
-import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check } from "lucide-react";
+import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check, UserPlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-store";
 import { useWebRTC } from "@/hooks/useWebRTC";
@@ -47,6 +47,12 @@ function RoomView() {
   const [guestEmail, setGuestEmail] = useState("");
   const [hasEnteredGuestInfo, setHasEnteredGuestInfo] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [roomData, setRoomData] = useState<any>(null);
+  
+  const [guestStatus, setGuestStatus] = useState<'prejoin' | 'waiting' | 'admitted' | 'rejected'>('prejoin');
+  const [waitingParticipants, setWaitingParticipants] = useState<any[]>([]);
+
+  const isHost = session?.id && roomData?.host_id === session.id;
 
   const handleCopyLink = () => {
     const link = `${window.location.origin}/rooms/${roomCode}`;
@@ -89,15 +95,99 @@ function RoomView() {
 
       if (dbError || !data) {
         setError("Room not found or has ended.");
-      } else if (!isJoined) {
-        // Initialize camera on the pre-join screen
-        initLocalStream();
+      } else {
+        setRoomData(data);
+        if (session?.id && data.host_id === session.id) {
+          // Host automatically bypasses waiting room
+          setGuestStatus('admitted');
+          if (!isJoined) initLocalStream();
+        } else if (!isJoined && guestStatus === 'prejoin') {
+          // Initialize camera on the pre-join screen for guests
+          initLocalStream();
+        }
       }
       
       setDbLoading(false);
     }
     checkRoom();
-  }, [roomCode, session, authLoading, hasEnteredGuestInfo, initLocalStream, isJoined]);
+  }, [roomCode, session, authLoading, hasEnteredGuestInfo, initLocalStream, isJoined, guestStatus]);
+
+  // Realtime subscription for guest to know when they are admitted
+  useEffect(() => {
+    if (isHost || guestStatus !== 'waiting') return;
+    
+    const channel = supabase.channel(`guest-wait-${roomCode}`)
+      .on('postgres_changes', { 
+        event: 'UPDATE', 
+        schema: 'public', 
+        table: 'room_participants',
+        filter: `room_code=eq.${roomCode}`
+      }, (payload) => {
+        if (payload.new.user_name === userName) {
+          if (payload.new.status === 'admitted') {
+            setGuestStatus('admitted');
+            joinRoom();
+          } else if (payload.new.status === 'rejected') {
+            setGuestStatus('rejected');
+            setError("The host has declined your request to join.");
+          }
+        }
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); }
+  }, [isHost, guestStatus, roomCode, userName, joinRoom]);
+
+  // Realtime subscription for host to see waiting participants
+  useEffect(() => {
+    if (!isHost) return;
+
+    // Fetch initial
+    supabase.from('room_participants')
+      .select('*')
+      .eq('room_code', roomCode)
+      .eq('status', 'waiting')
+      .then(({data}) => {
+        if (data) setWaitingParticipants(data);
+      });
+
+    const channel = supabase.channel(`host-wait-${roomCode}`)
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'room_participants',
+        filter: `room_code=eq.${roomCode}`
+      }, (payload) => {
+        if (payload.eventType === 'INSERT' && payload.new.status === 'waiting') {
+          setWaitingParticipants(prev => [...prev, payload.new]);
+        } else if (payload.eventType === 'UPDATE') {
+          setWaitingParticipants(prev => prev.filter(p => p.id !== payload.new.id));
+        }
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); }
+  }, [isHost, roomCode]);
+
+  const handleJoinClick = async () => {
+    if (isHost) {
+      joinRoom();
+      return;
+    }
+    setGuestStatus('waiting');
+    await supabase.from('room_participants').insert({
+      room_code: roomCode,
+      user_id: session?.id || null,
+      user_name: userName,
+      status: 'waiting'
+    });
+  };
+
+  const handleAdmit = async (participantId: string, status: 'admitted' | 'rejected') => {
+    await supabase.from('room_participants')
+      .update({ status })
+      .eq('id', participantId);
+  };
 
   if (authLoading || dbLoading) {
     return (
@@ -160,7 +250,7 @@ function RoomView() {
     );
   }
 
-  // Pre-join Screen
+  // Pre-join Screen / Waiting Room Screen
   if (!isJoined) {
     return (
       <div className="h-screen flex flex-col items-center justify-center p-4 bg-background">
@@ -220,13 +310,21 @@ function RoomView() {
               {copied ? "Copied Link!" : "Copy Invite Link"}
             </Button>
 
-            <Button 
-              onClick={joinRoom}
-              disabled={!localStream}
-              className="w-full py-6 text-lg font-bold rounded-xl bg-brand hover:bg-brand/90 text-brand-foreground shadow-lg shadow-brand/20 transition-all hover:scale-[1.02]"
-            >
-              Join Now
-            </Button>
+            {guestStatus === 'waiting' ? (
+              <div className="w-full flex flex-col items-center p-6 bg-surface-container-low rounded-2xl border border-outline-variant mt-4">
+                <Loader2 className="w-10 h-10 animate-spin text-brand mb-4" />
+                <h2 className="text-xl font-bold mb-2">Waiting for the host...</h2>
+                <p className="text-sm text-muted-foreground">You will join automatically once admitted.</p>
+              </div>
+            ) : (
+              <Button 
+                onClick={handleJoinClick}
+                disabled={!localStream}
+                className="w-full py-6 text-lg font-bold rounded-xl bg-brand hover:bg-brand/90 text-brand-foreground shadow-lg shadow-brand/20 transition-all hover:scale-[1.02]"
+              >
+                {isHost ? "Join Now" : "Ask to Join"}
+              </Button>
+            )}
             
             <Button 
               variant="ghost" 
@@ -278,8 +376,9 @@ function RoomView() {
       </header>
 
       {/* Main Video Grid */}
-      <main className="flex-1 p-4 md:p-6 overflow-hidden flex items-center justify-center">
-        <div className={`w-full h-full max-w-7xl mx-auto grid gap-4 ${gridCols} auto-rows-fr`}>
+      <main className="flex-1 overflow-hidden flex">
+        <div className="flex-1 p-4 md:p-6 flex items-center justify-center">
+          <div className={`w-full h-full max-w-7xl mx-auto grid gap-4 ${gridCols} auto-rows-fr`}>
           {/* Local User */}
           <div className="relative w-full h-full min-h-[200px]">
              {localStream && <VideoPlayer stream={localStream} muted userName={`${userName} (You)`} />}
@@ -292,6 +391,26 @@ function RoomView() {
             </div>
           ))}
         </div>
+        
+        {/* Host Waiting Room Sidebar */}
+        {isHost && waitingParticipants.length > 0 && (
+          <div className="w-80 bg-black/40 border-l border-white/10 flex flex-col">
+            <div className="p-4 border-b border-white/10 font-semibold flex items-center justify-between">
+              <span>Waiting Room ({waitingParticipants.length})</span>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {waitingParticipants.map(p => (
+                <div key={p.id} className="bg-white/5 rounded-xl p-3 border border-white/10 flex flex-col gap-3">
+                  <span className="font-medium">{p.user_name}</span>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" className="flex-1 bg-white/5 border-white/10 hover:bg-white/10" onClick={() => handleAdmit(p.id, 'rejected')}>Deny</Button>
+                    <Button size="sm" className="flex-1 bg-brand hover:bg-brand/90 text-brand-foreground" onClick={() => handleAdmit(p.id, 'admitted')}>Admit</Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Bottom Controls */}

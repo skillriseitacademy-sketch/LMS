@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Video, Keyboard, Plus, Users, LayoutDashboard } from "lucide-react";
-import { useState } from "react";
+import { Video, Keyboard, Plus, Users, Calendar, Clock } from "lucide-react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-store";
 import { TopBar } from "@/components/top-bar";
@@ -16,6 +16,23 @@ function RoomsHub() {
   const [isStarting, setIsStarting] = useState(false);
   const navigate = useNavigate();
   const { session } = useAuth();
+  const [scheduledDate, setScheduledDate] = useState("");
+  const [upcomingRooms, setUpcomingRooms] = useState<any[]>([]);
+  const [isScheduling, setIsScheduling] = useState(false);
+
+  useEffect(() => {
+    if (session?.id) {
+      supabase
+        .from("instant_rooms")
+        .select("*")
+        .eq("host_id", session.id)
+        .not("scheduled_for", "is", null)
+        .order("scheduled_for", { ascending: true })
+        .then(({ data }) => {
+          if (data) setUpcomingRooms(data);
+        });
+    }
+  }, [session?.id]);
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +60,33 @@ function RoomsHub() {
     } else {
       setIsStarting(false);
       alert("Failed to create room: " + error?.message);
+    }
+  };
+
+  const handleSchedule = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!scheduledDate) return;
+    setIsScheduling(true);
+    const newCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const { data, error } = await supabase
+      .from("instant_rooms")
+      .insert({
+        host_id: session?.id,
+        room_url: `https://meet.jit.si/PlacePro-Room-${newCode}`,
+        room_name: `Scheduled-${newCode}`,
+        room_code: newCode,
+        scheduled_for: new Date(scheduledDate).toISOString(),
+      })
+      .select()
+      .single();
+
+    setIsScheduling(false);
+    if (data) {
+      alert(`Meeting scheduled successfully! Code: ${data.room_code}`);
+      setUpcomingRooms(prev => [...prev, data].sort((a, b) => new Date(a.scheduled_for).getTime() - new Date(b.scheduled_for).getTime()));
+      setScheduledDate("");
+    } else {
+      alert("Failed to schedule room: " + error?.message);
     }
   };
 
@@ -78,7 +122,7 @@ function RoomsHub() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto w-full relative z-10">
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto w-full relative z-10">
           {/* Create Room Card */}
           <div 
             className="rounded-[24px] p-8 md:p-10 flex flex-col items-center text-center transition-all duration-300 relative overflow-hidden group border"
@@ -227,7 +271,102 @@ function RoomsHub() {
               </button>
             </form>
           </div>
+
+          {/* Schedule Room Card */}
+          <div 
+            className="rounded-[24px] p-8 md:p-10 flex flex-col items-center text-center transition-all duration-300 relative overflow-hidden group border"
+            style={{ 
+              backgroundColor: "var(--pp-surface-container-lowest)",
+              borderColor: "var(--pp-outline-variant)",
+              boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05)"
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = "color-mix(in srgb, var(--pp-tertiary) 50%, transparent)";
+              (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 24px -8px color-mix(in srgb, var(--pp-tertiary) 20%, transparent)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = "var(--pp-outline-variant)";
+              (e.currentTarget as HTMLElement).style.transform = "none";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05)";
+            }}
+          >
+            <div 
+              className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl -mr-16 -mt-16 opacity-10 transition-opacity group-hover:opacity-20"
+              style={{ backgroundColor: "var(--pp-tertiary)" }}
+            />
+            
+            <div 
+              className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 relative z-10 transition-transform group-hover:scale-110"
+              style={{ backgroundColor: "color-mix(in srgb, var(--pp-tertiary) 10%, transparent)", color: "var(--pp-tertiary)" }}
+            >
+              <Calendar className="w-8 h-8" />
+            </div>
+            
+            <div className="relative z-10 flex-1 flex flex-col mb-8">
+              <h3 className="text-2xl font-bold mb-3" style={{ fontFamily: "var(--font-display)", color: "var(--pp-on-surface)" }}>
+                Schedule
+              </h3>
+              <p className="text-sm flex-1" style={{ color: "var(--pp-on-surface-variant)" }}>
+                Plan a meeting for later and invite others.
+              </p>
+            </div>
+            
+            <form onSubmit={handleSchedule} className="w-full flex flex-col gap-3 relative z-10">
+              <input 
+                type="datetime-local"
+                required
+                value={scheduledDate} 
+                onChange={(e) => setScheduledDate(e.target.value)}
+                className="w-full rounded-xl px-4 py-3 text-center font-bold outline-none transition-all border"
+                style={{
+                  backgroundColor: "var(--pp-surface-container-low)",
+                  borderColor: "var(--pp-outline-variant)",
+                  color: "var(--pp-on-surface)"
+                }}
+              />
+              <button 
+                type="submit" 
+                disabled={isScheduling || !scheduledDate}
+                className="w-full py-3.5 rounded-xl font-bold transition-all shadow-sm disabled:opacity-50"
+                style={{ 
+                  backgroundColor: "var(--pp-tertiary)", 
+                  color: "var(--pp-on-tertiary)"
+                }}
+              >
+                {isScheduling ? "Scheduling..." : "Schedule Meeting"}
+              </button>
+            </form>
+          </div>
         </div>
+
+        {/* Upcoming Meetings List */}
+        {upcomingRooms.length > 0 && (
+          <div className="max-w-6xl mx-auto w-full mt-12 relative z-10">
+            <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: "var(--font-display)" }}>Your Upcoming Meetings</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {upcomingRooms.map(room => (
+                <div key={room.id} className="p-6 rounded-2xl border flex items-center justify-between" style={{ backgroundColor: "var(--pp-surface-container-lowest)", borderColor: "var(--pp-outline-variant)" }}>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Clock className="w-4 h-4 text-[var(--pp-primary)]" />
+                      <span className="font-semibold text-sm">
+                        {new Date(room.scheduled_for).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+                      </span>
+                    </div>
+                    <p className="font-mono text-sm text-[var(--pp-on-surface-variant)]">Code: {room.room_code}</p>
+                  </div>
+                  <button 
+                    onClick={() => navigate({ to: "/rooms/$roomCode", params: { roomCode: room.room_code } })}
+                    className="px-4 py-2 rounded-lg font-semibold text-sm transition-colors hover:bg-[var(--pp-primary-container)] text-[var(--pp-primary)]"
+                  >
+                    Enter Room
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
