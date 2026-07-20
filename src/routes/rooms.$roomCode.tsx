@@ -86,7 +86,8 @@ function RoomView() {
     leaveRoom,
     toggleMic,
     toggleCam,
-    toggleScreenShare
+    toggleScreenShare,
+    isScreenSharing
   } = useWebRTC(roomCode, userName);
 
   useEffect(() => {
