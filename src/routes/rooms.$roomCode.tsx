@@ -182,7 +182,10 @@ function RoomView() {
       .eq('room_code', roomCode)
       .eq('status', 'waiting')
       .then(({data}) => {
-        if (data) setWaitingParticipants(data);
+        if (data && data.length > 0) {
+          setWaitingParticipants(data);
+          setShowSidebar(true);
+        }
       });
 
     const channel = supabase.channel(`host-wait-${roomCode}`)
@@ -194,8 +197,19 @@ function RoomView() {
       }, (payload) => {
         if (payload.eventType === 'INSERT' && payload.new.status === 'waiting') {
           setWaitingParticipants(prev => [...prev, payload.new]);
+          setShowSidebar(true);
         } else if (payload.eventType === 'UPDATE') {
-          setWaitingParticipants(prev => prev.filter(p => p.id !== payload.new.id));
+          if (payload.new.status === 'waiting') {
+             setWaitingParticipants(prev => {
+                if (!prev.find(p => p.id === payload.new.id)) {
+                   setShowSidebar(true);
+                   return [...prev, payload.new];
+                }
+                return prev;
+             });
+          } else {
+             setWaitingParticipants(prev => prev.filter(p => p.id !== payload.new.id));
+          }
         }
       })
       .subscribe();
@@ -406,8 +420,14 @@ function RoomView() {
           </Button>
           <button
             onClick={() => setShowSidebar(!showSidebar)}
-            className="text-sm font-medium bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full border border-white/10 transition-colors"
+            className="relative text-sm font-medium bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full border border-white/10 transition-colors"
           >
+            {isHost && waitingParticipants.length > 0 && !showSidebar && (
+               <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+                 <span className="relative inline-flex rounded-full h-3 w-3 bg-brand"></span>
+               </span>
+            )}
             {totalParticipants} Participant{totalParticipants !== 1 ? 's' : ''}
           </button>
         </div>
