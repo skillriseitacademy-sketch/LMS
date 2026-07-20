@@ -34,7 +34,7 @@ export const generateInterviewFeedback = createServerFn({ method: "POST" })
       .join("\n");
 
     const { object } = await generateObject({
-      model: google("gemini-1.5-flash"),
+      model: google("gemini-1.5-flash") as any,
       schema: FeedbackSchema,
       system:
         "You are an expert interview coach. Score the candidate on communication (clarity, articulation, listening), technical depth (accuracy, depth, problem-solving), and confidence (tone, assertiveness, composure) on a scale of 0-100. Be specific and actionable in your feedback.",

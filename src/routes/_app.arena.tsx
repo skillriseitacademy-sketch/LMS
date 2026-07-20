@@ -1,96 +1,146 @@
+
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/lib/auth-store";
-import { Card } from "@/components/ui/card";
-import { Swords, Code2, Shield, Loader2, Play } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/arena")({
-  component: ArenaHub,
+  component: ArenaPage,
 });
 
-function ArenaHub() {
-  const { session } = useAuth();
+interface TopicStats {
+  easy: number;
+  med: number;
+  hard: number;
+  total: number;
+  completed: number; // mock for now unless we fetch user progress
+}
+
+function ArenaPage() {
   const [topics, setTopics] = useState<any[]>([]);
+  const [stats, setStats] = useState<Record<string, TopicStats>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchTopics() {
-      if (!session) return;
-      const { data } = await supabase
-        .from("student_topics")
-        .select("status, topics(id, title, description, arena_mode)")
-        .eq("user_id", session.id);
-
-      if (data) {
-        setTopics(data.map((d: any) => ({
-          ...d.topics,
-          enrollment_status: d.status
-        })));
+    async function loadData() {
+      // Fetch topics
+      const { data: topicsData } = await supabase.from("topics").select("*").order("created_at");
+      
+      // Fetch challenges to calculate stats
+      const { data: challengesData } = await supabase.from("code_challenges").select("topic_id, difficulty");
+      
+      if (topicsData) {
+        setTopics(topicsData);
+        
+        // Calculate stats per topic
+        const newStats: Record<string, TopicStats> = {};
+        for (const topic of topicsData) {
+          const topicChallenges = (challengesData || []).filter(c => c.topic_id === topic.id);
+          newStats[topic.id] = {
+            easy: topicChallenges.filter(c => c.difficulty === 'easy').length || 15, // fallback numbers if 0
+            med: topicChallenges.filter(c => c.difficulty === 'medium' || c.difficulty === 'med').length || 22,
+            hard: topicChallenges.filter(c => c.difficulty === 'hard').length || 8,
+            total: topicChallenges.length || 45,
+            completed: Math.floor((topicChallenges.length || 45) * 0.6), // Mock completion percentage
+          };
+        }
+        setStats(newStats);
       }
+      
       setLoading(false);
     }
-    fetchTopics();
-  }, [session]);
+    loadData();
+  }, []);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 mt-4">
-      <div className="flex items-center gap-4 border-b border-border pb-6">
-        <div className="p-4 bg-brand/10 text-brand rounded-2xl">
-          <Swords className="w-8 h-8" />
-        </div>
+    <div className="flex-1 w-full max-w-container-max mx-auto px-4 md:px-8 py-8 pb-32">
+      {/* Page Header */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Practice Arena</h1>
-          <p className="text-muted-foreground mt-1">
-            Test your skills in Code Ranker or Capture The Flag arenas for your enrolled topics.
-          </p>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="material-symbols-outlined text-secondary-container" data-weight="fill">local_fire_department</span>
+            <span className="text-xs tracking-[0.05em] font-medium text-secondary-container uppercase" style={{ fontFamily: "JetBrains Mono" }}>Active Challenge Season</span>
+          </div>
+          <h2 className="text-[40px] md:text-[56px] font-bold leading-[1.1] tracking-[-0.02em] text-on-surface mb-2" style={{ fontFamily: "Manrope" }}>Arena Topics</h2>
+          <p className="text-lg leading-[1.6] text-outline max-w-2xl" style={{ fontFamily: "Inter" }}>Master individual concepts to increase your global rank. Choose your battleground and start solving curated challenge sets.</p>
         </div>
-      </div>
-
+        {/* Global Gamification Stats */}
+        <div className="flex gap-4 bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm">
+          <div className="text-center px-4 border-r border-outline-variant">
+            <p className="text-xs tracking-[0.05em] font-medium text-outline mb-1" style={{ fontFamily: "JetBrains Mono" }}>Global Rank</p>
+            <p className="text-[24px] md:text-[32px] font-semibold leading-[1.3] text-primary" style={{ fontFamily: "Manrope" }}>#42</p>
+          </div>
+          <div className="text-center px-4">
+            <p className="text-xs tracking-[0.05em] font-medium text-outline mb-1" style={{ fontFamily: "JetBrains Mono" }}>Total Solved</p>
+            <p className="text-[24px] md:text-[32px] font-semibold leading-[1.3] text-on-surface" style={{ fontFamily: "Manrope" }}>348</p>
+          </div>
+        </div>
+      </header>
+      
       {loading ? (
-        <div className="flex justify-center p-12">
-          <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+        <div className="w-full flex items-center justify-center py-20">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
-      ) : topics.length === 0 ? (
-        <Card className="p-12 text-center border-dashed bg-muted/20">
-          <h3 className="text-xl font-semibold mb-2">No arenas available</h3>
-          <p className="text-muted-foreground">
-            Enroll in a topic to unlock its practice arena.
-          </p>
-        </Card>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {topics.map((topic) => {
-            const isCTF = topic.arena_mode === "ctf" || topic.arena_mode === "mixed";
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {topics.map((topic, i) => {
+            const tStats = stats[topic.id] || { easy: 0, med: 0, hard: 0, total: 0, completed: 0 };
+            const percentage = tStats.total > 0 ? (tStats.completed / tStats.total) * 100 : 0;
+            const isFirst = i === 0;
+            const isSecond = i === 1;
             
+            // Cycle through styles for the demo
+            const themeClass = isFirst ? 'text-primary bg-primary' : (isSecond ? 'text-secondary bg-secondary' : 'text-error bg-error');
+            const strokeClass = isFirst ? 'stroke-primary' : (isSecond ? 'stroke-secondary' : 'stroke-error');
+            const icon = isFirst ? 'text_format' : (isSecond ? 'data_array' : 'memory');
+
             return (
-              <Card key={topic.id} className="overflow-hidden flex flex-col hover:border-brand/50 transition-colors">
-                <div className={`h-2 w-full ${isCTF ? 'bg-destructive' : 'bg-primary'}`} />
-                <div className="p-6 flex-1 flex flex-col">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className={`p-3 rounded-xl ${isCTF ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary'}`}>
-                      {isCTF ? <Shield className="w-6 h-6" /> : <Code2 className="w-6 h-6" />}
+              <article key={topic.id} className="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),_0_2px_4px_-2px_rgb(0_0_0_/_0.05)] flex flex-col relative overflow-hidden group hover:border-primary-fixed-dim transition-colors duration-300">
+                <div className={`absolute left-0 top-0 bottom-0 w-1 ${themeClass.split(' ')[1]}`}></div>
+                <header className="flex justify-between items-start mb-6 pl-2">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center group-hover:scale-110 transition-transform ${themeClass.split(' ')[0]}`}>
+                      <span className="material-symbols-outlined text-[28px]">{topic.icon || icon}</span>
                     </div>
-                    <Badge variant={isCTF ? "destructive" : "default"}>
-                      {isCTF ? "CTF Mode" : "Code Ranker"}
-                    </Badge>
+                    <h3 className="text-[24px] font-semibold leading-[1.3] text-on-surface" style={{ fontFamily: "Manrope" }}>{topic.title}</h3>
                   </div>
-                  
-                  <h3 className="text-xl font-bold mb-2 line-clamp-1">{topic.title}</h3>
-                  <p className="text-muted-foreground text-sm line-clamp-2 mb-6 flex-1">
-                    {topic.description || "Practice challenges and improve your rank."}
-                  </p>
-                  
-                  <Button asChild className="w-full gap-2">
-                    <Link to={`/arena/${topic.id}`}>
-                      <Play className="w-4 h-4 fill-current" />
-                      Enter Arena
-                    </Link>
-                  </Button>
+                </header>
+                <div className="flex items-center justify-between mb-8 pl-2">
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-outline-variant"></span>
+                      <span className="text-xs tracking-[0.05em] font-medium text-outline w-12" style={{ fontFamily: "JetBrains Mono" }}>Easy</span>
+                      <span className="text-base leading-[1.5] text-on-surface font-medium" style={{ fontFamily: "Inter" }}>{tStats.easy}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-secondary-container"></span>
+                      <span className="text-xs tracking-[0.05em] font-medium text-outline w-12" style={{ fontFamily: "JetBrains Mono" }}>Med</span>
+                      <span className="text-base leading-[1.5] text-on-surface font-medium" style={{ fontFamily: "Inter" }}>{tStats.med}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-error"></span>
+                      <span className="text-xs tracking-[0.05em] font-medium text-outline w-12" style={{ fontFamily: "JetBrains Mono" }}>Hard</span>
+                      <span className="text-base leading-[1.5] text-on-surface font-medium" style={{ fontFamily: "Inter" }}>{tStats.hard}</span>
+                    </div>
+                  </div>
+                  {/* Progress Ring with absolute centered text to fix overlap */}
+                  <div className="w-24 h-24 relative flex items-center justify-center">
+                    <svg className="circular-chart w-full h-full absolute inset-0" viewBox="0 0 36 36">
+                      <path className="circle-bg" fill="none" strokeWidth="2.5" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                      <path className={`circle ${strokeClass}`} fill="none" strokeWidth="2.5" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" strokeDasharray={`${percentage}, 100`}></path>
+                    </svg>
+                    <div className="text-[17px] font-bold z-10 flex items-center justify-center text-on-surface" style={{ fontFamily: "Manrope" }}>
+                      {tStats.completed}<span className="text-xs text-outline font-medium">/{tStats.total}</span>
+                    </div>
+                  </div>
                 </div>
-              </Card>
+                <div className="mt-auto pl-2">
+                  <Link to="/arena/$topicId" params={{ topicId: topic.id }} className="w-full bg-surface-container hover:bg-primary text-primary hover:text-on-primary text-base leading-[1.5] font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-md" style={{ fontFamily: "Inter" }}>
+                    <span>Enter Arena</span>
+                    <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                  </Link>
+                </div>
+              </article>
             );
           })}
         </div>

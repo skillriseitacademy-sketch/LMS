@@ -10,12 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as SettingsSecurityRouteImport } from './routes/settings.security'
+import { Route as SettingsNotificationsRouteImport } from './routes/settings.notifications'
+import { Route as SettingsBillingRouteImport } from './routes/settings.billing'
+import { Route as RoomsRoomCodeRouteImport } from './routes/rooms.$roomCode'
 import { Route as OauthConsentRouteImport } from './routes/oauth.consent'
 import { Route as ApiUploadRouteImport } from './routes/api/upload'
 import { Route as ApiSuggestionsRouteImport } from './routes/api/suggestions'
@@ -36,7 +41,6 @@ import { Route as AdminProjectsRouteImport } from './routes/admin.projects'
 import { Route as AdminInterviewsRouteImport } from './routes/admin.interviews'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
-import { Route as AppRoomsRouteImport } from './routes/_app.rooms'
 import { Route as AppRoadmapRouteImport } from './routes/_app.roadmap'
 import { Route as AppResumeRouteImport } from './routes/_app.resume'
 import { Route as AppQuizzesRouteImport } from './routes/_app.quizzes'
@@ -48,6 +52,7 @@ import { Route as AppFeedRouteImport } from './routes/_app.feed'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCodeRouteImport } from './routes/_app.code'
 import { Route as AppArenaRouteImport } from './routes/_app.arena'
+import { Route as AppRoomsIndexRouteImport } from './routes/_app.rooms.index'
 import { Route as AppResumeIndexRouteImport } from './routes/_app.resume.index'
 import { Route as AppQuizzesIndexRouteImport } from './routes/_app.quizzes.index'
 import { Route as AppLiveIndexRouteImport } from './routes/_app.live.index'
@@ -62,7 +67,6 @@ import { Route as ApiInterviewStartRouteImport } from './routes/api/interview.st
 import { Route as ApiCoursesEnrolledRouteImport } from './routes/api/courses.enrolled'
 import { Route as ApiCoursesEnrollRouteImport } from './routes/api/courses.enroll'
 import { Route as ApiClassesCreateRouteImport } from './routes/api/classes.create'
-import { Route as AppRoomsRoomCodeRouteImport } from './routes/_app.rooms.$roomCode'
 import { Route as AppResumeTemplatesRouteImport } from './routes/_app.resume.templates'
 import { Route as AppResumeCreateRouteImport } from './routes/_app.resume.create'
 import { Route as AppQuizzesQuizIdRouteImport } from './routes/_app.quizzes.$quizId'
@@ -83,6 +87,11 @@ import { Route as AppArenaTopicIdChallengeIdRouteImport } from './routes/_app.ar
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -113,6 +122,26 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const SettingsSecurityRoute = SettingsSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsNotificationsRoute = SettingsNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsBillingRoute = SettingsBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const RoomsRoomCodeRoute = RoomsRoomCodeRouteImport.update({
+  id: '/rooms/$roomCode',
+  path: '/rooms/$roomCode',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const OauthConsentRoute = OauthConsentRouteImport.update({
   id: '/oauth/consent',
@@ -214,11 +243,6 @@ const AdminAdminsRoute = AdminAdminsRouteImport.update({
   path: '/admins',
   getParentRoute: () => AdminRoute,
 } as any)
-const AppRoomsRoute = AppRoomsRouteImport.update({
-  id: '/rooms',
-  path: '/rooms',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppRoadmapRoute = AppRoadmapRouteImport.update({
   id: '/roadmap',
   path: '/roadmap',
@@ -272,6 +296,11 @@ const AppCodeRoute = AppCodeRouteImport.update({
 const AppArenaRoute = AppArenaRouteImport.update({
   id: '/arena',
   path: '/arena',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRoomsIndexRoute = AppRoomsIndexRouteImport.update({
+  id: '/rooms/',
+  path: '/rooms/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppResumeIndexRoute = AppResumeIndexRouteImport.update({
@@ -343,11 +372,6 @@ const ApiClassesCreateRoute = ApiClassesCreateRouteImport.update({
   id: '/api/classes/create',
   path: '/api/classes/create',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AppRoomsRoomCodeRoute = AppRoomsRoomCodeRouteImport.update({
-  id: '/$roomCode',
-  path: '/$roomCode',
-  getParentRoute: () => AppRoomsRoute,
 } as any)
 const AppResumeTemplatesRoute = AppResumeTemplatesRouteImport.update({
   id: '/templates',
@@ -439,6 +463,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/settings': typeof SettingsRouteWithChildren
   '/signup': typeof SignupRoute
   '/arena': typeof AppArenaRouteWithChildren
   '/code': typeof AppCodeRouteWithChildren
@@ -451,7 +476,6 @@ export interface FileRoutesByFullPath {
   '/quizzes': typeof AppQuizzesRouteWithChildren
   '/resume': typeof AppResumeRouteWithChildren
   '/roadmap': typeof AppRoadmapRoute
-  '/rooms': typeof AppRoomsRouteWithChildren
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/interviews': typeof AdminInterviewsRoute
@@ -472,6 +496,10 @@ export interface FileRoutesByFullPath {
   '/api/suggestions': typeof ApiSuggestionsRoute
   '/api/upload': typeof ApiUploadRoute
   '/oauth/consent': typeof OauthConsentRoute
+  '/rooms/$roomCode': typeof RoomsRoomCodeRoute
+  '/settings/billing': typeof SettingsBillingRoute
+  '/settings/notifications': typeof SettingsNotificationsRoute
+  '/settings/security': typeof SettingsSecurityRoute
   '/admin/': typeof AdminIndexRoute
   '/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
   '/code/$challengeId': typeof AppCodeChallengeIdRoute
@@ -480,7 +508,6 @@ export interface FileRoutesByFullPath {
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
-  '/rooms/$roomCode': typeof AppRoomsRoomCodeRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -495,6 +522,7 @@ export interface FileRoutesByFullPath {
   '/live/': typeof AppLiveIndexRoute
   '/quizzes/': typeof AppQuizzesIndexRoute
   '/resume/': typeof AppResumeIndexRoute
+  '/rooms/': typeof AppRoomsIndexRoute
   '/arena/$topicId/$challengeId': typeof AppArenaTopicIdChallengeIdRoute
   '/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
   '/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
@@ -509,6 +537,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/settings': typeof SettingsRouteWithChildren
   '/signup': typeof SignupRoute
   '/arena': typeof AppArenaRouteWithChildren
   '/code': typeof AppCodeRouteWithChildren
@@ -517,7 +546,6 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof AppLeaderboardRoute
   '/profile': typeof AppProfileRouteWithChildren
   '/roadmap': typeof AppRoadmapRoute
-  '/rooms': typeof AppRoomsRouteWithChildren
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/interviews': typeof AdminInterviewsRoute
@@ -538,6 +566,10 @@ export interface FileRoutesByTo {
   '/api/suggestions': typeof ApiSuggestionsRoute
   '/api/upload': typeof ApiUploadRoute
   '/oauth/consent': typeof OauthConsentRoute
+  '/rooms/$roomCode': typeof RoomsRoomCodeRoute
+  '/settings/billing': typeof SettingsBillingRoute
+  '/settings/notifications': typeof SettingsNotificationsRoute
+  '/settings/security': typeof SettingsSecurityRoute
   '/admin': typeof AdminIndexRoute
   '/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
   '/code/$challengeId': typeof AppCodeChallengeIdRoute
@@ -546,7 +578,6 @@ export interface FileRoutesByTo {
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
-  '/rooms/$roomCode': typeof AppRoomsRoomCodeRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -561,6 +592,7 @@ export interface FileRoutesByTo {
   '/live': typeof AppLiveIndexRoute
   '/quizzes': typeof AppQuizzesIndexRoute
   '/resume': typeof AppResumeIndexRoute
+  '/rooms': typeof AppRoomsIndexRoute
   '/arena/$topicId/$challengeId': typeof AppArenaTopicIdChallengeIdRoute
   '/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
   '/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
@@ -578,6 +610,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/settings': typeof SettingsRouteWithChildren
   '/signup': typeof SignupRoute
   '/_app/arena': typeof AppArenaRouteWithChildren
   '/_app/code': typeof AppCodeRouteWithChildren
@@ -590,7 +623,6 @@ export interface FileRoutesById {
   '/_app/quizzes': typeof AppQuizzesRouteWithChildren
   '/_app/resume': typeof AppResumeRouteWithChildren
   '/_app/roadmap': typeof AppRoadmapRoute
-  '/_app/rooms': typeof AppRoomsRouteWithChildren
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/interviews': typeof AdminInterviewsRoute
@@ -611,6 +643,10 @@ export interface FileRoutesById {
   '/api/suggestions': typeof ApiSuggestionsRoute
   '/api/upload': typeof ApiUploadRoute
   '/oauth/consent': typeof OauthConsentRoute
+  '/rooms/$roomCode': typeof RoomsRoomCodeRoute
+  '/settings/billing': typeof SettingsBillingRoute
+  '/settings/notifications': typeof SettingsNotificationsRoute
+  '/settings/security': typeof SettingsSecurityRoute
   '/admin/': typeof AdminIndexRoute
   '/_app/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
   '/_app/code/$challengeId': typeof AppCodeChallengeIdRoute
@@ -619,7 +655,6 @@ export interface FileRoutesById {
   '/_app/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/_app/resume/create': typeof AppResumeCreateRoute
   '/_app/resume/templates': typeof AppResumeTemplatesRoute
-  '/_app/rooms/$roomCode': typeof AppRoomsRoomCodeRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -634,6 +669,7 @@ export interface FileRoutesById {
   '/_app/live/': typeof AppLiveIndexRoute
   '/_app/quizzes/': typeof AppQuizzesIndexRoute
   '/_app/resume/': typeof AppResumeIndexRoute
+  '/_app/rooms/': typeof AppRoomsIndexRoute
   '/_app/arena/$topicId/$challengeId': typeof AppArenaTopicIdChallengeIdRoute
   '/_app/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
   '/_app/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
@@ -651,6 +687,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/onboarding'
+    | '/settings'
     | '/signup'
     | '/arena'
     | '/code'
@@ -663,7 +700,6 @@ export interface FileRouteTypes {
     | '/quizzes'
     | '/resume'
     | '/roadmap'
-    | '/rooms'
     | '/admin/admins'
     | '/admin/analytics'
     | '/admin/interviews'
@@ -684,6 +720,10 @@ export interface FileRouteTypes {
     | '/api/suggestions'
     | '/api/upload'
     | '/oauth/consent'
+    | '/rooms/$roomCode'
+    | '/settings/billing'
+    | '/settings/notifications'
+    | '/settings/security'
     | '/admin/'
     | '/arena/$topicId'
     | '/code/$challengeId'
@@ -692,7 +732,6 @@ export interface FileRouteTypes {
     | '/quizzes/$quizId'
     | '/resume/create'
     | '/resume/templates'
-    | '/rooms/$roomCode'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -707,6 +746,7 @@ export interface FileRouteTypes {
     | '/live/'
     | '/quizzes/'
     | '/resume/'
+    | '/rooms/'
     | '/arena/$topicId/$challengeId'
     | '/interview/$sessionId/feedback'
     | '/interview/ai/$sessionId'
@@ -721,6 +761,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/onboarding'
+    | '/settings'
     | '/signup'
     | '/arena'
     | '/code'
@@ -729,7 +770,6 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/profile'
     | '/roadmap'
-    | '/rooms'
     | '/admin/admins'
     | '/admin/analytics'
     | '/admin/interviews'
@@ -750,6 +790,10 @@ export interface FileRouteTypes {
     | '/api/suggestions'
     | '/api/upload'
     | '/oauth/consent'
+    | '/rooms/$roomCode'
+    | '/settings/billing'
+    | '/settings/notifications'
+    | '/settings/security'
     | '/admin'
     | '/arena/$topicId'
     | '/code/$challengeId'
@@ -758,7 +802,6 @@ export interface FileRouteTypes {
     | '/quizzes/$quizId'
     | '/resume/create'
     | '/resume/templates'
-    | '/rooms/$roomCode'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -773,6 +816,7 @@ export interface FileRouteTypes {
     | '/live'
     | '/quizzes'
     | '/resume'
+    | '/rooms'
     | '/arena/$topicId/$challengeId'
     | '/interview/$sessionId/feedback'
     | '/interview/ai/$sessionId'
@@ -789,6 +833,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/onboarding'
+    | '/settings'
     | '/signup'
     | '/_app/arena'
     | '/_app/code'
@@ -801,7 +846,6 @@ export interface FileRouteTypes {
     | '/_app/quizzes'
     | '/_app/resume'
     | '/_app/roadmap'
-    | '/_app/rooms'
     | '/admin/admins'
     | '/admin/analytics'
     | '/admin/interviews'
@@ -822,6 +866,10 @@ export interface FileRouteTypes {
     | '/api/suggestions'
     | '/api/upload'
     | '/oauth/consent'
+    | '/rooms/$roomCode'
+    | '/settings/billing'
+    | '/settings/notifications'
+    | '/settings/security'
     | '/admin/'
     | '/_app/arena/$topicId'
     | '/_app/code/$challengeId'
@@ -830,7 +878,6 @@ export interface FileRouteTypes {
     | '/_app/quizzes/$quizId'
     | '/_app/resume/create'
     | '/_app/resume/templates'
-    | '/_app/rooms/$roomCode'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -845,6 +892,7 @@ export interface FileRouteTypes {
     | '/_app/live/'
     | '/_app/quizzes/'
     | '/_app/resume/'
+    | '/_app/rooms/'
     | '/_app/arena/$topicId/$challengeId'
     | '/_app/interview/$sessionId/feedback'
     | '/_app/interview/ai/$sessionId'
@@ -862,6 +910,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
+  SettingsRoute: typeof SettingsRouteWithChildren
   SignupRoute: typeof SignupRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiConnectionsRoute: typeof ApiConnectionsRoute
@@ -875,6 +924,7 @@ export interface RootRouteChildren {
   ApiSuggestionsRoute: typeof ApiSuggestionsRoute
   ApiUploadRoute: typeof ApiUploadRoute
   OauthConsentRoute: typeof OauthConsentRoute
+  RoomsRoomCodeRoute: typeof RoomsRoomCodeRoute
   ApiClassesCreateRoute: typeof ApiClassesCreateRoute
   ApiCoursesEnrollRoute: typeof ApiCoursesEnrollRoute
   ApiCoursesEnrolledRoute: typeof ApiCoursesEnrolledRoute
@@ -893,6 +943,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -936,6 +993,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/settings/security': {
+      id: '/settings/security'
+      path: '/security'
+      fullPath: '/settings/security'
+      preLoaderRoute: typeof SettingsSecurityRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/notifications': {
+      id: '/settings/notifications'
+      path: '/notifications'
+      fullPath: '/settings/notifications'
+      preLoaderRoute: typeof SettingsNotificationsRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/billing': {
+      id: '/settings/billing'
+      path: '/billing'
+      fullPath: '/settings/billing'
+      preLoaderRoute: typeof SettingsBillingRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/rooms/$roomCode': {
+      id: '/rooms/$roomCode'
+      path: '/rooms/$roomCode'
+      fullPath: '/rooms/$roomCode'
+      preLoaderRoute: typeof RoomsRoomCodeRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/oauth/consent': {
       id: '/oauth/consent'
@@ -1077,13 +1162,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/_app/rooms': {
-      id: '/_app/rooms'
-      path: '/rooms'
-      fullPath: '/rooms'
-      preLoaderRoute: typeof AppRoomsRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/roadmap': {
       id: '/_app/roadmap'
       path: '/roadmap'
@@ -1159,6 +1237,13 @@ declare module '@tanstack/react-router' {
       path: '/arena'
       fullPath: '/arena'
       preLoaderRoute: typeof AppArenaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/rooms/': {
+      id: '/_app/rooms/'
+      path: '/rooms'
+      fullPath: '/rooms/'
+      preLoaderRoute: typeof AppRoomsIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/resume/': {
@@ -1258,13 +1343,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/classes/create'
       preLoaderRoute: typeof ApiClassesCreateRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_app/rooms/$roomCode': {
-      id: '/_app/rooms/$roomCode'
-      path: '/$roomCode'
-      fullPath: '/rooms/$roomCode'
-      preLoaderRoute: typeof AppRoomsRoomCodeRouteImport
-      parentRoute: typeof AppRoomsRoute
     }
     '/_app/resume/templates': {
       id: '/_app/resume/templates'
@@ -1509,18 +1587,6 @@ const AppResumeRouteWithChildren = AppResumeRoute._addFileChildren(
   AppResumeRouteChildren,
 )
 
-interface AppRoomsRouteChildren {
-  AppRoomsRoomCodeRoute: typeof AppRoomsRoomCodeRoute
-}
-
-const AppRoomsRouteChildren: AppRoomsRouteChildren = {
-  AppRoomsRoomCodeRoute: AppRoomsRoomCodeRoute,
-}
-
-const AppRoomsRouteWithChildren = AppRoomsRoute._addFileChildren(
-  AppRoomsRouteChildren,
-)
-
 interface AppRouteChildren {
   AppArenaRoute: typeof AppArenaRouteWithChildren
   AppCodeRoute: typeof AppCodeRouteWithChildren
@@ -1533,9 +1599,9 @@ interface AppRouteChildren {
   AppQuizzesRoute: typeof AppQuizzesRouteWithChildren
   AppResumeRoute: typeof AppResumeRouteWithChildren
   AppRoadmapRoute: typeof AppRoadmapRoute
-  AppRoomsRoute: typeof AppRoomsRouteWithChildren
   AppLiveClassIdRoute: typeof AppLiveClassIdRoute
   AppLiveIndexRoute: typeof AppLiveIndexRoute
+  AppRoomsIndexRoute: typeof AppRoomsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -1550,9 +1616,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppQuizzesRoute: AppQuizzesRouteWithChildren,
   AppResumeRoute: AppResumeRouteWithChildren,
   AppRoadmapRoute: AppRoadmapRoute,
-  AppRoomsRoute: AppRoomsRouteWithChildren,
   AppLiveClassIdRoute: AppLiveClassIdRoute,
   AppLiveIndexRoute: AppLiveIndexRoute,
+  AppRoomsIndexRoute: AppRoomsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -1582,6 +1648,22 @@ const AdminRouteChildren: AdminRouteChildren = {
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface SettingsRouteChildren {
+  SettingsBillingRoute: typeof SettingsBillingRoute
+  SettingsNotificationsRoute: typeof SettingsNotificationsRoute
+  SettingsSecurityRoute: typeof SettingsSecurityRoute
+}
+
+const SettingsRouteChildren: SettingsRouteChildren = {
+  SettingsBillingRoute: SettingsBillingRoute,
+  SettingsNotificationsRoute: SettingsNotificationsRoute,
+  SettingsSecurityRoute: SettingsSecurityRoute,
+}
+
+const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
+  SettingsRouteChildren,
+)
 
 interface ApiPostsPostIdRouteChildren {
   ApiPostsPostIdCommentsRoute: typeof ApiPostsPostIdCommentsRoute
@@ -1615,6 +1697,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
+  SettingsRoute: SettingsRouteWithChildren,
   SignupRoute: SignupRoute,
   ApiChatRoute: ApiChatRoute,
   ApiConnectionsRoute: ApiConnectionsRoute,
@@ -1628,6 +1711,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSuggestionsRoute: ApiSuggestionsRoute,
   ApiUploadRoute: ApiUploadRoute,
   OauthConsentRoute: OauthConsentRoute,
+  RoomsRoomCodeRoute: RoomsRoomCodeRoute,
   ApiClassesCreateRoute: ApiClassesCreateRoute,
   ApiCoursesEnrollRoute: ApiCoursesEnrollRoute,
   ApiCoursesEnrolledRoute: ApiCoursesEnrolledRoute,

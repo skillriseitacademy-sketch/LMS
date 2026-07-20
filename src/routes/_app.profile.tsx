@@ -1,272 +1,547 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import { TopBar } from "@/components/top-bar";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Flame,
-  Trophy,
-  Sparkles,
-  Target,
-  Mic,
-  Code2,
-  ListChecks,
-  ArrowRight,
-  Pencil,
-  Check,
-  X,
-} from "lucide-react";
-import { useProfile, useQuizHistory } from "@/lib/store";
-import { useGamification } from "@/lib/use-gamification";
-import { quizTopics } from "@/lib/mock-data";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/lib/auth-store";
+import { supabase } from "@/lib/supabase";
+import { useR2Upload } from "@/hooks/use-r2-upload";
 
 export const Route = createFileRoute("/_app/profile")({
-  head: () => ({ meta: [{ title: "Profile — PlacePro LMS" }] }),
-  component: Profile,
+  component: ProfilePage,
 });
 
-const badges = [
-  // Badges will be loaded dynamically later
+const DEGREES = [
+  "Bachelors (B.Tech / B.Sc)",
+  "Masters (M.Tech / M.Sc)",
+  "MBA",
+  "PhD",
+  "Diploma",
+  "Other",
+];
+const GRAD_YEARS = Array.from({ length: 10 }, (_, i) => String(2023 + i));
+const ROLE_CHIPS = [
+  "Frontend Dev", "Backend Dev", "Full Stack", "Data Science",
+  "UI/UX Design", "DevOps", "Mobile Dev", "AI/ML", "Cybersecurity", "Cloud",
 ];
 
+type ProfileSection = "public-profile" | "education" | "preferences" | "security";
 
+function ProfilePage() {
+  const { session } = useAuth();
+  const [activeSection, setActiveSection] = useState<ProfileSection>("public-profile");
 
-function Profile() {
-  const { profile, saveProfile } = useProfile();
-  const stats = useGamification();
-  const quizHistory = useQuizHistory();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState(profile);
-
-  // Sync form when profile loads/updates from other tabs
-  useEffect(() => {
-    setEditForm(profile);
-  }, [profile]);
-
-  const recentQuizzes = quizHistory.slice(0, 3).map((q) => {
-    const topic = quizTopics.find((t) => t.id === q.quizId);
-    return {
-      kind: "quiz",
-      title: `Completed ${topic?.title || q.quizId}`,
-      xp: q.score * 10,
-      time: new Date(q.timestamp).toLocaleDateString(),
-    };
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    bio: "",
+    portfolioUrl: "",
+    linkedinUrl: "",
+    githubUrl: "",
   });
-  const activity = [...recentQuizzes].slice(0, 4);
+
+  const [education, setEducation] = useState({
+    university: "",
+    degree: "Bachelors (B.Tech / B.Sc)",
+    graduationYear: "2025",
+  });
+
+  const [preferences, setPreferences] = useState({
+    targetRoles: [] as string[],
+    preferredLocation: "",
+    activelyLooking: false,
+    emailNotifications: true,
+  });
+
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState({ text: "", type: "" });
+
+  const { openPicker: openAvatarPicker, uploading: avatarUploading } = useR2Upload({
+    context: "avatar",
+    accept: "image/jpeg,image/png,image/webp",
+  });
+
+  useEffect(() => {
+    async function loadProfile() {
+      if (!session?.id) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select("name, bio, avatar_url, headline, skills, visibility")
+        .eq("id", session.id)
+        .single();
+
+      if (data) {
+        const parts = (data.name || "").split(" ");
+        setFormData({
+          firstName: parts[0] || "",
+          lastName: parts.slice(1).join(" ") || "",
+          bio: data.bio || "",
+          portfolioUrl: "",
+          linkedinUrl: "",
+          githubUrl: "",
+        });
+        setAvatarUrl(data.avatar_url || "");
+        // Skills repurposed as target roles for now
+        if (data.skills?.length) {
+          setPreferences(p => ({ ...p, targetRoles: data.skills }));
+        }
+      }
+      setLoading(false);
+    }
+    loadProfile();
+  }, [session]);
+
+  const handleAvatarUpload = () => {
+    openAvatarPicker(async (result) => {
+      setAvatarUrl(result.publicUrl);
+      if (session?.id) {
+        await supabase.from("profiles").update({ avatar_url: result.publicUrl }).eq("id", session.id);
+        setMessage({ text: "Profile photo updated!", type: "success" });
+        setTimeout(() => setMessage({ text: "", type: "" }), 3000);
+      }
+    });
+  };
+
+  const handleSaveProfile = async () => {
+    if (!session?.id) return;
+    setSaving(true);
+    setMessage({ text: "", type: "" });
+    const { error } = await supabase.from("profiles").update({
+      name: `${formData.firstName} ${formData.lastName}`.trim(),
+      bio: formData.bio,
+      headline: `${education.degree} · ${education.graduationYear}`,
+      skills: preferences.targetRoles,
+    }).eq("id", session.id);
+    setSaving(false);
+    if (error) {
+      setMessage({ text: "Error saving: " + error.message, type: "error" });
+    } else {
+      setMessage({ text: "Profile saved successfully!", type: "success" });
+      setTimeout(() => setMessage({ text: "", type: "" }), 3000);
+    }
+  };
+
+  const toggleRole = (role: string) => {
+    setPreferences(p => ({
+      ...p,
+      targetRoles: p.targetRoles.includes(role)
+        ? p.targetRoles.filter(r => r !== role)
+        : [...p.targetRoles, role],
+    }));
+  };
+
+  const navItems: { id: ProfileSection; icon: string; label: string }[] = [
+    { id: "public-profile", icon: "person", label: "Public Profile" },
+    { id: "education", icon: "school", label: "Education" },
+    { id: "preferences", icon: "tune", label: "Preferences" },
+    { id: "security", icon: "lock", label: "Security & Privacy" },
+  ];
+
+  const profileStrength = Math.min(100,
+    (formData.firstName ? 15 : 0) +
+    (formData.bio ? 20 : 0) +
+    (avatarUrl ? 20 : 0) +
+    (education.university ? 15 : 0) +
+    (preferences.targetRoles.length > 0 ? 15 : 0) +
+    (formData.linkedinUrl || formData.githubUrl ? 15 : 0)
+  );
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-on-surface-variant text-sm" style={{ fontFamily: "Inter" }}>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <TopBar title="Profile" />
-      <div className="p-4 md:p-6">
-        <div className="mx-auto max-w-4xl">
-          {/* Hero */}
-          <section className="overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-light via-card to-card-yellow p-6">
-            <div className="flex flex-wrap items-center gap-5">
-              <Avatar className="h-20 w-20 ring-4 ring-background">
-                {profile.avatar_url ? (
-                  <img
-                    src={profile.avatar_url}
-                    alt={profile.name}
-                    className="h-full w-full object-cover"
+    <div className="flex-1 w-full max-w-[1400px] mx-auto min-h-screen">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-surface/80 backdrop-blur-md px-4 md:px-8 h-16 flex items-center border-b border-outline-variant/30">
+        <h1 className="text-2xl font-semibold text-on-surface" style={{ fontFamily: "Manrope" }}>Profile Settings</h1>
+      </header>
+
+      <div className="p-4 md:p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+          {/* ── Left Column ── */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30">
+
+              {/* Avatar + Name */}
+              <div className="flex items-center gap-4 border-b border-outline-variant/40 pb-6 mb-4">
+                <div className="relative flex-shrink-0">
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary/30">
+                    {avatarUrl ? (
+                      <img className="w-full h-full object-cover" src={avatarUrl} alt="Profile" />
+                    ) : (
+                      <div className="w-full h-full bg-primary-container flex items-center justify-center">
+                        <span className="material-symbols-outlined text-primary text-2xl">person</span>
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={handleAvatarUpload}
+                    disabled={avatarUploading}
+                    className="absolute -bottom-1 -right-1 bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center border-2 border-surface-container-lowest hover:bg-primary/90 transition-colors disabled:opacity-60"
+                    title="Change photo"
+                  >
+                    {avatarUploading
+                      ? <span className="w-3 h-3 border border-on-primary border-t-transparent rounded-full animate-spin" />
+                      : <span className="material-symbols-outlined text-[13px]">edit</span>
+                    }
+                  </button>
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-semibold text-on-surface truncate" style={{ fontFamily: "Manrope" }}>
+                    {formData.firstName} {formData.lastName}
+                  </h3>
+                  <p className="text-xs text-on-surface-variant mt-0.5 font-medium" style={{ fontFamily: "JetBrains Mono" }}>
+                    {education.degree ? education.degree.split(" ")[0] : "Student"}
+                    {education.graduationYear ? `, '${education.graduationYear.slice(2)}` : ""}
+                  </p>
+                </div>
+              </div>
+
+              {/* Section Nav */}
+              <nav className="space-y-0.5">
+                {navItems.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      if (item.id === "security") window.location.href = "/settings/security";
+                      else setActiveSection(item.id);
+                    }}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all text-left ${
+                      activeSection === item.id
+                        ? "bg-primary/10 text-primary font-medium"
+                        : "text-on-surface-variant hover:bg-surface-variant"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
+                      <span className="text-sm font-medium" style={{ fontFamily: "JetBrains Mono" }}>{item.label}</span>
+                    </div>
+                    <span className="material-symbols-outlined text-[16px] opacity-50">chevron_right</span>
+                  </button>
+                ))}
+              </nav>
+
+              {/* Profile Strength */}
+              <div className="mt-6 pt-5 border-t border-outline-variant/40">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-medium text-on-surface-variant" style={{ fontFamily: "JetBrains Mono" }}>Profile Strength</span>
+                  <span className="text-xs font-bold text-primary" style={{ fontFamily: "JetBrains Mono" }}>{profileStrength}%</span>
+                </div>
+                <div className="h-2 w-full bg-surface-variant rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-primary rounded-full transition-all duration-500"
+                    style={{ width: `${profileStrength}%` }}
                   />
-                ) : (
-                  <AvatarFallback className="bg-brand text-brand-foreground text-xl font-bold">
-                    {profile.initials}
-                  </AvatarFallback>
+                </div>
+                {profileStrength < 100 && (
+                  <p className="text-[11px] text-outline mt-2" style={{ fontFamily: "JetBrains Mono" }}>
+                    {profileStrength < 50 ? "Add your education and preferences to boost your profile" :
+                     profileStrength < 80 ? "Add social links to reach 100%" :
+                     "Almost there! Complete all sections"}
+                  </p>
                 )}
-              </Avatar>
-              <div className="flex-1 min-w-[240px]">
-                {isEditing ? (
-                  <div className="space-y-2 bg-background p-3 rounded-xl border border-border">
-                    <input
-                      className="w-full bg-transparent text-lg font-bold outline-none"
-                      value={editForm.name}
-                      onChange={(e) => {
-                        const name = e.target.value;
-                        const initials =
-                          name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .substring(0, 2)
-                            .toUpperCase() || "??";
-                        setEditForm({ ...editForm, name, initials });
-                      }}
-                      placeholder="Name"
+              </div>
+            </div>
+          </div>
+
+          {/* ── Right Column ── */}
+          <div className="lg:col-span-2 space-y-8">
+
+            {/* Global save message */}
+            {message.text && (
+              <div className={`px-4 py-3 rounded-lg text-sm font-medium ${
+                message.type === "success"
+                  ? "bg-primary/10 text-primary border border-primary/20"
+                  : "bg-error/10 text-error border border-error/20"
+              }`} style={{ fontFamily: "Inter" }}>
+                {message.text}
+              </div>
+            )}
+
+            {/* ── Section: Public Profile ── */}
+            {activeSection === "public-profile" && (
+              <section className="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm border-l-4 border-l-primary">
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold text-on-surface" style={{ fontFamily: "Manrope" }}>Public Profile</h2>
+                  <p className="text-sm text-on-surface-variant mt-1" style={{ fontFamily: "Inter" }}>
+                    This information will be displayed publicly to recruiters and peers.
+                  </p>
+                </div>
+
+                <form className="space-y-6" onSubmit={e => { e.preventDefault(); handleSaveProfile(); }}>
+                  {/* Name row */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-on-surface mb-2" style={{ fontFamily: "JetBrains Mono" }}>First Name</label>
+                      <input
+                        value={formData.firstName}
+                        onChange={e => setFormData(p => ({ ...p, firstName: e.target.value }))}
+                        className="w-full px-4 py-2.5 bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm text-on-surface"
+                        style={{ fontFamily: "Inter" }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-on-surface mb-2" style={{ fontFamily: "JetBrains Mono" }}>Last Name</label>
+                      <input
+                        value={formData.lastName}
+                        onChange={e => setFormData(p => ({ ...p, lastName: e.target.value }))}
+                        className="w-full px-4 py-2.5 bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm text-on-surface"
+                        style={{ fontFamily: "Inter" }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Bio */}
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="text-xs font-medium text-on-surface" style={{ fontFamily: "JetBrains Mono" }}>Bio</label>
+                      <span className="text-xs text-outline" style={{ fontFamily: "JetBrains Mono" }}>{formData.bio.length} / 300 characters</span>
+                    </div>
+                    <textarea
+                      value={formData.bio}
+                      maxLength={300}
+                      onChange={e => setFormData(p => ({ ...p, bio: e.target.value }))}
+                      className="w-full px-4 py-2.5 bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm text-on-surface resize-none"
+                      style={{ fontFamily: "Inter" }}
+                      rows={4}
+                      placeholder="Tell recruiters and peers about yourself..."
                     />
-                    <input
-                      className="w-full bg-transparent text-sm text-muted-foreground outline-none"
-                      value={(editForm as any).username || ""}
-                      onChange={(e) => setEditForm({ ...editForm, username: e.target.value } as any)}
-                      placeholder="Username"
-                    />
-                    <input
-                      className="w-full bg-transparent text-sm text-muted-foreground outline-none"
-                      value={editForm.headline}
-                      onChange={(e) => setEditForm({ ...editForm, headline: e.target.value })}
-                      placeholder="Headline"
-                    />
-                    <input
-                      className="w-full bg-transparent text-sm text-muted-foreground outline-none"
-                      value={editForm.avatar_url || ""}
-                      onChange={(e) => setEditForm({ ...editForm, avatar_url: e.target.value })}
-                      placeholder="Avatar URL (optional)"
-                    />
-                    <div className="flex gap-2 pt-1">
+                  </div>
+
+                  {/* Social Links */}
+                  <div>
+                    <label className="block text-xs font-medium text-on-surface mb-3" style={{ fontFamily: "JetBrains Mono" }}>Social Links</label>
+                    <div className="space-y-3">
+                      {[
+                        { key: "portfolioUrl", icon: "link", placeholder: "Portfolio URL", iconBg: "bg-surface-container" },
+                        { key: "linkedinUrl", icon: "work", placeholder: "LinkedIn URL", iconBg: "bg-[#0077B5]/10", iconColor: "text-[#0077B5]" },
+                        { key: "githubUrl", icon: "code", placeholder: "GitHub URL", iconBg: "bg-surface-container", iconColor: "text-on-surface-variant" },
+                      ].map(({ key, icon, placeholder, iconBg, iconColor }) => (
+                        <div key={key} className="flex items-center gap-3 bg-surface px-3 py-2 rounded-lg border border-outline-variant focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+                          <div className={`w-8 h-8 rounded ${iconBg} flex items-center justify-center flex-shrink-0`}>
+                            <span className={`material-symbols-outlined text-[18px] ${iconColor || "text-on-surface-variant"}`}>{icon}</span>
+                          </div>
+                          <input
+                            value={(formData as any)[key]}
+                            onChange={e => setFormData(p => ({ ...p, [key]: e.target.value }))}
+                            className="flex-1 bg-transparent border-none outline-none text-sm text-on-surface placeholder:text-outline"
+                            placeholder={placeholder}
+                            style={{ fontFamily: "Inter" }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-2">
+                    <button
+                      type="submit"
+                      disabled={saving}
+                      className="bg-primary hover:bg-primary/90 text-on-primary font-medium px-6 py-2.5 rounded-lg transition-all shadow-sm disabled:opacity-70 active:scale-[0.98]"
+                      style={{ fontFamily: "Inter" }}
+                    >
+                      {saving ? "Saving..." : "Save Changes"}
+                    </button>
+                  </div>
+                </form>
+              </section>
+            )}
+
+            {/* ── Section: Education ── */}
+            {activeSection === "education" && (
+              <section className="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm border-l-4 border-l-[#f59e0b]">
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold text-on-surface" style={{ fontFamily: "Manrope" }}>Education</h2>
+                  <p className="text-sm text-on-surface-variant mt-1" style={{ fontFamily: "Inter" }}>Update your current academic standing.</p>
+                </div>
+
+                <div className="space-y-5">
+                  <div>
+                    <label className="block text-xs font-medium text-on-surface mb-2" style={{ fontFamily: "JetBrains Mono" }}>University / College Name</label>
+                    <div className="flex items-center gap-3 bg-surface px-4 py-2.5 rounded-lg border border-outline-variant focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+                      <span className="material-symbols-outlined text-[18px] text-on-surface-variant flex-shrink-0">school</span>
+                      <input
+                        value={education.university}
+                        onChange={e => setEducation(p => ({ ...p, university: e.target.value }))}
+                        className="flex-1 bg-transparent border-none outline-none text-sm text-on-surface placeholder:text-outline"
+                        placeholder="e.g. State University Institute of Technology"
+                        style={{ fontFamily: "Inter" }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-on-surface mb-2" style={{ fontFamily: "JetBrains Mono" }}>Degree</label>
+                      <div className="relative">
+                        <select
+                          value={education.degree}
+                          onChange={e => setEducation(p => ({ ...p, degree: e.target.value }))}
+                          className="w-full px-4 py-2.5 bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm text-on-surface appearance-none cursor-pointer"
+                          style={{ fontFamily: "Inter" }}
+                        >
+                          {DEGREES.map(d => <option key={d}>{d}</option>)}
+                        </select>
+                        <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-on-surface mb-2" style={{ fontFamily: "JetBrains Mono" }}>Graduation Year</label>
+                      <div className="relative">
+                        <select
+                          value={education.graduationYear}
+                          onChange={e => setEducation(p => ({ ...p, graduationYear: e.target.value }))}
+                          className="w-full px-4 py-2.5 bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm text-on-surface appearance-none cursor-pointer"
+                          style={{ fontFamily: "Inter" }}
+                        >
+                          {GRAD_YEARS.map(y => <option key={y}>{y}</option>)}
+                        </select>
+                        <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-2">
+                    <button
+                      onClick={handleSaveProfile}
+                      disabled={saving}
+                      className="bg-primary hover:bg-primary/90 text-on-primary font-medium px-6 py-2.5 rounded-lg transition-all shadow-sm disabled:opacity-70 active:scale-[0.98]"
+                      style={{ fontFamily: "Inter" }}
+                    >
+                      {saving ? "Saving..." : "Update Education"}
+                    </button>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* ── Section: Preferences ── */}
+            {activeSection === "preferences" && (
+              <section className="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm border-l-4 border-l-[#f59e0b]">
+                <div className="mb-6 flex items-start gap-3">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h2 className="text-xl font-semibold text-on-surface" style={{ fontFamily: "Manrope" }}>Job Preferences</h2>
+                      <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-[#f59e0b]/15 text-[#f59e0b] border border-[#f59e0b]/30 uppercase tracking-wider">ACTION NEEDED</span>
+                    </div>
+                    <p className="text-sm text-on-surface-variant" style={{ fontFamily: "Inter" }}>We use this to recommend relevant opportunities and roadmap content.</p>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Target Roles */}
+                  <div>
+                    <label className="block text-xs font-medium text-on-surface mb-3" style={{ fontFamily: "JetBrains Mono" }}>Target Roles</label>
+                    <div className="flex flex-wrap gap-2">
+                      {ROLE_CHIPS.map(role => {
+                        const selected = preferences.targetRoles.includes(role);
+                        return (
+                          <button
+                            key={role}
+                            type="button"
+                            onClick={() => toggleRole(role)}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${
+                              selected
+                                ? "bg-primary text-on-primary border-primary"
+                                : "bg-surface border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary"
+                            }`}
+                            style={{ fontFamily: "Inter" }}
+                          >
+                            {selected && <span className="material-symbols-outlined text-[14px]">check</span>}
+                            {role}
+                          </button>
+                        );
+                      })}
                       <button
-                        onClick={() => {
-                          saveProfile(editForm);
-                          setIsEditing(false);
-                        }}
-                        className="p-1.5 rounded bg-success/20 text-success hover:bg-success/30"
+                        type="button"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border border-dashed border-outline-variant text-outline hover:border-primary hover:text-primary transition-all"
+                        style={{ fontFamily: "Inter" }}
                       >
-                        <Check className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setEditForm(profile);
-                          setIsEditing(false);
-                        }}
-                        className="p-1.5 rounded bg-destructive/20 text-destructive hover:bg-destructive/30"
-                      >
-                        <X className="h-4 w-4" />
+                        <span className="material-symbols-outlined text-[14px]">add</span>
+                        Add Role
                       </button>
                     </div>
                   </div>
-                ) : (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <h1 className="text-display text-2xl font-bold">{profile.name}</h1>
-                      <button
-                        onClick={() => setIsEditing(true)}
-                        className="text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </button>
+
+                  {/* Preferred Location */}
+                  <div>
+                    <label className="block text-xs font-medium text-on-surface mb-2" style={{ fontFamily: "JetBrains Mono" }}>Preferred Locations</label>
+                    <div className="flex items-center gap-3 bg-surface px-4 py-2.5 rounded-lg border border-outline-variant focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+                      <span className="material-symbols-outlined text-[18px] text-on-surface-variant flex-shrink-0">location_on</span>
+                      <input
+                        value={preferences.preferredLocation}
+                        onChange={e => setPreferences(p => ({ ...p, preferredLocation: e.target.value }))}
+                        className="flex-1 bg-transparent border-none outline-none text-sm text-on-surface placeholder:text-outline"
+                        placeholder="e.g. Remote, Bangalore, Hyderabad"
+                        style={{ fontFamily: "Inter" }}
+                      />
                     </div>
-                    {(profile as any).username && (
-                      <p className="text-sm font-medium text-brand">@{(profile as any).username}</p>
-                    )}
-                    <p className="text-sm text-muted-foreground">{profile.headline}</p>
-                  </>
-                )}
-                <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-background px-3 py-1 font-semibold">
-                    <Trophy className="h-3 w-3 text-xp-gold" /> Level {stats.level}
-                  </span>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-background px-3 py-1 font-semibold">
-                    <Flame className="h-3 w-3 text-streak" fill="currentColor" /> {stats.streak}-day streak
-                  </span>
-                </div>
-              </div>
-              <Link
-                to="/dashboard"
-                className="rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background hover:opacity-90"
-              >
-                Continue learning
-              </Link>
-            </div>
+                  </div>
 
-            <div className="mt-6">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-medium">Level {stats.level}</span>
-                <span className="font-display font-bold text-xp-gold">
-                  {stats.xp.toLocaleString()} / {stats.nextLevelXp.toLocaleString()} XP
-                </span>
-                <span className="font-medium">Level {stats.level + 1}</span>
-              </div>
-              <div className="mt-2 h-2 rounded-full bg-background/70">
-                <div
-                  className="h-full rounded-full bg-brand transition-all"
-                  style={{ width: `${stats.progressPct}%` }}
-                />
-              </div>
-            </div>
-          </section>
+                  {/* Toggles */}
+                  <div className="space-y-4">
+                    {[
+                      {
+                        key: "activelyLooking",
+                        label: "Actively looking for jobs",
+                        desc: "Your profile will be highlighted to verified recruiters.",
+                      },
+                      {
+                        key: "emailNotifications",
+                        label: "Receive email notifications",
+                        desc: "Get alerts for new job postings matching your preferences.",
+                      },
+                    ].map(({ key, label, desc }) => (
+                      <div key={key} className="flex items-center justify-between py-3 border-b border-outline-variant/30 last:border-0">
+                        <div>
+                          <p className="text-sm font-medium text-on-surface" style={{ fontFamily: "Inter" }}>{label}</p>
+                          <p className="text-xs text-on-surface-variant mt-0.5" style={{ fontFamily: "Inter" }}>{desc}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setPreferences(p => ({ ...p, [key]: !(p as any)[key] }))}
+                          className={`relative w-12 h-6 rounded-full transition-colors flex-shrink-0 ${
+                            (preferences as any)[key] ? "bg-primary" : "bg-surface-variant"
+                          }`}
+                        >
+                          <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
+                            (preferences as any)[key] ? "translate-x-6" : ""
+                          }`} />
+                          {(preferences as any)[key] && (
+                            <span className="absolute top-1/2 left-1.5 -translate-y-1/2">
+                              <span className="material-symbols-outlined text-on-primary text-[11px]">check</span>
+                            </span>
+                          )}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
 
-          {/* Stats */}
-          <section className="mt-5 grid gap-3 grid-cols-2 sm:grid-cols-4">
-            {[
-              ["Quizzes", quizHistory.length.toString()],
-              ["Interviews", "0"],
-              ["Code wins", "0"],
-              ["Hours practised", "0"],
-            ].map(([k, v]) => (
-              <div key={k} className="rounded-2xl border border-border bg-card p-4">
-                <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{k}</div>
-                <div className="text-display text-xl font-bold">{v}</div>
-              </div>
-            ))}
-          </section>
-
-          {/* Badges + Activity */}
-          <section className="mt-5 grid gap-5 md:grid-cols-2">
-            <div className="rounded-3xl border border-border bg-card p-5">
-              <h3 className="text-display text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Badges
-              </h3>
-              {badges.length > 0 ? (
-                <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {badges.map((b) => (
-                    <div
-                      key={b.name}
-                      className={`${(b as any).tint} rounded-2xl border border-border p-3 text-center`}
+                  <div className="flex justify-end pt-2">
+                    <button
+                      onClick={handleSaveProfile}
+                      disabled={saving}
+                      className="bg-primary hover:bg-primary/90 text-on-primary font-medium px-6 py-2.5 rounded-lg transition-all shadow-sm disabled:opacity-70"
+                      style={{ fontFamily: "Inter" }}
                     >
-                      <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-background/80">
-                        <b.icon className="h-4 w-4 text-brand-dark" />
-                      </div>
-                      <p className="mt-2 text-[11px] font-semibold leading-tight">{b.name}</p>
-                    </div>
-                  ))}
+                      {saving ? "Saving..." : "Save Preferences"}
+                    </button>
+                  </div>
                 </div>
-              ) : (
-                <div className="mt-3 text-sm text-muted-foreground py-6 text-center">
-                  No badges earned yet. Keep learning!
-                </div>
-              )}
-            </div>
-            <div className="rounded-3xl border border-border bg-card p-5">
-              <h3 className="text-display text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Recent activity
-              </h3>
-              {activity.length > 0 ? (
-                <ul className="mt-3 space-y-2">
-                  {activity.map((a, i) => (
-                    <li
-                      key={i}
-                      className="flex items-center gap-3 rounded-2xl border border-border p-3"
-                    >
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-light text-brand-dark">
-                        {a.kind === "quiz" ? (
-                          <ListChecks className="h-4 w-4" />
-                        ) : a.kind === "interview" ? (
-                          <Mic className="h-4 w-4" />
-                        ) : (
-                          <Code2 className="h-4 w-4" />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">{a.title}</p>
-                        <p className="text-[11px] text-muted-foreground">{a.time}</p>
-                      </div>
-                      <span className="text-[11px] font-semibold text-xp-gold">+{a.xp} XP</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="mt-3 text-sm text-muted-foreground py-6 text-center">
-                  No recent activity. Start a quiz to see it here!
-                </div>
-              )}
-              <Link
-                to="/leaderboard"
-                className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline"
-              >
-                See leaderboard <ArrowRight className="h-3 w-3" />
-              </Link>
-            </div>
-          </section>
+              </section>
+            )}
+
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

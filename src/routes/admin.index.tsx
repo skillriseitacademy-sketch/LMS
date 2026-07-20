@@ -307,7 +307,7 @@ function AdminDashboard() {
                         <AvatarFallback className="bg-muted text-xs">
                           {e.name
                             .split(" ")
-                            .map((n) => n[0])
+                            .map((n: string) => n[0])
                             .join("")}
                         </AvatarFallback>
                       </Avatar>

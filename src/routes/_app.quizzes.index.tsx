@@ -1,66 +1,150 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { TopBar } from "@/components/top-bar";
-import { Clock, ListChecks, Sparkles, ArrowRight } from "lucide-react";
-import { quizTopics } from "@/lib/mock-data";
+import { Clock, ListChecks, ArrowRight, Brain, Terminal, Database, Shield } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/_app/quizzes/")({
   head: () => ({ meta: [{ title: "Quizzes — PlacePro LMS" }] }),
   component: QuizzesIndex,
 });
 
+const getTopicIcon = (id: string) => {
+  if (id.includes('dsa') || id.includes('algo') || id.includes('coding')) return Terminal;
+  if (id.includes('system') || id.includes('arch') || id.includes('db')) return Database;
+  if (id.includes('behavioral') || id.includes('leadership')) return Brain;
+  if (id.includes('security')) return Shield;
+  return ListChecks;
+};
+
+const getTopicTheme = (difficulty: string, index: number) => {
+  const themes = [
+    { bg: "var(--pp-primary-container)", fg: "var(--pp-on-primary-container)", border: "var(--pp-primary)", glow: "var(--pp-primary-fixed)" },
+    { bg: "var(--pp-secondary-container)", fg: "var(--pp-on-secondary-container)", border: "var(--pp-secondary)", glow: "var(--pp-secondary-fixed)" },
+    { bg: "var(--pp-tertiary-container)", fg: "var(--pp-on-tertiary-container)", border: "var(--pp-tertiary)", glow: "var(--pp-tertiary-fixed)" },
+  ];
+  return themes[index % themes.length];
+};
+
 function QuizzesIndex() {
+  const [quizzes, setQuizzes] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function fetchQuizzes() {
+      const { data } = await supabase
+        .from("quizzes")
+        .select(`
+          id,
+          title,
+          topics ( title, description )
+        `);
+      if (data) setQuizzes(data);
+    }
+    fetchQuizzes();
+  }, []);
+
   return (
     <>
-      <TopBar title="Quizzes" />
-      <div className="p-4 md:p-6">
-        <div className="mx-auto max-w-5xl">
-          <header className="mb-6">
-            <h1 className="text-display text-2xl font-bold">Pick a topic to start</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Timed assessments with AI-written explanations. You earn XP for every correct answer.
-            </p>
-          </header>
+      <TopBar />
+      <main className="p-4 md:p-8 max-w-[1280px] mx-auto">
+        <header className="mb-8">
+          <h1
+            className="text-[32px] font-bold leading-tight mb-2"
+            style={{ fontFamily: "var(--font-display)", color: "var(--pp-on-surface)", letterSpacing: "-0.01em" }}
+          >
+            Pick a topic to start
+          </h1>
+          <p className="text-lg" style={{ color: "var(--pp-on-surface-variant)" }}>
+            Timed assessments with AI-written explanations. You earn XP for every correct answer.
+          </p>
+        </header>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {quizTopics.map((t) => (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {quizzes.map((q, idx) => {
+            const Icon = getTopicIcon(q.title.toLowerCase());
+            const difficulty = "Intermediate";
+            const theme = getTopicTheme(difficulty, idx);
+            const topicTitle = Array.isArray(q.topics) ? q.topics[0]?.title : q.topics?.title;
+            const topicDesc = Array.isArray(q.topics) ? q.topics[0]?.description : q.topics?.description;
+
+            return (
               <Link
-                key={t.id}
+                key={q.id}
                 to="/quizzes/$quizId"
-                params={{ quizId: t.id }}
-                className={`${t.tint} group rounded-3xl border border-border p-5 transition hover:-translate-y-0.5`}
+                params={{ quizId: q.id }}
+                className="group relative overflow-hidden rounded-[16px] p-6 transition-all duration-300 flex flex-col"
+                style={{
+                  backgroundColor: "var(--pp-surface-container-lowest)",
+                  border: "1px solid color-mix(in srgb, var(--pp-outline-variant) 30%, transparent)",
+                  boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05)",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = `color-mix(in srgb, ${theme.border} 50%, transparent)`;
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 16px -4px color-mix(in srgb, ${theme.border} 10%, transparent)`;
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "color-mix(in srgb, var(--pp-outline-variant) 30%, transparent)";
+                  (e.currentTarget as HTMLElement).style.transform = "";
+                  (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05)";
+                }}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <span className="inline-block rounded-full bg-background/70 px-3 py-1 text-[11px] font-medium">
-                      {t.difficulty}
-                    </span>
-                    <h3 className="mt-3 text-display text-lg font-semibold">{t.title}</h3>
-                    <p className="mt-1 max-w-[18rem] text-xs text-foreground/70">{t.description}</p>
-                  </div>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-background/70">
-                    <Sparkles className="h-5 w-5 text-brand-dark" />
+                {/* Decorative glow orb */}
+                <div
+                  className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl -mr-10 -mt-10 opacity-10 group-hover:opacity-30 transition-opacity"
+                  style={{ backgroundColor: theme.glow }}
+                />
+
+                <div className="flex items-start justify-between mb-4 relative z-10">
+                  <span
+                    className="px-3 py-1 text-xs font-bold uppercase rounded-full"
+                    style={{
+                      backgroundColor: theme.bg,
+                      color: theme.fg,
+                      fontFamily: "var(--font-mono)",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    {difficulty}
+                  </span>
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:-translate-y-1 transition-transform"
+                    style={{ backgroundColor: theme.bg, color: theme.fg }}
+                  >
+                    <Icon className="w-5 h-5" />
                   </div>
                 </div>
-                <div className="mt-4 flex items-center justify-between border-t border-foreground/10 pt-3 text-xs text-foreground/70">
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center gap-1">
-                      <ListChecks className="h-3 w-3" />
-                      {t.questions} questions
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {t.minutes} min
-                    </span>
+
+                <div className="relative z-10 flex-1">
+                  <h3
+                    className="text-xl font-semibold mb-2"
+                    style={{ fontFamily: "var(--font-display)", color: "var(--pp-on-surface)" }}
+                  >
+                    {q.title}
+                  </h3>
+                  <p className="text-sm line-clamp-2" style={{ color: "var(--pp-on-surface-variant)" }}>
+                    {topicDesc || "Test your knowledge on this topic."}
+                  </p>
+                </div>
+
+                <div
+                  className="mt-6 flex items-center justify-between pt-4 relative z-10"
+                  style={{ borderTop: "1px solid var(--pp-surface-variant)" }}
+                >
+                  <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--pp-on-surface-variant)", fontFamily: "var(--font-mono)" }}>
+                    <Clock className="w-4 h-4" />
+                    <span>~10 mins</span>
                   </div>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background">
-                    Start <ArrowRight className="h-3 w-3" />
-                  </span>
+                  <div className="flex items-center gap-1 text-sm font-bold group-hover:translate-x-1 transition-transform" style={{ color: theme.border }}>
+                    Start <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
               </Link>
-            ))}
-          </div>
+            );
+          })}
         </div>
-      </div>
+      </main>
     </>
   );
 }
+

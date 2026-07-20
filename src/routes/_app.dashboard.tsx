@@ -1,268 +1,421 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  Search,
-  Filter,
-  ChevronRight,
-  Sparkles,
-  ListChecks,
-  Target,
-  Plus,
-  X,
-  BookOpen,
-} from "lucide-react";
-import { TopBar } from "@/components/top-bar";
-import { useQuizHistory } from "@/lib/store";
-import { quizTopics } from "@/lib/mock-data";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { useGamification } from "@/lib/use-gamification";
+import { useAuth } from "@/lib/auth-store";
 
 export const Route = createFileRoute("/_app/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — PlacePro LMS" }] }),
-  component: Dashboard,
+  component: DashboardPage,
 });
 
-const missions = [
-  { title: "Complete 1 quiz", xp: 10, done: true },
-  { title: "Practice 1 AI interview", xp: 25, done: false },
-  { title: "Solve a coding challenge", xp: 15, done: false },
-];
-
-function Dashboard() {
-  const stats = useGamification();
-  const quizHistory = useQuizHistory();
-  const recentQuizzes = quizHistory.slice(0, 3);
-
-  const [courses, setCourses] = useState<any[]>([]);
-  const [allTopics, setAllTopics] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showAddCourse, setShowAddCourse] = useState(false);
-
-  const fetchEnrolled = async () => {
-    setLoading(true);
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) return;
-
-    const { data, error } = await supabase
-      .from("student_topics")
-      .select("is_primary, topics(*)")
-      .eq("user_id", session.user.id);
-
-    if (!error && data) {
-      setCourses(data.map((d) => ({ ...d.topics, is_primary: d.is_primary })));
-    }
-    setLoading(false);
-  };
-
-  const fetchAllTopics = async () => {
-    const { data } = await supabase.from("topics").select("*").order("created_at");
-    if (data) setAllTopics(data);
-  };
+function DashboardPage() {
+  const { session } = useAuth();
+  const [profile, setProfile] = useState<any>(null);
+  const [enrolledTopics, setEnrolledTopics] = useState<any[]>([]);
 
   useEffect(() => {
-    fetchEnrolled();
-    fetchAllTopics();
-  }, []);
+    if (!session?.user?.id) return;
+    const load = async () => {
+      const { data: p } = await supabase.from('profiles').select('*, xp_transactions(amount)').eq('id', session.user.id).single();
+      if (p) {
+        p.xp = p.xp_transactions ? p.xp_transactions.reduce((acc: number, t: any) => acc + t.amount, 0) : 0;
+        setProfile(p);
+      }
+      
+      const { data: topics } = await supabase.from('student_topics').select('topics(*)').eq('user_id', session.user.id);
+      if (topics) {
+        setEnrolledTopics(topics.map(t => t.topics).filter(Boolean));
+      }
+    };
+    load();
+  }, [session]);
 
-  const handleAddCourse = async (topicId: string) => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) return;
-    await supabase.from("student_topics").upsert({
-      user_id: session.user.id,
-      topic_id: topicId,
-      is_primary: false,
-    });
-    fetchEnrolled();
-    setShowAddCourse(false);
-  };
+  const currentXp = profile?.xp || 0;
+  const level = Math.floor(currentXp / 1000) + 1;
+  const nextLevelXp = level * 1000;
+  const progressPercent = ((currentXp % 1000) / 1000) * 100;
+  const firstName = profile?.name ? profile.name.split(' ')[0] : 'Student';
 
   return (
     <>
-      <TopBar title="Dashboard" />
-      <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-[1fr_280px]">
-        <div className="space-y-6">
-          <section className="rounded-3xl border border-border bg-card p-6 md:p-8">
-            <h1 className="text-display text-3xl font-bold tracking-tight md:text-4xl">
-              Level up your skills
-            </h1>
-            <p className="mt-2 max-w-lg text-sm text-muted-foreground">
-              Explore your active courses, learn from industry experts, and build job-ready skills
-              for your future.
-            </p>
-            <div className="mt-5 flex max-w-xl items-center gap-2 rounded-full border border-border bg-background px-3 py-2">
-              <Search className="h-4 w-4 text-muted-foreground" />
-              <input
-                className="flex-1 bg-transparent text-sm outline-none"
-                placeholder="Search by course, people, theme…"
-              />
-              <button className="flex h-7 w-7 items-center justify-center rounded-full bg-muted">
-                <Filter className="h-3.5 w-3.5" />
-              </button>
-              <button className="rounded-full bg-foreground px-4 py-1.5 text-xs font-semibold text-background">
-                Search
-              </button>
-            </div>
-          </section>
-
-          <section>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-display text-xl font-bold">Your Courses</h2>
-              <button
-                onClick={() => setShowAddCourse(true)}
-                className="flex items-center gap-1 rounded-full bg-brand px-3 py-1.5 text-xs font-semibold text-brand-foreground hover:opacity-90"
-              >
-                <Plus className="h-3.5 w-3.5" /> Add Course
-              </button>
-            </div>
-
-            {loading ? (
-              <div className="py-10 text-center text-sm text-muted-foreground">
-                Loading courses...
-              </div>
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2">
-                {courses.map((c, idx) => (
-                  <article
-                    key={c.id}
-                    className={`${idx % 2 === 0 ? "bg-card-pink" : "bg-card-blue"} group relative overflow-hidden rounded-3xl border border-border p-5 transition hover:-translate-y-0.5`}
-                  >
-                    <span className="inline-block rounded-full bg-background/70 px-3 py-1 text-[11px] font-medium">
-                      {c.is_primary ? "Primary" : "Enrolled"}
-                    </span>
-                    <h3 className="mt-3 text-display text-lg font-semibold">{c.title}</h3>
-                    <p className="mt-1 max-w-[16rem] text-xs text-foreground/70 line-clamp-2">
-                      {c.description}
-                    </p>
-                    <div className="mt-4 flex items-center justify-between border-t border-foreground/10 pt-3 text-xs">
-                      <Link
-                        to="/quizzes"
-                        className="inline-flex items-center gap-1 rounded-full bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background"
-                      >
-                        Continue <ChevronRight className="h-3 w-3" />
-                      </Link>
-                    </div>
-                  </article>
-                ))}
-                {courses.length === 0 && (
-                  <div className="col-span-2 py-10 text-center text-sm text-muted-foreground">
-                    You haven't enrolled in any courses yet.
-                  </div>
-                )}
-              </div>
-            )}
-          </section>
-        </div>
-
-        <aside className="space-y-4">
-          <div className="rounded-2xl border border-border bg-card p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs uppercase tracking-wide text-muted-foreground">Level {stats.level}</span>
-              <span className="text-display text-sm font-bold text-xp-gold">{stats.xp.toLocaleString()} XP</span>
-            </div>
-            <div className="mt-2 h-2 rounded-full bg-muted">
-              <div className="h-full rounded-full bg-brand" style={{ width: `${stats.progressPct}%` }} />
-            </div>
-            <p className="mt-2 text-xs text-muted-foreground">{stats.xpNeeded} XP to Level {stats.level + 1}</p>
+      <main className="flex-1 w-full p-4 md:p-8 max-w-[1280px] mx-auto">
+        {/* Top Section: Greeting & Gamification */}
+        <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-8">
+          <div className="flex-1">
+            <h1 className="text-[32px] font-bold leading-[1.2] tracking-[-0.01em] text-on-surface mb-2" style={{ fontFamily: "Manrope" }}>Welcome back, {firstName}! 👋</h1>
+            <p className="text-lg leading-[1.6] text-on-surface-variant" style={{ fontFamily: "Inter" }}>Let's get you ready for your next big interview.</p>
           </div>
+          {/* Gamification Widget */}
+          <div className="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant flex items-center gap-8 w-full lg:w-auto shrink-0">
+            {/* XP */}
+            <div className="flex-1 min-w-[200px]">
+              <div className="flex justify-between items-end mb-1">
+                <span className="text-xs tracking-[0.05em] font-medium text-secondary font-bold uppercase" style={{ fontFamily: "JetBrains Mono" }}>Level {level}</span>
+                <span className="text-xs tracking-[0.05em] font-medium text-on-surface-variant" style={{ fontFamily: "JetBrains Mono" }}>{currentXp} / {nextLevelXp} XP</span>
+              </div>
+              <div className="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                <div className="h-full bg-secondary-container rounded-full" style={{ width: `${progressPercent}%` }}></div>
+              </div>
+            </div>
+            <div className="w-px h-10 bg-outline-variant mx-2"></div>
+            {/* Streak */}
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+                <span className="material-symbols-outlined" data-weight="fill">local_fire_department</span>
+              </div>
+              <div>
+                <div className="text-[24px] font-semibold leading-[1.3] text-tertiary" style={{ fontFamily: "Manrope" }}>0</div>
+                <div className="text-xs tracking-[0.05em] font-medium text-on-surface-variant uppercase" style={{ fontFamily: "JetBrains Mono" }}>Day Streak</div>
+              </div>
+            </div>
+          </div>
+        </header>
 
-          <div className="rounded-2xl border border-border bg-card p-5">
-            <h3 className="text-display text-sm font-semibold">Daily missions</h3>
-            <ul className="mt-3 space-y-2">
-              {missions.map((m) => (
-                <li
-                  key={m.title}
-                  className="flex items-center gap-3 rounded-xl border border-border p-2.5"
+        {/* Bento Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+          {/* Quick Launch Tiles (Top Row, Spans Full) */}
+          <section className="md:col-span-12 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-4">
+            {/* Tile 1 */}
+            <Link
+              to="/interview"
+              className="group bg-surface-container-lowest p-6 rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-4 relative overflow-hidden"
+            >
+              <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-fixed rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="w-12 h-12 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 shadow-sm group-hover:-translate-y-1 transition-transform">
+                <span className="material-symbols-outlined">video_chat</span>
+              </div>
+              <div>
+                <h3
+                  className="text-lg leading-[1.6] font-semibold text-on-surface"
+                  style={{ fontFamily: "Inter" }}
                 >
-                  <span
-                    className={`flex h-5 w-5 items-center justify-center rounded-md border ${m.done ? "bg-success border-success text-white" : "border-border"}`}
-                  >
-                    {m.done && "✓"}
-                  </span>
-                  <span className="flex-1 text-xs">{m.title}</span>
-                  <span className="text-[10px] font-semibold text-xp-gold">+{m.xp}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+                  Start Interview
+                </h3>
+                <p
+                  className="text-xs tracking-[0.05em] font-medium text-on-surface-variant mt-1"
+                  style={{ fontFamily: "JetBrains Mono" }}
+                >
+                  Mock with AI or Peers
+                </p>
+              </div>
+            </Link>
 
-          {recentQuizzes.length > 0 && (
-            <div className="rounded-2xl border border-border bg-card p-5">
-              <h3 className="text-display text-sm font-semibold">Recent quizzes</h3>
-              <ul className="mt-3 space-y-2">
-                {recentQuizzes.map((q, i) => {
-                  const topic = quizTopics.find((t) => t.id === q.quizId);
-                  return (
-                    <li
-                      key={i}
-                      className="flex items-center gap-3 rounded-xl border border-border p-2.5"
-                    >
-                      <div className="flex h-8 w-8 items-center justify-center rounded-md bg-brand-light text-brand-dark shrink-0">
-                        <ListChecks className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1 overflow-hidden">
-                        <div className="text-xs font-semibold truncate">
-                          {topic?.title || q.quizId}
-                        </div>
-                        <div className="text-[10px] text-muted-foreground">
-                          {new Date(q.timestamp).toLocaleDateString()}
-                        </div>
-                      </div>
-                      <div className="text-xs font-bold text-foreground">{q.score}%</div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
-        </aside>
-      </div>
+            {/* Tile 2 */}
+            <Link
+              to="/quizzes"
+              className="group bg-surface-container-lowest p-6 rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-4 relative overflow-hidden"
+            >
+              <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-fixed rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center shrink-0 shadow-sm group-hover:-translate-y-1 transition-transform">
+                <span className="material-symbols-outlined">quiz</span>
+              </div>
+              <div>
+                <h3
+                  className="text-lg leading-[1.6] font-semibold text-on-surface"
+                  style={{ fontFamily: "Inter" }}
+                >
+                  Take a Quiz
+                </h3>
+                <p
+                  className="text-xs tracking-[0.05em] font-medium text-on-surface-variant mt-1"
+                  style={{ fontFamily: "JetBrains Mono" }}
+                >
+                  Test your knowledge
+                </p>
+              </div>
+            </Link>
 
-      {showAddCourse && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-2xl rounded-3xl border border-border bg-card p-6 shadow-2xl">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-display text-2xl font-bold">Add a new course</h2>
-              <button
-                onClick={() => setShowAddCourse(false)}
-                className="rounded-full p-2 hover:bg-muted text-muted-foreground"
+            {/* Tile 3 */}
+            <Link
+              to="/live"
+              className="group bg-surface-container-lowest p-6 rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-4 relative overflow-hidden"
+            >
+              <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-fixed rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center shrink-0 shadow-sm group-hover:-translate-y-1 transition-transform">
+                <span className="material-symbols-outlined">live_tv</span>
+              </div>
+              <div>
+                <h3
+                  className="text-lg leading-[1.6] font-semibold text-on-surface"
+                  style={{ fontFamily: "Inter" }}
+                >
+                  Join Live Class
+                </h3>
+                <p
+                  className="text-xs tracking-[0.05em] font-medium text-on-surface-variant mt-1"
+                  style={{ fontFamily: "JetBrains Mono" }}
+                >
+                  Starting in 15 mins
+                </p>
+              </div>
+            </Link>
+
+            {/* Tile 4 */}
+            <Link
+              to="/arena"
+              className="group bg-surface-container-lowest p-6 rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-4 relative overflow-hidden"
+            >
+              <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-fixed rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center shrink-0 shadow-sm group-hover:-translate-y-1 transition-transform">
+                <span className="material-symbols-outlined">sports_esports</span>
+              </div>
+              <div>
+                <h3
+                  className="text-lg leading-[1.6] font-semibold text-on-surface"
+                  style={{ fontFamily: "Inter" }}
+                >
+                  Open Arena
+                </h3>
+                <p
+                  className="text-xs tracking-[0.05em] font-medium text-on-surface-variant mt-1"
+                  style={{ fontFamily: "JetBrains Mono" }}
+                >
+                  Compete globally
+                </p>
+              </div>
+            </Link>
+          </section>
+
+          {/* Today's Mission (Left Col, Spans 7) */}
+          <section className="md:col-span-7 bg-surface-container-lowest rounded-[16px] shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)] border border-outline-variant p-6 flex flex-col">
+            <div className="flex justify-between items-center mb-4 pb-2 border-b border-surface-container-highest">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-secondary">checklist</span>
+                <h2
+                  className="text-[24px] font-semibold leading-[1.3] text-on-surface"
+                  style={{ fontFamily: "Manrope" }}
+                >
+                  Today's Mission
+                </h2>
+              </div>
+              <span
+                className="bg-surface-variant text-on-surface-variant text-xs tracking-[0.05em] font-medium px-2 py-1 rounded-md"
+                style={{ fontFamily: "JetBrains Mono" }}
               >
-                <X className="h-5 w-5" />
+                1/3 Completed
+              </span>
+            </div>
+            <div className="flex flex-col gap-2 flex-1">
+              {/* Task 1 (Completed) */}
+              <label className="flex items-start gap-4 p-2 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer group">
+                <div className="relative flex items-center justify-center w-6 h-6 shrink-0 mt-[2px]">
+                  <input
+                    defaultChecked
+                    className="peer appearance-none w-5 h-5 border border-outline-variant rounded bg-surface-container-lowest checked:bg-primary-container checked:border-primary-container transition-colors cursor-pointer"
+                    type="checkbox"
+                  />
+                  <span className="material-symbols-outlined absolute text-on-primary-container text-[16px] pointer-events-none opacity-0 peer-checked:opacity-100">
+                    check
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <p
+                    className="text-base leading-[1.5] text-on-surface-variant line-through group-hover:text-on-surface transition-colors"
+                    style={{ fontFamily: "Inter" }}
+                  >
+                    Solve 2 DSA problems
+                  </p>
+                  <p
+                    className="text-xs tracking-[0.05em] font-medium text-outline mt-1"
+                    style={{ fontFamily: "JetBrains Mono" }}
+                  >
+                    +50 XP
+                  </p>
+                </div>
+              </label>
+
+              {/* Task 2 (Pending) */}
+              <label className="flex items-start gap-4 p-2 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer group border-l-[3px] border-secondary-container pl-[9px]">
+                <div className="relative flex items-center justify-center w-6 h-6 shrink-0 mt-[2px]">
+                  <input
+                    className="peer appearance-none w-5 h-5 border border-outline-variant rounded bg-surface-container-lowest checked:bg-primary-container checked:border-primary-container transition-colors cursor-pointer hover:border-primary"
+                    type="checkbox"
+                  />
+                  <span className="material-symbols-outlined absolute text-on-primary-container text-[16px] pointer-events-none opacity-0 peer-checked:opacity-100">
+                    check
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <p
+                    className="text-base leading-[1.5] text-on-surface font-medium"
+                    style={{ fontFamily: "Inter" }}
+                  >
+                    Complete 1 Mock Interview
+                  </p>
+                  <p
+                    className="text-xs tracking-[0.05em] font-medium text-outline mt-1"
+                    style={{ fontFamily: "JetBrains Mono" }}
+                  >
+                    +150 XP
+                  </p>
+                </div>
+                <button
+                  className="px-3 py-1 bg-primary-container text-on-primary-container text-xs tracking-[0.05em] rounded hover:bg-primary transition-colors shrink-0 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                  style={{ fontFamily: "JetBrains Mono" }}
+                >
+                  Start
+                </button>
+              </label>
+
+              {/* Task 3 (Pending) */}
+              <label className="flex items-start gap-4 p-2 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer group pl-3">
+                <div className="relative flex items-center justify-center w-6 h-6 shrink-0 mt-[2px]">
+                  <input
+                    className="peer appearance-none w-5 h-5 border border-outline-variant rounded bg-surface-container-lowest checked:bg-primary-container checked:border-primary-container transition-colors cursor-pointer hover:border-primary"
+                    type="checkbox"
+                  />
+                  <span className="material-symbols-outlined absolute text-on-primary-container text-[16px] pointer-events-none opacity-0 peer-checked:opacity-100">
+                    check
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <p
+                    className="text-base leading-[1.5] text-on-surface"
+                    style={{ fontFamily: "Inter" }}
+                  >
+                    Attend "System Design Basics" Live Class
+                  </p>
+                  <p
+                    className="text-xs tracking-[0.05em] font-medium text-outline mt-1"
+                    style={{ fontFamily: "JetBrains Mono" }}
+                  >
+                    Starts at 4:00 PM • +100 XP
+                  </p>
+                </div>
+              </label>
+            </div>
+          </section>
+
+          {/* Enrolled Topics (Right Col, Spans 5) */}
+          <section className="md:col-span-5 bg-surface-container-lowest rounded-[16px] shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)] border border-outline-variant p-6 flex flex-col">
+            <div className="flex justify-between items-center mb-4 pb-2 border-b border-surface-container-highest">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">school</span>
+                <h2
+                  className="text-[24px] font-semibold leading-[1.3] text-on-surface"
+                  style={{ fontFamily: "Manrope" }}
+                >
+                  Enrolled Topics
+                </h2>
+              </div>
+              <button className="text-primary hover:text-on-primary-fixed-variant p-1 rounded-full hover:bg-surface-container-low transition-colors">
+                <span className="material-symbols-outlined">more_horiz</span>
               </button>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 max-h-[60vh] overflow-y-auto">
-              {allTopics
-                .filter((t) => !courses.find((c) => c.id === t.id))
-                .map((t) => (
-                  <button
-                    key={t.id}
-                    onClick={() => handleAddCourse(t.id)}
-                    className="flex items-start gap-4 rounded-2xl border border-border p-4 text-left transition hover:bg-muted"
-                  >
-                    <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand/20 text-brand-dark">
-                      <BookOpen className="h-4 w-4" />
+            <div className="grid grid-cols-2 gap-4 flex-1 items-center justify-center py-2">
+              {enrolledTopics.length === 0 ? (
+                <div className="col-span-2 text-center text-sm text-on-surface-variant">No enrolled topics yet.</div>
+              ) : (
+                enrolledTopics.slice(0, 2).map((topic, i) => (
+                  <div key={topic.id} className="flex flex-col items-center text-center">
+                    <div className="relative w-24 h-24 mb-2">
+                      <svg
+                        className={`circular-chart ${i % 2 === 0 ? 'text-primary-container' : 'text-secondary-container'} w-full h-full drop-shadow-sm`}
+                        viewBox="0 0 36 36"
+                      >
+                        <path
+                          className="circle-bg"
+                          fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        ></path>
+                        <path
+                          className="circle stroke-current"
+                          fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          strokeDasharray="0, 100"
+                        ></path>
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span
+                          className="text-[24px] font-bold leading-[1.3] text-on-surface"
+                          style={{ fontFamily: "Manrope" }}
+                        >
+                          0%
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground">{t.title}</h3>
-                      <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                        {t.description}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-              {allTopics.filter((t) => !courses.find((c) => c.id === t.id)).length === 0 && (
-                <div className="col-span-2 py-8 text-center text-sm text-muted-foreground">
-                  You're already enrolled in all available courses!
-                </div>
+                    <h3
+                      className="text-base leading-[1.5] font-medium text-on-surface line-clamp-1"
+                      style={{ fontFamily: "Inter" }}
+                    >
+                      {topic.title}
+                    </h3>
+                    <span
+                      className={`text-xs tracking-[0.05em] font-medium mt-1 px-2 py-0.5 rounded ${i % 2 === 0 ? 'bg-primary-fixed/30 text-primary' : 'bg-surface-container-highest text-on-surface-variant'}`}
+                      style={{ fontFamily: "JetBrains Mono" }}
+                    >
+                      Enrolled
+                    </span>
+                  </div>
+                ))
               )}
             </div>
-          </div>
+            <button
+              className="w-full mt-4 py-2 border border-outline-variant rounded-lg text-base leading-[1.5] text-primary hover:bg-surface-container-low transition-colors font-medium"
+              style={{ fontFamily: "Inter" }}
+            >
+              View All Topics
+            </button>
+          </section>
         </div>
-      )}
+      </main>
+
+      {/* Mobile Bottom Navigation (Hidden on md+) */}
+      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant flex justify-around items-center h-[72px] pb-[env(safe-area-inset-bottom)] z-50 shadow-[0_-4px_6px_-1px_rgb(0,0,0,0.05)]">
+        <Link
+          to="/dashboard"
+          aria-current="page"
+          className="flex flex-col items-center justify-center w-16 h-full text-primary-container gap-1"
+        >
+          <div className="w-16 h-8 rounded-full bg-primary-container/20 flex items-center justify-center">
+            <span className="material-symbols-outlined" data-weight="fill">
+              dashboard
+            </span>
+          </div>
+          <span
+            className="text-[10px] tracking-[0.05em] font-bold"
+            style={{ fontFamily: "JetBrains Mono" }}
+          >
+            Home
+          </span>
+        </Link>
+        <Link
+          to="/quizzes"
+          className="flex flex-col items-center justify-center w-16 h-full text-on-surface-variant hover:text-on-surface transition-colors gap-1"
+        >
+          <span className="material-symbols-outlined">quiz</span>
+          <span
+            className="text-[10px] tracking-[0.05em] font-medium"
+            style={{ fontFamily: "JetBrains Mono" }}
+          >
+            Quizzes
+          </span>
+        </Link>
+        <Link
+          to="/interview"
+          className="flex flex-col items-center justify-center w-16 h-full text-on-surface-variant hover:text-on-surface transition-colors gap-1"
+        >
+          <span className="material-symbols-outlined">video_chat</span>
+          <span
+            className="text-[10px] tracking-[0.05em] font-medium"
+            style={{ fontFamily: "JetBrains Mono" }}
+          >
+            Interviews
+          </span>
+        </Link>
+        <Link
+          to="/profile"
+          className="flex flex-col items-center justify-center w-16 h-full text-on-surface-variant hover:text-on-surface transition-colors gap-1"
+        >
+          <span className="material-symbols-outlined">person</span>
+          <span
+            className="text-[10px] tracking-[0.05em] font-medium"
+            style={{ fontFamily: "JetBrains Mono" }}
+          >
+            Profile
+          </span>
+        </Link>
+      </nav>
     </>
   );
 }

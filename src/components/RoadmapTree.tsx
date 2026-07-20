@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { useAuth } from "@/lib/auth-store";
+import { supabase } from "@/lib/supabase";
 
 export type TreeNode = {
   id: string;
@@ -30,8 +31,8 @@ export function RoadmapTree({ initialNode }: RoadmapTreeProps) {
   const dataRef = useRef(data);
   dataRef.current = data;
 
-  const handleNodeClick = async (e: any, d: d3.HierarchyPointNode<TreeNode>) => {
-    const node = d.data;
+  const handleNodeClick = async (e: any, d: any) => {
+    const node = d.data as TreeNode;
     if (node.isLoading) return;
 
     if (node.children) {
@@ -61,7 +62,7 @@ export function RoadmapTree({ initialNode }: RoadmapTreeProps) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(session ? { Authorization: `Bearer ${session.access_token}` } : {})
+          ...(session ? { Authorization: `Bearer ${(supabase as any).realtime?.accessToken ?? ""}` } : {})
         },
         body: JSON.stringify({
           currentLevel: dataRef.current.level || dataRef.current.label,
@@ -123,9 +124,9 @@ export function RoadmapTree({ initialNode }: RoadmapTreeProps) {
       .selectAll("path")
       .data(root.links())
       .join("path")
-      .attr("d", d3.linkHorizontal<d3.HierarchyPointLink<TreeNode>, d3.HierarchyPointNode<TreeNode>>()
-          .x(d => d.y)
-          .y(d => d.x));
+      .attr("d", d3.linkHorizontal<any, any>()
+          .x(d => (d as any).y)
+          .y(d => (d as any).x));
 
     const node = g.append("g")
       .selectAll("g")
@@ -175,7 +176,7 @@ export function RoadmapTree({ initialNode }: RoadmapTreeProps) {
       });
 
     // Add Regenerate button inline for nodes that have children (either expanded or collapsed)
-    const regeneratableNodes = node.filter(d => !d.data.isLoading && d.data.type !== 'root' && (d.data.children || d.data._children));
+    const regeneratableNodes = node.filter(d => !d.data.isLoading && d.data.type !== 'root' && !!(d.data.children || d.data._children));
     regeneratableNodes.append("text")
       .attr("dy", "0.31em")
       .attr("x", d => d.children || d.data._children ? -12 - d.data.label.length * 7 - 10 : 12 + d.data.label.length * 7 + 10)

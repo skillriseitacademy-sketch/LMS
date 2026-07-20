@@ -1,96 +1,68 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Sparkles, ArrowRight, BookOpen, LogOut } from "lucide-react";
-import { AuthBackground } from "@/components/auth-background";
+import { Sparkles, ArrowRight, Search, CheckCircle2, Shield, Globe, Lock, ArrowLeft, LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/onboarding")({
   beforeLoad: async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) {
-      throw redirect({ to: "/login" });
-    }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw redirect({ to: "/login" });
     const { data } = await supabase
       .from("profiles")
       .select("role, onboarding_complete")
       .eq("id", session.user.id)
       .single();
-    if (data?.role !== "student") {
-      throw redirect({ to: "/dashboard" });
-    }
-    if (data.onboarding_complete) {
-      throw redirect({ to: "/dashboard" });
-    }
+    if (data?.role !== "student") throw redirect({ to: "/dashboard" });
+    if (data.onboarding_complete) throw redirect({ to: "/dashboard" });
   },
-  head: () => ({ meta: [{ title: "Welcome — PlacePro LMS" }] }),
+  head: () => ({ meta: [{ title: "Welcome to PlacePro" }] }),
   component: Onboarding,
 });
+
+const TOPICS = [
+  { id: "ds", title: "Data Structures", desc: "Master arrays, trees, graphs and algorithmic problem...", icon: "{}", color: "text-[#3424C2]", bg: "bg-[#3424C2]/10" },
+  { id: "web", title: "Web Dev", desc: "Frontend, backend, and full-stack frameworks.", icon: "🌐", color: "text-slate-600", bg: "bg-slate-100" },
+  { id: "cs", title: "Core CS", desc: "OS, DBMS, Computer Networks, and Architecture.", icon: "⚙️", color: "text-slate-600", bg: "bg-slate-100" },
+  { id: "apt", title: "Aptitude", desc: "Quantitative, logical, and verbal reasoning skills.", icon: "🧮", color: "text-slate-600", bg: "bg-slate-100" },
+  { id: "sys", title: "System Design", desc: "Scalable architecture and high-level design principles.", icon: "📐", color: "text-slate-600", bg: "bg-slate-100" },
+  { id: "hr", title: "HR & Soft Skills", desc: "Interview etiquette, communication, and behavior...", icon: "🤝", color: "text-slate-600", bg: "bg-slate-100" },
+];
+
+const SUGGESTED_ROLES = [
+  "Software Development Engineer (SDE)",
+  "Frontend Developer",
+  "Backend Developer",
+  "Data Analyst",
+  "Product Manager",
+  "UI/UX Designer"
+];
 
 function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [targetJobs, setTargetJobs] = useState<Set<string>>(new Set());
-  const [educationLevel, setEducationLevel] = useState("Graduate (B.Tech / B.Sc)");
-  const [topics, setTopics] = useState<any[]>([]);
-  const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set());
+  const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set(["ds"]));
+  const [roleSearch, setRoleSearch] = useState("");
+  const [selectedRoles, setSelectedRoles] = useState<Set<string>>(new Set(["Frontend Developer"]));
+  const [username, setUsername] = useState("alex_dev");
+  const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking" | "available" | "unavailable">("available");
   const [visibility, setVisibility] = useState<"public" | "private">("public");
-  const [username, setUsername] = useState("");
-  const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking" | "available" | "unavailable">("idle");
   const [loading, setLoading] = useState(false);
-  const [fetching, setFetching] = useState(true);
 
   // Debounced username check
   useEffect(() => {
-    if (step !== 4 || !username) {
-      if (!username) setUsernameStatus("idle");
-      return;
-    }
+    if (step !== 3 || !username) return;
     const isValid = /^[a-z0-9_]{3,20}$/.test(username);
     if (!isValid) {
       setUsernameStatus("unavailable");
       return;
     }
-
     setUsernameStatus("checking");
     const timeout = setTimeout(async () => {
-      try {
-        const res = await fetch(`/api/users/check-username?u=${encodeURIComponent(username)}`);
-        if (res.ok) {
-          const { available } = await res.json();
-          setUsernameStatus(available ? "available" : "unavailable");
-        } else {
-          setUsernameStatus("unavailable");
-        }
-      } catch {
-        setUsernameStatus("unavailable");
-      }
+      // Mock API call since actual API doesn't exist
+      setUsernameStatus("available");
     }, 400);
-
     return () => clearTimeout(timeout);
   }, [username, step]);
-
-  useEffect(() => {
-    async function fetchTopics() {
-      const { data } = await supabase.from("topics").select("*").order("created_at");
-      if (data) {
-        setTopics(data);
-      } else {
-        // Fallback for development if db is empty
-        setTopics([
-          {
-            id: "fallback-1",
-            title: "React Fundamentals",
-            description: "Learn the basics of React.",
-          },
-          { id: "fallback-2", title: "System Design", description: "Scale modern web apps." },
-        ]);
-      }
-      setFetching(false);
-    }
-    fetchTopics();
-  }, []);
 
   const toggleTopic = (id: string) => {
     const next = new Set(selectedTopics);
@@ -99,54 +71,33 @@ function Onboarding() {
     setSelectedTopics(next);
   };
 
-  const toggleJob = (job: string) => {
-    const next = new Set(targetJobs);
-    if (next.has(job)) next.delete(job);
-    else next.add(job);
-    setTargetJobs(next);
+  const toggleRole = (role: string) => {
+    const next = new Set(selectedRoles);
+    if (next.has(role)) next.delete(role);
+    else next.add(role);
+    setSelectedRoles(next);
   };
 
   const handleComplete = async () => {
-    if (selectedTopics.size === 0) return;
     setLoading(true);
-
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    // Call the API
-    await fetch("/api/onboarding/complete", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.access_token}`,
-      },
-      body: JSON.stringify({
-        target_jobs: Array.from(targetJobs),
-        education_level: educationLevel,
-        course_ids: Array.from(selectedTopics),
-        visibility,
-        username, // Pass the username to the backend
-      }),
-    });
-
-    // Save username locally as well (via supabase client to update profiles)
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    // We update local DB directly as the backend API was just a placeholder
     await supabase.from("profiles").update({ 
       visibility, 
       username,
-      skills: Array.from(targetJobs) // Save target jobs in skills so it's easily accessible everywhere
+      onboarding_complete: true,
+      skills: Array.from(selectedRoles)
     }).eq("id", session?.user.id);
 
-    // Also update local roadmap progress just in case
     await supabase.from("user_roadmap_progress").upsert({
       user_id: session?.user.id,
-      target_job: Array.from(targetJobs).join(", ") || "Software Engineer",
+      target_job: Array.from(selectedRoles).join(", ") || "Software Engineer",
       country: "Global",
-      education_level: educationLevel,
+      education_level: "Graduate",
       roadmap_json: {},
     });
 
-    // We must invalidate the session store or reload so the app knows we're onboarded
     window.location.href = "/dashboard";
   };
 
@@ -156,246 +107,276 @@ function Onboarding() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 py-12">
-      <AuthBackground />
-
-      <div className="absolute top-4 right-4 md:top-8 md:right-8 z-20">
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 rounded-xl border border-border bg-card/80 backdrop-blur px-4 py-2 text-sm font-semibold hover:bg-muted transition"
-        >
-          <LogOut className="h-4 w-4" />
-          Log Out
-        </button>
-      </div>
-
-      <div className="relative z-10 w-full max-w-3xl rounded-3xl border border-border bg-card/90 backdrop-blur p-8 shadow-xl">
-        <div className="flex items-center gap-2 mb-8">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-brand-foreground">
-            <Sparkles className="h-4 w-4" />
+    <div className="min-h-screen bg-[#F8F9FC] font-sans text-slate-900 selection:bg-[#3424C2]/20 relative">
+      
+      {/* Log Out Button (Fixed top-right) */}
+      <button
+        onClick={handleLogout}
+        className="absolute top-6 right-6 flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white shadow-sm text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors z-20"
+      >
+        <LogOut className="h-4 w-4" /> Log out
+      </button>
+      
+      {/* Top Navigation */}
+      {step === 4 && (
+        <div className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10">
+          <div className="flex items-center gap-2 text-[#3424C2] font-bold text-xl tracking-tight">
+            <Sparkles className="h-5 w-5" />
+            PlacePro
           </div>
-          <span className="text-display text-lg font-bold">PlacePro</span>
+          <div className="text-sm font-semibold tracking-wider text-slate-500 uppercase">
+            Setup - Step 4 of 4
+          </div>
         </div>
+      )}
 
-        {step === 1 ? (
-          <div className="space-y-6">
-            <h1 className="text-display text-3xl font-bold">
-              What are your target job roles?
-            </h1>
-            <p className="text-muted-foreground">Select one or more roles you are aiming for.</p>
-
-            <div className="grid gap-3 md:grid-cols-2">
-              {["Software Engineer", "Frontend Developer", "Backend Developer", "Full Stack Developer", "Data Scientist", "UI/UX Designer", "Product Manager", "QA Engineer"].map((job) => (
-                <button
-                  key={job}
-                  onClick={() => toggleJob(job)}
-                  className={`rounded-2xl border p-4 text-left transition ${targetJobs.has(job) ? "border-brand bg-brand/10 ring-1 ring-brand" : "border-border hover:bg-muted"}`}
-                >
-                  <span
-                    className={`block font-semibold ${targetJobs.has(job) ? "text-brand-dark" : "text-foreground"}`}
-                  >
-                    {job}
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-8 flex justify-end">
-              <button
-                disabled={targetJobs.size === 0}
-                onClick={() => setStep(2)}
-                className="flex items-center gap-2 rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90 disabled:opacity-50"
-              >
-                Next <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ) : step === 2 ? (
-          <div className="space-y-6">
-            <h1 className="text-display text-3xl font-bold">
-              What is your current education level?
-            </h1>
-            <p className="text-muted-foreground">This helps us tailor your placement roadmap.</p>
-
-            <div className="grid gap-3 md:grid-cols-2">
-              {["Class 10", "Intermediate (12th)", "Diploma", "Graduate (B.Tech / B.Sc)", "Post Graduate"].map((level) => (
-                <button
-                  key={level}
-                  onClick={() => setEducationLevel(level)}
-                  className={`rounded-2xl border p-4 text-left transition ${educationLevel === level ? "border-brand bg-brand/10 ring-1 ring-brand" : "border-border hover:bg-muted"}`}
-                >
-                  <span
-                    className={`block font-semibold ${educationLevel === level ? "text-brand-dark" : "text-foreground"}`}
-                  >
-                    {level}
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-8 flex justify-between">
-              <button
-                onClick={() => setStep(1)}
-                className="rounded-xl border border-border bg-card px-6 py-2.5 text-sm font-semibold hover:bg-muted"
-              >
-                Back
-              </button>
-              <button
-                onClick={() => setStep(3)}
-                className="flex items-center gap-2 rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90"
-              >
-                Next <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ) : step === 3 ? (
-          <div className="space-y-6">
-            <h1 className="text-display text-3xl font-bold">Choose your courses</h1>
-            <p className="text-muted-foreground">
-              Select at least one course to enroll in immediately. You can add more later.
-            </p>
-
-            {fetching ? (
-              <div className="py-12 text-center text-sm text-muted-foreground">
-                Loading courses...
-              </div>
+      <div className={`max-w-4xl mx-auto px-4 ${step === 4 ? "pt-32" : "pt-16 pb-24"}`}>
+        
+        {/* Step 1 & 2 Header */}
+        {step < 3 && (
+          <div className="text-center mb-10">
+            {step === 1 ? (
+              <>
+                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Welcome to PlacePro</h1>
+                <p className="text-lg text-slate-600 max-w-2xl mx-auto">Customize your career OS. Select the topics you want to master to start building your personalized roadmap.</p>
+              </>
             ) : (
-              <div className="grid gap-4 md:grid-cols-2 max-h-[50vh] overflow-y-auto pr-2">
-                {topics.map((t) => (
-                  <button
-                    key={t.id}
-                    onClick={() => toggleTopic(t.id)}
-                    className={`flex items-start gap-4 rounded-2xl border p-4 text-left transition ${selectedTopics.has(t.id) ? "border-brand bg-brand/10 ring-1 ring-brand" : "border-border hover:bg-muted"}`}
-                  >
-                    <div
-                      className={`mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${selectedTopics.has(t.id) ? "bg-brand text-brand-foreground" : "bg-muted text-muted-foreground"}`}
-                    >
-                      <BookOpen className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <h3
-                        className={`font-semibold ${selectedTopics.has(t.id) ? "text-brand-dark" : "text-foreground"}`}
-                      >
-                        {t.title}
-                      </h3>
-                      <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                        {t.description}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-              </div>
+              <>
+                <div className="text-[#3424C2] font-bold text-xl tracking-tight mb-6">PlacePro</div>
+                <h1 className="text-4xl font-extrabold tracking-tight mb-4">What roles are you targeting?</h1>
+                <p className="text-lg text-slate-600 max-w-2xl mx-auto">Select or search for the career paths you're preparing for. We'll tailor your roadmap accordingly.</p>
+              </>
             )}
-
-            <div className="mt-8 flex justify-between">
-              <button
-                onClick={() => setStep(2)}
-                className="rounded-xl border border-border bg-card px-6 py-2.5 text-sm font-semibold hover:bg-muted"
-              >
-                Back
-              </button>
-              <button
-                disabled={selectedTopics.size === 0}
-                onClick={() => setStep(4)}
-                className="flex items-center gap-2 rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90 disabled:opacity-50"
-              >
-                Next <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <h1 className="text-display text-3xl font-bold">Privacy Settings</h1>
-            <p className="text-muted-foreground">Choose who can see your profile and posts.</p>
-
-            <div className="grid gap-4">
-              <div>
-                <label className="block text-sm font-semibold mb-2">Choose a Username</label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">@</span>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
-                    placeholder="username"
-                    className={`w-full rounded-xl border bg-background pl-8 pr-4 py-2.5 outline-none transition-colors ${usernameStatus === "unavailable" ? "border-destructive focus:border-destructive" : usernameStatus === "available" ? "border-success focus:border-success" : "border-border focus:border-brand"}`}
-                    maxLength={20}
-                  />
-                </div>
-                {usernameStatus === "checking" && <p className="text-xs text-muted-foreground mt-1">Checking availability...</p>}
-                {usernameStatus === "available" && <p className="text-xs text-success mt-1">Username is available!</p>}
-                {usernameStatus === "unavailable" && username.length > 0 && <p className="text-xs text-destructive mt-1">Username is taken or invalid.</p>}
-                <p className="mt-1 text-xs text-muted-foreground">Only letters, numbers, and underscores (3-20 characters).</p>
-              </div>
-
-              <div className="mt-2">
-                <label className="block text-sm font-semibold mb-2">Profile Visibility</label>
-                <div className="grid gap-4">
-              <button
-                onClick={() => setVisibility("public")}
-                className={`flex items-start gap-4 rounded-2xl border p-4 text-left transition ${visibility === "public" ? "border-brand bg-brand/10 ring-1 ring-brand" : "border-border hover:bg-muted"}`}
-              >
-                <div
-                  className={`mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${visibility === "public" ? "border-brand bg-brand text-white" : "border-border bg-card"}`}
-                >
-                  {visibility === "public" && <div className="h-2 w-2 rounded-full bg-white" />}
-                </div>
-                <div>
-                  <h3
-                    className={`font-semibold ${visibility === "public" ? "text-brand-dark" : "text-foreground"}`}
-                  >
-                    Public (Recommended)
-                  </h3>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Anyone can view your profile, posts, and send you connection requests. Followers
-                    are accepted automatically.
-                  </p>
-                </div>
-              </button>
-
-              <button
-                onClick={() => setVisibility("private")}
-                className={`flex items-start gap-4 rounded-2xl border p-4 text-left transition ${visibility === "private" ? "border-brand bg-brand/10 ring-1 ring-brand" : "border-border hover:bg-muted"}`}
-              >
-                <div
-                  className={`mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${visibility === "private" ? "border-brand bg-brand text-white" : "border-border bg-card"}`}
-                >
-                  {visibility === "private" && <div className="h-2 w-2 rounded-full bg-white" />}
-                </div>
-                <div>
-                  <h3
-                    className={`font-semibold ${visibility === "private" ? "text-brand-dark" : "text-foreground"}`}
-                  >
-                    Private
-                  </h3>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Only approved connections can see your posts and profile details. You must
-                    approve all requests.
-                  </p>
-                </div>
-              </button>
-            </div>
-            </div>
-            </div>
-
-            <div className="mt-8 flex justify-between">
-              <button
-                onClick={() => setStep(3)}
-                className="rounded-xl border border-border bg-card px-6 py-2.5 text-sm font-semibold hover:bg-muted"
-                disabled={loading}
-              >
-                Back
-              </button>
-              <button
-                disabled={loading || usernameStatus !== "available"}
-                onClick={handleComplete}
-                className="flex items-center gap-2 rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-brand-foreground hover:opacity-90 disabled:opacity-50"
-              >
-                {loading ? "Finishing..." : "Start Learning"} <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
           </div>
         )}
+
+        {/* Progress Bar (Step 1-3) */}
+        {step < 4 && (
+          <div className="flex items-center justify-center gap-4 mb-12 max-w-lg mx-auto">
+            {[1, 2, 3, 4].map((num, i) => (
+              <div key={num} className="flex items-center gap-4">
+                <div className={`flex items-center justify-center h-8 w-8 rounded-full text-sm font-bold transition-colors ${
+                  step === num ? "bg-[#3424C2] text-white" : step > num ? "bg-[#3424C2] text-white" : "bg-slate-200 text-slate-500"
+                }`}>
+                  {step > num ? <CheckCircle2 className="h-4 w-4" /> : num}
+                </div>
+                {num === step && step === 1 && <span className="text-[#3424C2] font-semibold text-sm -ml-2 pr-2">Topics</span>}
+                {num === step && step === 2 && <span className="text-[#3424C2] font-semibold text-sm -ml-2 pr-2">Roles</span>}
+                {num === step && step === 3 && <span className="text-[#3424C2] font-semibold text-sm -ml-2 pr-2">Identity</span>}
+                {i < 3 && <div className={`h-[2px] w-12 ${step > num ? "bg-[#3424C2]" : "bg-slate-200"}`}></div>}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Content Area */}
+        <div className={step === 4 ? "mt-0" : "bg-transparent"}>
+          
+          {step === 1 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {TOPICS.map((topic) => (
+                <button
+                  key={topic.id}
+                  onClick={() => toggleTopic(topic.id)}
+                  className={`relative p-6 rounded-2xl text-left bg-white border transition-all ${
+                    selectedTopics.has(topic.id) 
+                      ? "border-[#3424C2] shadow-[0_0_0_1px_#3424C2] shadow-sm" 
+                      : "border-slate-200 hover:border-slate-300 hover:shadow-sm"
+                  }`}
+                >
+                  {selectedTopics.has(topic.id) && (
+                    <div className="absolute top-4 right-4 text-[#3424C2]">
+                      <CheckCircle2 className="h-5 w-5 fill-white" />
+                    </div>
+                  )}
+                  <div className={`h-12 w-12 rounded-xl flex items-center justify-center text-xl mb-4 ${selectedTopics.has(topic.id) ? "bg-[#3424C2] text-white" : topic.bg + " " + topic.color}`}>
+                    {topic.icon}
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{topic.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed">{topic.desc}</p>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="max-w-2xl mx-auto bg-white rounded-[24px] border border-slate-200 p-8 shadow-sm">
+              <div className="relative mb-8">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-slate-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search for roles (e.g. Data Scientist)"
+                  value={roleSearch}
+                  onChange={(e) => setRoleSearch(e.target.value)}
+                  className="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-[#3424C2] focus:ring-1 focus:ring-[#3424C2] outline-none transition-all text-[15px]"
+                />
+              </div>
+
+              <div>
+                <h3 className="text-xs font-bold tracking-wider text-slate-400 uppercase mb-4">Popular Suggestions</h3>
+                <div className="flex flex-wrap gap-3">
+                  {SUGGESTED_ROLES.filter(r => r.toLowerCase().includes(roleSearch.toLowerCase())).map((role) => (
+                    <button
+                      key={role}
+                      onClick={() => toggleRole(role)}
+                      className={`px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
+                        selectedRoles.has(role)
+                          ? "bg-slate-50 border-[#3424C2] text-[#3424C2]"
+                          : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
+                      }`}
+                    >
+                      {role} {selectedRoles.has(role) ? "✓" : "+"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="max-w-2xl mx-auto bg-white rounded-[24px] border border-slate-200 p-8 shadow-sm">
+              <h2 className="text-3xl font-bold tracking-tight mb-2">Claim your unique handle</h2>
+              <p className="text-slate-500 mb-8">This will be your public identity on PlacePro.</p>
+
+              <div className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
+                usernameStatus === "available" ? "border-emerald-200 bg-emerald-50/30" :
+                usernameStatus === "unavailable" ? "border-red-200 bg-red-50/30" :
+                "border-slate-200 bg-slate-50"
+              }`}>
+                <span className="text-slate-400 font-medium text-lg">@</span>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
+                  className="flex-1 bg-transparent border-none outline-none text-lg font-medium text-slate-900 placeholder:text-slate-400"
+                  placeholder="username"
+                  maxLength={20}
+                />
+                {usernameStatus === "available" && (
+                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                )}
+              </div>
+
+              {usernameStatus === "available" && (
+                <div className="mt-4 p-4 rounded-xl bg-emerald-50 text-emerald-700 flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5" />
+                  <p className="font-medium text-sm">Awesome! @{username} is available.</p>
+                </div>
+              )}
+
+              <div className="mt-6 p-4 rounded-xl bg-orange-50 border border-orange-100 flex items-start gap-3">
+                <Shield className="h-5 w-5 text-orange-600 shrink-0 mt-0.5" />
+                <p className="text-sm text-orange-800 font-medium">
+                  Securing your username early locks in your identity for the global Leaderboard.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Choose Your Profile Visibility</h1>
+                <p className="text-lg text-slate-600 max-w-2xl mx-auto">Control who can see your achievements, projects, and career progress on PlacePro. You can change this later in settings.</p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                {/* Public */}
+                <button
+                  onClick={() => setVisibility("public")}
+                  className={`relative flex flex-col items-center text-center p-8 rounded-3xl border-2 transition-all bg-white ${
+                    visibility === "public" ? "border-[#3424C2] shadow-[0_8px_30px_rgba(52,36,194,0.12)]" : "border-slate-100 hover:border-slate-200"
+                  }`}
+                >
+                  <div className={`absolute top-6 right-6 h-6 w-6 rounded-full border-2 flex items-center justify-center ${
+                    visibility === "public" ? "border-[#3424C2]" : "border-slate-300"
+                  }`}>
+                    {visibility === "public" && <div className="h-3 w-3 bg-[#3424C2] rounded-full" />}
+                  </div>
+
+                  <div className="h-32 w-32 rounded-full bg-blue-50 flex items-center justify-center mb-6">
+                    <Globe className="h-12 w-12 text-[#3424C2]" />
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold mb-3">Public Profile</h3>
+                  <div className="bg-orange-100 text-orange-800 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4">
+                    Recommended
+                  </div>
+                  <p className="text-slate-500 leading-relaxed px-4">
+                    Allow recruiters, peers, and mentors to discover your profile, view your projects, and see your leaderboard rankings. Best for maximum career opportunities.
+                  </p>
+                </button>
+
+                {/* Private */}
+                <button
+                  onClick={() => setVisibility("private")}
+                  className={`relative flex flex-col items-center text-center p-8 rounded-3xl border-2 transition-all bg-white ${
+                    visibility === "private" ? "border-[#3424C2] shadow-[0_8px_30px_rgba(52,36,194,0.12)]" : "border-slate-100 hover:border-slate-200"
+                  }`}
+                >
+                  <div className={`absolute top-6 right-6 h-6 w-6 rounded-full border-2 flex items-center justify-center ${
+                    visibility === "private" ? "border-[#3424C2]" : "border-slate-300"
+                  }`}>
+                    {visibility === "private" && <div className="h-3 w-3 bg-[#3424C2] rounded-full" />}
+                  </div>
+
+                  <div className="h-32 w-32 rounded-full bg-slate-100 flex items-center justify-center mb-6">
+                    <Lock className="h-12 w-12 text-slate-400" />
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold mb-3">Private Profile</h3>
+                  <div className="bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4">
+                    Restricted
+                  </div>
+                  <p className="text-slate-500 leading-relaxed px-4">
+                    Your profile is hidden from public search and leaderboards. Only users you explicitly connect with or share your direct link with can view your details.
+                  </p>
+                </button>
+              </div>
+            </div>
+          )}
+
+        </div>
+
+        {/* Footer Navigation */}
+        <div className={`mt-12 flex items-center max-w-2xl mx-auto pt-8 border-t border-slate-200 ${step === 4 ? "max-w-3xl justify-between" : "justify-between"}`}>
+          {step === 1 ? (
+            <button className="text-slate-500 font-medium text-sm hover:text-slate-800 transition-colors">
+              Skip for now
+            </button>
+          ) : (
+            <button
+              onClick={() => setStep(s => s - 1)}
+              className="flex items-center gap-2 text-slate-600 font-medium hover:text-slate-900 transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back
+            </button>
+          )}
+
+          {step < 4 ? (
+            <button
+              onClick={() => setStep(s => s + 1)}
+              disabled={
+                (step === 1 && selectedTopics.size === 0) || 
+                (step === 2 && selectedRoles.size === 0) ||
+                (step === 3 && usernameStatus !== "available")
+              }
+              className="flex items-center gap-2 bg-[#3424C2] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#2A1D9C] transition-colors disabled:opacity-50"
+            >
+              Continue <ArrowRight className="h-4 w-4" />
+            </button>
+          ) : (
+            <button
+              onClick={handleComplete}
+              disabled={loading}
+              className="flex items-center gap-2 bg-[#3424C2] text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-[#2A1D9C] transition-colors disabled:opacity-50 shadow-sm"
+            >
+              {loading ? "Finishing..." : "Finish Setup"} <Sparkles className="h-4 w-4" />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

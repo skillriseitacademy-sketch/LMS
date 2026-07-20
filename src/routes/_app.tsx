@@ -1,5 +1,4 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { supabase } from "@/lib/supabase";
 
@@ -27,13 +26,12 @@ export const Route = createFileRoute("/_app")({
 
 function AppLayout() {
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-muted/30">
-        <AppSidebar />
-        <SidebarInset className="bg-transparent">
-          <Outlet />
-        </SidebarInset>
+    <div className="bg-surface text-on-surface font-body-md antialiased min-h-screen flex selection:bg-primary-container selection:text-on-primary-container w-full">
+      <AppSidebar />
+      {/* Main content area */}
+      <div className="flex-1 w-full min-h-screen md:pl-[280px]">
+        <Outlet />
       </div>
-    </SidebarProvider>
+    </div>
   );
 }

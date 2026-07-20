@@ -1,59 +1,243 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { FilePlus, UploadCloud, ArrowLeft } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/auth-store";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/_app/resume/create")({
-  component: ResumeCreate,
+  component: ResumeEditorPage,
 });
 
-function ResumeCreate() {
-  const navigate = useNavigate();
+function ResumeEditorPage() {
+  const { session } = useAuth();
+  const [resumeData, setResumeData] = useState({
+    firstName: "",
+    lastName: "",
+    title: "Software Engineering Intern",
+    email: "",
+    phone: "(555) 123-4567",
+    experiences: [
+      {
+        id: "1",
+        title: "Software Engineering Intern",
+        employer: "TechNova Solutions",
+        startDate: "2023-05",
+        endDate: "2023-08",
+        description: "Developed internal dashboard using React and Node.js.\nImproved API response time by 15% through query optimization.\nCollaborated with UX team to implement responsive design features."
+      }
+    ]
+  });
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (session) {
+      const parts = session.name ? session.name.split(" ") : ["", ""];
+      setResumeData(prev => ({
+        ...prev,
+        firstName: parts[0] || "",
+        lastName: parts.slice(1).join(" ") || "",
+        email: session.email || ""
+      }));
+    }
+  }, [session]);
+
+  const handleUpdate = (field: string, value: string) => {
+    setResumeData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleExpUpdate = (id: string, field: string, value: string) => {
+    setResumeData(prev => ({
+      ...prev,
+      experiences: prev.experiences.map(exp => 
+        exp.id === id ? { ...exp, [field]: value } : exp
+      )
+    }));
+  };
+
+  const saveResumeToDatabase = async () => {
+    if (!session?.id) return;
+    setSaving(true);
+    await supabase.from("resumes").upsert({
+      user_id: session.id,
+      title: `${resumeData.firstName}'s Resume`,
+      content: resumeData
+    });
+    setSaving(false);
+  };
 
   return (
-    <div className="mx-auto max-w-4xl p-6 md:p-12">
-      <div className="text-center mb-12">
-        <h1 className="text-display text-4xl font-bold md:text-5xl">
-          How would you like to build your resume?
-        </h1>
-      </div>
+    <div className="flex-1 flex flex-col h-full transition-all duration-300">
+      {/* TopAppBar */}
+      <header className="bg-surface border-b border-outline-variant/30 flex justify-between items-center w-full h-16 px-4 md:px-8 sticky top-0 z-40 shrink-0">
+        <div className="flex items-center gap-4">
+          <h1 className="font-headline-md text-headline-md font-bold text-on-surface">Resume Builder</h1>
+          <span className="hidden md:flex items-center gap-1 text-label-sm font-label-sm bg-surface-container-highest text-primary px-2 py-1 rounded-full uppercase tracking-wide ml-2">
+            <span className="material-symbols-outlined text-[14px]">{saving ? 'sync' : 'save'}</span> {saving ? 'Saving...' : 'Auto-saved'}
+          </span>
+        </div>
+        <div className="flex items-center gap-3 md:gap-4">
+          <button onClick={saveResumeToDatabase} disabled={saving} className="flex items-center gap-2 bg-surface-container text-on-surface px-4 py-2 rounded-lg font-body-md font-medium hover:bg-surface-container-high transition-all">
+            Save to DB
+          </button>
+          <button className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg font-body-md font-medium hover:bg-surface-tint transition-all active:scale-[0.98]">
+            <span className="material-symbols-outlined text-[20px]">download</span>
+            <span className="hidden sm:inline">Download PDF</span>
+          </button>
+        </div>
+      </header>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Create New */}
-        <button
-          onClick={() => navigate({ to: "/resume/templates" })}
-          className="group flex flex-col items-center text-center p-8 md:p-12 rounded-3xl border-2 border-border bg-card transition hover:border-brand hover:shadow-lg cursor-pointer"
-        >
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-brand-light text-brand-dark mb-6 group-hover:scale-110 transition-transform">
-            <FilePlus className="h-10 w-10" />
+      {/* Builder Workspace: Split Pane */}
+      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden bg-surface-container-low h-[calc(100vh-64px)]">
+        
+        {/* Left Pane: Editor Form */}
+        <section className="w-full lg:w-1/2 flex flex-col h-full bg-surface-container-lowest border-r border-outline-variant/30 z-10 relative overflow-y-auto">
+          <div className="p-4 md:p-8 space-y-8">
+            
+            {/* Section: Personal Info */}
+            <div className="bg-surface-bright rounded-xl shadow-sm border border-outline-variant/20 overflow-hidden">
+              <div className="px-6 py-4 border-b border-outline-variant/20 bg-surface flex justify-between items-center cursor-pointer hover:bg-surface-container-lowest transition-colors">
+                <h2 className="font-headline-md text-lg font-semibold text-on-surface flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[20px]">person</span> Personal Details
+                </h2>
+                <span className="material-symbols-outlined text-outline">expand_less</span>
+              </div>
+              <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="font-label-sm text-xs text-on-surface-variant uppercase">First Name</label>
+                  <input value={resumeData.firstName} onChange={e => handleUpdate('firstName', e.target.value)} className="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-3 py-2 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" type="text" />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-label-sm text-xs text-on-surface-variant uppercase">Last Name</label>
+                  <input value={resumeData.lastName} onChange={e => handleUpdate('lastName', e.target.value)} className="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-3 py-2 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" type="text" />
+                </div>
+                <div className="space-y-1 md:col-span-2">
+                  <label className="font-label-sm text-xs text-on-surface-variant uppercase">Professional Title</label>
+                  <input value={resumeData.title} onChange={e => handleUpdate('title', e.target.value)} className="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-3 py-2 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" type="text" />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-label-sm text-xs text-on-surface-variant uppercase">Email</label>
+                  <input value={resumeData.email} onChange={e => handleUpdate('email', e.target.value)} className="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-3 py-2 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" type="email" />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-label-sm text-xs text-on-surface-variant uppercase">Phone</label>
+                  <input value={resumeData.phone} onChange={e => handleUpdate('phone', e.target.value)} className="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-3 py-2 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" type="tel" />
+                </div>
+              </div>
+            </div>
+            
+            {/* Section: Experience */}
+            <div className="bg-surface-bright rounded-xl shadow-sm border border-outline-variant/20 overflow-hidden border-l-4 border-l-primary">
+              <div className="px-6 py-4 border-b border-outline-variant/20 bg-surface flex justify-between items-center cursor-pointer hover:bg-surface-container-lowest transition-colors">
+                <h2 className="font-headline-md text-lg font-semibold text-on-surface flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[20px]">work</span> Work Experience
+                </h2>
+                <span className="material-symbols-outlined text-outline">expand_less</span>
+              </div>
+              <div className="p-6 space-y-6">
+                
+                {resumeData.experiences.map((exp, idx) => (
+                  <div key={exp.id} className="border border-outline-variant/30 rounded-lg p-4 relative group hover:border-primary/50 transition-colors">
+                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button className="p-1 text-on-surface-variant hover:text-primary rounded"><span className="material-symbols-outlined text-[18px]">edit</span></button>
+                      <button className="p-1 text-on-surface-variant hover:text-error rounded"><span className="material-symbols-outlined text-[18px]">delete</span></button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div className="space-y-1">
+                        <label className="font-label-sm text-xs text-on-surface-variant uppercase">Job Title</label>
+                        <input value={exp.title} onChange={e => handleExpUpdate(exp.id, 'title', e.target.value)} className="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-3 py-2 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" type="text" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="font-label-sm text-xs text-on-surface-variant uppercase">Employer</label>
+                        <input value={exp.employer} onChange={e => handleExpUpdate(exp.id, 'employer', e.target.value)} className="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-3 py-2 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" type="text" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="font-label-sm text-xs text-on-surface-variant uppercase">Start Date</label>
+                        <input value={exp.startDate} onChange={e => handleExpUpdate(exp.id, 'startDate', e.target.value)} className="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-3 py-2 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" type="month" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="font-label-sm text-xs text-on-surface-variant uppercase">End Date</label>
+                        <input value={exp.endDate} onChange={e => handleExpUpdate(exp.id, 'endDate', e.target.value)} className="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-3 py-2 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" type="month" />
+                      </div>
+                    </div>
+                    <div className="space-y-1 relative">
+                      <label className="font-label-sm text-xs text-on-surface-variant uppercase">Description</label>
+                      <textarea value={exp.description} onChange={e => handleExpUpdate(exp.id, 'description', e.target.value)} className="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-3 py-2 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none resize-none leading-relaxed" rows={4}></textarea>
+                    </div>
+                  </div>
+                ))}
+
+                <button className="w-full py-2 border-2 border-dashed border-outline-variant/50 rounded-lg text-on-surface-variant font-body-md font-medium flex items-center justify-center gap-2 hover:border-primary hover:text-primary transition-colors hover:bg-surface-container-low">
+                  <span className="material-symbols-outlined">add</span> Add Experience
+                </button>
+              </div>
+            </div>
+            
           </div>
-          <h3 className="text-display text-2xl font-bold mb-3">Start with a new resume</h3>
-          <p className="text-muted-foreground text-sm">
-            We will provide a step-by-step guide to help you build your resume from scratch quickly.
-          </p>
-        </button>
+        </section>
 
-        {/* Upload Existing */}
-        <button
-          onClick={() => navigate({ to: "/resume/templates" })}
-          className="group flex flex-col items-center text-center p-8 md:p-12 rounded-3xl border-2 border-border bg-card transition hover:border-brand hover:shadow-lg cursor-pointer"
-        >
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted text-foreground mb-6 group-hover:scale-110 transition-transform group-hover:bg-brand-light group-hover:text-brand-dark">
-            <UploadCloud className="h-10 w-10" />
+        {/* Right Pane: Live Preview & AI Overlay */}
+        <section className="hidden lg:flex lg:w-1/2 h-full relative flex-col items-center justify-start p-8 overflow-y-auto bg-surface-variant/30">
+          
+          {/* AI Floating Assistant */}
+          <div className="absolute top-4 right-4 bg-surface-container-lowest shadow-md rounded-2xl p-4 w-72 border border-primary-container z-20 transition-all">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
+              </div>
+              <div>
+                <p className="font-body-sm text-sm text-on-surface">Consider adding metrics to your TechNova experience to increase impact score by ~15%.</p>
+                <button className="mt-2 text-xs font-label-sm text-primary font-medium hover:underline">Apply suggestion</button>
+              </div>
+            </div>
           </div>
-          <h3 className="text-display text-2xl font-bold mb-3">Upload an existing resume</h3>
-          <p className="text-muted-foreground text-sm">
-            We'll extract your information and reformat it into a professional, modern design.
-          </p>
-        </button>
-      </div>
 
-      <div className="mt-12 flex justify-start">
-        <button
-          onClick={() => navigate({ to: "/resume" })}
-          className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back
-        </button>
-      </div>
+          {/* The A4 Resume Preview Page */}
+          <div className="w-[850px] min-h-[1100px] bg-white shadow-xl origin-top scale-[0.6] xl:scale-[0.75] transition-transform flex-shrink-0" style={{ transformOrigin: 'top center' }}>
+            <div className="p-12 h-full flex flex-col font-sans text-gray-900">
+              
+              {/* Header */}
+              <div className="text-center border-b-2 border-gray-200 pb-6 mb-6">
+                <h1 className="text-4xl font-light tracking-tight text-gray-900 uppercase">{resumeData.firstName} <span className="font-bold">{resumeData.lastName}</span></h1>
+                <h2 className="text-lg text-primary font-medium mt-1 uppercase tracking-widest">{resumeData.title}</h2>
+                <div className="flex items-center justify-center gap-4 mt-4 text-sm text-gray-600">
+                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">mail</span> {resumeData.email}</span>
+                  <span>|</span>
+                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">call</span> {resumeData.phone}</span>
+                </div>
+              </div>
+
+              {/* Experience */}
+              <div className="mb-6">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-4 flex items-center gap-2"><span className="w-4 h-px bg-primary"></span> Experience</h3>
+                
+                {resumeData.experiences.map((exp) => (
+                  <div key={exp.id} className="mb-5">
+                    <div className="flex justify-between items-baseline mb-1">
+                      <h4 className="text-md font-bold text-gray-900">{exp.title}</h4>
+                      <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{exp.startDate} - {exp.endDate}</span>
+                    </div>
+                    <div className="text-sm font-medium text-primary mb-2">{exp.employer}</div>
+                    <ul className="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1 leading-relaxed">
+                      {exp.description.split('\n').filter(line => line.trim()).map((line, i) => (
+                        <li key={i} className="pl-1">{line}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Placeholder for Education/Skills to fill space */}
+              <div className="mt-auto pt-6 border-t-2 border-gray-200 opacity-50">
+                <div className="h-4 bg-gray-200 w-1/4 mb-4 rounded"></div>
+                <div className="h-3 bg-gray-200 w-full mb-2 rounded"></div>
+                <div className="h-3 bg-gray-200 w-5/6 mb-2 rounded"></div>
+                <div className="h-3 bg-gray-200 w-full mb-2 rounded"></div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+        
+      </main>
     </div>
   );
 }

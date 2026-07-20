@@ -1,27 +1,30 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Sparkles, User, GraduationCap, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { AuthBackground } from "@/components/auth-background";
 import type { Role } from "@/lib/auth-store";
 
 export const Route = createFileRoute("/signup")({
-  head: () => ({ meta: [{ title: "Sign up — PlacePro LMS" }] }),
+  head: () => ({ meta: [{ title: "Sign up — PlacePro" }] }),
   component: Signup,
 });
 
 function Signup() {
-  const [role, setRole] = useState<Role>("student");
+  const [role] = useState<Role>("student");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!agreed) {
+      setError("You must agree to the Terms of Service and Privacy Policy.");
+      return;
+    }
     setLoading(true);
     setError("");
 
@@ -42,8 +45,6 @@ function Signup() {
       return;
     }
 
-    // After signup, they are automatically logged in by Supabase.
-    // Give the trigger a moment to populate the profile
     setTimeout(() => {
       navigate({ to: "/dashboard" });
     }, 500);
@@ -59,128 +60,130 @@ function Signup() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4">
-      <AuthBackground />
-      <div className="relative z-10 w-full max-w-sm rounded-3xl border border-border bg-card/90 backdrop-blur p-8 shadow-xl">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-brand-foreground">
-            <Sparkles className="h-4 w-4" />
-          </div>
-          <span className="text-display text-lg font-bold">PlacePro</span>
-        </Link>
-        <h1 className="mt-6 text-display text-2xl font-bold">Create your account</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Start your placement prep in under a minute.
-        </p>
-
-        {error && (
-          <div className="mt-4 rounded-xl bg-destructive/10 p-3 text-sm text-destructive border border-destructive/20">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => setRole("student")}
-              className={`flex items-center justify-center gap-2 rounded-xl border p-2.5 text-sm font-medium transition-colors ${role === "student" ? "border-brand bg-brand/10 text-brand-dark" : "border-border hover:bg-muted"}`}
-            >
-              <User className="h-4 w-4" /> Student
-            </button>
-            <button
-              type="button"
-              onClick={() => setRole("teacher")}
-              className={`flex items-center justify-center gap-2 rounded-xl border p-2.5 text-sm font-medium transition-colors ${role === "teacher" ? "border-foreground bg-foreground text-background" : "border-border hover:bg-muted"}`}
-            >
-              <GraduationCap className="h-4 w-4" /> Teacher
-            </button>
-          </div>
-
-          <div className="space-y-3">
-            <input
-              required
-              className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-brand"
-              placeholder="Full Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <input
-              required
-              type="email"
-              className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-brand"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <div className="relative">
-              <input
-                required
-                type={showPassword ? "text" : "password"}
-                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 pr-10 text-sm outline-none focus:border-brand"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-          </div>
-          <button
-            disabled={loading}
-            type="submit"
-            className="block w-full rounded-xl bg-brand py-2.5 text-center text-sm font-semibold text-brand-foreground hover:opacity-90 disabled:opacity-50"
-          >
-            {loading ? "Please wait..." : "Get started"}
-          </button>
-        </form>
-
-        <div className="mt-5 relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border"></div>
-          </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-          </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#EAE9FE] via-[#F2F1FF] to-[#E3E7FB] px-4 py-8 font-sans selection:bg-[#3424C2]/20">
+      <div className="w-full max-w-[420px]">
+        {/* Header Outside Card */}
+        <div className="text-center mb-8">
+          <h1 className="text-display text-[#3424C2] text-3xl font-bold tracking-tight">PlacePro</h1>
+          <p className="text-[#3424C2]/70 mt-1 text-[15px] font-semibold tracking-wide uppercase">Your Career OS</p>
         </div>
 
-        <button
-          onClick={handleGoogleLogin}
-          type="button"
-          className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-background py-2.5 text-sm font-semibold hover:bg-muted"
-        >
-          <svg className="h-4 w-4" aria-hidden="true" viewBox="0 0 24 24">
-            <path
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-              fill="#4285F4"
-            />
-            <path
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-              fill="#34A853"
-            />
-            <path
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-              fill="#FBBC05"
-            />
-            <path
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-              fill="#EA4335"
-            />
-          </svg>
-          Google
-        </button>
+        <div className="rounded-[24px] bg-white p-8 md:p-10 shadow-[0_20px_40px_rgba(0,0,0,0.04)] border border-white">
+          <h2 className="text-display text-2xl font-bold text-slate-900 mb-6 text-center tracking-tight">Create an Account</h2>
 
-        <p className="mt-5 text-center text-xs text-muted-foreground">
-          Already have an account?{" "}
-          <Link to="/login" className="font-medium text-foreground hover:underline">
-            Log in
-          </Link>
-        </p>
+          {error && (
+            <div className="mb-5 rounded-[12px] bg-red-50 p-3.5 text-sm text-red-700 border border-red-100">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-[13px] font-semibold text-slate-700 mb-1.5 font-mono tracking-tight uppercase">Full Name</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                  <User className="h-4 w-4 text-slate-400" />
+                </div>
+                <input
+                  required
+                  type="text"
+                  className="w-full rounded-[12px] border border-slate-200 bg-white pl-10 pr-4 py-3 text-[15px] outline-none focus:border-[#3424C2] focus:ring-1 focus:ring-[#3424C2] transition-all placeholder:text-slate-400"
+                  placeholder="Alex Rivera"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[13px] font-semibold text-slate-700 mb-1.5 font-mono tracking-tight uppercase">Email</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                  <Mail className="h-4 w-4 text-slate-400" />
+                </div>
+                <input
+                  required
+                  type="email"
+                  className="w-full rounded-[12px] border border-slate-200 bg-white pl-10 pr-4 py-3 text-[15px] outline-none focus:border-[#3424C2] focus:ring-1 focus:ring-[#3424C2] transition-all placeholder:text-slate-400"
+                  placeholder="you@university.edu"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-[13px] font-semibold text-slate-700 mb-1.5 font-mono tracking-tight uppercase">Password</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-slate-400" />
+                </div>
+                <input
+                  required
+                  type="password"
+                  className="w-full rounded-[12px] border border-slate-200 bg-white pl-10 pr-4 py-3 text-[15px] outline-none focus:border-[#3424C2] focus:ring-1 focus:ring-[#3424C2] transition-all placeholder:text-slate-400 font-mono tracking-widest"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 pt-2">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-slate-300 text-[#3424C2] focus:ring-[#3424C2]"
+              />
+              <label htmlFor="terms" className="text-[13px] text-slate-600 leading-snug">
+                I agree to the <a href="#" className="font-semibold text-[#3424C2] hover:underline">Terms of Service</a> and <a href="#" className="font-semibold text-[#3424C2] hover:underline">Privacy Policy</a>
+              </label>
+            </div>
+
+            <button
+              disabled={loading}
+              type="submit"
+              className="w-full mt-4 flex items-center justify-center gap-2 rounded-[12px] bg-[#3424C2] py-3.5 text-[15px] font-semibold text-white hover:bg-[#2A1D9C] transition-colors disabled:opacity-70 shadow-sm"
+            >
+              {loading ? "Creating..." : "Create Account"}
+              {!loading && <ArrowRight className="h-4 w-4" />}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200"></div>
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white px-3 text-slate-400 font-semibold tracking-wider uppercase">Or Continue With</span>
+            </div>
+          </div>
+
+          {/* Google OAuth */}
+          <button
+            onClick={handleGoogleLogin}
+            type="button"
+            className="w-full flex items-center justify-center gap-3 rounded-[12px] border border-slate-200 bg-white py-3 text-[15px] font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+          >
+            <svg className="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+            </svg>
+            Google
+          </button>
+
+          <p className="mt-8 text-center text-[15px] text-slate-600">
+            Already have an account?{" "}
+            <Link to="/login" className="font-semibold text-[#3424C2] hover:underline">
+              Log In
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

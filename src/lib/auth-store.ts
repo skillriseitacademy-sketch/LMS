@@ -10,12 +10,13 @@ export interface UserSession {
   email: string;
   onboarding_complete: boolean;
   visibility?: "public" | "private";
+  avatar_url?: string;
 }
 
 async function buildSession(userId: string): Promise<UserSession | null> {
   const { data, error } = await supabase
     .from("profiles")
-    .select("role, name, email, onboarding_complete, visibility")
+    .select("role, name, email, onboarding_complete, visibility, avatar_url")
     .eq("id", userId)
     .single();
 
@@ -28,6 +29,7 @@ async function buildSession(userId: string): Promise<UserSession | null> {
     email: data.email,
     onboarding_complete: data.onboarding_complete ?? false,
     visibility: data.visibility ?? "private",
+    avatar_url: data.avatar_url ?? undefined,
   };
 }
 

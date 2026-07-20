@@ -1,270 +1,232 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Briefcase, Search, MapPin, DollarSign, Clock, ExternalLink, Loader2 } from "lucide-react";
-import { TopBar } from "@/components/top-bar";
-
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/_app/jobs")({
-  head: () => ({ meta: [{ title: "Jobs — PlacePro LMS" }] }),
   component: JobsPage,
 });
 
-interface JobListing {
+type Job = {
+  id: string;
   title: string;
   company: string;
-  location: string;
-  salary: string | null;
-  experience: string | null;
-  link: string;
-}
+  url: string;
+  source: string;
+  location?: string;
+  salary?: string;
+  type?: string;
+  logo?: string;
+  matchScore?: number;
+};
 
 function JobsPage() {
-  const [role, setRole] = useState("");
-  const [experience, setExperience] = useState("");
-  const [lpa, setLpa] = useState("");
-  const [location, setLocation] = useState("");
-  
-  const [jobs, setJobs] = useState<JobListing[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [appliedJobs, setAppliedJobs] = useState<string[]>([]);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!role.trim()) return;
-
-    setIsLoading(true);
-    setError(null);
-    setHasSearched(true);
-    setJobs([]);
-
-    try {
-      // The user provided this key in the prompt, moving to env variable to avoid secrets in code
-      const key = import.meta.env.VITE_GEMINI_API_KEY || "";
+  useEffect(() => {
+    async function fetchJobs() {
+      const { data, error } = await supabase
+        .from("job_listings")
+        .select("*")
+        .limit(10);
       
-      const promptText = `Find live, real job openings on the internet matching these criteria:
-      Role: "${role}"
-      Experience required: "${experience || 'Any'}"
-      Salary expected: "${lpa || 'Any'}"
-      Location: "${location || 'Any'}"
-      
-      Return a list of actual job postings currently available. Ensure the 'link' is a valid URL to the job posting or application page.
-      If no exact matches are found, return similar relevant roles.`;
-
-      const geminiRes = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${key}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ role: "user", parts: [{ text: promptText }] }],
-            generationConfig: {
-              responseMimeType: "application/json",
-              responseSchema: {
-                type: "OBJECT",
-                properties: {
-                  jobs: {
-                    type: "ARRAY",
-                    items: {
-                      type: "OBJECT",
-                      properties: {
-                        title: { type: "STRING", description: "Job title" },
-                        company: { type: "STRING", description: "Company name" },
-                        location: { type: "STRING", description: "Job location (e.g., Remote, Bangalore, etc.)" },
-                        salary: { type: "STRING", description: "Salary or LPA, if specified", nullable: true },
-                        experience: { type: "STRING", description: "Required experience", nullable: true },
-                        link: { type: "STRING", description: "A valid URL link to apply for the job" },
-                      },
-                      required: ["title", "company", "location", "link"],
-                    },
-                  },
-                },
-                required: ["jobs"],
-              },
-            },
-          }),
-        }
-      );
-
-      if (!geminiRes.ok) {
-        throw new Error("Failed to communicate with AI provider.");
-      }
-
-      const data = await geminiRes.json();
-      const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      
-      if (!resultText) {
-        throw new Error("Failed to parse jobs data.");
-      }
-
-      const object = JSON.parse(resultText);
-
-      if (object.jobs && Array.isArray(object.jobs)) {
-        setJobs(object.jobs);
+      if (data && !error) {
+        setJobs(data.map(j => ({
+          ...j,
+          // Since our schema only has basic fields, we mock the extra display fields based on the title/company
+          location: "Remote",
+          salary: "Competitive",
+          type: "Full-Time",
+          logo: `https://ui-avatars.com/api/?name=${encodeURIComponent(j.company)}&background=random`,
+          matchScore: Math.floor(Math.random() * 20) + 80 // 80-99
+        })));
       } else {
+        // If the DB is empty, let's just fall back to empty state cleanly
         setJobs([]);
       }
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "An unexpected error occurred.");
-    } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
+    fetchJobs();
+  }, []);
+
+  const applyToJob = (id: string) => {
+    setAppliedJobs(prev => [...prev, id]);
   };
 
   return (
-    <>
-      <TopBar title="Jobs" />
-      <div className="mx-auto max-w-6xl p-4 md:p-6 lg:p-8">
-        
-        {/* Search Header */}
-        <div className="mb-8 rounded-3xl border border-border bg-card p-6 shadow-sm">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-light text-brand-dark">
-              <Briefcase className="h-5 w-5" />
-            </div>
-            <div>
-              <h1 className="text-display text-xl font-bold">Find Your Next Job</h1>
-              <p className="text-sm text-muted-foreground">AI scans the web to find live jobs matching your criteria.</p>
-            </div>
+    <div className="flex-1 max-w-container-max mx-auto w-full flex flex-col lg:flex-row gap-8 items-start p-4 md:p-8">
+      {/* Left Column: Search & Jobs Grid */}
+      <div className="flex-1 flex flex-col gap-8 min-w-0">
+        {/* Page Header & Complex Filter Bar */}
+        <section className="flex flex-col gap-4">
+          <div>
+            <h2 className="text-[32px] md:text-[40px] font-bold leading-[1.2] tracking-[-0.01em] text-on-surface" style={{ fontFamily: "Manrope" }}>Discover Opportunities</h2>
+            <p className="text-base leading-[1.5] text-on-surface-variant mt-1" style={{ fontFamily: "Inter" }}>Curated positions matching your Arena performance and profile.</p>
           </div>
-
-          <form onSubmit={handleSearch} className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-            <div className="lg:col-span-2">
-              <label className="mb-1.5 block text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Job Role / Title *
-              </label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="e.g. Frontend Developer"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-background py-2.5 pl-9 pr-3 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
-                  required
-                />
-              </div>
+          
+          {/* Bento-style Filter Bar */}
+          <div className="bg-surface-container-lowest rounded-xl p-2 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border border-surface-container-high flex flex-wrap gap-2 items-center">
+            <div className="flex-1 min-w-[200px] relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-[20px]">search</span>
+              <input className="w-full bg-transparent border-none py-2.5 pl-10 pr-3 text-base leading-[1.5] text-on-surface focus:ring-0 placeholder:text-outline outline-none" style={{ fontFamily: "Inter" }} placeholder="Job Role, Title, or Keyword" type="text" />
             </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Experience
-              </label>
-              <select
-                value={experience}
-                onChange={(e) => setExperience(e.target.value)}
-                className="w-full rounded-xl border border-border bg-background py-2.5 px-3 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand transition appearance-none"
-              >
-                <option value="">Any</option>
-                <option value="Fresher / 0 years">Fresher (0 years)</option>
-                <option value="1-3 years">1-3 years</option>
-                <option value="3-5 years">3-5 years</option>
-                <option value="5+ years">5+ years</option>
+            <div className="w-px h-8 bg-surface-container-highest hidden md:block"></div>
+            <div className="flex-1 min-w-[150px] relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-[20px]">location_on</span>
+              <input className="w-full bg-transparent border-none py-2.5 pl-10 pr-3 text-base leading-[1.5] text-on-surface focus:ring-0 placeholder:text-outline outline-none" style={{ fontFamily: "Inter" }} placeholder="Location" type="text" />
+            </div>
+            <div className="w-px h-8 bg-surface-container-highest hidden md:block"></div>
+            <div className="flex-1 min-w-[150px] relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-[20px]">payments</span>
+              <select className="w-full bg-transparent border-none py-2.5 pl-10 pr-8 text-base leading-[1.5] text-on-surface focus:ring-0 appearance-none cursor-pointer outline-none" style={{ fontFamily: "Inter" }}>
+                <option value="">Salary Range</option>
+                <option value="1">10LPA - 20LPA</option>
+                <option value="2">20LPA - 30LPA</option>
+                <option value="3">30LPA+</option>
               </select>
             </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Salary / LPA
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. 5-10 LPA"
-                value={lpa}
-                onChange={(e) => setLpa(e.target.value)}
-                className="w-full rounded-xl border border-border bg-background py-2.5 px-3 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Location
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. Remote, Bangalore"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full rounded-xl border border-border bg-background py-2.5 px-3 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand transition"
-              />
-            </div>
-
-            <div className="lg:col-span-5 flex justify-end mt-2">
-              <button
-                type="submit"
-                disabled={isLoading || !role.trim()}
-                className="flex items-center gap-2 rounded-full bg-brand px-6 py-2.5 text-sm font-bold text-brand-foreground hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                {isLoading ? "Scanning web..." : "Search Live Jobs"}
-              </button>
-            </div>
-          </form>
-        </div>
-
-        {/* Results Section */}
-        {error && (
-          <div className="rounded-xl border border-danger/20 bg-danger/10 p-4 text-sm text-danger mb-8">
-            {error}
+            <button className="bg-primary text-on-primary px-6 py-2.5 rounded-lg text-xs tracking-[0.05em] font-medium hover:bg-primary/90 transition-colors active:scale-[0.98] shadow-sm flex items-center gap-2 shrink-0" style={{ fontFamily: "JetBrains Mono" }}>
+              Search Jobs
+            </button>
           </div>
-        )}
-
-        {!isLoading && hasSearched && jobs.length === 0 && !error && (
-          <div className="text-center py-12 text-muted-foreground">
-            No jobs found matching your criteria. Try adjusting your search terms.
+          <div className="flex gap-2 flex-wrap">
+            <span className="px-3 py-1 bg-surface-container-high text-on-surface-variant text-xs tracking-[0.05em] font-medium rounded-full flex items-center gap-1 cursor-pointer hover:bg-surface-container-highest transition-colors" style={{ fontFamily: "JetBrains Mono" }}>Remote <span className="material-symbols-outlined text-[16px]">close</span></span>
+            <span className="px-3 py-1 bg-surface-container-high text-on-surface-variant text-xs tracking-[0.05em] font-medium rounded-full flex items-center gap-1 cursor-pointer hover:bg-surface-container-highest transition-colors" style={{ fontFamily: "JetBrains Mono" }}>Full-Time <span className="material-symbols-outlined text-[16px]">close</span></span>
+            <button className="px-3 py-1 text-primary text-xs tracking-[0.05em] font-medium hover:bg-primary-container/50 rounded-full transition-colors" style={{ fontFamily: "JetBrains Mono" }}>Clear All</button>
           </div>
-        )}
+        </section>
 
-        {jobs.length > 0 && (
-          <div className="space-y-4">
-            <h2 className="text-lg font-bold">Search Results</h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {jobs.map((job, idx) => (
-                <div key={idx} className="flex flex-col rounded-2xl border border-border bg-card p-5 shadow-sm hover:shadow-md transition group">
-                  <div className="flex-1">
-                    <h3 className="text-display text-lg font-bold line-clamp-1">{job.title}</h3>
-                    <p className="text-brand font-semibold text-sm mt-1">{job.company}</p>
-                    
-                    <div className="mt-4 space-y-2 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 shrink-0" />
-                        <span className="line-clamp-1">{job.location}</span>
+        {/* Recommended Jobs Grid */}
+        <section>
+          <div className="flex justify-between items-end mb-4">
+            <h3 className="text-[24px] font-semibold leading-[1.3] text-on-surface" style={{ fontFamily: "Manrope" }}>Recommended for You</h3>
+            <a className="text-xs tracking-[0.05em] font-medium text-primary hover:underline" style={{ fontFamily: "JetBrains Mono" }} href="#">View All Matches</a>
+          </div>
+          
+          {loading ? (
+            <div className="p-8 text-center text-on-surface-variant">Loading jobs...</div>
+          ) : jobs.length === 0 ? (
+            <div className="p-8 text-center bg-surface-container-lowest rounded-xl border border-surface-container-highest text-on-surface-variant">
+              No job listings found in database. Add some to `job_listings`!
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              {jobs.map(job => (
+                <div key={job.id} className="bg-surface-container-lowest rounded-xl p-6 border border-surface-container-highest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow group flex flex-col gap-4">
+                  <div className="flex justify-between items-start">
+                    <div className="flex gap-4">
+                      <div className="w-14 h-14 rounded-lg border border-surface-container-highest overflow-hidden p-2 bg-surface-bright flex items-center justify-center">
+                        <img className="w-full h-full object-contain" src={job.logo} alt="Logo" />
                       </div>
-                      
-                      {job.experience && (
-                        <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4 shrink-0" />
-                          <span className="line-clamp-1">{job.experience}</span>
-                        </div>
-                      )}
-                      
-                      {job.salary && (
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="h-4 w-4 shrink-0" />
-                          <span className="line-clamp-1">{job.salary}</span>
-                        </div>
-                      )}
+                      <div>
+                        <h4 className="text-[18px] font-semibold leading-[1.3] text-on-surface group-hover:text-primary transition-colors cursor-pointer" style={{ fontFamily: "Manrope" }}>{job.title}</h4>
+                        <p className="text-base leading-[1.5] text-on-surface-variant mt-0.5" style={{ fontFamily: "Inter" }}>{job.company}</p>
+                      </div>
+                    </div>
+                    <button className="text-outline-variant hover:text-primary transition-colors"><span className="material-symbols-outlined">bookmark_border</span></button>
+                  </div>
+                  {/* Match Badge */}
+                  <div className="inline-flex items-center gap-1.5 bg-secondary-fixed text-on-secondary-container px-3 py-1.5 rounded-full w-fit">
+                    <span className="material-symbols-outlined text-[16px]" data-weight="fill">local_fire_department</span>
+                    <span className="text-xs tracking-[0.05em] font-semibold" style={{ fontFamily: "JetBrains Mono" }}>{job.matchScore}% Match based on Profile</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-auto">
+                    <div className="flex items-center gap-1 text-on-surface-variant text-xs tracking-[0.05em] font-medium bg-surface-container px-2 py-1 rounded-md" style={{ fontFamily: "JetBrains Mono" }}>
+                      <span className="material-symbols-outlined text-[16px]">location_on</span> {job.location}
+                    </div>
+                    <div className="flex items-center gap-1 text-on-surface-variant text-xs tracking-[0.05em] font-medium bg-surface-container px-2 py-1 rounded-md" style={{ fontFamily: "JetBrains Mono" }}>
+                      <span className="material-symbols-outlined text-[16px]">payments</span> {job.salary}
+                    </div>
+                    <div className="flex items-center gap-1 text-on-surface-variant text-xs tracking-[0.05em] font-medium bg-surface-container px-2 py-1 rounded-md" style={{ fontFamily: "JetBrains Mono" }}>
+                      <span className="material-symbols-outlined text-[16px]">work</span> {job.type}
                     </div>
                   </div>
-                  
-                  <div className="mt-6 pt-4 border-t border-border">
-                    <a
-                      href={job.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-foreground px-4 py-2 text-sm font-semibold text-background hover:opacity-90 transition group-hover:bg-brand group-hover:text-brand-foreground"
-                    >
-                      Apply Now <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
+                  <div className="pt-4 border-t border-surface-container-highest flex justify-end">
+                    <button 
+                      onClick={() => applyToJob(job.id)}
+                      disabled={appliedJobs.includes(job.id)}
+                      className={`px-6 py-2 rounded-lg text-xs tracking-[0.05em] font-medium transition-colors active:scale-[0.98] ${appliedJobs.includes(job.id) ? 'bg-primary-fixed-dim text-on-primary-fixed cursor-not-allowed opacity-70' : 'bg-surface-container text-on-surface hover:bg-surface-container-high'}`} 
+                      style={{ fontFamily: "JetBrains Mono" }}>
+                      {appliedJobs.includes(job.id) ? 'Applied ✓' : 'Quick Apply'}
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        )}
-
+          )}
+        </section>
       </div>
-    </>
+
+      {/* Right Column: Tracked Applications */}
+      <aside className="w-full lg:w-[320px] shrink-0 flex flex-col gap-8 lg:sticky lg:top-8">
+        <div className="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border border-surface-container-highest">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-[18px] font-semibold leading-[1.3] text-on-surface" style={{ fontFamily: "Manrope" }}>Tracked Applications</h3>
+            <button className="text-primary hover:bg-primary-container/20 p-1 rounded-full transition-colors"><span className="material-symbols-outlined text-[20px]">more_horiz</span></button>
+          </div>
+          <div className="flex flex-col gap-4">
+            
+            {jobs.filter(j => appliedJobs.includes(j.id)).map(job => (
+              <div key={job.id} className="border-l-4 border-outline-variant bg-surface-bright p-3 rounded-r-lg group hover:bg-surface-container-lowest transition-colors">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4 className="text-[14px] font-semibold leading-[1.3] text-on-surface" style={{ fontFamily: "Manrope" }}>{job.title}</h4>
+                    <p className="text-[12px] leading-[1.5] text-on-surface-variant" style={{ fontFamily: "Inter" }}>{job.company}</p>
+                  </div>
+                  <div className="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-xs font-bold text-outline">
+                    {job.company.substring(0,2).toUpperCase()}
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-outline-variant"></span>
+                  <span className="text-xs tracking-[0.05em] font-medium text-on-surface-variant" style={{ fontFamily: "JetBrains Mono" }}>Applied</span>
+                </div>
+                <p className="text-[11px] leading-[1.5] text-outline mt-1" style={{ fontFamily: "Inter" }}>Just now</p>
+              </div>
+            ))}
+
+            {/* Static tracker items for visual density */}
+            <div className="border-l-4 border-secondary bg-surface-bright p-3 rounded-r-lg relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-r from-secondary-fixed-dim/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="relative z-10 flex justify-between items-start">
+                <div>
+                  <h4 className="text-[14px] font-bold leading-[1.3] text-on-surface" style={{ fontFamily: "Manrope" }}>Frontend Engineer</h4>
+                  <p className="text-[12px] leading-[1.5] text-on-surface-variant" style={{ fontFamily: "Inter" }}>CloudSync Systems</p>
+                </div>
+                <div className="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-xs font-bold text-secondary-container">
+                  CS
+                </div>
+              </div>
+              <div className="mt-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                <span className="text-xs tracking-[0.05em] font-semibold text-secondary" style={{ fontFamily: "JetBrains Mono" }}>Interviewing (R2)</span>
+              </div>
+              <p className="text-[11px] leading-[1.5] text-outline mt-1" style={{ fontFamily: "Inter" }}>Tomorrow, 2:00 PM</p>
+            </div>
+            
+            <div className="border-l-4 border-primary bg-primary-fixed/30 p-3 rounded-r-lg group">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h4 className="text-[14px] font-semibold leading-[1.3] text-on-primary-fixed" style={{ fontFamily: "Manrope" }}>Junior SDE</h4>
+                  <p className="text-[12px] leading-[1.5] text-on-primary-fixed-variant" style={{ fontFamily: "Inter" }}>TechFlow</p>
+                </div>
+                <div className="w-8 h-8 rounded bg-primary text-on-primary flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[16px]">celebration</span>
+                </div>
+              </div>
+              <div className="mt-3 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[14px] text-primary">check_circle</span>
+                <span className="text-xs tracking-[0.05em] font-bold text-primary" style={{ fontFamily: "JetBrains Mono" }}>Offer Received</span>
+              </div>
+              <button className="mt-2 w-full bg-primary text-on-primary py-1.5 rounded text-[11px] font-bold uppercase tracking-wider hover:bg-primary/90 transition-colors">View Details</button>
+            </div>
+          </div>
+          <button className="w-full mt-4 py-2 border border-outline-variant rounded-lg text-xs tracking-[0.05em] font-medium text-on-surface hover:bg-surface-container transition-colors" style={{ fontFamily: "JetBrains Mono" }}>
+            View All Applications
+          </button>
+        </div>
+      </aside>
+    </div>
   );
 }

@@ -727,3 +727,26 @@ CREATE POLICY "Users upsert own leaderboard entry" ON topic_leaderboards FOR INS
   WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users update own leaderboard entry" ON topic_leaderboards FOR UPDATE
   USING (auth.uid() = user_id);
+
+-- ==============================================================================
+-- 10. INSTANT ROOMS
+-- ==============================================================================
+
+CREATE TABLE IF NOT EXISTS instant_rooms (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  host_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  room_code TEXT NOT NULL UNIQUE,
+  room_name TEXT NOT NULL,
+  room_url TEXT NOT NULL,
+  status TEXT DEFAULT 'active',
+  created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+);
+ALTER TABLE instant_rooms ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone authenticated can view active instant rooms" ON instant_rooms FOR SELECT
+  USING (auth.uid() IS NOT NULL);
+CREATE POLICY "Users can create instant rooms" ON instant_rooms FOR INSERT
+  WITH CHECK (auth.uid() = host_id);
+CREATE POLICY "Hosts can manage their instant rooms" ON instant_rooms FOR UPDATE
+  USING (auth.uid() = host_id);
+CREATE POLICY "Hosts can delete their instant rooms" ON instant_rooms FOR DELETE
+  USING (auth.uid() = host_id);

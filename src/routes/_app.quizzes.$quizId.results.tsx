@@ -1,9 +1,9 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { TopBar } from "@/components/top-bar";
-import { quizTopics, quizQuestions } from "@/lib/mock-data";
-import { Trophy, Check, X, RotateCcw, Share2 } from "lucide-react";
+import { Trophy, Check, X, RotateCcw, Share2, Loader2 } from "lucide-react";
 import { saveQuizAttempt } from "@/lib/store";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/_app/quizzes/$quizId/results")({
   head: () => ({ meta: [{ title: "Results — PlacePro LMS" }] }),
@@ -12,11 +12,43 @@ export const Route = createFileRoute("/_app/quizzes/$quizId/results")({
 
 function Results() {
   const { quizId } = useParams({ from: "/_app/quizzes/$quizId/results" });
-  const topic = quizTopics.find((t) => t.id === quizId);
-  const questions = quizQuestions[quizId] ?? [];
+  
+  const [topic, setTopic] = useState<any>(null);
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [answers, setAnswers] = useState<number[]>([]);
 
   useEffect(() => {
+    async function loadQuiz() {
+      const { data: quiz } = await supabase
+        .from("quizzes")
+        .select(`id, title`)
+        .eq("id", quizId)
+        .single();
+      
+      if (quiz) {
+        setTopic(quiz);
+      }
+
+      const { data: qs } = await supabase
+        .from("quiz_questions")
+        .select("*")
+        .eq("quiz_id", quizId)
+        .order("created_at", { ascending: true });
+
+      if (qs) {
+        setQuestions(qs.map(q => ({
+          ...q,
+          correctIndex: q.correct_index,
+        })));
+      }
+      setLoading(false);
+    }
+    loadQuiz();
+  }, [quizId]);
+
+  useEffect(() => {
+    if (loading) return;
     const raw = sessionStorage.getItem(`quiz-result-${quizId}`);
     const alreadySaved = sessionStorage.getItem(`quiz-saved-${quizId}`);
     if (raw) {
@@ -42,7 +74,7 @@ function Results() {
         }
       } catch {}
     }
-  }, [quizId, questions]);
+  }, [quizId, questions, loading]);
 
   const correctCount = answers.reduce(
     (s, a, i) => (a === questions[i]?.correctIndex ? s + 1 : s),
@@ -50,6 +82,17 @@ function Results() {
   );
   const score = questions.length ? Math.round((correctCount / questions.length) * 100) : 0;
   const xp = correctCount * 10;
+
+  if (loading) {
+    return (
+      <>
+        <TopBar title="Loading Results..." />
+        <div className="flex h-[50vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </>
+    );
+  }
 
   if (!topic) return null;
 
