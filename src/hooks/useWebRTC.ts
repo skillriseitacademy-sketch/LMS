@@ -54,13 +54,18 @@ export function useWebRTC(roomCode: string, userName: string) {
     setIsCamOff(!localStreamRef.current.getVideoTracks()[0]?.enabled);
   }, []);
 
-  const configuration = {
+  const configuration: RTCConfiguration = {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
       { urls: 'stun:stun1.l.google.com:19302' },
       { urls: 'stun:stun2.l.google.com:19302' },
       { urls: 'stun:stun3.l.google.com:19302' },
       { urls: 'stun:stun4.l.google.com:19302' },
+      ...(import.meta.env.VITE_TURN_URL ? [{
+        urls: import.meta.env.VITE_TURN_URL,
+        username: import.meta.env.VITE_TURN_USERNAME,
+        credential: import.meta.env.VITE_TURN_CREDENTIAL
+      }] : [])
     ]
   };
 
@@ -70,12 +75,14 @@ export function useWebRTC(roomCode: string, userName: string) {
     // Add local tracks
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => {
+        console.log(`[WebRTC] Adding local track: ${track.kind} to peer ${peerId}`);
         pc.addTrack(track, localStreamRef.current!);
       });
     }
 
     pc.onicecandidate = (event) => {
       if (event.candidate) {
+        console.log(`[WebRTC] Sending ICE candidate to ${peerId}`);
         channelRef.current?.send({
           type: 'broadcast',
           event: 'ice-candidate',
@@ -89,17 +96,25 @@ export function useWebRTC(roomCode: string, userName: string) {
     };
 
     pc.ontrack = (event) => {
-      setRemoteStreams(prev => ({
-        ...prev,
-        [peerId]: {
-          peerId,
-          userName: peerName,
-          stream: event.streams[0]
-        }
-      }));
+      console.log(`[WebRTC] ontrack fired for peer ${peerId}. Track kind: ${event.track.kind}`);
+      setRemoteStreams(prev => {
+        // Safely construct or update the stream to ensure both audio/video tracks are attached
+        const existingStream = prev[peerId]?.stream || new MediaStream();
+        existingStream.addTrack(event.track);
+        
+        return {
+          ...prev,
+          [peerId]: {
+            peerId,
+            userName: peerName,
+            stream: existingStream
+          }
+        };
+      });
     };
 
     pc.onconnectionstatechange = () => {
+      console.log(`[WebRTC] connectionState for ${peerId} changed to: ${pc.connectionState}`);
       if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed' || pc.connectionState === 'closed') {
         setRemoteStreams(prev => {
           const next = { ...prev };
@@ -111,6 +126,7 @@ export function useWebRTC(roomCode: string, userName: string) {
     };
 
     pc.oniceconnectionstatechange = () => {
+      console.log(`[WebRTC] iceConnectionState for ${peerId} changed to: ${pc.iceConnectionState}`);
       if (pc.iceConnectionState === 'disconnected' || pc.iceConnectionState === 'failed' || pc.iceConnectionState === 'closed') {
         setRemoteStreams(prev => {
           const next = { ...prev };
@@ -143,6 +159,7 @@ export function useWebRTC(roomCode: string, userName: string) {
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
 
+        console.log(`[WebRTC] Sending offer to ${from}`);
         channel.send({
           type: 'broadcast',
           event: 'offer',
@@ -157,11 +174,13 @@ export function useWebRTC(roomCode: string, userName: string) {
       .on('broadcast', { event: 'offer' }, async ({ payload }) => {
         const { to, from, userName: peerName, offer } = payload;
         if (to !== myPeerId.current) return;
+        console.log(`[WebRTC] Received offer from ${from}`);
 
         const pc = createPeerConnection(from, peerName);
         await pc.setRemoteDescription(new RTCSessionDescription(offer));
         
         if (candidateBufferRef.current[from]) {
+          console.log(`[WebRTC] Flushing ${candidateBufferRef.current[from].length} buffered ICE candidates for ${from}`);
           for (const c of candidateBufferRef.current[from]) {
             await pc.addIceCandidate(new RTCIceCandidate(c)).catch(console.error);
           }
@@ -171,6 +190,7 @@ export function useWebRTC(roomCode: string, userName: string) {
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
 
+        console.log(`[WebRTC] Sending answer to ${from}`);
         channel.send({
           type: 'broadcast',
           event: 'answer',
@@ -184,12 +204,14 @@ export function useWebRTC(roomCode: string, userName: string) {
       .on('broadcast', { event: 'answer' }, async ({ payload }) => {
         const { to, from, answer } = payload;
         if (to !== myPeerId.current) return;
+        console.log(`[WebRTC] Received answer from ${from}`);
 
         const pc = peerConnectionsRef.current[from];
         if (pc) {
           await pc.setRemoteDescription(new RTCSessionDescription(answer));
           
           if (candidateBufferRef.current[from]) {
+            console.log(`[WebRTC] Flushing ${candidateBufferRef.current[from].length} buffered ICE candidates for ${from}`);
             for (const c of candidateBufferRef.current[from]) {
               await pc.addIceCandidate(new RTCIceCandidate(c)).catch(console.error);
             }
@@ -200,16 +222,19 @@ export function useWebRTC(roomCode: string, userName: string) {
       .on('broadcast', { event: 'ice-candidate' }, async ({ payload }) => {
         const { to, from, candidate } = payload;
         if (to !== myPeerId.current) return;
+        console.log(`[WebRTC] Received ICE candidate from ${from}`);
 
         const pc = peerConnectionsRef.current[from];
         if (pc) {
           if (pc.remoteDescription) {
             await pc.addIceCandidate(new RTCIceCandidate(candidate)).catch(console.error);
           } else {
+            console.log(`[WebRTC] Buffering ICE candidate for ${from} (RemoteDescription not set)`);
             if (!candidateBufferRef.current[from]) candidateBufferRef.current[from] = [];
             candidateBufferRef.current[from].push(candidate);
           }
         } else {
+          console.log(`[WebRTC] Buffering ICE candidate for ${from} (PeerConnection not ready)`);
           if (!candidateBufferRef.current[from]) candidateBufferRef.current[from] = [];
           candidateBufferRef.current[from].push(candidate);
         }
