@@ -70,6 +70,10 @@ export function useWebRTC(roomCode: string, userName: string) {
   };
 
   const createPeerConnection = (peerId: string, peerName: string) => {
+    if (peerConnectionsRef.current[peerId]) {
+      return peerConnectionsRef.current[peerId];
+    }
+    
     const pc = new RTCPeerConnection(configuration);
     
     // Add local tracks
@@ -142,7 +146,7 @@ export function useWebRTC(roomCode: string, userName: string) {
   };
 
   const joinRoom = useCallback(async () => {
-    if (isJoined) return;
+    if (isJoined || channelRef.current) return;
     const stream = await initLocalStream();
     if (!stream) return; // Wait for permissions
 
@@ -177,6 +181,12 @@ export function useWebRTC(roomCode: string, userName: string) {
         console.log(`[WebRTC] Received offer from ${from}`);
 
         const pc = createPeerConnection(from, peerName);
+        
+        if (pc.signalingState !== 'stable') {
+          console.log(`[WebRTC] Ignoring offer from ${from} because signaling state is ${pc.signalingState}`);
+          return;
+        }
+
         await pc.setRemoteDescription(new RTCSessionDescription(offer));
         
         if (candidateBufferRef.current[from]) {
@@ -208,6 +218,10 @@ export function useWebRTC(roomCode: string, userName: string) {
 
         const pc = peerConnectionsRef.current[from];
         if (pc) {
+          if (pc.signalingState !== 'have-local-offer') {
+            console.log(`[WebRTC] Ignoring answer from ${from} because signaling state is ${pc.signalingState}`);
+            return;
+          }
           await pc.setRemoteDescription(new RTCSessionDescription(answer));
           
           if (candidateBufferRef.current[from]) {
