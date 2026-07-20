@@ -18,6 +18,7 @@ export function useWebRTC(roomCode: string, userName: string) {
 
   const localStreamRef = useRef<MediaStream | null>(null);
   const peerConnectionsRef = useRef<Record<string, RTCPeerConnection>>({});
+  const candidateBufferRef = useRef<Record<string, RTCIceCandidateInit[]>>({});
   const channelRef = useRef<any>(null);
   const myPeerId = useRef(Math.random().toString(36).substring(7));
 
@@ -160,6 +161,13 @@ export function useWebRTC(roomCode: string, userName: string) {
         const pc = createPeerConnection(from, peerName);
         await pc.setRemoteDescription(new RTCSessionDescription(offer));
         
+        if (candidateBufferRef.current[from]) {
+          for (const c of candidateBufferRef.current[from]) {
+            await pc.addIceCandidate(new RTCIceCandidate(c)).catch(console.error);
+          }
+          delete candidateBufferRef.current[from];
+        }
+
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
 
@@ -180,6 +188,13 @@ export function useWebRTC(roomCode: string, userName: string) {
         const pc = peerConnectionsRef.current[from];
         if (pc) {
           await pc.setRemoteDescription(new RTCSessionDescription(answer));
+          
+          if (candidateBufferRef.current[from]) {
+            for (const c of candidateBufferRef.current[from]) {
+              await pc.addIceCandidate(new RTCIceCandidate(c)).catch(console.error);
+            }
+            delete candidateBufferRef.current[from];
+          }
         }
       })
       .on('broadcast', { event: 'ice-candidate' }, async ({ payload }) => {
@@ -188,7 +203,15 @@ export function useWebRTC(roomCode: string, userName: string) {
 
         const pc = peerConnectionsRef.current[from];
         if (pc) {
-          await pc.addIceCandidate(new RTCIceCandidate(candidate));
+          if (pc.remoteDescription) {
+            await pc.addIceCandidate(new RTCIceCandidate(candidate)).catch(console.error);
+          } else {
+            if (!candidateBufferRef.current[from]) candidateBufferRef.current[from] = [];
+            candidateBufferRef.current[from].push(candidate);
+          }
+        } else {
+          if (!candidateBufferRef.current[from]) candidateBufferRef.current[from] = [];
+          candidateBufferRef.current[from].push(candidate);
         }
       })
       .on('broadcast', { event: 'leave' }, ({ payload }) => {
