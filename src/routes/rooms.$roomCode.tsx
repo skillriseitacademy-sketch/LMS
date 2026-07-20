@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/card";
-import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check, UserPlus, X } from "lucide-react";
+import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check, UserPlus, X, Home, Calendar, Bell, Settings, LogOut, MessageSquare, LayoutGrid, Menu, MonitorUp, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-store";
 import { useWebRTC } from "@/hooks/useWebRTC";
@@ -11,8 +11,12 @@ export const Route = createFileRoute("/rooms/$roomCode")({
   component: RoomView,
 });
 
-function VideoPlayer({ stream, muted = false, userName }: { stream: MediaStream; muted?: boolean; userName?: string }) {
+function VideoPlayer({ stream, muted = false, userName, isLocal = false }: { stream: MediaStream; muted?: boolean; userName?: string, isLocal?: boolean }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // Check if track is muted/disabled
+  const audioTrack = stream.getAudioTracks()[0];
+  const isAudioMuted = audioTrack ? !audioTrack.enabled : true;
 
   useEffect(() => {
     if (videoRef.current && stream) {
@@ -22,7 +26,7 @@ function VideoPlayer({ stream, muted = false, userName }: { stream: MediaStream;
   }, [stream]);
 
   return (
-    <div className="relative w-full h-full bg-surface-container-high rounded-xl overflow-hidden shadow-sm flex items-center justify-center border border-outline-variant/30">
+    <div className={`relative w-full h-full bg-[#1A1D24] rounded-3xl overflow-hidden flex items-center justify-center border-4 ${isLocal ? 'border-brand' : 'border-transparent'}`}>
       <video
         ref={videoRef}
         autoPlay
@@ -30,8 +34,13 @@ function VideoPlayer({ stream, muted = false, userName }: { stream: MediaStream;
         muted={muted}
         className="w-full h-full object-cover"
       />
+      {isAudioMuted && !isLocal && (
+        <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md p-2 rounded-xl text-white z-10 flex items-center justify-center">
+          <MicOff className="w-4 h-4 opacity-70" />
+        </div>
+      )}
       {userName && (
-        <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-lg text-white text-sm font-medium z-10 flex items-center gap-2">
+        <div className="absolute bottom-4 right-4 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl text-white text-sm font-medium z-10 flex items-center gap-2">
           {userName}
         </div>
       )}
@@ -53,6 +62,7 @@ function RoomView() {
   const [guestStatus, setGuestStatus] = useState<'prejoin' | 'waiting' | 'admitted' | 'rejected'>('prejoin');
   const [waitingParticipants, setWaitingParticipants] = useState<any[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [activeTab, setActiveTab] = useState<'management' | 'chat' | 'participants'>('participants');
 
   const isHost = session?.id && roomData?.host_id === session.id;
 
@@ -396,97 +406,257 @@ function RoomView() {
                    "grid-cols-1 sm:grid-cols-2 md:grid-cols-3";
 
   return (
-    <div className="h-screen flex flex-col bg-[#0F1115] text-white">
-      {/* Header */}
-      <header className="h-16 flex items-center justify-between px-6 border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="bg-brand/20 text-brand p-2 rounded-lg">
-            <Users className="w-5 h-5" />
+    <div className="h-screen flex bg-[#0F1115] text-white overflow-hidden p-3 gap-3">
+      {/* Left Sidebar Navigation */}
+      <aside className="w-[60px] flex flex-col items-center py-6 bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl justify-between">
+        <div className="flex flex-col gap-6 w-full items-center">
+          <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-brand-foreground shadow-lg shadow-brand/20 mb-4 cursor-pointer hover:scale-105 transition-transform">
+            <MonitorUp className="w-5 h-5" />
           </div>
-          <div>
-            <h2 className="font-semibold text-[15px] leading-tight">Instant Room</h2>
-            <p className="text-xs text-white/50 font-mono">Code: {roomCode}</p>
-          </div>
+          <button className="text-white/50 hover:text-white transition-colors p-2"><Home className="w-5 h-5" /></button>
+          <button className="text-brand bg-brand/10 p-2 rounded-xl"><Video className="w-5 h-5" /></button>
+          <button className="text-white/50 hover:text-white transition-colors p-2"><Users className="w-5 h-5" /></button>
+          <button className="text-white/50 hover:text-white transition-colors p-2"><Calendar className="w-5 h-5" /></button>
+          <button className="text-white/50 hover:text-white transition-colors p-2"><Bell className="w-5 h-5" /></button>
+          <button className="text-white/50 hover:text-white transition-colors p-2"><Settings className="w-5 h-5" /></button>
         </div>
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCopyLink}
-            className="bg-white/5 border-white/10 hover:bg-white/10 text-white h-9"
-          >
-            {copied ? <Check className="w-4 h-4 mr-2 text-green-400" /> : <Copy className="w-4 h-4 mr-2" />}
-            {copied ? "Copied" : "Copy Link"}
-          </Button>
-          <button
-            onClick={() => setShowSidebar(!showSidebar)}
-            className="relative text-sm font-medium bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full border border-white/10 transition-colors"
-          >
-            {isHost && waitingParticipants.length > 0 && !showSidebar && (
-               <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
-                 <span className="relative inline-flex rounded-full h-3 w-3 bg-brand"></span>
-               </span>
-            )}
-            {totalParticipants} Participant{totalParticipants !== 1 ? 's' : ''}
-          </button>
-        </div>
-      </header>
+        <button 
+          className="text-white/50 hover:text-white transition-colors p-2 mt-auto"
+          onClick={() => navigate({ to: "/rooms" })}
+        >
+          <LogOut className="w-5 h-5" />
+        </button>
+      </aside>
 
-      {/* Main Video Grid */}
-      <main className="flex-1 overflow-hidden flex">
-        <div className="flex-1 p-4 md:p-6 flex items-center justify-center">
-          <div className={`w-full h-full max-w-7xl mx-auto grid gap-4 ${gridCols} auto-rows-fr`}>
-          {/* Local User */}
-          <div className="relative w-full h-full min-h-[200px]">
-             {localStream && <VideoPlayer stream={localStream} muted userName={`${userName} (You)`} />}
-          </div>
-          
-          {/* Remote Users */}
-          {remoteStreams.map((remote) => (
-            <div key={remote.peerId} className="relative w-full h-full min-h-[200px]">
-               <VideoPlayer stream={remote.stream} userName={remote.userName} />
+      {/* Center Main Area */}
+      <main className="flex-1 flex flex-col relative min-w-0 bg-[#0F1115]">
+        {/* Header */}
+        <header className="h-20 flex items-center justify-between px-2">
+          <div className="flex items-center gap-4">
+            <button className="text-white hover:text-brand transition-colors">
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <h2 className="text-xl font-bold tracking-tight">Design meeting</h2>
+            <div className="bg-brand/20 text-brand px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ml-2">
+              <Users className="w-3.5 h-3.5" /> Group
             </div>
-          ))}
-        </div>
-        </div>
-        
-        {/* Participants Sidebar */}
-        {showSidebar && (
-          <div className="w-80 bg-black/40 border-l border-white/10 flex flex-col">
-            <div className="p-4 border-b border-white/10 font-semibold flex items-center justify-between">
-              <span>Participants ({totalParticipants})</span>
-              <button onClick={() => setShowSidebar(false)} className="text-white/50 hover:text-white transition-colors">
-                <X className="w-5 h-5" />
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <button className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-black">
+                <div className="w-3.5 h-3.5 rounded-sm bg-black" />
+              </button>
+              <button className="w-8 h-8 rounded-lg bg-transparent border-2 border-white/20 flex flex-wrap items-center justify-center gap-0.5 p-1.5">
+                <div className="w-2 h-2 rounded-[2px] border border-white/50" />
+                <div className="w-2 h-2 rounded-[2px] border border-white/50" />
+                <div className="w-2 h-2 rounded-[2px] border border-white/50" />
+                <div className="w-2 h-2 rounded-[2px] border border-white/50" />
+              </button>
+              <button className="w-8 h-8 rounded-lg bg-transparent text-brand flex items-center justify-center">
+                <LayoutGrid className="w-5 h-5" />
               </button>
             </div>
+            <div className="flex items-center gap-3">
+              <button className="flex items-center gap-2 bg-transparent border border-white/20 rounded-full px-3 py-1.5 text-sm font-medium hover:bg-white/5 transition-colors">
+                <Users className="w-4 h-4" /> {totalParticipants}
+              </button>
+              <button className="text-brand text-sm font-medium hover:text-brand/80 transition-colors flex items-center gap-1.5" onClick={handleCopyLink}>
+                {copied ? <Check className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
+                {copied ? "Copied" : "Invite a participant"}
+              </button>
+            </div>
+            <div className="flex items-center gap-2 bg-transparent border border-white/20 rounded-full px-3 py-1.5 text-sm font-medium font-mono">
+              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              12:34
+            </div>
+          </div>
+        </header>
+
+        {/* Video Grid */}
+        <div className="flex-1 p-2 pt-0 pb-[100px]">
+          <div className={`w-full h-full grid gap-4 ${gridCols} auto-rows-fr`}>
+            {/* Local User */}
+            <div className="relative w-full h-full min-h-[200px]">
+              {localStream && <VideoPlayer stream={localStream} muted userName="You" isLocal={true} />}
+            </div>
             
-            <div className="flex-1 overflow-y-auto p-4 space-y-6">
-              {/* In Call Section */}
+            {/* Remote Users */}
+            {remoteStreams.map((remote) => (
+              <div key={remote.peerId} className="relative w-full h-full min-h-[200px]">
+                <VideoPlayer stream={remote.stream} userName={remote.userName} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Floating Bottom Controls */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center justify-between w-full px-6 max-w-4xl z-20">
+          <button className="flex items-center gap-2 text-white/70 hover:text-white text-sm font-medium">
+            <Menu className="w-5 h-5 text-brand" /> Tools
+          </button>
+          
+          <div className="flex items-center gap-3 bg-transparent">
+            <button
+              onClick={toggleMic}
+              className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${isMicMuted ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+            >
+              {isMicMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+            </button>
+            
+            <button
+              className="w-[72px] h-14 rounded-[20px] bg-red-500 hover:bg-red-600 flex items-center justify-center transition-all shadow-lg shadow-red-500/20"
+              onClick={async () => {
+                sessionStorage.removeItem(`auto_join_${roomCode}`);
+                leaveRoom();
+                if (isHost) {
+                  await supabase.from('instant_rooms').update({ is_active: false }).eq('room_code', roomCode);
+                }
+                navigate({ to: "/rooms" });
+              }}
+            >
+              <PhoneOff className="w-6 h-6 text-white" />
+            </button>
+            
+            <button
+              onClick={toggleCam}
+              className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${isCamOff ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+            >
+              {isCamOff ? <VideoOff className="w-6 h-6" /> : <Video className="w-6 h-6" />}
+            </button>
+            
+            <button className="w-14 h-14 rounded-2xl bg-[#2A2E38] hover:bg-[#323642] flex items-center justify-center transition-all">
+              <Settings className="w-6 h-6 text-white/70" />
+            </button>
+          </div>
+          
+          <div className="w-20" /> {/* Spacer to balance 'Tools' button */}
+        </div>
+      </main>
+
+      {/* Right Sidebar (Tabs) */}
+      <aside className="w-[340px] flex flex-col bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl p-6">
+        <div className="flex items-center justify-between mb-8">
+          <button 
+            className={`text-sm font-medium transition-colors ${activeTab === 'management' ? 'text-brand' : 'text-white/50 hover:text-white'}`}
+            onClick={() => setActiveTab('management')}
+          >
+            Management
+          </button>
+          <button 
+            className={`text-sm font-medium transition-colors ${activeTab === 'chat' ? 'text-brand' : 'text-white/50 hover:text-white'}`}
+            onClick={() => setActiveTab('chat')}
+          >
+            Chat
+          </button>
+          <button 
+            className={`text-sm font-medium transition-colors relative ${activeTab === 'participants' ? 'text-brand' : 'text-white/50 hover:text-white'}`}
+            onClick={() => setActiveTab('participants')}
+          >
+            Participants
+            {isHost && waitingParticipants.length > 0 && activeTab !== 'participants' && (
+               <span className="absolute -top-1 -right-3 flex h-2 w-2">
+                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+                 <span className="relative inline-flex rounded-full h-2 w-2 bg-brand"></span>
+               </span>
+            )}
+          </button>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto pr-2 -mr-2">
+          {activeTab === 'management' && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
               <div>
-                <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-3">In Call</h3>
+                <h3 className="text-lg font-bold mb-4">Poll</h3>
+                <p className="text-sm text-brand font-medium mb-4">What do you think about the meeting?</p>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-sm">{userName} (You)</span>
+                  <div className="relative overflow-hidden rounded-xl border border-brand p-3 cursor-pointer">
+                     <div className="absolute top-0 left-0 bottom-0 bg-brand/10 w-0" />
+                     <div className="relative flex items-center justify-between text-sm">
+                       <div className="flex items-center gap-3">
+                         <div className="w-4 h-4 rounded-full border border-white/50" />
+                         Pretty good conversation
+                       </div>
+                       <span className="text-white/50">4</span>
+                     </div>
                   </div>
-                  {remoteStreams.map(remote => (
-                    <div key={remote.peerId} className="flex items-center justify-between">
-                      <span className="font-medium text-sm">{remote.userName}</span>
+                  <div className="relative overflow-hidden rounded-xl border border-brand/50 p-3 bg-brand/20 cursor-pointer">
+                     <div className="absolute top-0 left-0 bottom-0 bg-brand w-[85%]" />
+                     <div className="relative flex items-center justify-between text-sm">
+                       <div className="flex items-center gap-3">
+                         <div className="w-4 h-4 rounded-full bg-white flex items-center justify-center text-brand">
+                           <Check className="w-3 h-3" />
+                         </div>
+                         This is awesome!
+                       </div>
+                       <span>28</span>
+                     </div>
+                  </div>
+                  <div className="relative overflow-hidden rounded-xl border border-white/10 p-3 cursor-pointer">
+                     <div className="absolute top-0 left-0 bottom-0 bg-brand/10 w-0" />
+                     <div className="relative flex items-center justify-between text-sm">
+                       <div className="flex items-center gap-3">
+                         <div className="w-4 h-4 rounded-full border border-white/50" />
+                         Could be a lot better
+                       </div>
+                       <span className="text-white/50">0</span>
+                     </div>
+                  </div>
+                </div>
+                <p className="text-xs text-white/50 mt-3">32 votes total</p>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-bold mb-4">To Do</h3>
+                <div className="space-y-4">
+                  <label className="flex items-center gap-3 text-sm text-white/50 line-through cursor-pointer">
+                    <div className="w-4 h-4 rounded-md border border-white/20 bg-white/10 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" />
                     </div>
-                  ))}
+                    Create Dribbble shot about last project
+                  </label>
+                  <label className="flex items-center gap-3 text-sm text-white/50 line-through cursor-pointer">
+                    <div className="w-4 h-4 rounded-md border border-white/20 bg-white/10 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" />
+                    </div>
+                    Animation in Principle
+                  </label>
+                  <label className="flex items-center gap-3 text-sm text-white/50 line-through cursor-pointer">
+                    <div className="w-4 h-4 rounded-md border border-white/20 bg-white/10 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" />
+                    </div>
+                    Icons for app navigation and homepage
+                  </label>
+                  <label className="flex items-center gap-3 text-sm text-white cursor-pointer">
+                    <div className="w-4 h-4 rounded-md border border-white/50 flex items-center justify-center" />
+                    Talk to Jane
+                  </label>
+                  <button className="w-6 h-6 rounded-md bg-brand text-brand-foreground flex items-center justify-center hover:bg-brand/90 transition-colors">
+                    <UserPlus className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
+            </div>
+          )}
 
+          {activeTab === 'chat' && (
+             <div className="h-full flex flex-col items-center justify-center text-white/50 animate-in fade-in slide-in-from-right-4 duration-300">
+               <MessageSquare className="w-12 h-12 mb-4 opacity-50" />
+               <p>Chat is currently disabled.</p>
+             </div>
+          )}
+          
+          {activeTab === 'participants' && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               {/* Waiting Room Section (Host Only) */}
               {isHost && waitingParticipants.length > 0 && (
                 <div>
-                  <h3 className="text-xs font-bold text-brand uppercase tracking-wider mb-3">Waiting ({waitingParticipants.length})</h3>
+                  <h3 className="text-xs font-bold text-brand uppercase tracking-wider mb-3">Waiting to Join ({waitingParticipants.length})</h3>
                   <div className="space-y-3">
                     {waitingParticipants.map(p => (
-                      <div key={p.id} className="bg-white/5 rounded-xl p-3 border border-white/10 flex flex-col gap-3">
-                        <span className="font-medium text-sm">{p.user_name}</span>
+                      <div key={p.id} className="bg-brand/5 rounded-2xl p-4 border border-brand/20 flex flex-col gap-3">
+                        <span className="font-medium">{p.user_name}</span>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline" className="flex-1 bg-white/5 border-white/10 hover:bg-white/10" onClick={() => handleAdmit(p.id, 'rejected')}>Deny</Button>
+                          <Button size="sm" variant="outline" className="flex-1 bg-white/5 border-white/10 hover:bg-white/10 text-white" onClick={() => handleAdmit(p.id, 'rejected')}>Deny</Button>
                           <Button size="sm" className="flex-1 bg-brand hover:bg-brand/90 text-brand-foreground" onClick={() => handleAdmit(p.id, 'admitted')}>Admit</Button>
                         </div>
                       </div>
@@ -494,61 +664,38 @@ function RoomView() {
                   </div>
                 </div>
               )}
+
+              {/* In Call Section */}
+              <div>
+                <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-3">In Call ({totalParticipants})</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-brand/20 flex items-center justify-center text-brand font-medium">
+                        {userName[0].toUpperCase()}
+                      </div>
+                      <span className="font-medium text-sm">{userName} (You)</span>
+                    </div>
+                    {isHost && <span className="text-xs text-brand bg-brand/10 px-2 py-1 rounded-md">Host</span>}
+                  </div>
+                  
+                  {remoteStreams.map(remote => (
+                    <div key={remote.peerId} className="flex items-center justify-between group">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 font-medium">
+                          {remote.userName[0].toUpperCase()}
+                        </div>
+                        <span className="font-medium text-sm text-white/90">{remote.userName}</span>
+                      </div>
+                      <Mic className="w-4 h-4 text-white/30" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        )}
-      </main>
-
-      {/* Bottom Controls */}
-      <footer className="h-24 flex items-center justify-center gap-4 border-t border-white/10 bg-black/20 backdrop-blur-md px-6">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={toggleMic}
-          className={`rounded-full w-14 h-14 border-0 transition-all ${isMicMuted ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-white/10 hover:bg-white/20 text-white'}`}
-        >
-          {isMicMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-        </Button>
-        
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={toggleCam}
-          className={`rounded-full w-14 h-14 border-0 transition-all ${isCamOff ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-white/10 hover:bg-white/20 text-white'}`}
-        >
-          {isCamOff ? <VideoOff className="w-6 h-6" /> : <Video className="w-6 h-6" />}
-        </Button>
-
-        <div className="w-px h-8 bg-white/10 mx-2" />
-
-        {isHost && (
-          <Button
-            variant="destructive"
-            onClick={async () => {
-              sessionStorage.removeItem(`auto_join_${roomCode}`);
-              leaveRoom();
-              await supabase.from('instant_rooms').update({ is_active: false }).eq('room_code', roomCode);
-              navigate({ to: "/rooms" });
-            }}
-            className="rounded-full h-14 px-8 font-semibold text-[15px] bg-red-950 hover:bg-red-900 shadow-lg shadow-red-900/20 text-red-100 border border-red-900/50"
-          >
-            End Room
-          </Button>
-        )}
-
-        <Button
-          variant="destructive"
-          onClick={() => {
-            sessionStorage.removeItem(`auto_join_${roomCode}`);
-            leaveRoom();
-            navigate({ to: "/rooms" });
-          }}
-          className="rounded-full h-14 px-8 font-semibold text-[15px] shadow-lg shadow-red-500/20"
-        >
-          <PhoneOff className="w-5 h-5 mr-2" />
-          Leave
-        </Button>
-      </footer>
+          )}
+        </div>
+      </aside>
     </div>
   );
 }
