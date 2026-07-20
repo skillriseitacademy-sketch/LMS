@@ -96,6 +96,13 @@ function RoomView() {
       if (dbError || !data) {
         setError("Room not found or has ended.");
       } else {
+        const roomAgeHours = (new Date().getTime() - new Date(data.created_at).getTime()) / (1000 * 60 * 60);
+        if (roomAgeHours > 24) {
+          setError("This room has expired. Instant rooms are only active for 24 hours.");
+          setDbLoading(false);
+          return;
+        }
+
         setRoomData(data);
         if (session?.id && data.host_id === session.id) {
           // Host automatically bypasses waiting room

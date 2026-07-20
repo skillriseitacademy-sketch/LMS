@@ -224,12 +224,12 @@ function RoomsHub() {
               </p>
             </div>
             
-            <form onSubmit={handleJoin} className="w-full flex gap-3 relative z-10">
+            <form onSubmit={handleJoin} className="w-full flex flex-col gap-3 relative z-10">
               <input 
                 placeholder="e.g. A1B2C3" 
                 value={code} 
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
-                className="flex-1 rounded-xl px-4 py-3 text-center uppercase tracking-[0.2em] font-mono font-bold outline-none transition-all border"
+                className="w-full rounded-xl px-4 py-3 text-center uppercase tracking-[0.2em] font-mono font-bold outline-none transition-all border"
                 style={{
                   backgroundColor: "var(--pp-surface-container-low)",
                   borderColor: "var(--pp-outline-variant)",
@@ -248,26 +248,13 @@ function RoomsHub() {
               <button 
                 type="submit" 
                 disabled={isJoining || code.length < 3}
-                className="px-6 py-3 rounded-xl font-bold transition-all shadow-sm disabled:opacity-50"
+                className="w-full py-3.5 rounded-xl font-bold transition-all shadow-sm disabled:opacity-50"
                 style={{ 
-                  backgroundColor: "var(--pp-surface-variant)", 
-                  color: "var(--pp-on-surface)",
-                  borderColor: "var(--pp-outline-variant)"
-                }}
-                onMouseEnter={(e) => {
-                  if (!isJoining && code.length >= 3) {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = "var(--pp-secondary)";
-                    (e.currentTarget as HTMLElement).style.color = "var(--pp-on-secondary)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isJoining && code.length >= 3) {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = "var(--pp-surface-variant)";
-                    (e.currentTarget as HTMLElement).style.color = "var(--pp-on-surface)";
-                  }
+                  backgroundColor: "var(--pp-secondary)", 
+                  color: "var(--pp-on-secondary)"
                 }}
               >
-                Join
+                {isJoining ? "Joining..." : "Join Room"}
               </button>
             </form>
           </div>
