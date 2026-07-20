@@ -16,7 +16,8 @@ PlacePro LMS is a full-stack, AI-powered Learning Management System targeted at 
 | **Auth** | Supabase Auth (JWT based) |
 | **Hosting** | Vercel (indicated by `vercel.json`), Cloudflare R2 for media |
 | **Build** | Vite 8, Bun |
-| **Third-party** | Daily.co (Live Video), MediaPipe (Proctoring face detection) |
+| **Third-party** | MediaPipe (Proctoring face detection) |
+| **Live Video** | Custom Peer-to-Peer WebRTC with Supabase Realtime (Broadcast) signaling |
 
 
 ## 2. Folder Structure
@@ -70,9 +71,11 @@ c:\Users\Mani\Projects\pixel-perfect-preview
             |                | OpenAI API    |  | Gemini API    |
             |WebRTC          | (Realtime)    |  | (AI SDK)      |
             v                +---------------+  +---------------+
-   +-------------------+
-   | Daily.co (Video)  |
-   +-------------------+
+   +-----------------------+
+   | Peer-to-Peer WebRTC   |
+   | (Supabase Realtime    |
+   | Signaling)            |
+   +-----------------------+
 ```
 
 ## 4. Frontend Architecture
@@ -142,6 +145,7 @@ The application uses PostgreSQL (via Supabase). The full schema is maintained in
 - **Auth & Profiles:** `profiles` (links to `auth.users`), `teachers`, `connections`.
 - **LMS Content:** `topics`, `quizzes`, `quiz_questions`, `code_challenges`.
 - **User Activity:** `student_topics`, `quiz_attempts`, `code_submissions`, `interview_sessions`.
+- **Live Rooms:** `instant_rooms`, `room_participants` (Tracks active rooms and waiting room guests).
 - **Gamification:** `xp_transactions`, `badges`, `topic_leaderboards`.
 - **Social:** `posts`, `post_reactions`, `post_comments`, `stories`.
 
@@ -172,11 +176,10 @@ erDiagram
 
 ## 8. Third-Party Integrations
 
-1. **Supabase:** Core database, authentication, and RLS. 
+1. **Supabase:** Core database, authentication, RLS, and **Realtime Broadcast** for WebRTC signaling (live rooms). 
 2. **OpenAI (Realtime API):** Used for AI voice interviews. Generates an ephemeral WebRTC token for the client.
 3. **Google Gemini (Vercel AI SDK):** Used for generating structured Career Roadmaps (`/api/roadmap`).
-4. **Daily.co:** Powers the live video classrooms (`/live` routes).
-5. **Cloudflare R2:** Used for media storage (images/recordings). Configured via AWS S3 SDK compatibility (`@aws-sdk/client-s3`).
+4. **Cloudflare R2:** Used for media storage (images/recordings). Configured via AWS S3 SDK compatibility (`@aws-sdk/client-s3`).
 
 ### Code Snippet: Gemini Integration (`api/roadmap.ts`)
 ```typescript
@@ -197,7 +200,6 @@ const { object } = await generateObject({
 | `SUPABASE_SERVICE_ROLE_KEY` | Admin access to Supabase | Server Only | Present |
 | `GEMINI_API_KEY` | Roadmap generation | Server Only | Present |
 | `OPENAI_API_KEY` | Realtime voice interviews | Server Only | Present |
-| `DAILY_API_KEY` | Live video rooms | Server Only | Present |
 | `R2_ACCOUNT_ID`... | Cloudflare R2 configurations | Server Only | Present |
 
 ## 10. Data Flow Walkthroughs
