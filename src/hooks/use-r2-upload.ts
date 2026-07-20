@@ -72,8 +72,8 @@ export function useR2Upload(options: { context: UploadContext; accept?: string }
             Authorization: `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({
-            filename: file.name,
-            content_type: file.type,
+            filename: file.name || "upload.bin",
+            content_type: file.type || "application/octet-stream",
             size_bytes: file.size,
             context,
           }),
