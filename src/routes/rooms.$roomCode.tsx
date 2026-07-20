@@ -167,11 +167,10 @@ function RoomView() {
   // Auto-join on refresh if previously joined
   useEffect(() => {
     if (localStream && !isJoined && sessionStorage.getItem(`auto_join_${roomCode}`) === 'true') {
-      if (isHost || guestStatus === 'admitted') {
-        joinRoom();
-      }
+      joinRoom();
+      if (!isHost) setGuestStatus('admitted');
     }
-  }, [localStream, isJoined, roomCode, isHost, guestStatus, joinRoom]);
+  }, [localStream, isJoined, roomCode, isHost, joinRoom]);
 
   // Realtime subscription for host to see waiting participants
   useEffect(() => {
