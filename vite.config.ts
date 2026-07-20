@@ -5,13 +5,6 @@ import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "path";
 import { createClient } from "@supabase/supabase-js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-// busboy is a dev dependency for multipart parsing in the upload middleware
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const busboy = require("busboy") as (opts: Record<string, unknown>) => NodeJS.EventEmitter & {
-  on(event: "file", cb: (fieldname: string, stream: NodeJS.ReadableStream, info: { filename: string; mimeType: string }) => void): void;
-  on(event: "field", cb: (name: string, val: string) => void): void;
-  on(event: "close" | "error", cb: (...args: unknown[]) => void): void;
-};
 
 // Vite plugin that handles /api/invite during local development
 function apiMiddlewarePlugin() {
@@ -182,6 +175,8 @@ function uploadMiddlewarePlugin() {
         }
 
         try {
+          const busboyModule = await import("busboy");
+          const busboy = busboyModule.default || busboyModule;
           const { fileBuffer, mimeType, filename, context } = await new Promise<{
             fileBuffer: Buffer;
             mimeType: string;
