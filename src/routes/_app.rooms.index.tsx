@@ -26,10 +26,15 @@ function RoomsHub() {
         .from("instant_rooms")
         .select("*")
         .eq("host_id", session.id)
-        .not("scheduled_for", "is", null)
-        .order("scheduled_for", { ascending: true })
+        .order("created_at", { ascending: false })
         .then(({ data }) => {
-          if (data) setUpcomingRooms(data);
+          if (data) {
+             const activeRooms = data.filter(room => {
+                const roomAgeHours = (new Date().getTime() - new Date(room.created_at).getTime()) / (1000 * 60 * 60);
+                return roomAgeHours <= 24;
+             });
+             setUpcomingRooms(activeRooms);
+          }
         });
     }
   }, [session?.id]);
@@ -330,7 +335,7 @@ function RoomsHub() {
         {/* Upcoming Meetings List */}
         {upcomingRooms.length > 0 && (
           <div className="max-w-6xl mx-auto w-full mt-12 relative z-10">
-            <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: "var(--font-display)" }}>Your Upcoming Meetings</h2>
+            <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: "var(--font-display)" }}>Your Active Rooms</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {upcomingRooms.map(room => (
                 <div key={room.id} className="p-6 rounded-2xl border flex items-center justify-between" style={{ backgroundColor: "var(--pp-surface-container-lowest)", borderColor: "var(--pp-outline-variant)" }}>
@@ -338,7 +343,10 @@ function RoomsHub() {
                     <div className="flex items-center gap-2 mb-1">
                       <Clock className="w-4 h-4 text-[var(--pp-primary)]" />
                       <span className="font-semibold text-sm">
-                        {new Date(room.scheduled_for).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+                        {room.scheduled_for 
+                          ? new Date(room.scheduled_for).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })
+                          : "Instant Room"
+                        }
                       </span>
                     </div>
                     <p className="font-mono text-sm text-[var(--pp-on-surface-variant)]">Code: {room.room_code}</p>
