@@ -406,24 +406,63 @@ function RoomView() {
 
   return (
     <div className="h-screen flex bg-[#0F1115] text-white overflow-hidden p-3 gap-3">
-      {/* Left Sidebar Navigation (Hidden on Mobile) */}
-      <aside className="hidden md:flex w-[60px] flex-col items-center py-6 bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl justify-between">
-        <div className="flex flex-col gap-6 w-full items-center">
-          <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-brand-foreground shadow-lg shadow-brand/20 mb-4 cursor-pointer hover:scale-105 transition-transform">
+      {/* Left Sidebar Navigation */}
+      <aside className="flex w-[64px] md:w-[72px] flex-col items-center py-6 bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl justify-between z-20 shrink-0">
+        <div className="flex flex-col gap-4 md:gap-5 w-full items-center">
+          <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-brand-foreground shadow-lg shadow-brand/20 mb-2 cursor-pointer hover:scale-105 transition-transform">
             <MonitorUp className="w-5 h-5" />
           </div>
-          <button className="text-white/50 hover:text-white transition-colors p-2"><Home className="w-5 h-5" /></button>
-          <button className="text-brand bg-brand/10 p-2 rounded-xl"><Video className="w-5 h-5" /></button>
-          <button className="text-white/50 hover:text-white transition-colors p-2"><Users className="w-5 h-5" /></button>
-          <button className="text-white/50 hover:text-white transition-colors p-2"><Calendar className="w-5 h-5" /></button>
-          <button className="text-white/50 hover:text-white transition-colors p-2"><Bell className="w-5 h-5" /></button>
-          <button className="text-white/50 hover:text-white transition-colors p-2"><Settings className="w-5 h-5" /></button>
+          
+          <button
+            onClick={toggleMic}
+            title={isMicMuted ? "Unmute" : "Mute"}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${isMicMuted ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+          >
+            {isMicMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+          </button>
+          
+          <button
+            onClick={toggleCam}
+            title={isCamOff ? "Turn on camera" : "Turn off camera"}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${isCamOff ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+          >
+            {isCamOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
+          </button>
+
+          <button 
+            className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white"
+            title="Chat Room"
+          >
+            <MessageSquare className="w-5 h-5" />
+          </button>
+
+          {isHost && (
+            <button 
+              className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white"
+              title="Add Poll"
+            >
+              <BarChart2 className="w-5 h-5" />
+            </button>
+          )}
+          
+          <button className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-[#2A2E38] hover:bg-[#323642] flex items-center justify-center transition-all text-white">
+            <Settings className="w-5 h-5 text-white/70 hover:text-white transition-colors" />
+          </button>
         </div>
-        <button 
-          className="text-white/50 hover:text-white transition-colors p-2 mt-auto"
-          onClick={() => navigate({ to: "/rooms" })}
+        
+        <button
+          className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-red-500 hover:bg-red-600 flex items-center justify-center transition-all shadow-lg shadow-red-500/20 mt-auto"
+          onClick={async () => {
+            sessionStorage.removeItem(`auto_join_${roomCode}`);
+            leaveRoom();
+            if (isHost) {
+              await supabase.from('instant_rooms').update({ is_active: false }).eq('room_code', roomCode);
+            }
+            navigate({ to: "/rooms" });
+          }}
+          title="Leave Room"
         >
-          <LogOut className="w-5 h-5" />
+          <PhoneOff className="w-5 h-5 text-white" />
         </button>
       </aside>
 
@@ -475,7 +514,7 @@ function RoomView() {
         </header>
 
         {/* Video Grid */}
-        <div className="flex-1 p-2 pt-0 pb-[100px]">
+        <div className="flex-1 p-2 pt-0 pb-2">
           <div className={`w-full h-full grid gap-4 ${gridCols} auto-rows-fr`}>
             {/* Local User */}
             <div className="relative w-full h-full min-h-[200px]">
@@ -489,49 +528,6 @@ function RoomView() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Floating Bottom Controls */}
-        <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex items-center justify-center md:justify-between w-full px-4 md:px-6 max-w-4xl z-20 pointer-events-none">
-          <button className="hidden md:flex items-center gap-2 text-white/70 hover:text-white text-sm font-medium pointer-events-auto">
-            <Menu className="w-5 h-5 text-brand" /> Tools
-          </button>
-          
-          <div className="flex items-center gap-2 md:gap-3 bg-transparent pointer-events-auto">
-            <button
-              onClick={toggleMic}
-              className={`w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center transition-all ${isMicMuted ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
-            >
-              {isMicMuted ? <MicOff className="w-5 h-5 md:w-6 md:h-6" /> : <Mic className="w-5 h-5 md:w-6 md:h-6" />}
-            </button>
-            
-            <button
-              className="w-[60px] h-12 md:w-[72px] md:h-14 rounded-xl md:rounded-[20px] bg-red-500 hover:bg-red-600 flex items-center justify-center transition-all shadow-lg shadow-red-500/20"
-              onClick={async () => {
-                sessionStorage.removeItem(`auto_join_${roomCode}`);
-                leaveRoom();
-                if (isHost) {
-                  await supabase.from('instant_rooms').update({ is_active: false }).eq('room_code', roomCode);
-                }
-                navigate({ to: "/rooms" });
-              }}
-            >
-              <PhoneOff className="w-5 h-5 md:w-6 md:h-6 text-white" />
-            </button>
-            
-            <button
-              onClick={toggleCam}
-              className={`w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center transition-all ${isCamOff ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
-            >
-              {isCamOff ? <VideoOff className="w-5 h-5 md:w-6 md:h-6" /> : <Video className="w-5 h-5 md:w-6 md:h-6" />}
-            </button>
-            
-            <button className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-[#2A2E38] hover:bg-[#323642] flex items-center justify-center transition-all">
-              <Settings className="w-5 h-5 md:w-6 md:h-6 text-white/70" />
-            </button>
-          </div>
-          
-          <div className="hidden md:block w-20" /> {/* Spacer to balance 'Tools' button */}
         </div>
       </main>
 
