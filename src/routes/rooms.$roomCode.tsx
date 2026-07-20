@@ -391,6 +391,7 @@ function RoomView() {
             </div>
           ))}
         </div>
+        </div>
         
         {/* Host Waiting Room Sidebar */}
         {isHost && waitingParticipants.length > 0 && (

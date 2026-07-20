@@ -71,13 +71,13 @@ function ResumePage() {
             <div className="relative w-full aspect-[1/1.4] bg-surface-variant p-4">
               <div className="w-full h-full bg-cover bg-center rounded bg-surface-container-lowest shadow-sm border border-outline-variant/20" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuASkMfGN9c5h3cqvR-Xg3DXrdN-EPQVd0nGcSI4wAYjHKrqUQ8ipmD9lyU-gcJkqJYZQ1UxwE75fxTRg8phSTdTMBGmdTSmJh5Fy7PP6EbAP0y9MtoFuZxjSsZ4xKtkIB8e6QLOrnE9keGm8hgyUumHNEPcTIUSGaJEjL_5j4KwUX8aabWAHFxi2Rj-isqBWKZ739G-CW5LAMIzmGknzXhbcEvcmU8MBN0Xk-DWqIbs__URqynhx-aYAA')" }}></div>
               <div className="template-overlay absolute inset-0 bg-on-surface/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 z-20 group-hover:opacity-100">
-                <button className="w-3/4 py-2 bg-primary text-on-primary text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105" style={{ fontFamily: "Inter" }}>
+                <Link to="/resume/create" className="w-3/4 py-2 bg-primary text-on-primary text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105 text-center flex items-center justify-center" style={{ fontFamily: "Inter" }}>
                   Use This Template
-                </button>
-                <button className="w-3/4 py-2 bg-surface-container-lowest text-on-surface text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2" style={{ fontFamily: "Inter" }}>
+                </Link>
+                <a href="https://lh3.googleusercontent.com/aida-public/AB6AXuASkMfGN9c5h3cqvR-Xg3DXrdN-EPQVd0nGcSI4wAYjHKrqUQ8ipmD9lyU-gcJkqJYZQ1UxwE75fxTRg8phSTdTMBGmdTSmJh5Fy7PP6EbAP0y9MtoFuZxjSsZ4xKtkIB8e6QLOrnE9keGm8hgyUumHNEPcTIUSGaJEjL_5j4KwUX8aabWAHFxi2Rj-isqBWKZ739G-CW5LAMIzmGknzXhbcEvcmU8MBN0Xk-DWqIbs__URqynhx-aYAA" target="_blank" rel="noopener noreferrer" className="w-3/4 py-2 bg-surface-container-lowest text-on-surface text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2" style={{ fontFamily: "Inter" }}>
                   <span className="material-symbols-outlined text-[18px]">visibility</span>
                   Preview Full
-                </button>
+                </a>
               </div>
             </div>
             <div className="p-4 border-t border-outline-variant/20 bg-surface-container-lowest z-10">
@@ -95,13 +95,13 @@ function ResumePage() {
             <div className="relative w-full aspect-[1/1.4] bg-surface-variant p-4">
               <div className="w-full h-full bg-cover bg-center rounded bg-surface-container-lowest shadow-sm border border-outline-variant/20" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCDAy6EwYHxws8ZGrgAcEP1z1a0HxT8lsgbrOEktOpu5dPzXHwcSdg6xZCx-tqnvM0_PhjB5P-54tAEmg-zynS79LC6GEe9xXOac39Zb6IOJjNYNfCz5zYaHJUC6GcTrUbEYH5EOid8fqQePa243fgL9gYVlC0oXWausPSR5RG88EqR8MB-sXPPSoxbyl7uy8FHiXAxY1bRegnn9Elu4D8yn4XtRqJ6eH3jzA0NqZdkraNGDj6uj1ZV7A')" }}></div>
               <div className="template-overlay absolute inset-0 bg-on-surface/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 z-20 group-hover:opacity-100">
-                <button className="w-3/4 py-2 bg-primary text-on-primary text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105" style={{ fontFamily: "Inter" }}>
+                <Link to="/resume/create" className="w-3/4 py-2 bg-primary text-on-primary text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105 text-center flex items-center justify-center" style={{ fontFamily: "Inter" }}>
                   Use This Template
-                </button>
-                <button className="w-3/4 py-2 bg-surface-container-lowest text-on-surface text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2" style={{ fontFamily: "Inter" }}>
+                </Link>
+                <a href="https://lh3.googleusercontent.com/aida-public/AB6AXuCDAy6EwYHxws8ZGrgAcEP1z1a0HxT8lsgbrOEktOpu5dPzXHwcSdg6xZCx-tqnvM0_PhjB5P-54tAEmg-zynS79LC6GEe9xXOac39Zb6IOJjNYNfCz5zYaHJUC6GcTrUbEYH5EOid8fqQePa243fgL9gYVlC0oXWausPSR5RG88EqR8MB-sXPPSoxbyl7uy8FHiXAxY1bRegnn9Elu4D8yn4XtRqJ6eH3jzA0NqZdkraNGDj6uj1ZV7A" target="_blank" rel="noopener noreferrer" className="w-3/4 py-2 bg-surface-container-lowest text-on-surface text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2" style={{ fontFamily: "Inter" }}>
                   <span className="material-symbols-outlined text-[18px]">visibility</span>
                   Preview Full
-                </button>
+                </a>
               </div>
             </div>
             <div className="p-4 border-t border-outline-variant/20 bg-surface-container-lowest z-10">
@@ -119,13 +119,13 @@ function ResumePage() {
             <div className="relative w-full aspect-[1/1.4] bg-surface-variant p-4">
               <div className="w-full h-full bg-cover bg-center rounded bg-surface-container-lowest shadow-sm border border-outline-variant/20" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAEq5IKiBg-c1XyOh6sJphJ6eHQLUMkzZhIcqGtkIlmFQfetrHXHtrKqMcDfMlgJ8DtxV5dZWFpcbb4z_FYuxgQWmh22EkmSUkuIjKxjvmibS81KbCeOmn5D6s2yEBW0yGEwq41N-pDDkS9S5_JdNMSWw3GIOyrMKaGflpVLAKLZl10VElHgVi3AkvvNmW9UVr13MypuHRbDYW192gJQv9ylzXHboUQI7QFj0bJkOwZ8-ukuHfgr9dZ-Q')" }}></div>
               <div className="template-overlay absolute inset-0 bg-on-surface/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 z-20 group-hover:opacity-100">
-                <button className="w-3/4 py-2 bg-primary text-on-primary text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105" style={{ fontFamily: "Inter" }}>
+                <Link to="/resume/create" className="w-3/4 py-2 bg-primary text-on-primary text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105 text-center flex items-center justify-center" style={{ fontFamily: "Inter" }}>
                   Use This Template
-                </button>
-                <button className="w-3/4 py-2 bg-surface-container-lowest text-on-surface text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2" style={{ fontFamily: "Inter" }}>
+                </Link>
+                <a href="https://lh3.googleusercontent.com/aida-public/AB6AXuAEq5IKiBg-c1XyOh6sJphJ6eHQLUMkzZhIcqGtkIlmFQfetrHXHtrKqMcDfMlgJ8DtxV5dZWFpcbb4z_FYuxgQWmh22EkmSUkuIjKxjvmibS81KbCeOmn5D6s2yEBW0yGEwq41N-pDDkS9S5_JdNMSWw3GIOyrMKaGflpVLAKLZl10VElHgVi3AkvvNmW9UVr13MypuHRbDYW192gJQv9ylzXHboUQI7QFj0bJkOwZ8-ukuHfgr9dZ-Q" target="_blank" rel="noopener noreferrer" className="w-3/4 py-2 bg-surface-container-lowest text-on-surface text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2" style={{ fontFamily: "Inter" }}>
                   <span className="material-symbols-outlined text-[18px]">visibility</span>
                   Preview Full
-                </button>
+                </a>
               </div>
             </div>
             <div className="p-4 border-t border-outline-variant/20 bg-surface-container-lowest z-10">
@@ -148,13 +148,13 @@ function ResumePage() {
             <div className="relative w-full aspect-[1/1.4] bg-surface-variant p-4">
               <div className="w-full h-full bg-cover bg-center rounded bg-surface-container-lowest shadow-sm border border-outline-variant/20" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAyHgJgEx5SctxRIjbahcq2dCfiyYytJwX6F1WhXYLlpHRyb1adKBdSFDpagQyiruODuszTzphRTuxo2x-55Ovyg6du9cq34ChsRSnbOSrdshVk9K34aMY5ME7d0ReFlLE2OhjPAuHnO7VoyqcC-b_CJMxpOch8u3dBu6de2s1cnm1UQQRFQrnTCaeSRUONYVJpW7BpHiRg00dDl0EtL0VT2ATvgNKY4b_WHdfLxq9sU6CZqh7Iw7z38A')" }}></div>
               <div className="template-overlay absolute inset-0 bg-on-surface/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 z-20 group-hover:opacity-100">
-                <button className="w-3/4 py-2 bg-primary text-on-primary text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105" style={{ fontFamily: "Inter" }}>
+                <Link to="/resume/create" className="w-3/4 py-2 bg-primary text-on-primary text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105 text-center flex items-center justify-center" style={{ fontFamily: "Inter" }}>
                   Use This Template
-                </button>
-                <button className="w-3/4 py-2 bg-surface-container-lowest text-on-surface text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2" style={{ fontFamily: "Inter" }}>
+                </Link>
+                <a href="https://lh3.googleusercontent.com/aida-public/AB6AXuAyHgJgEx5SctxRIjbahcq2dCfiyYytJwX6F1WhXYLlpHRyb1adKBdSFDpagQyiruODuszTzphRTuxo2x-55Ovyg6du9cq34ChsRSnbOSrdshVk9K34aMY5ME7d0ReFlLE2OhjPAuHnO7VoyqcC-b_CJMxpOch8u3dBu6de2s1cnm1UQQRFQrnTCaeSRUONYVJpW7BpHiRg00dDl0EtL0VT2ATvgNKY4b_WHdfLxq9sU6CZqh7Iw7z38A" target="_blank" rel="noopener noreferrer" className="w-3/4 py-2 bg-surface-container-lowest text-on-surface text-base leading-[1.5] font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2" style={{ fontFamily: "Inter" }}>
                   <span className="material-symbols-outlined text-[18px]">visibility</span>
                   Preview Full
-                </button>
+                </a>
               </div>
             </div>
             <div className="p-4 border-t border-outline-variant/20 bg-surface-container-lowest z-10">
