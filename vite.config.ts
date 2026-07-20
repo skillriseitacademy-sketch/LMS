@@ -166,74 +166,52 @@ function uploadMiddlewarePlugin() {
           return;
         }
 
-        // ── Parse multipart form ──────────────────────────────────────────────
-        const contentType = req.headers["content-type"] || "";
-        if (!contentType.includes("multipart/form-data")) {
+        // ── Read body ──────────────────────────────────────────────
+        let bodyStr = "";
+        for await (const chunk of req) {
+          bodyStr += chunk;
+        }
+
+        let body: any;
+        try {
+          body = JSON.parse(bodyStr);
+        } catch {
           res.writeHead(400, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ error: "Expected multipart/form-data" }));
+          res.end(JSON.stringify({ error: "Invalid JSON body" }));
           return;
         }
 
+        const { filename, content_type, context = "post" } = body;
+        if (!filename || !content_type) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "filename and content_type are required" }));
+          return;
+        }
+
+        // ── Choose bucket based on context ────────────────────────────────
+        const BUCKET_MAP: Record<string, { bucket: string, publicUrl: string }> = {
+          post: { bucket: env.R2_BUCKET_MEDIA || "placepro-media", publicUrl: env.R2_PUBLIC_URL_MEDIA || "" },
+          story: { bucket: env.R2_BUCKET_MEDIA || "placepro-media", publicUrl: env.R2_PUBLIC_URL_MEDIA || "" },
+          avatar: { bucket: env.R2_BUCKET_MEDIA || "placepro-media", publicUrl: env.R2_PUBLIC_URL_MEDIA || "" },
+          interview: { bucket: env.R2_BUCKET_RECORDINGS || "placepro-recordings", publicUrl: env.R2_PUBLIC_URL_RECORDINGS || "" },
+          course: { bucket: env.R2_BUCKET_CONTENT || "placepro-content", publicUrl: env.R2_PUBLIC_URL_CONTENT || "" },
+        };
+
+        const bucketConfig = BUCKET_MAP[context];
+        if (!bucketConfig) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "Invalid context" }));
+          return;
+        }
+
+        const ext = filename.split(".").pop()?.toLowerCase() ?? "bin";
+        const id = Math.random().toString(36).slice(2, 14);
+        const key = `${context}s/${user.id}/${id}.${ext}`;
+
         try {
-          const busboyModule = await import("busboy");
-          const busboy = busboyModule.default || busboyModule;
-          const { fileBuffer, mimeType, filename, context } = await new Promise<{
-            fileBuffer: Buffer;
-            mimeType: string;
-            filename: string;
-            context: string;
-          }>((resolve, reject) => {
-            const bb = busboy({ headers: req.headers, limits: { fileSize: 200 * 1024 * 1024 } });
-            let fileBuffer: Buffer | null = null;
-            let mimeType = "application/octet-stream";
-            let filename = "upload";
-            let context = "post";
-            const chunks: Buffer[] = [];
+          const { getSignedUrl } = await import("@aws-sdk/s3-request-presigner");
+          const { S3Client, PutObjectCommand } = await import("@aws-sdk/client-s3");
 
-            bb.on("file", (fieldname, stream, info) => {
-              mimeType = info.mimeType;
-              filename = info.filename || "upload";
-              stream.on("data", (d: Buffer) => chunks.push(d));
-              stream.on("end", () => { fileBuffer = Buffer.concat(chunks); });
-            });
-            bb.on("field", (name, val) => {
-              if (name === "context") context = val;
-            });
-            bb.on("close", () => {
-              if (!fileBuffer) return reject(new Error("No file received"));
-              resolve({ fileBuffer, mimeType, filename, context });
-            });
-            bb.on("error", reject);
-            req.pipe(bb);
-          });
-
-          // ── Choose bucket based on context ────────────────────────────────
-          const bucketMap: Record<string, string> = {
-            post: "placepro-media",
-            story: "placepro-media",
-            avatar: "placepro-media",
-            interview: "placepro-recordings",
-            course: "placepro-content",
-          };
-          const publicUrlMap: Record<string, string> = {
-            post: "placepro-media",
-            story: "placepro-media",
-            avatar: "placepro-media",
-            interview: "placepro-recordings",
-            course: "placepro-content",
-          };
-          const R2_PUBLIC_URLS: Record<string, string> = {
-            "placepro-media": env.R2_PUBLIC_URL_MEDIA || env.VITE_R2_PUBLIC_URL_MEDIA || "",
-            "placepro-recordings": env.R2_PUBLIC_URL_RECORDINGS || env.VITE_R2_PUBLIC_URL_RECORDINGS || "",
-            "placepro-content": env.R2_PUBLIC_URL_CONTENT || env.VITE_R2_PUBLIC_URL_CONTENT || "",
-          };
-
-          const bucketName = bucketMap[context] ?? "placepro-media";
-          const ext = filename.split(".").pop()?.toLowerCase() ?? "bin";
-          const id = Math.random().toString(36).slice(2, 14);
-          const key = `${context}s/${user.id}/${id}.${ext}`;
-
-          // ── Upload to R2 ──────────────────────────────────────────────────
           const r2 = new S3Client({
             region: "auto",
             endpoint: `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
@@ -243,22 +221,23 @@ function uploadMiddlewarePlugin() {
             },
           });
 
-          await r2.send(new PutObjectCommand({
-            Bucket: bucketName,
+          const command = new PutObjectCommand({
+            Bucket: bucketConfig.bucket,
             Key: key,
-            Body: fileBuffer,
-            ContentType: mimeType,
-          }));
+            ContentType: content_type,
+          });
 
-          const baseUrl = R2_PUBLIC_URLS[bucketName] || "";
-          const publicUrl = baseUrl ? `${baseUrl}/${key}` : `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${bucketName}/${key}`;
+          const uploadUrl = await getSignedUrl(r2, command, { expiresIn: 300 });
+          const publicUrl = bucketConfig.publicUrl 
+            ? `${bucketConfig.publicUrl.replace(/\/$/, "")}/${key}` 
+            : `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${bucketConfig.bucket}/${key}`;
 
           res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ publicUrl, key, bucket: bucketName }));
+          res.end(JSON.stringify({ uploadUrl, publicUrl, key, bucket: bucketConfig.bucket }));
         } catch (err: any) {
           console.error("[upload-middleware] error:", err);
           res.writeHead(500, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ error: err?.message || "Upload failed" }));
+          res.end(JSON.stringify({ error: err?.message || "Presign failed" }));
         }
       });
     },
