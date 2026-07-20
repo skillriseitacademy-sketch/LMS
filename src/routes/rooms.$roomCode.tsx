@@ -62,7 +62,6 @@ function RoomView() {
   const [guestStatus, setGuestStatus] = useState<'prejoin' | 'waiting' | 'admitted' | 'rejected'>('prejoin');
   const [waitingParticipants, setWaitingParticipants] = useState<any[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
-  const [activeTab, setActiveTab] = useState<'management' | 'chat' | 'participants'>('participants');
 
   const isHost = session?.id && roomData?.host_id === session.id;
 
@@ -407,8 +406,8 @@ function RoomView() {
 
   return (
     <div className="h-screen flex bg-[#0F1115] text-white overflow-hidden p-3 gap-3">
-      {/* Left Sidebar Navigation */}
-      <aside className="w-[60px] flex flex-col items-center py-6 bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl justify-between">
+      {/* Left Sidebar Navigation (Hidden on Mobile) */}
+      <aside className="hidden md:flex w-[60px] flex-col items-center py-6 bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl justify-between">
         <div className="flex flex-col gap-6 w-full items-center">
           <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-brand-foreground shadow-lg shadow-brand/20 mb-4 cursor-pointer hover:scale-105 transition-transform">
             <MonitorUp className="w-5 h-5" />
@@ -431,18 +430,18 @@ function RoomView() {
       {/* Center Main Area */}
       <main className="flex-1 flex flex-col relative min-w-0 bg-[#0F1115]">
         {/* Header */}
-        <header className="h-20 flex items-center justify-between px-2">
-          <div className="flex items-center gap-4">
+        <header className="h-20 flex items-center justify-between px-2 md:px-4 shrink-0">
+          <div className="flex items-center gap-2 md:gap-4">
             <button className="text-white hover:text-brand transition-colors">
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
             </button>
-            <h2 className="text-xl font-bold tracking-tight">Design meeting</h2>
-            <div className="bg-brand/20 text-brand px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ml-2">
+            <h2 className="text-lg md:text-xl font-bold tracking-tight truncate max-w-[120px] md:max-w-none">Design meeting</h2>
+            <div className="hidden sm:flex bg-brand/20 text-brand px-3 py-1 rounded-full text-xs font-semibold items-center gap-1.5 ml-2">
               <Users className="w-3.5 h-3.5" /> Group
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 md:gap-6">
+            <div className="hidden md:flex items-center gap-3">
               <button className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-black">
                 <div className="w-3.5 h-3.5 rounded-sm bg-black" />
               </button>
@@ -456,16 +455,19 @@ function RoomView() {
                 <LayoutGrid className="w-5 h-5" />
               </button>
             </div>
-            <div className="flex items-center gap-3">
-              <button className="flex items-center gap-2 bg-transparent border border-white/20 rounded-full px-3 py-1.5 text-sm font-medium hover:bg-white/5 transition-colors">
+            <div className="flex items-center gap-2 md:gap-3">
+              <button 
+                onClick={() => setShowSidebar(!showSidebar)}
+                className={`flex items-center gap-2 border rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${showSidebar ? 'bg-brand/20 text-brand border-brand/30' : 'bg-transparent border-white/20 hover:bg-white/5 text-white/90'}`}
+              >
                 <Users className="w-4 h-4" /> {totalParticipants}
               </button>
-              <button className="text-brand text-sm font-medium hover:text-brand/80 transition-colors flex items-center gap-1.5" onClick={handleCopyLink}>
+              <button className="hidden sm:flex text-brand text-sm font-medium hover:text-brand/80 transition-colors items-center gap-1.5" onClick={handleCopyLink}>
                 {copied ? <Check className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
-                {copied ? "Copied" : "Invite a participant"}
+                {copied ? "Copied" : "Invite"}
               </button>
             </div>
-            <div className="flex items-center gap-2 bg-transparent border border-white/20 rounded-full px-3 py-1.5 text-sm font-medium font-mono">
+            <div className="flex items-center gap-2 bg-transparent border border-white/20 rounded-full px-3 py-1.5 text-sm font-medium font-mono shrink-0">
               <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
               12:34
             </div>
@@ -490,21 +492,21 @@ function RoomView() {
         </div>
 
         {/* Floating Bottom Controls */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center justify-between w-full px-6 max-w-4xl z-20">
-          <button className="flex items-center gap-2 text-white/70 hover:text-white text-sm font-medium">
+        <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex items-center justify-center md:justify-between w-full px-4 md:px-6 max-w-4xl z-20 pointer-events-none">
+          <button className="hidden md:flex items-center gap-2 text-white/70 hover:text-white text-sm font-medium pointer-events-auto">
             <Menu className="w-5 h-5 text-brand" /> Tools
           </button>
           
-          <div className="flex items-center gap-3 bg-transparent">
+          <div className="flex items-center gap-2 md:gap-3 bg-transparent pointer-events-auto">
             <button
               onClick={toggleMic}
-              className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${isMicMuted ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center transition-all ${isMicMuted ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
             >
-              {isMicMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+              {isMicMuted ? <MicOff className="w-5 h-5 md:w-6 md:h-6" /> : <Mic className="w-5 h-5 md:w-6 md:h-6" />}
             </button>
             
             <button
-              className="w-[72px] h-14 rounded-[20px] bg-red-500 hover:bg-red-600 flex items-center justify-center transition-all shadow-lg shadow-red-500/20"
+              className="w-[60px] h-12 md:w-[72px] md:h-14 rounded-xl md:rounded-[20px] bg-red-500 hover:bg-red-600 flex items-center justify-center transition-all shadow-lg shadow-red-500/20"
               onClick={async () => {
                 sessionStorage.removeItem(`auto_join_${roomCode}`);
                 leaveRoom();
@@ -514,138 +516,40 @@ function RoomView() {
                 navigate({ to: "/rooms" });
               }}
             >
-              <PhoneOff className="w-6 h-6 text-white" />
+              <PhoneOff className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </button>
             
             <button
               onClick={toggleCam}
-              className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${isCamOff ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center transition-all ${isCamOff ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
             >
-              {isCamOff ? <VideoOff className="w-6 h-6" /> : <Video className="w-6 h-6" />}
+              {isCamOff ? <VideoOff className="w-5 h-5 md:w-6 md:h-6" /> : <Video className="w-5 h-5 md:w-6 md:h-6" />}
             </button>
             
-            <button className="w-14 h-14 rounded-2xl bg-[#2A2E38] hover:bg-[#323642] flex items-center justify-center transition-all">
-              <Settings className="w-6 h-6 text-white/70" />
+            <button className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-[#2A2E38] hover:bg-[#323642] flex items-center justify-center transition-all">
+              <Settings className="w-5 h-5 md:w-6 md:h-6 text-white/70" />
             </button>
           </div>
           
-          <div className="w-20" /> {/* Spacer to balance 'Tools' button */}
+          <div className="hidden md:block w-20" /> {/* Spacer to balance 'Tools' button */}
         </div>
       </main>
 
-      {/* Right Sidebar (Tabs) */}
-      <aside className="w-[340px] flex flex-col bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl p-6">
-        <div className="flex items-center justify-between mb-8">
+      {/* Right Sidebar */}
+      <aside className={`w-[340px] bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl p-6 flex-col absolute md:relative right-3 top-3 bottom-3 z-30 transition-transform md:translate-x-0 ${showSidebar ? 'flex translate-x-0' : 'hidden md:hidden lg:flex translate-x-[120%]'}`}>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+            <Users className="w-5 h-5 text-brand" /> Participants
+          </h2>
           <button 
-            className={`text-sm font-medium transition-colors ${activeTab === 'management' ? 'text-brand' : 'text-white/50 hover:text-white'}`}
-            onClick={() => setActiveTab('management')}
+            onClick={() => setShowSidebar(false)}
+            className="lg:hidden text-white/50 hover:text-white transition-colors"
           >
-            Management
-          </button>
-          <button 
-            className={`text-sm font-medium transition-colors ${activeTab === 'chat' ? 'text-brand' : 'text-white/50 hover:text-white'}`}
-            onClick={() => setActiveTab('chat')}
-          >
-            Chat
-          </button>
-          <button 
-            className={`text-sm font-medium transition-colors relative ${activeTab === 'participants' ? 'text-brand' : 'text-white/50 hover:text-white'}`}
-            onClick={() => setActiveTab('participants')}
-          >
-            Participants
-            {isHost && waitingParticipants.length > 0 && activeTab !== 'participants' && (
-               <span className="absolute -top-1 -right-3 flex h-2 w-2">
-                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
-                 <span className="relative inline-flex rounded-full h-2 w-2 bg-brand"></span>
-               </span>
-            )}
+            <Settings className="w-5 h-5" /> {/* Use X icon if imported, else fallback */}
           </button>
         </div>
         
         <div className="flex-1 overflow-y-auto pr-2 -mr-2">
-          {activeTab === 'management' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div>
-                <h3 className="text-lg font-bold mb-4">Poll</h3>
-                <p className="text-sm text-brand font-medium mb-4">What do you think about the meeting?</p>
-                <div className="space-y-3">
-                  <div className="relative overflow-hidden rounded-xl border border-brand p-3 cursor-pointer">
-                     <div className="absolute top-0 left-0 bottom-0 bg-brand/10 w-0" />
-                     <div className="relative flex items-center justify-between text-sm">
-                       <div className="flex items-center gap-3">
-                         <div className="w-4 h-4 rounded-full border border-white/50" />
-                         Pretty good conversation
-                       </div>
-                       <span className="text-white/50">4</span>
-                     </div>
-                  </div>
-                  <div className="relative overflow-hidden rounded-xl border border-brand/50 p-3 bg-brand/20 cursor-pointer">
-                     <div className="absolute top-0 left-0 bottom-0 bg-brand w-[85%]" />
-                     <div className="relative flex items-center justify-between text-sm">
-                       <div className="flex items-center gap-3">
-                         <div className="w-4 h-4 rounded-full bg-white flex items-center justify-center text-brand">
-                           <Check className="w-3 h-3" />
-                         </div>
-                         This is awesome!
-                       </div>
-                       <span>28</span>
-                     </div>
-                  </div>
-                  <div className="relative overflow-hidden rounded-xl border border-white/10 p-3 cursor-pointer">
-                     <div className="absolute top-0 left-0 bottom-0 bg-brand/10 w-0" />
-                     <div className="relative flex items-center justify-between text-sm">
-                       <div className="flex items-center gap-3">
-                         <div className="w-4 h-4 rounded-full border border-white/50" />
-                         Could be a lot better
-                       </div>
-                       <span className="text-white/50">0</span>
-                     </div>
-                  </div>
-                </div>
-                <p className="text-xs text-white/50 mt-3">32 votes total</p>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-bold mb-4">To Do</h3>
-                <div className="space-y-4">
-                  <label className="flex items-center gap-3 text-sm text-white/50 line-through cursor-pointer">
-                    <div className="w-4 h-4 rounded-md border border-white/20 bg-white/10 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-white" />
-                    </div>
-                    Create Dribbble shot about last project
-                  </label>
-                  <label className="flex items-center gap-3 text-sm text-white/50 line-through cursor-pointer">
-                    <div className="w-4 h-4 rounded-md border border-white/20 bg-white/10 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-white" />
-                    </div>
-                    Animation in Principle
-                  </label>
-                  <label className="flex items-center gap-3 text-sm text-white/50 line-through cursor-pointer">
-                    <div className="w-4 h-4 rounded-md border border-white/20 bg-white/10 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-white" />
-                    </div>
-                    Icons for app navigation and homepage
-                  </label>
-                  <label className="flex items-center gap-3 text-sm text-white cursor-pointer">
-                    <div className="w-4 h-4 rounded-md border border-white/50 flex items-center justify-center" />
-                    Talk to Jane
-                  </label>
-                  <button className="w-6 h-6 rounded-md bg-brand text-brand-foreground flex items-center justify-center hover:bg-brand/90 transition-colors">
-                    <UserPlus className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'chat' && (
-             <div className="h-full flex flex-col items-center justify-center text-white/50 animate-in fade-in slide-in-from-right-4 duration-300">
-               <MessageSquare className="w-12 h-12 mb-4 opacity-50" />
-               <p>Chat is currently disabled.</p>
-             </div>
-          )}
-          
-          {activeTab === 'participants' && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               {/* Waiting Room Section (Host Only) */}
               {isHost && waitingParticipants.length > 0 && (
@@ -693,8 +597,7 @@ function RoomView() {
                 </div>
               </div>
             </div>
-          )}
-        </div>
+          </div>
       </aside>
     </div>
   );
