@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/card";
-import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check, UserPlus, X, Home, Calendar, Bell, Settings, LogOut, MessageSquare, LayoutGrid, Menu, MonitorUp, ChevronLeft } from "lucide-react";
+import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check, UserPlus, X, Home, Calendar, Bell, Settings, LogOut, MessageSquare, LayoutGrid, Menu, MonitorUp, ChevronLeft, BarChart2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-store";
 import { useWebRTC } from "@/hooks/useWebRTC";

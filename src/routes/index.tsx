@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Sparkles, ArrowRight, Video, Code2, PlaySquare, Map, BookOpen, Target, Briefcase, Quote } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -14,7 +14,19 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
+import { useAuth } from "@/lib/auth-store";
+import { useEffect } from "react";
+
 function Landing() {
+  const { session } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (session) {
+      navigate({ to: "/dashboard" });
+    }
+  }, [session, navigate]);
+
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-[#3424C2]/20 selection:text-[#3424C2]">
       
