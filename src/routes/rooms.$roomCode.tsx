@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/card";
-import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users } from "lucide-react";
+import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-store";
 import { useWebRTC } from "@/hooks/useWebRTC";
@@ -46,6 +46,14 @@ function RoomView() {
   const [error, setError] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [hasEnteredGuestInfo, setHasEnteredGuestInfo] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyLink = () => {
+    const link = `${window.location.origin}/rooms/${roomCode}`;
+    navigator.clipboard.writeText(link);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const userName = session?.name || guestEmail.split('@')[0] || "Guest";
 
@@ -203,6 +211,15 @@ function RoomView() {
               </div>
             )}
 
+            <Button
+              variant="outline"
+              onClick={handleCopyLink}
+              className="w-full py-6 text-lg font-semibold rounded-xl mb-4 border-2"
+            >
+              {copied ? <Check className="w-5 h-5 mr-2 text-green-500" /> : <Copy className="w-5 h-5 mr-2" />}
+              {copied ? "Copied Link!" : "Copy Invite Link"}
+            </Button>
+
             <Button 
               onClick={joinRoom}
               disabled={!localStream}
@@ -245,6 +262,15 @@ function RoomView() {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleCopyLink}
+            className="bg-white/5 border-white/10 hover:bg-white/10 text-white h-9"
+          >
+            {copied ? <Check className="w-4 h-4 mr-2 text-green-400" /> : <Copy className="w-4 h-4 mr-2" />}
+            {copied ? "Copied" : "Copy Link"}
+          </Button>
           <span className="text-sm font-medium bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
             {totalParticipants} Participant{totalParticipants !== 1 ? 's' : ''}
           </span>
