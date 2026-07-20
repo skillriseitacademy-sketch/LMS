@@ -13,10 +13,69 @@ export const Route = createFileRoute("/rooms/$roomCode")({
 
 function VideoPlayer({ stream, muted = false, userName, isLocal = false }: { stream: MediaStream; muted?: boolean; userName?: string, isLocal?: boolean }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   
   // Check if track is muted/disabled
   const audioTrack = stream.getAudioTracks()[0];
   const isAudioMuted = audioTrack ? !audioTrack.enabled : true;
+
+  // Active speaker detection
+  useEffect(() => {
+    if (!stream || stream.getAudioTracks().length === 0) return;
+
+    let audioContext: AudioContext | null = null;
+    let source: MediaStreamAudioSourceNode | null = null;
+    let analyser: AnalyserNode | null = null;
+    let animationFrame: number;
+    let speakingFrames = 0;
+
+    try {
+      audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.4;
+
+      // In Chrome, attaching the same stream to an AudioContext that is also playing in a video element
+      // can sometimes mute the original stream. To prevent this, we clone the audio track.
+      const audioClone = new MediaStream([stream.getAudioTracks()[0].clone()]);
+      source = audioContext.createMediaStreamSource(audioClone);
+      source.connect(analyser);
+
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+      const checkAudioLevel = () => {
+        if (!analyser) return;
+        analyser.getByteFrequencyData(dataArray);
+        let sum = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+          sum += dataArray[i];
+        }
+        const average = sum / dataArray.length;
+        
+        if (average > 15 && !isAudioMuted) {
+          speakingFrames++;
+          if (speakingFrames > 2) setIsSpeaking(true);
+        } else {
+          speakingFrames = 0;
+          setIsSpeaking(false);
+        }
+        animationFrame = requestAnimationFrame(checkAudioLevel);
+      };
+
+      checkAudioLevel();
+    } catch (err) {
+      console.warn("Could not start audio context for active speaker detection:", err);
+    }
+
+    return () => {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      if (source) source.disconnect();
+      if (analyser) analyser.disconnect();
+      if (audioContext && audioContext.state !== 'closed') {
+        audioContext.close().catch(() => {});
+      }
+    };
+  }, [stream, isAudioMuted]);
 
   useEffect(() => {
     if (videoRef.current && stream) {
@@ -38,7 +97,7 @@ function VideoPlayer({ stream, muted = false, userName, isLocal = false }: { str
   }, [stream]);
 
   return (
-    <div className={`relative w-full h-full bg-[#1A1D24] rounded-3xl overflow-hidden flex items-center justify-center border-4 ${isLocal ? 'border-brand' : 'border-transparent'}`}>
+    <div className={`relative w-full h-full bg-[#1A1D24] rounded-3xl overflow-hidden flex items-center justify-center border-4 transition-all duration-300 ${isSpeaking ? 'border-brand shadow-[0_0_20px_rgba(var(--brand),0.3)]' : isLocal ? 'border-white/10' : 'border-transparent'}`}>
       <video
         ref={videoRef}
         autoPlay
