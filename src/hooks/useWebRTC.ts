@@ -23,6 +23,7 @@ export function useWebRTC(roomCode: string, userName: string) {
   const candidateBufferRef = useRef<Record<string, RTCIceCandidateInit[]>>({});
   const channelRef = useRef<any>(null);
   const myPeerId = useRef(Math.random().toString(36).substring(7));
+  const iceServersRef = useRef<RTCIceServer[]>([]);
 
   // Initialize local media
   const initLocalStream = useCallback(async () => {
@@ -135,27 +136,28 @@ export function useWebRTC(roomCode: string, userName: string) {
     }
   }, [isScreenSharing]);
 
-  const configuration: RTCConfiguration = {
+  const getConfiguration = (): RTCConfiguration => ({
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
       { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'stun:stun2.l.google.com:19302' },
-      { urls: 'stun:stun3.l.google.com:19302' },
-      { urls: 'stun:stun4.l.google.com:19302' },
+      // Env-var based fallback if needed
       ...(import.meta.env.VITE_TURN_URL ? [{
         urls: import.meta.env.VITE_TURN_URL,
         username: import.meta.env.VITE_TURN_USERNAME,
         credential: import.meta.env.VITE_TURN_CREDENTIAL
-      }] : [])
-    ]
-  };
+      }] : []),
+      // Dynamically fetched Metered TURN servers
+      ...iceServersRef.current
+    ],
+    iceTransportPolicy: 'all'
+  });
 
   const createPeerConnection = (peerId: string, peerName: string) => {
     if (peerConnectionsRef.current[peerId]) {
       return peerConnectionsRef.current[peerId];
     }
     
-    const pc = new RTCPeerConnection(configuration);
+    const pc = new RTCPeerConnection(getConfiguration());
     
     // Add local tracks
     if (localStreamRef.current) {
@@ -200,7 +202,34 @@ export function useWebRTC(roomCode: string, userName: string) {
 
     pc.onconnectionstatechange = () => {
       console.log(`[WebRTC] connectionState for ${peerId} changed to: ${pc.connectionState}`);
-      if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed' || pc.connectionState === 'closed') {
+      if (pc.connectionState === 'failed') {
+        // Attempt ICE restart before giving up
+        console.log(`[WebRTC] Connection failed for ${peerId}, attempting ICE restart...`);
+        pc.restartIce();
+        pc.createOffer({ iceRestart: true }).then(offer => {
+          return pc.setLocalDescription(offer);
+        }).then(() => {
+          channelRef.current?.send({
+            type: 'broadcast',
+            event: 'offer',
+            payload: {
+              to: peerId,
+              from: myPeerId.current,
+              userName: userName,
+              offer: pc.localDescription
+            }
+          });
+        }).catch(err => {
+          console.error(`[WebRTC] ICE restart failed for ${peerId}:`, err);
+          // Only clean up after restart also fails
+          setRemoteStreams(prev => {
+            const next = { ...prev };
+            delete next[peerId];
+            return next;
+          });
+          delete peerConnectionsRef.current[peerId];
+        });
+      } else if (pc.connectionState === 'disconnected' || pc.connectionState === 'closed') {
         setRemoteStreams(prev => {
           const next = { ...prev };
           delete next[peerId];
@@ -212,7 +241,8 @@ export function useWebRTC(roomCode: string, userName: string) {
 
     pc.oniceconnectionstatechange = () => {
       console.log(`[WebRTC] iceConnectionState for ${peerId} changed to: ${pc.iceConnectionState}`);
-      if (pc.iceConnectionState === 'disconnected' || pc.iceConnectionState === 'failed' || pc.iceConnectionState === 'closed') {
+      // Don't clean up on 'disconnected' — wait for connectionState handler to attempt restart
+      if (pc.iceConnectionState === 'closed') {
         setRemoteStreams(prev => {
           const next = { ...prev };
           delete next[peerId];
@@ -235,6 +265,18 @@ export function useWebRTC(roomCode: string, userName: string) {
         supabase.removeChannel(ch);
       }
     });
+
+    try {
+      const turnRes = await fetch("/api/turn");
+      if (turnRes.ok) {
+        const iceData = await turnRes.json();
+        if (Array.isArray(iceData)) {
+          iceServersRef.current = iceData;
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch dynamic TURN credentials:", err);
+    }
 
     const stream = await initLocalStream();
     if (!stream) return; // Wait for permissions

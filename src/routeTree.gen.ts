@@ -23,6 +23,7 @@ import { Route as SettingsBillingRouteImport } from './routes/settings.billing'
 import { Route as RoomsRoomCodeRouteImport } from './routes/rooms.$roomCode'
 import { Route as OauthConsentRouteImport } from './routes/oauth.consent'
 import { Route as ApiUploadRouteImport } from './routes/api/upload'
+import { Route as ApiTurnRouteImport } from './routes/api/turn'
 import { Route as ApiSuggestionsRouteImport } from './routes/api/suggestions'
 import { Route as ApiStoriesRouteImport } from './routes/api/stories'
 import { Route as ApiRoadmapRouteImport } from './routes/api/roadmap'
@@ -151,6 +152,11 @@ const OauthConsentRoute = OauthConsentRouteImport.update({
 const ApiUploadRoute = ApiUploadRouteImport.update({
   id: '/api/upload',
   path: '/api/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTurnRoute = ApiTurnRouteImport.update({
+  id: '/api/turn',
+  path: '/api/turn',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSuggestionsRoute = ApiSuggestionsRouteImport.update({
@@ -494,6 +500,7 @@ export interface FileRoutesByFullPath {
   '/api/roadmap': typeof ApiRoadmapRoute
   '/api/stories': typeof ApiStoriesRoute
   '/api/suggestions': typeof ApiSuggestionsRoute
+  '/api/turn': typeof ApiTurnRoute
   '/api/upload': typeof ApiUploadRoute
   '/oauth/consent': typeof OauthConsentRoute
   '/rooms/$roomCode': typeof RoomsRoomCodeRoute
@@ -564,6 +571,7 @@ export interface FileRoutesByTo {
   '/api/roadmap': typeof ApiRoadmapRoute
   '/api/stories': typeof ApiStoriesRoute
   '/api/suggestions': typeof ApiSuggestionsRoute
+  '/api/turn': typeof ApiTurnRoute
   '/api/upload': typeof ApiUploadRoute
   '/oauth/consent': typeof OauthConsentRoute
   '/rooms/$roomCode': typeof RoomsRoomCodeRoute
@@ -641,6 +649,7 @@ export interface FileRoutesById {
   '/api/roadmap': typeof ApiRoadmapRoute
   '/api/stories': typeof ApiStoriesRoute
   '/api/suggestions': typeof ApiSuggestionsRoute
+  '/api/turn': typeof ApiTurnRoute
   '/api/upload': typeof ApiUploadRoute
   '/oauth/consent': typeof OauthConsentRoute
   '/rooms/$roomCode': typeof RoomsRoomCodeRoute
@@ -718,6 +727,7 @@ export interface FileRouteTypes {
     | '/api/roadmap'
     | '/api/stories'
     | '/api/suggestions'
+    | '/api/turn'
     | '/api/upload'
     | '/oauth/consent'
     | '/rooms/$roomCode'
@@ -788,6 +798,7 @@ export interface FileRouteTypes {
     | '/api/roadmap'
     | '/api/stories'
     | '/api/suggestions'
+    | '/api/turn'
     | '/api/upload'
     | '/oauth/consent'
     | '/rooms/$roomCode'
@@ -864,6 +875,7 @@ export interface FileRouteTypes {
     | '/api/roadmap'
     | '/api/stories'
     | '/api/suggestions'
+    | '/api/turn'
     | '/api/upload'
     | '/oauth/consent'
     | '/rooms/$roomCode'
@@ -922,6 +934,7 @@ export interface RootRouteChildren {
   ApiRoadmapRoute: typeof ApiRoadmapRoute
   ApiStoriesRoute: typeof ApiStoriesRoute
   ApiSuggestionsRoute: typeof ApiSuggestionsRoute
+  ApiTurnRoute: typeof ApiTurnRoute
   ApiUploadRoute: typeof ApiUploadRoute
   OauthConsentRoute: typeof OauthConsentRoute
   RoomsRoomCodeRoute: typeof RoomsRoomCodeRoute
@@ -1034,6 +1047,13 @@ declare module '@tanstack/react-router' {
       path: '/api/upload'
       fullPath: '/api/upload'
       preLoaderRoute: typeof ApiUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/turn': {
+      id: '/api/turn'
+      path: '/api/turn'
+      fullPath: '/api/turn'
+      preLoaderRoute: typeof ApiTurnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/suggestions': {
@@ -1709,6 +1729,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiRoadmapRoute: ApiRoadmapRoute,
   ApiStoriesRoute: ApiStoriesRoute,
   ApiSuggestionsRoute: ApiSuggestionsRoute,
+  ApiTurnRoute: ApiTurnRoute,
   ApiUploadRoute: ApiUploadRoute,
   OauthConsentRoute: OauthConsentRoute,
   RoomsRoomCodeRoute: RoomsRoomCodeRoute,

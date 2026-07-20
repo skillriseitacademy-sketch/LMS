@@ -21,8 +21,20 @@ function VideoPlayer({ stream, muted = false, userName, isLocal = false }: { str
   useEffect(() => {
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
-      videoRef.current.play().catch(e => console.error("Video play error:", e));
+      // Only call play() if the video is paused and in the DOM
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Silently handle AbortError — this is expected when React re-renders
+        });
+      }
     }
+    return () => {
+      // Clean up srcObject on unmount to prevent stale references
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+    };
   }, [stream]);
 
   return (
