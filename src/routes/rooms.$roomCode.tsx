@@ -85,7 +85,8 @@ function RoomView() {
     joinRoom,
     leaveRoom,
     toggleMic,
-    toggleCam
+    toggleCam,
+    toggleScreenShare
   } = useWebRTC(roomCode, userName);
 
   useEffect(() => {
@@ -409,13 +410,13 @@ function RoomView() {
       {/* Left Sidebar Navigation */}
       <aside className="flex w-[64px] md:w-[72px] flex-col items-center py-6 bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl justify-between z-20 shrink-0">
         <div className="flex flex-col gap-4 md:gap-5 w-full items-center">
-          <div 
-            onClick={() => alert("Screen sharing is coming soon!")}
-            title="Share Screen"
-            className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-brand-foreground shadow-lg shadow-brand/20 mb-2 cursor-pointer hover:scale-105 transition-transform"
+          <button 
+            onClick={toggleScreenShare}
+            title={isScreenSharing ? "Stop sharing" : "Share Screen"}
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform ${isScreenSharing ? 'bg-brand text-brand-foreground shadow-lg shadow-brand/20' : 'bg-[#2A2E38] hover:bg-[#323642] text-white hover:scale-105 mb-2'}`}
           >
             <MonitorUp className="w-5 h-5" />
-          </div>
+          </button>
           
           <button
             onClick={toggleMic}

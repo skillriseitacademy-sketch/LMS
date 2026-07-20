@@ -14,9 +14,11 @@ export function useWebRTC(roomCode: string, userName: string) {
   
   const [isMicMuted, setIsMicMuted] = useState(false);
   const [isCamOff, setIsCamOff] = useState(false);
+  const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [streamError, setStreamError] = useState("");
 
   const localStreamRef = useRef<MediaStream | null>(null);
+  const originalVideoTrackRef = useRef<MediaStreamTrack | null>(null);
   const peerConnectionsRef = useRef<Record<string, RTCPeerConnection>>({});
   const candidateBufferRef = useRef<Record<string, RTCIceCandidateInit[]>>({});
   const channelRef = useRef<any>(null);
@@ -53,6 +55,85 @@ export function useWebRTC(roomCode: string, userName: string) {
     });
     setIsCamOff(!localStreamRef.current.getVideoTracks()[0]?.enabled);
   }, []);
+
+  const toggleScreenShare = useCallback(async () => {
+    if (!localStreamRef.current) return;
+
+    if (isScreenSharing) {
+      // Turn off screen sharing
+      const cameraTrack = originalVideoTrackRef.current;
+      if (cameraTrack) {
+        // Replace track in all peer connections
+        Object.values(peerConnectionsRef.current).forEach(pc => {
+          const sender = pc.getSenders().find(s => s.track?.kind === 'video');
+          if (sender) {
+            sender.replaceTrack(cameraTrack);
+          }
+        });
+
+        // Update local stream to show camera
+        const screenTrack = localStreamRef.current.getVideoTracks()[0];
+        if (screenTrack) {
+          screenTrack.stop();
+          localStreamRef.current.removeTrack(screenTrack);
+        }
+        localStreamRef.current.addTrack(cameraTrack);
+        
+        // Force re-render
+        setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
+      }
+      setIsScreenSharing(false);
+      originalVideoTrackRef.current = null;
+    } else {
+      // Turn on screen sharing
+      try {
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        const screenTrack = screenStream.getVideoTracks()[0];
+        
+        const cameraTrack = localStreamRef.current.getVideoTracks()[0];
+        if (cameraTrack) {
+          originalVideoTrackRef.current = cameraTrack;
+          localStreamRef.current.removeTrack(cameraTrack);
+        }
+
+        localStreamRef.current.addTrack(screenTrack);
+        setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
+
+        // Replace track in all peer connections
+        Object.values(peerConnectionsRef.current).forEach(pc => {
+          const sender = pc.getSenders().find(s => s.track?.kind === 'video');
+          if (sender) {
+            sender.replaceTrack(screenTrack);
+          }
+        });
+
+        setIsScreenSharing(true);
+
+        // Listen for user stopping screen share via browser UI
+        screenTrack.onended = () => {
+          if (originalVideoTrackRef.current && localStreamRef.current) {
+            const currentScreenTrack = localStreamRef.current.getVideoTracks()[0];
+            if (currentScreenTrack) {
+              localStreamRef.current.removeTrack(currentScreenTrack);
+            }
+            localStreamRef.current.addTrack(originalVideoTrackRef.current);
+            setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
+            
+            Object.values(peerConnectionsRef.current).forEach(pc => {
+              const sender = pc.getSenders().find(s => s.track?.kind === 'video');
+              if (sender) {
+                sender.replaceTrack(originalVideoTrackRef.current!);
+              }
+            });
+          }
+          setIsScreenSharing(false);
+          originalVideoTrackRef.current = null;
+        };
+      } catch (err) {
+        console.error("Error sharing screen:", err);
+      }
+    }
+  }, [isScreenSharing]);
 
   const configuration: RTCConfiguration = {
     iceServers: [
@@ -322,10 +403,15 @@ export function useWebRTC(roomCode: string, userName: string) {
 
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => track.stop());
+      if (originalVideoTrackRef.current) {
+        originalVideoTrackRef.current.stop();
+        originalVideoTrackRef.current = null;
+      }
       localStreamRef.current = null;
       setLocalStream(null);
       setIsMicMuted(false);
       setIsCamOff(false);
+      setIsScreenSharing(false);
     }
   }, []);
 
@@ -342,11 +428,13 @@ export function useWebRTC(roomCode: string, userName: string) {
     isJoined,
     isMicMuted,
     isCamOff,
+    isScreenSharing,
     streamError,
     initLocalStream,
     joinRoom,
     leaveRoom,
     toggleMic,
-    toggleCam
+    toggleCam,
+    toggleScreenShare
   };
 }
