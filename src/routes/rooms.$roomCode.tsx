@@ -51,6 +51,7 @@ function RoomView() {
   
   const [guestStatus, setGuestStatus] = useState<'prejoin' | 'waiting' | 'admitted' | 'rejected'>('prejoin');
   const [waitingParticipants, setWaitingParticipants] = useState<any[]>([]);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const isHost = session?.id && roomData?.host_id === session.id;
 
@@ -376,9 +377,12 @@ function RoomView() {
             {copied ? <Check className="w-4 h-4 mr-2 text-green-400" /> : <Copy className="w-4 h-4 mr-2" />}
             {copied ? "Copied" : "Copy Link"}
           </Button>
-          <span className="text-sm font-medium bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+          <button
+            onClick={() => setShowSidebar(!showSidebar)}
+            className="text-sm font-medium bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full border border-white/10 transition-colors"
+          >
             {totalParticipants} Participant{totalParticipants !== 1 ? 's' : ''}
-          </span>
+          </button>
         </div>
       </header>
 
@@ -400,22 +404,49 @@ function RoomView() {
         </div>
         </div>
         
-        {/* Host Waiting Room Sidebar */}
-        {isHost && waitingParticipants.length > 0 && (
+        {/* Participants Sidebar */}
+        {showSidebar && (
           <div className="w-80 bg-black/40 border-l border-white/10 flex flex-col">
             <div className="p-4 border-b border-white/10 font-semibold flex items-center justify-between">
-              <span>Waiting Room ({waitingParticipants.length})</span>
+              <span>Participants ({totalParticipants})</span>
+              <button onClick={() => setShowSidebar(false)} className="text-white/50 hover:text-white transition-colors">
+                <X className="w-5 h-5" />
+              </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {waitingParticipants.map(p => (
-                <div key={p.id} className="bg-white/5 rounded-xl p-3 border border-white/10 flex flex-col gap-3">
-                  <span className="font-medium">{p.user_name}</span>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline" className="flex-1 bg-white/5 border-white/10 hover:bg-white/10" onClick={() => handleAdmit(p.id, 'rejected')}>Deny</Button>
-                    <Button size="sm" className="flex-1 bg-brand hover:bg-brand/90 text-brand-foreground" onClick={() => handleAdmit(p.id, 'admitted')}>Admit</Button>
+            
+            <div className="flex-1 overflow-y-auto p-4 space-y-6">
+              {/* In Call Section */}
+              <div>
+                <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-3">In Call</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-sm">{userName} (You)</span>
+                  </div>
+                  {remoteStreams.map(remote => (
+                    <div key={remote.peerId} className="flex items-center justify-between">
+                      <span className="font-medium text-sm">{remote.userName}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Waiting Room Section (Host Only) */}
+              {isHost && waitingParticipants.length > 0 && (
+                <div>
+                  <h3 className="text-xs font-bold text-brand uppercase tracking-wider mb-3">Waiting ({waitingParticipants.length})</h3>
+                  <div className="space-y-3">
+                    {waitingParticipants.map(p => (
+                      <div key={p.id} className="bg-white/5 rounded-xl p-3 border border-white/10 flex flex-col gap-3">
+                        <span className="font-medium text-sm">{p.user_name}</span>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" className="flex-1 bg-white/5 border-white/10 hover:bg-white/10" onClick={() => handleAdmit(p.id, 'rejected')}>Deny</Button>
+                          <Button size="sm" className="flex-1 bg-brand hover:bg-brand/90 text-brand-foreground" onClick={() => handleAdmit(p.id, 'admitted')}>Admit</Button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         )}
