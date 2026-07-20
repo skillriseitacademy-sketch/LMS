@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Video, Keyboard, Plus, Users, Calendar, Clock } from "lucide-react";
+import { Video, Keyboard, Plus, Users, Calendar, Clock, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-store";
@@ -26,6 +26,7 @@ function RoomsHub() {
         .from("instant_rooms")
         .select("*")
         .eq("host_id", session.id)
+        .eq("is_active", true)
         .order("created_at", { ascending: false })
         .then(({ data }) => {
           if (data) {
@@ -38,6 +39,14 @@ function RoomsHub() {
         });
     }
   }, [session?.id]);
+
+  const handleEndRoom = async (roomId: string) => {
+    // Optimistic update
+    setUpcomingRooms(prev => prev.filter(r => r.id !== roomId));
+    
+    // DB update
+    await supabase.from("instant_rooms").update({ is_active: false }).eq("id", roomId);
+  };
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -351,12 +360,21 @@ function RoomsHub() {
                     </div>
                     <p className="font-mono text-sm text-[var(--pp-on-surface-variant)]">Code: {room.room_code}</p>
                   </div>
-                  <button 
-                    onClick={() => navigate({ to: "/rooms/$roomCode", params: { roomCode: room.room_code } })}
-                    className="px-4 py-2 rounded-lg font-semibold text-sm transition-colors hover:bg-[var(--pp-primary-container)] text-[var(--pp-primary)]"
-                  >
-                    Enter Room
-                  </button>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => handleEndRoom(room.id)}
+                      className="px-3 py-2 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors"
+                      title="End Room"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => navigate({ to: "/rooms/$roomCode", params: { roomCode: room.room_code } })}
+                      className="px-4 py-2 rounded-lg font-semibold text-sm transition-colors hover:bg-[var(--pp-primary-container)] text-[var(--pp-primary)]"
+                    >
+                      Enter Room
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

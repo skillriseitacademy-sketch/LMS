@@ -501,6 +501,21 @@ function RoomView() {
 
         <div className="w-px h-8 bg-white/10 mx-2" />
 
+        {isHost && (
+          <Button
+            variant="destructive"
+            onClick={async () => {
+              sessionStorage.removeItem(`auto_join_${roomCode}`);
+              leaveRoom();
+              await supabase.from('instant_rooms').update({ is_active: false }).eq('room_code', roomCode);
+              navigate({ to: "/rooms" });
+            }}
+            className="rounded-full h-14 px-8 font-semibold text-[15px] bg-red-950 hover:bg-red-900 shadow-lg shadow-red-900/20 text-red-100 border border-red-900/50"
+          >
+            End Room
+          </Button>
+        )}
+
         <Button
           variant="destructive"
           onClick={() => {
