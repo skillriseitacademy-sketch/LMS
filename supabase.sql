@@ -770,3 +770,7 @@ ALTER TABLE stories ADD CONSTRAINT stories_user_id_profiles_fkey FOREIGN KEY (us
 ALTER TABLE instant_rooms ADD CONSTRAINT instant_rooms_host_id_profiles_fkey FOREIGN KEY (host_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE notifications ADD CONSTRAINT notifications_actor_id_profiles_fkey FOREIGN KEY (actor_id) REFERENCES profiles(id) ON DELETE CASCADE;
 
+
+ALTER TABLE post_comments ADD CONSTRAINT post_comments_user_id_profiles_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE post_reactions ADD CONSTRAINT post_reactions_user_id_profiles_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+

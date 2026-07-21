@@ -26,7 +26,7 @@ export const Route = createFileRoute("/api/posts/$postId/comments")({
           .select(
             `
             id, post_id, user_id, content, created_at,
-            profiles:user_id (id, name, avatar_url)
+            profiles (id, name, avatar_url)
           `,
           )
           .eq("post_id", params.postId)
@@ -71,12 +71,24 @@ export const Route = createFileRoute("/api/posts/$postId/comments")({
           .select(
             `
             id, post_id, user_id, content, created_at,
-            profiles:user_id (id, name, avatar_url)
+            profiles (id, name, avatar_url)
           `,
           )
           .single();
 
         if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+
+        // Add Notification
+        const { data: postData } = await serviceClient.from("posts").select("user_id").eq("id", params.postId).single();
+        if (postData && postData.user_id !== user.id) {
+          await serviceClient.from("notifications").insert({
+            user_id: postData.user_id,
+            actor_id: user.id,
+            type: "comment",
+            ref_id: params.postId
+          });
+        }
+
         return new Response(JSON.stringify(data), {
           status: 201,
           headers: { "Content-Type": "application/json" },

@@ -65,6 +65,18 @@ export const Route = createFileRoute("/api/posts/$postId/react")({
           .single();
 
         if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+
+        // Add Notification
+        const { data: postData } = await serviceClient.from("posts").select("user_id").eq("id", postId).single();
+        if (postData && postData.user_id !== user.id) {
+          await serviceClient.from("notifications").insert({
+            user_id: postData.user_id,
+            actor_id: user.id,
+            type: "like",
+            ref_id: postId
+          });
+        }
+
         return new Response(JSON.stringify(data), {
           status: 201,
           headers: { "Content-Type": "application/json" },
