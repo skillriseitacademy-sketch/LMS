@@ -29,6 +29,7 @@ function ProfileSettingsPage() {
   const [activeSection, setActiveSection] = useState<ProfileSection>("public-profile");
 
   const [formData, setFormData] = useState({
+    username: "",
     firstName: "",
     lastName: "",
     bio: "",
@@ -36,6 +37,8 @@ function ProfileSettingsPage() {
     linkedinUrl: "",
     githubUrl: "",
   });
+  
+  const [coverUrl, setCoverUrl] = useState<string>("");
 
   const [education, setEducation] = useState({
     university: "",
@@ -60,25 +63,31 @@ function ProfileSettingsPage() {
     accept: "image/jpeg,image/png,image/webp",
   });
 
+  const { openPicker: openCoverPicker, uploading: coverUploading, error: coverError } = useR2Upload({
+    context: "cover",
+    accept: "image/jpeg,image/png,image/webp",
+  });
+
   useEffect(() => {
-    if (avatarError) {
-      setMessage({ text: avatarError, type: "error" });
+    if (avatarError || coverError) {
+      setMessage({ text: avatarError || coverError || "", type: "error" });
       setTimeout(() => setMessage({ text: "", type: "" }), 5000);
     }
-  }, [avatarError]);
+  }, [avatarError, coverError]);
 
   useEffect(() => {
     async function loadProfile() {
       if (!session?.id) return;
       const { data } = await supabase
         .from("profiles")
-        .select("name, bio, avatar_url, headline, skills, visibility")
+        .select("name, username, bio, avatar_url, headline, skills, visibility")
         .eq("id", session.id)
         .single();
 
       if (data) {
         const parts = (data.name || "").split(" ");
         setFormData({
+          username: data.username || "",
           firstName: parts[0] || "",
           lastName: parts.slice(1).join(" ") || "",
           bio: data.bio || "",
@@ -86,6 +95,8 @@ function ProfileSettingsPage() {
           linkedinUrl: "",
           githubUrl: "",
         });
+        setAvatarUrl(data.avatar_url || "");
+        // setCoverUrl(data.cover_url || ""); // Uncomment when cover_url is added to DB
         setAvatarUrl(data.avatar_url || "");
         // Skills repurposed as target roles for now
         if (data.skills?.length) {
@@ -108,11 +119,23 @@ function ProfileSettingsPage() {
     });
   };
 
+  const handleCoverUpload = () => {
+    openCoverPicker(async (result) => {
+      setCoverUrl(result.publicUrl);
+      if (session?.id) {
+        // await supabase.from("profiles").update({ cover_url: result.publicUrl }).eq("id", session.id);
+        setMessage({ text: "Cover photo updated locally! (Add cover_url to DB to persist)", type: "success" });
+        setTimeout(() => setMessage({ text: "", type: "" }), 3000);
+      }
+    });
+  };
+
   const handleSaveProfile = async () => {
     if (!session?.id) return;
     setSaving(true);
     setMessage({ text: "", type: "" });
     const { error } = await supabase.from("profiles").update({
+      username: formData.username.trim(),
       name: `${formData.firstName} ${formData.lastName}`.trim(),
       bio: formData.bio,
       headline: `${education.degree} · ${education.graduationYear}`,
@@ -284,6 +307,18 @@ function ProfileSettingsPage() {
                 </div>
 
                 <form className="space-y-6" onSubmit={e => { e.preventDefault(); handleSaveProfile(); }}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-on-surface mb-2" style={{ fontFamily: "JetBrains Mono" }}>Username</label>
+                      <input
+                        value={formData.username}
+                        onChange={e => setFormData(p => ({ ...p, username: e.target.value }))}
+                        className="w-full px-4 py-2.5 bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm text-on-surface"
+                        style={{ fontFamily: "Inter" }}
+                      />
+                    </div>
+                  </div>
+
                   {/* Name row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -303,6 +338,26 @@ function ProfileSettingsPage() {
                         className="w-full px-4 py-2.5 bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm text-on-surface"
                         style={{ fontFamily: "Inter" }}
                       />
+                    </div>
+                  </div>
+
+                  {/* Cover Image Upload */}
+                  <div>
+                    <label className="block text-xs font-medium text-on-surface mb-2" style={{ fontFamily: "JetBrains Mono" }}>Cover Image</label>
+                    <div className="flex items-center gap-4">
+                      {coverUrl && (
+                        <div className="w-32 h-16 rounded-lg overflow-hidden border border-outline-variant">
+                          <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        onClick={handleCoverUpload}
+                        disabled={coverUploading}
+                        className="px-4 py-2 bg-surface border border-outline-variant rounded-lg text-sm font-medium hover:border-primary transition-colors disabled:opacity-50"
+                      >
+                        {coverUploading ? "Uploading..." : "Upload Cover Image"}
+                      </button>
                     </div>
                   </div>
 
