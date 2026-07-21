@@ -750,3 +750,23 @@ CREATE POLICY "Hosts can manage their instant rooms" ON instant_rooms FOR UPDATE
   USING (auth.uid() = host_id);
 CREATE POLICY "Hosts can delete their instant rooms" ON instant_rooms FOR DELETE
   USING (auth.uid() = host_id);
+
+-- ==============================================================================
+-- NOTIFICATIONS ARCHITECTURE
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  actor_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  type TEXT NOT NULL CHECK (type IN ('like', 'comment', 'follow', 'mention')),
+  ref_id UUID,
+  is_read BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+);
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view their own notifications" ON notifications FOR SELECT USING (auth.uid() = user_id);
+
+ALTER TABLE stories ADD CONSTRAINT stories_user_id_profiles_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE instant_rooms ADD CONSTRAINT instant_rooms_host_id_profiles_fkey FOREIGN KEY (host_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE notifications ADD CONSTRAINT notifications_actor_id_profiles_fkey FOREIGN KEY (actor_id) REFERENCES profiles(id) ON DELETE CASCADE;
+
