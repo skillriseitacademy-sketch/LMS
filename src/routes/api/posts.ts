@@ -50,7 +50,7 @@ export const Route = createFileRoute("/api/posts")({
           .select(
             `
             id, user_id, content, media_urls, visibility, type, ref_type, ref_id, is_hidden, created_at,
-            profiles:user_id (id, name, avatar_url, headline, role)
+            profiles (id, name, avatar_url, headline, role)
           `,
           )
           .single();

@@ -52,7 +52,7 @@ export const Route = createFileRoute("/api/feed")({
           .select(
             `
             id, user_id, content, media_urls, visibility, type, ref_type, ref_id, is_hidden, created_at,
-            profiles:user_id (id, name, username, avatar_url, headline, role),
+            profiles (id, name, username, avatar_url, headline, role),
             post_reactions (reaction_type, user_id),
             post_comments (id)
           `,
