@@ -18,6 +18,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SettingsSecurityRouteImport } from './routes/settings.security'
+import { Route as SettingsProfileRouteImport } from './routes/settings.profile'
 import { Route as SettingsNotificationsRouteImport } from './routes/settings.notifications'
 import { Route as SettingsBillingRouteImport } from './routes/settings.billing'
 import { Route as RoomsRoomCodeRouteImport } from './routes/rooms.$roomCode'
@@ -127,6 +128,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const SettingsSecurityRoute = SettingsSecurityRouteImport.update({
   id: '/security',
   path: '/security',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsProfileRoute = SettingsProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => SettingsRoute,
 } as any)
 const SettingsNotificationsRoute = SettingsNotificationsRouteImport.update({
@@ -506,6 +512,7 @@ export interface FileRoutesByFullPath {
   '/rooms/$roomCode': typeof RoomsRoomCodeRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
+  '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
   '/admin/': typeof AdminIndexRoute
   '/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
@@ -577,6 +584,7 @@ export interface FileRoutesByTo {
   '/rooms/$roomCode': typeof RoomsRoomCodeRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
+  '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
   '/admin': typeof AdminIndexRoute
   '/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
@@ -655,6 +663,7 @@ export interface FileRoutesById {
   '/rooms/$roomCode': typeof RoomsRoomCodeRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
+  '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
   '/admin/': typeof AdminIndexRoute
   '/_app/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
@@ -733,6 +742,7 @@ export interface FileRouteTypes {
     | '/rooms/$roomCode'
     | '/settings/billing'
     | '/settings/notifications'
+    | '/settings/profile'
     | '/settings/security'
     | '/admin/'
     | '/arena/$topicId'
@@ -804,6 +814,7 @@ export interface FileRouteTypes {
     | '/rooms/$roomCode'
     | '/settings/billing'
     | '/settings/notifications'
+    | '/settings/profile'
     | '/settings/security'
     | '/admin'
     | '/arena/$topicId'
@@ -881,6 +892,7 @@ export interface FileRouteTypes {
     | '/rooms/$roomCode'
     | '/settings/billing'
     | '/settings/notifications'
+    | '/settings/profile'
     | '/settings/security'
     | '/admin/'
     | '/_app/arena/$topicId'
@@ -1012,6 +1024,13 @@ declare module '@tanstack/react-router' {
       path: '/security'
       fullPath: '/settings/security'
       preLoaderRoute: typeof SettingsSecurityRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/profile': {
+      id: '/settings/profile'
+      path: '/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof SettingsProfileRouteImport
       parentRoute: typeof SettingsRoute
     }
     '/settings/notifications': {
@@ -1672,12 +1691,14 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 interface SettingsRouteChildren {
   SettingsBillingRoute: typeof SettingsBillingRoute
   SettingsNotificationsRoute: typeof SettingsNotificationsRoute
+  SettingsProfileRoute: typeof SettingsProfileRoute
   SettingsSecurityRoute: typeof SettingsSecurityRoute
 }
 
 const SettingsRouteChildren: SettingsRouteChildren = {
   SettingsBillingRoute: SettingsBillingRoute,
   SettingsNotificationsRoute: SettingsNotificationsRoute,
+  SettingsProfileRoute: SettingsProfileRoute,
   SettingsSecurityRoute: SettingsSecurityRoute,
 }
 
