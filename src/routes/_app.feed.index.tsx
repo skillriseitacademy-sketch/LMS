@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/lib/auth-store";
 import { supabase } from "@/lib/supabase";
 import { useR2Upload } from "@/hooks/use-r2-upload";
+import { StoryRow } from "@/components/social/story-row";
 
 export const Route = createFileRoute("/_app/feed/")({
   component: FeedPage,
@@ -60,9 +61,15 @@ function FeedPage() {
   const [topStudents, setTopStudents] = useState<TopStudent[]>([]);
   const [xpData, setXpData] = useState({ total: 0, rank: 0 });
   const [showReactions, setShowReactions] = useState<string | null>(null);
+  const [stories, setStories] = useState<any[]>([]);
 
   const { openPicker: openPhotoPicker, uploading: photoUploading } = useR2Upload({
     context: "post",
+    accept: "image/jpeg,image/png,image/webp,image/gif",
+  });
+
+  const { openPicker: openStoryPicker, uploading: storyUploading } = useR2Upload({
+    context: "story",
     accept: "image/jpeg,image/png,image/webp,image/gif",
   });
 
@@ -140,9 +147,26 @@ function FeedPage() {
     }
   };
 
+  const fetchStories = async () => {
+    if (!session) return;
+    const { data } = await supabase
+      .from("stories")
+      .select(`
+        id, user_id, story_type, content, expires_at, created_at,
+        profiles (id, name, username, avatar_url)
+      `)
+      .gt("expires_at", new Date().toISOString())
+      .order("created_at", { ascending: false });
+    if (data) {
+      // make sure profiles is a single object
+      setStories(data.map(s => ({ ...s, profiles: Array.isArray(s.profiles) ? s.profiles[0] : s.profiles })));
+    }
+  };
+
   useEffect(() => {
     fetchPosts();
     fetchSidebar();
+    fetchStories();
   }, [session]);
 
   // ── Actions ───────────────────────────────────────────────────────────────
@@ -169,6 +193,19 @@ function FeedPage() {
   const handlePhotoAttach = () => {
     openPhotoPicker((result) => {
       setPendingImageUrl(result.publicUrl);
+    });
+  };
+
+  const handleAddStory = () => {
+    openStoryPicker(async (result) => {
+      const { data, error } = await supabase.from("stories").insert({
+        user_id: session?.id,
+        media_url: result.publicUrl,
+        story_type: "media",
+      }).select().single();
+      if (!error && data) {
+        fetchStories();
+      }
     });
   };
 
@@ -264,24 +301,29 @@ function FeedPage() {
 
           {/* Stories Bar */}
           <div className="bg-surface-container-lowest rounded-2xl shadow-sm p-4">
-            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar">
-              {[
-                { icon: "workspace_premium", label: "New Badge", color: "from-[#f59e0b] to-[#f97316]" },
-                { icon: "local_fire_department", label: "7 Day Streak", color: "from-primary to-primary/60" },
-              ].map(({ icon, label, color }) => (
-                <div key={label} className="flex flex-col items-center gap-1.5 flex-shrink-0">
-                  <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${color} flex items-center justify-center ring-2 ring-primary/30 ring-offset-2 ring-offset-surface-container-lowest cursor-pointer hover:ring-primary transition-all`}>
-                    <span className="material-symbols-outlined text-white text-2xl">{icon}</span>
-                  </div>
-                  <span className="text-[10px] text-on-surface-variant text-center font-medium" style={{ fontFamily: "JetBrains Mono" }}>{label}</span>
+            <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar items-center">
+              <button 
+                onClick={handleAddStory}
+                disabled={storyUploading}
+                className="flex flex-col items-center gap-1.5 flex-shrink-0 group"
+              >
+                <div className={`w-14 h-14 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center cursor-pointer transition-all text-on-surface-variant ${storyUploading ? 'opacity-50' : 'group-hover:border-primary group-hover:text-primary'}`}>
+                  {storyUploading ? (
+                    <span className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <span className="material-symbols-outlined text-2xl">add</span>
+                  )}
                 </div>
-              ))}
-              <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
-                <div className="w-14 h-14 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center cursor-pointer hover:border-primary hover:text-primary transition-all text-on-surface-variant">
-                  <span className="material-symbols-outlined text-2xl">add</span>
-                </div>
-                <span className="text-[10px] text-on-surface-variant text-center font-medium" style={{ fontFamily: "JetBrains Mono" }}>Add Story</span>
-              </div>
+                <span className="text-[10px] text-on-surface-variant text-center font-medium" style={{ fontFamily: "JetBrains Mono" }}>
+                  {storyUploading ? "Adding..." : "Add Story"}
+                </span>
+              </button>
+              
+              {stories.length > 0 && (
+                <div className="h-10 w-px bg-border mx-2" />
+              )}
+              
+              <StoryRow stories={stories} />
             </div>
           </div>
 
