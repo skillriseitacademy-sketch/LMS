@@ -6,6 +6,7 @@ import { TopBar } from "@/components/top-bar";
 import { Bookmark, MessageCircle, ThumbsUp, MoreHorizontal, Calendar, BadgeCheck } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { PostComposer } from "@/components/social/post-composer";
 
 export const Route = createFileRoute("/_app/profile")({
   component: ProfileViewPage,
@@ -25,6 +26,23 @@ function ProfileViewPage() {
     likes: "0"
   });
 
+  const fetchPosts = async () => {
+    if (!session?.id) return;
+    const { data: userPosts } = await supabase
+      .from("posts")
+      .select(`
+        id, content, created_at, author_id, image_url,
+        author:profiles(id, name, username, avatar_url)
+      `)
+      .eq("author_id", session.id)
+      .order("created_at", { ascending: false });
+
+    if (userPosts) {
+      setPosts(userPosts);
+      setStats(s => ({ ...s, posts: userPosts.length.toString() }));
+    }
+  };
+
   useEffect(() => {
     async function loadData() {
       if (!session?.id) return;
@@ -37,19 +55,7 @@ function ProfileViewPage() {
 
       if (prof) setProfile(prof);
 
-      const { data: userPosts } = await supabase
-        .from("posts")
-        .select(`
-          id, content, created_at, author_id, image_url,
-          author:profiles(id, name, username, avatar_url)
-        `)
-        .eq("author_id", session.id)
-        .order("created_at", { ascending: false });
-
-      if (userPosts) {
-        setPosts(userPosts);
-        setStats(s => ({ ...s, posts: userPosts.length.toString() }));
-      }
+      await fetchPosts();
 
       setLoading(false);
     }
@@ -169,8 +175,10 @@ function ProfileViewPage() {
 
             {/* Content Grid */}
             {activeTab === "Posts" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {posts.length > 0 ? (
+              <div className="flex flex-col gap-6">
+                <PostComposer onPostSuccess={fetchPosts} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {posts.length > 0 ? (
                   posts.map((post) => (
                     <div key={post.id} className="flex flex-col gap-3 group">
                       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-muted border border-border">
@@ -209,8 +217,7 @@ function ProfileViewPage() {
                     <p className="text-sm mt-1">When you share posts or photos, they will appear here.</p>
                   </div>
                 )}
-                
-
+              </div>
               </div>
             )}
             
