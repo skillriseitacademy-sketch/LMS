@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PlacePro - Arena &amp; Rewards</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Manrope:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#960014",
+                        "surface-tint": "#4d44e3",
+                        "inverse-primary": "#c3c0ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#fea619",
+                        "outline": "#777587",
+                        "on-tertiary-fixed": "#410004",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-tertiary-container": "#ffd0cc",
+                        "inverse-surface": "#283044",
+                        "on-surface-variant": "#464555",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "background": "#faf8ff",
+                        "tertiary-container": "#bc1d25",
+                        "surface": "#faf8ff",
+                        "secondary-fixed": "#ffddb8",
+                        "on-background": "#131b2e",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eef0ff",
+                        "primary-fixed": "#e2dfff",
+                        "on-primary-fixed": "#0f0069",
+                        "on-secondary-container": "#684000",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "error": "#ba1a1a",
+                        "primary-container": "#4f46e5",
+                        "surface-variant": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#dae2fd",
+                        "primary": "#3525cd",
+                        "surface-container-low": "#f2f3ff",
+                        "on-primary-container": "#dad7ff",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-dim": "#d2d9f4",
+                        "surface-bright": "#faf8ff",
+                        "surface-container-high": "#e2e7ff",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-secondary-fixed": "#2a1700",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-surface": "#131b2e",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#eaedff",
+                        "secondary": "#855300"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "1rem",
+                        "sm": "0.5rem",
+                        "sidebar-width": "280px",
+                        "xs": "0.25rem",
+                        "base": "4px",
+                        "lg": "1.5rem",
+                        "xl": "2rem",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-md": ["Manrope"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill-1 {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .progress-glow {
+            box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+        }
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        .achievement-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<aside class="w-sidebar-width h-full fixed left-0 top-0 bg-surface-container-lowest shadow-sm flex flex-col py-lg px-md z-50 hidden md:flex border-r border-outline-variant/30">
+<div class="mb-xl flex items-center gap-sm px-sm">
+<span class="material-symbols-outlined icon-fill-1 text-primary text-3xl">rocket_launch</span>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tight">PlacePro</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Career OS</p>
+</div>
+</div>
+<button class="bg-primary hover:bg-primary-container text-on-primary font-body-md font-medium rounded-lg py-3 px-4 mb-xl transition-colors shadow-sm flex items-center justify-center gap-2 group w-full">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">bolt</span>
+            Start Daily Challenge
+        </button>
+<nav class="flex-1 overflow-y-auto space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">forum</span>
+                Feed
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">record_voice_over</span>
+                Interview Hub
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">quiz</span>
+                Quizzes
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/10 text-primary font-bold border-r-4 border-primary transition-colors" href="#">
+<span class="material-symbols-outlined icon-fill-1">sports_esports</span>
+                Arena
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">work</span>
+                Jobs
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+                Roadmap
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+                Resume
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+                Leaderboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+                Profile
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">groups</span>
+                Rooms
+            </a>
+</nav>
+<div class="mt-auto pt-lg border-t border-outline-variant/30 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+                Help
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 w-full md:ml-sidebar-width min-h-screen flex flex-col bg-background">
+<!-- TopAppBar -->
+<header class="bg-surface docked full-width top-0 sticky z-40 flex justify-between items-center w-full h-16 px-xl max-w-container-max border-b border-outline-variant/30">
+<div class="flex-1 flex items-center gap-4">
+<div class="relative w-64 md:hidden">
+<!-- Mobile Logo Placeholder -->
+<h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tight">PlacePro</h1>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-surface-container-low hover:bg-surface-container-high text-primary font-medium px-4 py-1.5 rounded-full transition-colors flex items-center gap-2 border border-primary/20">
+<span class="material-symbols-outlined text-sm">star</span>
+                    Upgrade Pro
+                </button>
+<div class="flex items-center gap-1 bg-secondary-container/20 text-secondary-fixed-dim px-3 py-1.5 rounded-full font-bold">
+<span class="material-symbols-outlined icon-fill-1 text-sm text-secondary-container">stars</span>
+                    1,250 XP
+                </div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors text-secondary-container">
+<span class="material-symbols-outlined icon-fill-1">local_fire_department</span>
+</button>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant ml-2 bg-surface-container-high">
+<img alt="Student avatar" class="w-full h-full object-cover" data-alt="A clean, minimalist 3D rendering of a generic student avatar profile picture, smooth plastic texture, soft lighting, light mode aesthetic, isolated on a light gray background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7DPBnwwuPB7Wm_Sbv45hy-7qBTbhHmfbZVncVjxhCQ4O_JfBJwSutXTd9YtaC0RS2sXGMAnOcgt7vGDKLcmW1RKnTvZcAEnc6M6yPdGEHKMQC2lsuP2kxVwoo7PavsTGGO-TycvTNCS-EsUb99cR0s5qr3EDUVL5ntS-q450tjr-SFBMT24u-L_SqDX29BYP1fylQte4avhEp4R6DYSYa1YzBkZjkmlETI_prTKZYg-NAzgqm84vJJQ"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="flex-1 w-full max-w-container-max mx-auto p-4 md:p-xl space-y-xl overflow-y-auto">
+<!-- Hero / Level Section -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Main Status -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-lg card-shadow border border-outline-variant/20 flex flex-col sm:flex-row items-center gap-lg relative overflow-hidden">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative">
+<svg class="w-32 h-32 transform -rotate-90">
+<circle class="text-surface-container-highest" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" stroke-width="8"></circle>
+<circle :stroke-dasharray="2 * Math.PI * 56" class="text-primary transition-all duration-1000 ease-out" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" stroke-dashoffset="100" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-lg text-headline-lg text-on-surface">Lvl 12</span>
+</div>
+</div>
+<div class="flex-1 w-full text-center sm:text-left z-10">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Arena Challenger</h2>
+<p class="text-on-surface-variant font-body-md mb-4">You're in the top 15% of your cohort. Keep pushing!</p>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="font-medium text-on-surface-variant">XP Progress</span>
+<span class="font-bold text-primary">1,250 / 2,000 XP</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-primary h-2 rounded-full progress-glow" style="width: 62.5%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Streak Card -->
+<div class="bg-surface-container-lowest rounded-xl p-lg card-shadow border border-outline-variant/20 flex flex-col items-center justify-center text-center relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-b from-secondary-container/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-16 h-16 rounded-full bg-secondary-container/20 flex items-center justify-center mb-4 text-secondary-container relative">
+<span class="material-symbols-outlined text-4xl icon-fill-1">local_fire_department</span>
+<!-- Subtle pulse effect -->
+<div class="absolute inset-0 rounded-full border border-secondary-container/50 animate-ping opacity-75"></div>
+</div>
+<h3 class="font-display-lg text-display-lg text-on-surface mb-1">15</h3>
+<p class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Day Streak</p>
+<div class="mt-4 flex gap-1 justify-center w-full">
+<div class="w-6 h-2 bg-secondary-container rounded-sm"></div>
+<div class="w-6 h-2 bg-secondary-container rounded-sm"></div>
+<div class="w-6 h-2 bg-secondary-container rounded-sm"></div>
+<div class="w-6 h-2 bg-secondary-container rounded-sm"></div>
+<div class="w-6 h-2 bg-surface-container-highest rounded-sm"></div>
+</div>
+</div>
+</section>
+<!-- Grid Layout for Quests & Referrals -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Daily Quests -->
+<div class="bg-surface-container-lowest rounded-xl p-lg card-shadow border border-outline-variant/20">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">task_alt</span>
+                            Daily Quests
+                        </h3>
+<span class="text-sm font-medium text-on-surface-variant bg-surface-container-high px-2 py-1 rounded">2/3 Done</span>
+</div>
+<div class="space-y-3">
+<!-- Quest 1 (Completed) -->
+<div class="flex items-start gap-4 p-4 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors opacity-60">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-on-primary text-sm icon-fill-1">check</span>
+</div>
+<div class="flex-1">
+<h4 class="font-medium text-on-surface line-through">Solve 2 Array Problems</h4>
+<p class="text-sm text-on-surface-variant mt-1">Data Structures</p>
+</div>
+<div class="text-secondary-fixed-dim font-bold text-sm">+50 XP</div>
+</div>
+<!-- Quest 2 (Completed) -->
+<div class="flex items-start gap-4 p-4 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors opacity-60">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-on-primary text-sm icon-fill-1">check</span>
+</div>
+<div class="flex-1">
+<h4 class="font-medium text-on-surface line-through">Complete 1 Mock Interview</h4>
+<p class="text-sm text-on-surface-variant mt-1">Interview Hub</p>
+</div>
+<div class="text-secondary-fixed-dim font-bold text-sm">+100 XP</div>
+</div>
+<!-- Quest 3 (Pending) -->
+<div class="flex items-start gap-4 p-4 rounded-lg border-l-4 border-secondary-container bg-surface-container hover:bg-surface-container-high transition-colors">
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center flex-shrink-0 mt-0.5"></div>
+<div class="flex-1">
+<h4 class="font-medium text-on-surface">Review System Design Module</h4>
+<p class="text-sm text-on-surface-variant mt-1">Roadmap</p>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 mt-3 overflow-hidden">
+<div class="bg-secondary-container h-1.5 rounded-full" style="width: 40%"></div>
+</div>
+</div>
+<div class="text-secondary-container font-bold text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">local_fire_department</span>
+                                +150 XP
+                            </div>
+</div>
+</div>
+</div>
+<!-- Referral & Upcoming Rewards -->
+<div class="space-y-6">
+<!-- Referral Banner -->
+<div class="bg-gradient-to-br from-primary-container to-primary rounded-xl p-lg text-on-primary shadow-md relative overflow-hidden flex flex-col justify-between h-48">
+<!-- Abstract Background Pattern -->
+<div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 20px 20px;"></div>
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md font-bold mb-1">Invite &amp; Earn Pro</h3>
+<p class="text-primary-fixed-dim text-sm max-w-[80%]">Get 1 month of PlacePro Premium for every friend who joins.</p>
+</div>
+<div class="relative z-10 flex gap-2">
+<div class="bg-surface-container-lowest/20 px-4 py-2 rounded-lg flex-1 font-mono text-sm border border-surface-container-lowest/30 flex items-center justify-between">
+<span class="truncate">placepro.app/ref/alex24</span>
+<button class="hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+<button class="bg-surface-container-lowest text-primary font-medium px-4 py-2 rounded-lg hover:bg-surface-container-lowest/90 transition-colors shadow-sm">
+                                Share
+                            </button>
+</div>
+</div>
+<!-- Upcoming Reward -->
+<div class="bg-surface-container-lowest rounded-xl p-lg card-shadow border border-outline-variant/20">
+<h4 class="font-label-sm text-label-sm uppercase text-on-surface-variant mb-4">Next Milestone Reward</h4>
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl bg-surface-container-high flex items-center justify-center text-primary border border-primary/20">
+<span class="material-symbols-outlined text-3xl icon-fill-1">card_membership</span>
+</div>
+<div>
+<h5 class="font-medium text-on-surface">Pro Interview Bundle</h5>
+<p class="text-sm text-on-surface-variant mt-1">Unlocks at Level 15</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Achievements Grid -->
+<section>
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container">military_tech</span>
+                        Achievements
+                    </h3>
+<button class="text-primary font-medium text-sm hover:underline">View All</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+<!-- Unlocked Badge 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 text-center border border-primary/20 achievement-card transition-all cursor-pointer relative">
+<div class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></div>
+<div class="w-16 h-16 mx-auto bg-primary-container/10 rounded-full flex items-center justify-center mb-4 text-primary">
+<span class="material-symbols-outlined text-3xl icon-fill-1">code</span>
+</div>
+<h4 class="font-medium text-on-surface text-sm mb-1">Code Ninja</h4>
+<p class="text-xs text-on-surface-variant">Solve 100 Algorithmic challenges.</p>
+<div class="mt-3 text-xs font-bold text-primary bg-primary-container/10 inline-block px-2 py-1 rounded">Unlocked</div>
+</div>
+<!-- Unlocked Badge 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 text-center border border-secondary-container/30 achievement-card transition-all cursor-pointer">
+<div class="w-16 h-16 mx-auto bg-secondary-container/10 rounded-full flex items-center justify-center mb-4 text-secondary-container">
+<span class="material-symbols-outlined text-3xl icon-fill-1">record_voice_over</span>
+</div>
+<h4 class="font-medium text-on-surface text-sm mb-1">Interview Ace</h4>
+<p class="text-xs text-on-surface-variant">Pass 5 Mock Interviews perfectly.</p>
+<div class="mt-3 text-xs font-bold text-secondary-container bg-secondary-container/10 inline-block px-2 py-1 rounded">Unlocked</div>
+</div>
+<!-- Unlocked Badge 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 text-center border border-outline-variant/20 achievement-card transition-all cursor-pointer">
+<div class="w-16 h-16 mx-auto bg-surface-container-high rounded-full flex items-center justify-center mb-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-3xl">timer</span>
+</div>
+<h4 class="font-medium text-on-surface text-sm mb-1">Fastest Solver</h4>
+<p class="text-xs text-on-surface-variant">Solve a Hard problem under 5 mins.</p>
+<div class="mt-3 text-xs font-bold text-on-surface-variant bg-surface-container-high inline-block px-2 py-1 rounded">Unlocked</div>
+</div>
+<!-- Locked Badge 1 -->
+<div class="bg-surface/50 rounded-xl p-6 text-center border border-outline-variant/20 opacity-70 grayscale hover:grayscale-0 transition-all cursor-help relative">
+<div class="absolute inset-0 bg-background/40 rounded-xl backdrop-blur-[1px] flex items-center justify-center z-10 hover:opacity-0 transition-opacity">
+<span class="material-symbols-outlined text-on-surface-variant">lock</span>
+</div>
+<div class="w-16 h-16 mx-auto bg-surface-container-high rounded-full flex items-center justify-center mb-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-3xl">emoji_events</span>
+</div>
+<h4 class="font-medium text-on-surface text-sm mb-1">Top 1%</h4>
+<p class="text-xs text-on-surface-variant">Reach the global top 1% leaderboard.</p>
+<div class="w-full bg-surface-container-highest rounded-full h-1 mt-4">
+<div class="bg-primary h-1 rounded-full" style="width: 30%"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

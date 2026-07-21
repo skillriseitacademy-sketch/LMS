@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Welcome to Pro - PlacePro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#ffddb8",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#c3c0ff",
+                        "on-primary-container": "#dad7ff",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#dae2fd",
+                        "tertiary": "#960014",
+                        "secondary": "#855300",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#684000",
+                        "on-surface-variant": "#464555",
+                        "surface": "#faf8ff",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-tertiary-fixed": "#410004",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-container-high": "#e2e7ff",
+                        "primary-container": "#4f46e5",
+                        "inverse-surface": "#283044",
+                        "on-secondary-fixed": "#2a1700",
+                        "on-surface": "#131b2e",
+                        "surface-dim": "#d2d9f4",
+                        "tertiary-container": "#bc1d25",
+                        "surface-variant": "#dae2fd",
+                        "primary-fixed": "#e2dfff",
+                        "outline-variant": "#c7c4d8",
+                        "on-primary": "#ffffff",
+                        "background": "#faf8ff",
+                        "surface-bright": "#faf8ff",
+                        "surface-container": "#eaedff",
+                        "secondary-container": "#fea619",
+                        "primary": "#3525cd",
+                        "outline": "#777587",
+                        "on-tertiary-container": "#ffd0cc",
+                        "surface-container-low": "#f2f3ff",
+                        "on-background": "#131b2e",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "surface-tint": "#4d44e3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-primary-fixed": "#0f0069"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "1.5rem",
+                        "container-max": "1280px",
+                        "xs": "0.25rem",
+                        "sidebar-width": "280px",
+                        "sm": "0.5rem",
+                        "xl": "2rem",
+                        "md": "1rem",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Manrope"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-md": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }]
+                    },
+                    "animation": {
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'pulse-glow': 'pulseGlow 3s infinite alternate',
+                        'shimmer': 'shimmer 2.5s infinite linear',
+                    },
+                    "keyframes": {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pulseGlow: {
+                            '0%': { opacity: '0.2', transform: 'scale(1.5)' },
+                            '100%': { opacity: '0.4', transform: 'scale(1.7)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .confetti-piece {
+            position: absolute;
+            width: 8px;
+            height: 16px;
+            opacity: 0;
+            top: -20px;
+        }
+        
+        @media (prefers-reduced-motion: no-preference) {
+            .scale-up-hover {
+                transition: transform 0.2s ease-in-out;
+            }
+            .scale-up-hover:hover {
+                transform: scale(1.05);
+            }
+            .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+            .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+            .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+            .stagger-4 { animation-delay: 0.4s; opacity: 0; }
+            
+            .shimmer-btn {
+                background: linear-gradient(90deg, #3525cd 25%, #5a4beb 50%, #3525cd 75%);
+                background-size: 200% 100%;
+            }
+            
+            @keyframes confetti-fall {
+                0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+                100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+            }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            .animate-fade-in-up, .animate-pulse-glow, .animate-shimmer, .shimmer-btn {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .stagger-1, .stagger-2, .stagger-3, .stagger-4 {
+                opacity: 1;
+                animation: none;
+            }
+            .confetti-piece {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen w-full flex items-center justify-center overflow-hidden relative">
+<!-- Confetti Background (Vanilla JS implementation below) -->
+<div class="absolute inset-0 pointer-events-none z-0" id="confetti-container"></div>
+<main class="relative z-10 w-full max-w-container-max px-md md:px-xl mx-auto flex flex-col items-center text-center py-xl overflow-y-auto max-h-screen">
+<!-- Celebratory Icon / Image -->
+<div class="mb-lg relative">
+<div class="absolute inset-0 bg-secondary-container rounded-full animate-pulse-glow scale-150 blur-xl"></div>
+<img alt="Golden Trophy" class="w-32 h-32 md:w-48 md:h-48 object-contain relative z-10 drop-shadow-xl" data-alt="A 3D rendered, premium-looking golden trophy with glowing accents on a sleek, light-mode background. The style is modern, corporate SaaS with a gamified edge, featuring vibrant amber and indigo highlights to signify achievement and success. Clean lighting and soft shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMyLvZ5RDkwulqoEQ-5OQN7ZI7K3UYLEU1CXtpPiikp6gT3u1-19XBrFVeifYLlcixL-bSXa7BkPDb52cDym7QzSJmdKRDSiL1YRsWQ7gxfRBhnkBd1kcdLAIbgCTt4lQrCaZYaM6fKGs-ETedYYLZ3l0X5MH4Kv5pTyrVqkuJqYW9ivNde9PwdnXcLMHEj5arlCVSM-Q550QIu8VMHc5y-qUqCTKwgpD3uRlY6ZeXtlSzYia6FncS6A"/>
+</div>
+<!-- Typography -->
+<h1 class="font-display-lg text-display-lg text-on-surface mb-sm hidden md:block animate-fade-in-up stagger-1">Welcome to the Pro Tier, Alex!</h1>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-sm md:hidden animate-fade-in-up stagger-1">Welcome to Pro, Alex!</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-xl animate-fade-in-up stagger-1">
+            Your career acceleration starts now. All premium features are now unlocked and ready to propel you forward.
+        </p>
+<!-- What's New Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md w-full max-w-3xl mb-xl">
+<!-- Benefit 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-2">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center mr-md flex-shrink-0 group-hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">magic_button</span>
+</div>
+<div>
+<h3 class="font-headline-md text-[18px] mb-xs">AI Resume Optimization</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant">Tailor your resume instantly for every application with AI-driven insights.</p>
+</div>
+</div>
+<!-- Benefit 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-2">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center mr-md flex-shrink-0 group-hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">record_voice_over</span>
+</div>
+<div>
+<h3 class="font-headline-md text-[18px] mb-xs">Unlimited Mock Interviews</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant">Practice with industry-specific AI interviewers anytime.</p>
+</div>
+</div>
+<!-- Benefit 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-3">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center mr-md flex-shrink-0 group-hover:bg-secondary-container/40 transition-colors">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div>
+<h3 class="font-headline-md text-[18px] mb-xs">Premium Arena Challenges</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant">Compete in high-stakes coding and logic challenges for extra visibility.</p>
+</div>
+</div>
+<!-- Benefit 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center mr-md flex-shrink-0 group-hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">mark_email_read</span>
+</div>
+<div>
+<h3 class="font-headline-md text-[18px] mb-xs">Direct Recruiter Credits</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant">Send direct messages to hiring managers and recruiters every month.</p>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-col md:flex-row gap-md items-center w-full md:w-auto animate-fade-in-up stagger-4">
+<button class="w-full md:w-auto text-on-primary font-body-md font-semibold py-sm px-xl rounded-lg scale-up-hover shadow-sm shimmer-btn animate-shimmer">
+                Go to Dashboard
+            </button>
+<button class="w-full md:w-auto bg-surface-container-lowest text-on-surface border border-outline-variant font-body-md font-semibold py-sm px-xl rounded-lg hover:bg-surface-container-low transition-colors">
+                Explore Pro Features
+            </button>
+</div>
+</main>
+<script>
+        // High-energy JS Confetti Generator
+        document.addEventListener('DOMContentLoaded', () => {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            
+            if (prefersReducedMotion) return;
+
+            const container = document.getElementById('confetti-container');
+            const colors = ['#3525cd', '#fea619', '#22c55e']; // Indigo, Amber, Success Green
+            
+            // Create a burst from the center
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti-piece');
+                
+                // Random properties
+                const startX = 50 + (Math.random() - 0.5) * 20; // Start near center
+                const startY = 30 + (Math.random() - 0.5) * 20;
+                
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Shapes
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                }
+                
+                const duration = Math.random() * 2 + 2;
+                const delay = Math.random() * 0.5;
+                
+                confetti.style.animation = `confetti-fall ${duration}s ease-in ${delay}s forwards`;
+                
+                container.appendChild(confetti);
+                
+                // Cleanup
+                setTimeout(() => {
+                    confetti.remove();
+                }, (duration + delay) * 1000);
+            }
+        });
+    </script>
+</body></html>

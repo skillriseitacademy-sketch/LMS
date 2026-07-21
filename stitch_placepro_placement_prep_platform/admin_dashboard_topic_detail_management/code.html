@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PlacePro Admin - Topic: Data Structures</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#93000a",
+                      "surface-dim": "#d2d9f4",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "surface": "#faf8ff",
+                      "on-primary-fixed": "#0f0069",
+                      "error": "#ba1a1a",
+                      "error-container": "#ffdad6",
+                      "primary": "#3525cd",
+                      "on-tertiary-container": "#ffd0cc",
+                      "on-error": "#ffffff",
+                      "surface-tint": "#4d44e3",
+                      "on-background": "#131b2e",
+                      "primary-container": "#4f46e5",
+                      "surface-container-highest": "#dae2fd",
+                      "on-primary-container": "#dad7ff",
+                      "background": "#faf8ff",
+                      "on-tertiary-fixed": "#410004",
+                      "secondary": "#855300",
+                      "surface-container": "#eaedff",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-container": "#bc1d25",
+                      "secondary-fixed-dim": "#ffb95f",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "inverse-on-surface": "#eef0ff",
+                      "tertiary-fixed": "#ffdad7",
+                      "primary-fixed": "#e2dfff",
+                      "on-secondary-fixed-variant": "#653e00",
+                      "inverse-surface": "#283044",
+                      "secondary-container": "#fea619",
+                      "on-primary": "#ffffff",
+                      "surface-container-high": "#e2e7ff",
+                      "on-secondary-container": "#684000",
+                      "outline": "#777587",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-low": "#f2f3ff",
+                      "secondary-fixed": "#ffddb8",
+                      "on-surface": "#131b2e",
+                      "on-surface-variant": "#464555",
+                      "on-secondary": "#ffffff",
+                      "outline-variant": "#c7c4d8",
+                      "tertiary-fixed-dim": "#ffb3ad",
+                      "tertiary": "#960014",
+                      "on-tertiary-fixed-variant": "#930013",
+                      "surface-bright": "#faf8ff",
+                      "on-secondary-fixed": "#2a1700",
+                      "inverse-primary": "#c3c0ff",
+                      "surface-variant": "#dae2fd"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "0.5rem",
+                      "base": "4px",
+                      "xs": "0.25rem",
+                      "md": "1rem",
+                      "xl": "2rem",
+                      "sidebar-width": "280px",
+                      "lg": "1.5rem",
+                      "container-max": "1280px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Manrope"
+                      ],
+                      "display-lg": [
+                              "Manrope"
+                      ],
+                      "headline-md": [
+                              "Manrope"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Manrope"
+                      ],
+                      "label-sm": [
+                              "JetBrains Mono"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.surface'); }
+        .nav-item-active { background-color: theme('colors.primary-container'); color: theme('colors.on-primary-container'); font-weight: bold; border-radius: theme('borderRadius.lg'); }
+        .nav-item-inactive { color: theme('colors.on-surface-variant'); border-radius: theme('borderRadius.lg'); }
+        .nav-item-inactive:hover { background-color: theme('colors.surface-container-high'); }
+        .sidebar-admin { transition: width 0.3s ease; }
+        .sidebar-admin:hover { width: theme('spacing.sidebar-width'); }
+        .sidebar-admin .label { display: none; white-space: nowrap; }
+        .sidebar-admin:hover .label { display: inline-block; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05); }
+    </style>
+</head>
+<body class="font-body-md text-body-md text-on-surface bg-surface flex h-screen overflow-hidden">
+<!-- Admin SideNavBar -->
+<nav class="sidebar-admin fixed left-0 top-0 h-screen w-20 hover:w-[280px] bg-surface-dim dark:bg-inverse-surface border-r border-outline-variant shadow-lg z-50 flex flex-col items-center hover:items-start py-lg gap-lg overflow-x-hidden">
+<div class="px-md flex items-center justify-center w-full">
+<span class="material-symbols-outlined text-primary text-[32px] shrink-0" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<div class="label ml-md overflow-hidden">
+<h1 class="text-headline-md font-headline-md font-black text-on-surface truncate">PlacePro Admin</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant truncate">System Controller</p>
+</div>
+</div>
+<div class="flex flex-col w-full px-sm gap-base mt-lg">
+<a class="nav-item-inactive flex items-center p-md gap-md w-full transition-all" href="#">
+<span class="material-symbols-outlined shrink-0 text-on-surface-variant">admin_panel_settings</span>
+<span class="label font-medium text-on-surface-variant">Admin Dashboard</span>
+</a>
+<a class="nav-item-inactive flex items-center p-md gap-md w-full transition-all" href="#">
+<span class="material-symbols-outlined shrink-0 text-on-surface-variant">group</span>
+<span class="label font-medium text-on-surface-variant">Users</span>
+</a>
+<a class="nav-item-inactive flex items-center p-md gap-md w-full transition-all" href="#">
+<span class="material-symbols-outlined shrink-0 text-on-surface-variant">school</span>
+<span class="label font-medium text-on-surface-variant">Teachers</span>
+</a>
+<a class="nav-item-inactive flex items-center p-md gap-md w-full transition-all" href="#">
+<span class="material-symbols-outlined shrink-0 text-on-surface-variant">shield_person</span>
+<span class="label font-medium text-on-surface-variant">Admins</span>
+</a>
+<a class="nav-item-inactive flex items-center p-md gap-md w-full transition-all" href="#">
+<span class="material-symbols-outlined shrink-0 text-on-surface-variant">analytics</span>
+<span class="label font-medium text-on-surface-variant">Analytics</span>
+</a>
+<a class="nav-item-inactive flex items-center p-md gap-md w-full transition-all" href="#">
+<span class="material-symbols-outlined shrink-0 text-on-surface-variant">video_stable</span>
+<span class="label font-medium text-on-surface-variant">Interviews</span>
+</a>
+<a class="nav-item-inactive flex items-center p-md gap-md w-full transition-all" href="#">
+<span class="material-symbols-outlined shrink-0 text-on-surface-variant">account_tree</span>
+<span class="label font-medium text-on-surface-variant">Projects</span>
+</a>
+<a class="nav-item-inactive flex items-center p-md gap-md w-full transition-all" href="#">
+<span class="material-symbols-outlined shrink-0 text-on-surface-variant">library_books</span>
+<span class="label font-medium text-on-surface-variant">Quizzes</span>
+</a>
+<!-- Active State -->
+<a class="nav-item-active flex items-center p-md gap-md w-full transition-all opacity-80" href="#">
+<span class="material-symbols-outlined shrink-0 text-primary">topic</span>
+<span class="label font-bold text-primary">Topics</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<main class="ml-20 flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300">
+<!-- TopAppBar (Admin Breadcrumbs) -->
+<header class="bg-surface-container-lowest border-b border-outline-variant shadow-sm py-md px-lg flex items-center justify-between z-40 sticky top-0">
+<div class="flex items-center gap-sm text-on-surface-variant font-label-sm text-label-sm">
+<a class="hover:text-primary transition-colors" href="#">Content Management</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Topics</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="font-bold text-on-surface">Data Structures</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-label-sm">
+                    A
+                </div>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-xl bg-surface">
+<div class="max-w-container-max mx-auto space-y-xl">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Topic: Data Structures</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Manage curriculum, assessments, and track performance for this topic.</p>
+</div>
+<div class="flex items-center gap-md">
+<button class="px-md py-sm rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-sm text-label-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+                            View on App
+                        </button>
+<button class="px-md py-sm rounded-lg bg-primary text-on-primary hover:bg-surface-tint transition-colors font-label-sm text-label-sm flex items-center gap-xs shadow-sm hover:scale-105 transform duration-200">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+                            Edit Topic
+                        </button>
+</div>
+</div>
+<!-- Stats Bento -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<div class="bg-surface-container-lowest rounded-xl p-lg card-shadow border-l-4 border-primary">
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Enrollment</h3>
+<span class="material-symbols-outlined text-primary bg-primary-fixed-dim bg-opacity-20 rounded-full p-xs">group</span>
+</div>
+<div class="font-display-lg text-display-lg text-on-surface">12.5k</div>
+<div class="mt-xs text-body-md font-body-md text-secondary-container flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                            +15% this month
+                        </div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-lg card-shadow border-l-4 border-secondary-container">
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Avg. Quiz Score</h3>
+<span class="material-symbols-outlined text-secondary-container bg-secondary-fixed bg-opacity-20 rounded-full p-xs">analytics</span>
+</div>
+<div class="font-display-lg text-display-lg text-on-surface">76%</div>
+<div class="mt-xs w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full rounded-full" style="width: 76%"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-lg card-shadow border-l-4 border-outline-variant">
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Lessons</h3>
+<span class="material-symbols-outlined text-on-surface-variant bg-surface-container-high rounded-full p-xs">menu_book</span>
+</div>
+<div class="font-display-lg text-display-lg text-on-surface">15</div>
+<div class="mt-xs flex gap-sm">
+<span class="px-xs py-[2px] rounded bg-primary-fixed-dim bg-opacity-20 text-primary font-label-sm text-label-sm">5 Modules</span>
+<span class="px-xs py-[2px] rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">3 Quizzes</span>
+</div>
+</div>
+</div>
+<!-- Two Column Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+<!-- Left Column (Curriculum Builder) -->
+<div class="lg:col-span-2 space-y-lg">
+<div class="bg-surface-container-lowest rounded-xl card-shadow overflow-hidden flex flex-col h-full">
+<div class="p-lg border-b border-outline-variant flex justify-between items-center bg-surface-bright">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">drag_indicator</span>
+                                    Curriculum Builder
+                                </h3>
+<button class="text-primary hover:text-surface-tint font-label-sm text-label-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">add</span> Add Module
+                                </button>
+</div>
+<div class="p-md space-y-sm bg-surface-container-low flex-1">
+<!-- Module Item -->
+<div class="group bg-surface-container-lowest p-md rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors cursor-grab">drag_handle</span>
+<div>
+<h4 class="font-body-lg text-body-lg text-on-surface font-medium">1. Arrays &amp; Strings</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-xs">3 Lessons • 1 Quiz</p>
+</div>
+</div>
+<button class="px-sm py-xs rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
+                                        Manage
+                                    </button>
+</div>
+<!-- Module Item -->
+<div class="group bg-surface-container-lowest p-md rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors cursor-grab">drag_handle</span>
+<div>
+<h4 class="font-body-lg text-body-lg text-on-surface font-medium">2. Linked Lists</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-xs">4 Lessons • 2 Challenges</p>
+</div>
+</div>
+<button class="px-sm py-xs rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
+                                        Manage
+                                    </button>
+</div>
+<!-- Module Item -->
+<div class="group bg-surface-container-lowest p-md rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors cursor-grab">drag_handle</span>
+<div>
+<h4 class="font-body-lg text-body-lg text-on-surface font-medium">3. Stacks &amp; Queues</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-xs">2 Lessons • 1 Quiz</p>
+</div>
+</div>
+<button class="px-sm py-xs rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
+                                        Manage
+                                    </button>
+</div>
+<!-- Module Item -->
+<div class="group bg-surface-container-lowest p-md rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors cursor-grab">drag_handle</span>
+<div>
+<h4 class="font-body-lg text-body-lg text-on-surface font-medium">4. Trees &amp; Graphs</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-xs">5 Lessons • 3 Challenges</p>
+</div>
+</div>
+<button class="px-sm py-xs rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
+                                        Manage
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (Assessments & Analytics) -->
+<div class="space-y-lg">
+<!-- Linked Assessments -->
+<div class="bg-surface-container-lowest rounded-xl p-lg card-shadow">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary-container">assignment</span>
+                                Linked Assessments
+                            </h3>
+<div class="space-y-md">
+<div class="flex items-start gap-sm">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0">
+<span class="material-symbols-outlined text-[18px]">quiz</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md font-medium text-on-surface">Mid-Topic Evaluation</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">20 Questions • Hard</p>
+</div>
+</div>
+<div class="flex items-start gap-sm">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0">
+<span class="material-symbols-outlined text-[18px]">code</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md font-medium text-on-surface">BST Traversal Challenge</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Coding • Medium</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-lg py-sm border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-sm text-label-sm">
+                                View All Assessments
+                            </button>
+</div>
+<!-- Analytics Trend (Mock) -->
+<div class="bg-surface-container-lowest rounded-xl p-lg card-shadow">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-md">30-Day Progress Trend</h3>
+<div class="h-32 w-full bg-surface-container-low rounded-lg relative overflow-hidden flex items-end">
+<!-- Simple CSS visual representation of a chart -->
+<div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(to right, #4f46e5 1px, transparent 1px), linear-gradient(to bottom, #4f46e5 1px, transparent 1px); background-size: 20px 20px;"></div>
+<div class="w-full flex justify-between items-end px-xs h-full pb-xs gap-1 relative z-10">
+<div class="bg-primary opacity-40 w-full rounded-t-sm" style="height: 30%"></div>
+<div class="bg-primary opacity-50 w-full rounded-t-sm" style="height: 45%"></div>
+<div class="bg-primary opacity-60 w-full rounded-t-sm" style="height: 40%"></div>
+<div class="bg-primary opacity-70 w-full rounded-t-sm" style="height: 60%"></div>
+<div class="bg-primary opacity-80 w-full rounded-t-sm" style="height: 75%"></div>
+<div class="bg-primary opacity-90 w-full rounded-t-sm" style="height: 65%"></div>
+<div class="bg-primary w-full rounded-t-sm" style="height: 85%"></div>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant text-center mt-sm">Completion Rate</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

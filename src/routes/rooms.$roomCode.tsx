@@ -708,7 +708,7 @@ function RoomView() {
             <div className="absolute inset-0 animate-in fade-in slide-in-from-right-4 duration-300">
               <PollsPanel 
                 polls={polls}
-                isHost={isHost}
+                isHost={Boolean(isHost)}
                 myPeerId={myPeerId}
                 onCreatePoll={(question, options) => {
                   broadcastData('poll_new', {

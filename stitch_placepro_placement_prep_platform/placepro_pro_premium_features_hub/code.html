@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PlacePro Pro - Career Acceleration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#eaedff",
+                        "surface-container-highest": "#dae2fd",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "tertiary": "#960014",
+                        "inverse-on-surface": "#eef0ff",
+                        "tertiary-container": "#bc1d25",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "surface-container-high": "#e2e7ff",
+                        "surface-container-low": "#f2f3ff",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-primary-container": "#dad7ff",
+                        "on-tertiary-container": "#ffd0cc",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#c3c0ff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "surface-dim": "#d2d9f4",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "on-secondary-fixed": "#2a1700",
+                        "inverse-surface": "#283044",
+                        "background": "#faf8ff",
+                        "on-background": "#131b2e",
+                        "primary-fixed": "#e2dfff",
+                        "surface-bright": "#faf8ff",
+                        "surface": "#faf8ff",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#410004",
+                        "primary": "#3525cd",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-surface-variant": "#464555",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c7c4d8",
+                        "outline": "#777587",
+                        "on-secondary-container": "#684000",
+                        "on-surface": "#131b2e",
+                        "secondary-fixed": "#ffddb8",
+                        "secondary": "#855300",
+                        "primary-container": "#4f46e5",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#dae2fd",
+                        "secondary-container": "#fea619"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "1rem",
+                        "lg": "1.5rem",
+                        "xs": "0.25rem",
+                        "sidebar-width": "280px",
+                        "xl": "2rem",
+                        "sm": "0.5rem",
+                        "base": "4px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg": ["Manrope"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface docked full-width top-0 sticky z-50 border-b border-outline-variant shadow-sm flex justify-between items-center px-lg py-md max-w-container-max mx-auto">
+<div class="flex items-center gap-md">
+<span class="text-headline-md font-headline-md font-extrabold text-primary">PlacePro</span>
+</div>
+<nav class="hidden md:flex gap-lg">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Features</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">How it Works</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Testimonials</a>
+</nav>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 hidden md:block">Log In</button>
+<button class="bg-primary text-on-primary px-lg py-sm rounded-lg font-medium hover:bg-primary-container hover:scale-95 transition-all duration-200">Get Started</button>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-lg py-xl flex flex-col gap-xl">
+<!-- Hero Section -->
+<section class="relative rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant overflow-hidden p-xl md:p-2xl flex flex-col md:flex-row items-center gap-xl text-center md:text-left">
+<div class="absolute inset-0 bg-gradient-to-br from-surface-container-high/50 to-transparent pointer-events-none"></div>
+<div class="flex-1 z-10 flex flex-col items-center md:items-start gap-md">
+<div class="inline-flex items-center gap-sm bg-secondary-container/20 text-secondary border border-secondary/30 px-md py-xs rounded-full font-label-sm text-label-sm mb-sm">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                    PlacePro Pro
+                </div>
+<h1 class="text-display-lg font-display-lg text-on-background">
+                    Accelerate Your <br/> Career Trajectory.
+                </h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-lg mt-sm">
+                    Unlock AI-driven resume optimization, unlimited mock interviews, and priority arena access. Stand out and secure your dream role faster.
+                </p>
+<div class="flex gap-md mt-lg">
+<button class="bg-secondary-container text-on-secondary-container px-xl py-md rounded-lg font-medium hover:brightness-110 hover:scale-105 transition-all duration-200 shadow-md">
+                        Upgrade to Pro Now
+                    </button>
+<button class="bg-surface text-on-surface border border-outline-variant px-xl py-md rounded-lg font-medium hover:bg-surface-variant transition-colors duration-200 shadow-sm">
+                        View Pricing
+                    </button>
+</div>
+</div>
+<div class="flex-1 w-full relative h-[400px] rounded-xl overflow-hidden shadow-lg border border-outline-variant/50">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A modern, sleek dashboard interface displayed on a high-end monitor in a brightly lit, professional workspace. The screen shows detailed analytics graphs and a premium profile badge, illuminated by soft natural light creating a bright, modern light-mode aesthetic. The scene uses a clean palette of deep blacks, pristine whites, and vibrant indigo and amber accents. The mood is ambitious and technologically advanced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV_eJfMtLZj5h2_7dk7OcYoh42ZW4wBgPz3R_5AN7AknvGJLxVPTZ1IxOS_bnTs8do3RJ2wnwoVjOrCZBuhFf5bOSmfKHpyGEop1UQqbKvKgKq4u349sbF7rDcrb0MQaIRV4B3SVgkgapgFNknsZj6Qo1nlidyd6GZxDAnihEotEYfxppS-RXJZm08d76vbGR9GEAh8zp1eJdhSH9QDV4gYzGUB0Bdr7XksCnDopJrq-Au3Xa-WcUMCQ"/>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<div class="col-span-1 md:col-span-2 bg-surface-container-lowest rounded-xl shadow-sm border-l-4 border-l-primary p-lg flex flex-col gap-md relative overflow-hidden group">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+</div>
+<h3 class="text-headline-md font-headline-md">AI Resume Optimization</h3>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant">
+                    Bypass ATS filters with intelligent keyword injection and structural formatting suggestions tailored to specific job descriptions.
+                </p>
+<div class="mt-auto pt-md flex items-center gap-sm font-label-sm text-label-sm text-primary">
+<span class="material-symbols-outlined text-sm">check_circle</span> 95%+ ATS Score Guarantee
+                </div>
+</div>
+<div class="col-span-1 bg-surface-container-lowest rounded-xl shadow-sm border-l-4 border-l-secondary-container p-lg flex flex-col gap-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">video_camera_front</span>
+</div>
+<h3 class="text-headline-md font-headline-md">Unlimited Mock Interviews</h3>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant">
+                    Practice endlessly with AI interviewers. Get detailed feedback on pacing, filler words, and technical accuracy.
+                </p>
+</div>
+<div class="col-span-1 bg-surface-container-lowest rounded-xl shadow-sm border-l-4 border-l-primary p-lg flex flex-col gap-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+</div>
+<h3 class="text-headline-md font-headline-md">Premium Arena Access</h3>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant">
+                    Exclusive high-tier coding challenges, 2x XP multiplier, and priority placement on global leaderboards.
+                </p>
+</div>
+<div class="col-span-1 md:col-span-2 bg-surface-container-lowest rounded-xl shadow-sm border-l-4 border-l-secondary-container p-lg flex flex-col md:flex-row gap-lg items-center relative overflow-hidden">
+<div class="flex-1 flex flex-col gap-md">
+<div class="inline-flex items-center gap-sm bg-surface-container-high text-on-surface-variant px-sm py-xs rounded font-label-sm text-label-sm w-max">
+                        New Feature
+                    </div>
+<h3 class="text-headline-md font-headline-md">Direct Recruiter Messages</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">
+                        Pro users get 5 direct connection credits per month to bypass the application queue and pitch directly to hiring managers.
+                    </p>
+</div>
+<div class="w-full md:w-1/3 h-32 bg-surface-container rounded-lg border border-outline-variant flex items-center justify-center relative shadow-inner">
+<span class="material-symbols-outlined text-4xl text-primary/30">mail</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-highest w-full py-xl border-t border-outline-variant mt-xl">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-xl max-w-container-max mx-auto px-lg">
+<div class="col-span-2 md:col-span-1 flex flex-col gap-md">
+<span class="text-headline-md font-headline-md font-bold text-on-surface">PlacePro</span>
+<p class="text-body-md font-body-md text-on-surface-variant">© 2024 PlacePro Career OS. All rights reserved.</p>
+</div>
+<div class="flex flex-col gap-sm">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Product</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Resources</a>
+</div>
+<div class="flex flex-col gap-sm">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Company</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Terms</a>
+</div>
+</div>
+</footer>
+</body></html>

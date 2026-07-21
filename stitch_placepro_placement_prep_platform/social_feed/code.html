@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PlacePro - Social Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-dim": "#d2d9f4",
+                      "primary": "#3525cd",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "tertiary-container": "#bc1d25",
+                      "surface-variant": "#dae2fd",
+                      "secondary-container": "#fea619",
+                      "on-surface-variant": "#464555",
+                      "on-secondary-fixed": "#2a1700",
+                      "outline-variant": "#c7c4d8",
+                      "tertiary-fixed": "#ffdad7",
+                      "surface-tint": "#4d44e3",
+                      "surface-container": "#eaedff",
+                      "surface-bright": "#faf8ff",
+                      "secondary-fixed-dim": "#ffb95f",
+                      "secondary-fixed": "#ffddb8",
+                      "secondary": "#855300",
+                      "on-tertiary-fixed": "#410004",
+                      "on-secondary-fixed-variant": "#653e00",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#131b2e",
+                      "on-error": "#ffffff",
+                      "primary-fixed": "#e2dfff",
+                      "tertiary": "#960014",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-on-surface": "#eef0ff",
+                      "primary-container": "#4f46e5",
+                      "on-error-container": "#93000a",
+                      "on-secondary-container": "#684000",
+                      "background": "#faf8ff",
+                      "surface-container-highest": "#dae2fd",
+                      "on-background": "#131b2e",
+                      "tertiary-fixed-dim": "#ffb3ad",
+                      "on-tertiary-container": "#ffd0cc",
+                      "surface-container-low": "#f2f3ff",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed": "#0f0069",
+                      "inverse-surface": "#283044",
+                      "inverse-primary": "#c3c0ff",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "on-secondary": "#ffffff",
+                      "on-primary-container": "#dad7ff",
+                      "surface-container-high": "#e2e7ff",
+                      "error-container": "#ffdad6",
+                      "outline": "#777587",
+                      "error": "#ba1a1a",
+                      "on-tertiary-fixed-variant": "#930013",
+                      "surface": "#faf8ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "0.5rem",
+                      "xl": "2rem",
+                      "lg": "1.5rem",
+                      "base": "4px",
+                      "xs": "0.25rem",
+                      "sidebar-width": "280px",
+                      "md": "1rem",
+                      "container-max": "1280px"
+              },
+              "fontFamily": {
+                      "label-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-md": [
+                              "Manrope"
+                      ],
+                      "headline-lg": [
+                              "Manrope"
+                      ],
+                      "display-lg": [
+                              "Manrope"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Manrope"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #F8FAFC;
+        }
+        .soft-shadow {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        .nav-item-active {
+            background-color: #4f46e5;
+            color: white;
+            font-weight: 700;
+        }
+      </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<aside class="bg-surface-container-low shadow-md fixed left-0 top-0 h-screen w-sidebar-width hidden md:flex flex-col p-md gap-base overflow-y-auto z-40">
+<div class="mb-lg px-2">
+<h1 class="text-headline-md font-headline-md font-bold text-primary">PlacePro Career OS</h1>
+<div class="flex items-center gap-sm mt-xs">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A small, professional avatar portrait of a diverse university student in a bright, modern setting. The style is clean, corporate modern with a light-mode aesthetic, suitable for a SaaS career platform profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTil6RM5qSW_1O-5_3TVlCXb7iGFThI89yWKm1Xn_JVDfj3BoofrqfZzRMZOfQ09GVtHdS6l3fsZjcgiBrfAG3PQ7jQhiVrCcpC1BALiGrUNMid1cPZh1a6z_-FCj_Vz3afwDAvj2hZ-UJgc7tPawIGfLU28gwJa0hWCjdp9yc2Uy-GgR5K4d1m65o8-H28tslb33lNFK-Bc7kgV0dT_QajtsMRnUTt21NVqAx8dR-5IQEJ8tXT7U0rw"/>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Rank: #42 | 2500 XP</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container font-bold rounded-lg translate-x-1 transition-transform font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="rss_feed">rss_feed</span>
+                Feed
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="video_chat">video_chat</span>
+                Interview Hub
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+                Quizzes
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="live_tv">live_tv</span>
+                Live Classes
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="sports_esports">sports_esports</span>
+                Arena
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="work">work</span>
+                Jobs
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+                Roadmap
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+                Resume
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+                Leaderboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+                Profile
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+                Rooms
+            </a>
+</nav>
+<div class="mt-auto pt-lg border-t border-outline-variant">
+<button class="w-full bg-primary text-on-primary py-2 rounded-lg font-body-md font-semibold hover:bg-on-primary-fixed-variant transition-colors">
+                Upgrade to Pro
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col md:ml-[280px] w-full bg-[#F8FAFC]">
+<!-- Top Bar -->
+<header class="bg-surface-container-lowest sticky top-0 z-30 px-lg py-md flex items-center justify-between border-b border-outline-variant shadow-sm">
+<div class="relative w-full max-w-md hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-slate-200 rounded-full focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md text-on-surface placeholder-on-surface-variant" placeholder="Search posts, people, or companies" type="text"/>
+</div>
+<div class="flex items-center gap-md ml-auto">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+</button>
+<img class="w-10 h-10 rounded-full object-cover sm:hidden ml-sm border border-outline-variant" data-alt="A small, professional avatar portrait of a diverse university student in a bright, modern setting. The style is clean, corporate modern with a light-mode aesthetic, suitable for a SaaS career platform profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUfV0qJic9JLcpfLiqEA_Plg5yHhG6AdgqZ-xkBjkitdgHOhkovuOBnD87RJlhlUYDONxEeejEPy8kpaNwruMr3E_gV2iYcmoW_4Yx6zHVA-Kt0cR6Q7TyzMQK8IED5kRH5FPWOIY8HCEsS3ybtup6msTsgErNyUp_s91EOhkTo50ruIr0sfGa1QywrPSNhf2yHvxyHpsEvtr3P3PGybGaJ-AKt6tpRV7hkfApgWEq8uWtCAy-RNhQ3w"/>
+</div>
+</header>
+<!-- Feed Layout -->
+<div class="flex-1 overflow-y-auto p-4 md:p-lg">
+<div class="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Left Rail (Profile & Trends) -->
+<div class="hidden lg:block lg:col-span-3 space-y-lg">
+<!-- Mini Profile Card -->
+<div class="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg">
+<div class="flex flex-col items-center text-center">
+<img class="w-20 h-20 rounded-full object-cover border-4 border-surface-container-lowest shadow-sm mb-md" data-alt="A professional headshot of a young, confident university student, wearing smart casual attire. Bright, light-mode background with subtle, clean studio lighting. Corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAofqHnM_vkw6YthEU2tJHFbOui-CFXEcknXtM0jiCB_THRR4HAWe04lUzQFjGqhjqGT-sBobFHyckfo1P-7c4nfcscF4u5_cnd-A2-r869IUJTPhaPl-IWFQ4DrBZ4oetR1BelABaXxBUMzEHEwArjWiu2huqmAvKHU4xP9kwu7TlMqwtrGbjjicAFIA_aG_RIS_CdISiFwv7GG8bPRnAcBgkDZfBpalNUJ6Y0755utLYOYDswtz4LMQ"/>
+<h2 class="font-headline-md text-headline-md text-on-surface">Alex Mercer</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Final Year CS @ University</p>
+<div class="mt-md inline-flex items-center gap-2 bg-secondary-container/20 text-secondary px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-[18px]" data-icon="star">star</span>
+<span class="font-label-sm text-label-sm font-bold">2,500 XP</span>
+</div>
+</div>
+</div>
+<!-- Trending Topics -->
+<div class="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg">
+<h3 class="font-body-md text-body-lg font-semibold text-on-surface mb-md">Trending Topics</h3>
+<ul class="space-y-sm">
+<li><a class="text-primary hover:underline font-body-md text-body-md block" href="#">#DSAPractice</a></li>
+<li><a class="text-primary hover:underline font-body-md text-body-md block" href="#">#Interviews2024</a></li>
+<li><a class="text-primary hover:underline font-body-md text-body-md block" href="#">#SystemDesign</a></li>
+<li><a class="text-primary hover:underline font-body-md text-body-md block" href="#">#SummerInternships</a></li>
+</ul>
+</div>
+</div>
+<!-- Center Column (Feed) -->
+<div class="col-span-1 lg:col-span-6 space-y-lg">
+<!-- Stories Row -->
+<div class="flex gap-md overflow-x-auto pb-2 hide-scrollbar">
+<div class="flex flex-col items-center gap-xs flex-shrink-0 cursor-pointer">
+<div class="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-secondary-container to-primary">
+<div class="w-full h-full bg-surface-container-lowest rounded-full p-[2px]">
+<img class="w-full h-full rounded-full object-cover" data-alt="Close up of a vibrant, modern 3D icon of a glowing gold star or badge, representing a new achievement in a gamified learning platform. Light clean background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyxO0LJZQjw3OR6-oTnZVYBeJ6shjX2jwMY-vZ4m_YUuWD_KW0f9C-EnYAMKClPAsW7H3KDrr8x10DPDlaTK5vDffnA14sOYt10H5jhKxLtS6-iGD53bBknrGxjWenIBegdy_eRjnsWTIX47aGuYNfL5kNzZv_1nEcxaj6NGs_1yqmZO2GOrqslWB1OezAlDoBuY4f7Jix889DMKaMgQRsTaHYyAmVV1LkSSIPW_aZNBgxQImNHVk6sA"/>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">New Badge</span>
+</div>
+<div class="flex flex-col items-center gap-xs flex-shrink-0 cursor-pointer">
+<div class="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-secondary-container to-primary">
+<div class="w-full h-full bg-surface-container-lowest rounded-full p-[2px]">
+<img class="w-full h-full rounded-full object-cover" data-alt="Close up of a vibrant, modern 3D icon of a flame, representing a 7-day study streak in a gamified learning platform. Light clean background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwKq7XT2G-OUdrUrK2zefxTsKAEEQZU7Iz6ShLJ6xSiKvXCSm60BQqWf33F20iH4DocqCOBUN5Xk11Sk5aHvg4nak-Ep9oQaYN5BWdMj4ifezzSRHLX3nIjki7LZIVwKOOKd8glm444s7b1UN3V124QrW640aBQMUB-sAZQaFrJdIMR_sSFS4Y5hGD_195qghcKkVBwb2dynZi04CaC-UIqTzElwe15pVWtvTuat26AQKsk65HB3B83Q"/>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">7 Day Streak</span>
+</div>
+<div class="flex flex-col items-center gap-xs flex-shrink-0 cursor-pointer opacity-50 hover:opacity-100 transition-opacity">
+<div class="w-16 h-16 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center bg-surface-container-low text-on-surface-variant hover:bg-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Add Story</span>
+</div>
+</div>
+<!-- Post Composer -->
+<div class="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg">
+<div class="flex gap-sm">
+<img class="w-10 h-10 rounded-full object-cover flex-shrink-0 border border-outline-variant" data-alt="A small, professional avatar portrait of a diverse university student in a bright, modern setting. The style is clean, corporate modern with a light-mode aesthetic, suitable for a SaaS career platform profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnwa0-Q7qsw8m0R17wDkd4CrqiIMgcymuOPFOMuCcWaSA43LNmF7YCC2opF9-F4HgyqAIISeu3IyxM-ZvXB2qLe0DhHdW0_bpYczdcZwttZ5cZoJaMtFwi_5UgE0GfGXvbIHgpBSGCqi_B7yjKiciFobkKtqL4PZYHyArpt1-RH4S3hPnvqGqmvpTtLBVu3FS_DfCc3OSbyR6mGQAn-J5KVZ5X278Ns6uDbO1ySnB8SehhHt3KURI3nA"/>
+<input class="w-full bg-surface-container-low border border-slate-200 rounded-full px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md text-on-surface placeholder-on-surface-variant outline-none" placeholder="What's on your mind, Alex?" type="text"/>
+</div>
+<div class="flex justify-between items-center mt-md pt-md border-t border-outline-variant">
+<div class="flex gap-sm">
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors px-2 py-1 rounded-md hover:bg-primary-fixed-dim/20">
+<span class="material-symbols-outlined text-[20px]" data-icon="image">image</span>
+<span class="font-label-sm text-label-sm hidden sm:inline">Photo</span>
+</button>
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors px-2 py-1 rounded-md hover:bg-primary-fixed-dim/20">
+<span class="material-symbols-outlined text-[20px]" data-icon="videocam">videocam</span>
+<span class="font-label-sm text-label-sm hidden sm:inline">Video</span>
+</button>
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors px-2 py-1 rounded-md hover:bg-primary-fixed-dim/20">
+<span class="material-symbols-outlined text-[20px]" data-icon="poll">poll</span>
+<span class="font-label-sm text-label-sm hidden sm:inline">Poll</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary px-4 py-1.5 rounded-lg font-body-md font-semibold text-sm hover:bg-on-primary-fixed-variant transition-colors shadow-sm">
+                                Post
+                            </button>
+</div>
+</div>
+<!-- Post 1 (Success Story) -->
+<div class="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg border-l-4 border-primary">
+<div class="flex items-start justify-between mb-md">
+<div class="flex gap-sm items-center">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A portrait of a joyful university student looking confident, shot in a bright, modern indoor environment. Clean, corporate modern SaaS aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_kax8P-NYMlfr8EUrejL-_JGuHCtVmaUdZca7d6nus01okebFIfaHDvjP_JWndwS5_toSvaJayyicPIt6Zek0m-AD9N_v0JsB3-7WgZIRuJ_n9Az8g8Z_cndiHgZXZV7LsGyKM2o0K2Yv6ZKL2rUuDguJIKi76ctbxU0o4wnUgFhiWWF7ofxZX0qZzz8x6xBdOiX5gXfA2J3ePzA6EZjr8wQfeOqD92X6-U1varcbEwtqommVWtq7GA"/>
+<div>
+<h4 class="font-body-md text-body-lg font-semibold text-on-surface">Sarah Jenkins</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">2 hours ago · Mock Interview</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 bg-primary-fixed-dim/20 text-primary px-2 py-1 rounded text-xs font-semibold">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified">verified</span>
+                                Success
+                            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mb-md">
+                            Just crushed my mock interview for a SWE intern role! The system design rounds on PlacePro really helped me structure my thoughts. Big thanks to my peers for the feedback! 🚀 #InterviewPrep
+                        </p>
+<div class="flex items-center justify-between border-t border-outline-variant pt-md mt-md">
+<div class="flex gap-2 text-on-surface-variant">
+<button class="hover:text-primary hover:bg-primary-fixed-dim/20 p-1.5 rounded-full transition-all text-sm flex items-center gap-1">👍 <span class="hidden sm:inline">24</span></button>
+<button class="hover:text-primary hover:bg-primary-fixed-dim/20 p-1.5 rounded-full transition-all text-sm flex items-center gap-1">🔥 <span class="hidden sm:inline">12</span></button>
+<button class="hover:text-primary hover:bg-primary-fixed-dim/20 p-1.5 rounded-full transition-all text-sm flex items-center gap-1">👏 <span class="hidden sm:inline">8</span></button>
+<button class="hover:text-primary hover:bg-primary-fixed-dim/20 p-1.5 rounded-full transition-all text-sm flex items-center gap-1">🧠 <span class="hidden sm:inline">5</span></button>
+<button class="hover:text-primary hover:bg-primary-fixed-dim/20 p-1.5 rounded-full transition-all text-sm flex items-center gap-1">🚀 <span class="hidden sm:inline">10</span></button>
+</div>
+<button class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+                                5 Comments
+                            </button>
+</div>
+</div>
+<!-- Post 2 (Live Class) -->
+<div class="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg overflow-hidden">
+<div class="flex items-start justify-between mb-md">
+<div class="flex gap-sm items-center">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xl">
+                                    PP
+                                </div>
+<div>
+<h4 class="font-body-md text-body-lg font-semibold text-on-surface">PlacePro Official</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">5 hours ago · Announcement</p>
+</div>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface mb-md">
+                            Join our Live Class tomorrow at 6 PM EST: "Mastering Dynamic Programming Patterns". Limited seats available!
+                        </p>
+<div class="rounded-xl overflow-hidden mb-md border border-outline-variant relative">
+<img class="w-full h-48 object-cover" data-alt="A vibrant, modern graphic promoting a live coding class. It features sleek typography 'Dynamic Programming' against a dark, high-tech background with subtle geometric glowing patterns in indigo and purple. Premium SaaS aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk3YkCtkmI3V3iJQMuQ6XfH9HCKESls99tYci6P76dEiISsEVaczojX6I8yfBpEENhqLtCZa_37KdYipyTGmbNlCYv4Cccg0QWXNuN4xDt-vGvEUmssPbDNEjJz5aYZmzFeUsNYOAxstCFhFJQjdEs0bxYLksYzEcw0PV2Di5KKFAnJ3Rglp-dy7U6xNcKQdjf6XPMWVnPHZHbF73Xs6OpFqTlCzzehVLhjKcjrCbM4HJv2MsvV1D6MA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-md">
+<div class="text-white w-full flex justify-between items-center">
+<div>
+<p class="font-bold text-lg">Mastering DP Patterns</p>
+<p class="text-sm opacity-80">Tomorrow · 6 PM EST</p>
+</div>
+<button class="bg-primary hover:bg-on-primary-fixed-variant text-white px-4 py-2 rounded-lg font-semibold text-sm transition-transform hover:scale-105 shadow-md">
+                                        Join Now
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Rail (Widgets) -->
+<div class="hidden lg:block lg:col-span-3 space-y-lg">
+<!-- People You May Know -->
+<div class="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg">
+<h3 class="font-body-md text-body-lg font-semibold text-on-surface mb-md">People you may know</h3>
+<div class="space-y-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Small avatar of a smiling female student wearing glasses. Bright, clean background. Corporate modern style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOSPEceiOyzQTjdYW20bHrkCPDKysulbHg74L73hkrzQ10Qq1ggjJD8Z0oSId6vIU76tEzQCx8WmzyYrh_BLQgCng3UNxWR4AZkeIheBtgQ9rkmA5fHLxR-ugTfHBokw3xSBVVW7jV0IU0kV-oS-m6FDiSTTXv4vSJP54MKYCd9NHwuIn-8W0_JHdIFo_ZCUOfZpoiLEUv9Yo91CHl3eB-mtGOVJPbg9oZLDL3xrjp4_RACfGOVUHLrw"/>
+<div>
+<p class="font-body-md text-sm font-semibold text-on-surface">Emily Chen</p>
+<p class="font-label-sm text-xs text-on-surface-variant">CS @ Tech U</p>
+</div>
+</div>
+<button class="text-primary border border-primary hover:bg-primary hover:text-white px-3 py-1 rounded-full text-xs font-semibold transition-colors">
+                                    Connect
+                                </button>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Small avatar of a focused male student. Bright, clean background. Corporate modern style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3J88ZZrIg37rJJOymW6Zv2bsZvwfKXnEJGF6tM4QjLU7yoZ_0lrDkDXVHEeBYPJvfie7sP2atSnH67nfy3MHxBvJhDpxTHn8bLIZYlQebEt9C4RvwsTABuPG3o72k3t-DoJiqvBCJCrSoVNe8oiQLBf7Vm8fTsmBST2IZ8PfcJumV5IiKnbCrrMolgTexsV0aZQUzuZ1cIeAEgBKr5ZVbeHe7IOxIUiMRutGLe4iD5WxIECPPV3v4ng"/>
+<div>
+<p class="font-body-md text-sm font-semibold text-on-surface">Marcus Doe</p>
+<p class="font-label-sm text-xs text-on-surface-variant">Software Eng</p>
+</div>
+</div>
+<button class="text-primary border border-primary hover:bg-primary hover:text-white px-3 py-1 rounded-full text-xs font-semibold transition-colors">
+                                    Connect
+                                </button>
+</div>
+</div>
+</div>
+<!-- Mini Leaderboard -->
+<div class="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg">
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-body-md text-body-lg font-semibold text-on-surface">Top Students (Week)</h3>
+<span class="material-symbols-outlined text-secondary-container" data-icon="emoji_events">emoji_events</span>
+</div>
+<div class="space-y-sm">
+<div class="flex items-center gap-sm p-2 rounded-lg bg-surface-container hover:bg-surface-variant transition-colors cursor-pointer border-l-2 border-secondary-container">
+<span class="font-bold text-secondary-container w-4">1</span>
+<img class="w-8 h-8 rounded-full object-cover" data-alt="Avatar of student ranking first. Clean, bright aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd-xubS8Us1Z8KlwLAglE5ymvpzT_snc3ixGx9h5pYbSjuFOVyGjBjcTYLkSMEekLxLxIiBgv0y195RagblKITfZ7bAtN0AeiBkzwrzFZJlu3HMExQmx5hfBvp0MCunnPmIJll2-Z1Co12Fh48O7VwkIOA2DkI_n1xVmFKAkCzXYdtae30cxwCWHPlgwnl5k_DUhcgWKmjh7Lkp6LTG_VyHlpFBMzVX0oberV40c0xktPaCAsxeLj1bw"/>
+<div class="flex-1">
+<p class="font-body-md text-sm font-semibold text-on-surface">David Kim</p>
+</div>
+<span class="font-label-sm text-xs font-bold text-secondary">3,200 XP</span>
+</div>
+<div class="flex items-center gap-sm p-2 rounded-lg hover:bg-surface-variant transition-colors cursor-pointer">
+<span class="font-bold text-on-surface-variant w-4">2</span>
+<img class="w-8 h-8 rounded-full object-cover" data-alt="Avatar of student ranking second. Clean, bright aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxn87AeKFJslP6M3o9znWES4N8jOSE88gbxeDcTw8AJsh-toZAkMWoMzdkguvNEa52grTYe6Ez8nKRr5rQ-4bo-vjOzq52NO8Zplw7u4sdzogWFbNdSBbkC4HNzIqPByj-Nv6xq_d5djHLOU67-j4TlBzPe43dJsPF_s5eT0zJJ0ddSzTA7rKfO7Nq0b5zmtzASh54ba2StD9wGGKZ6gytv62vMnEVv-mCLY0cIOfyy7HABULVd4e-_g"/>
+<div class="flex-1">
+<p class="font-body-md text-sm font-semibold text-on-surface">Anita Silva</p>
+</div>
+<span class="font-label-sm text-xs font-bold text-secondary">2,950 XP</span>
+</div>
+<div class="flex items-center gap-sm p-2 rounded-lg hover:bg-surface-variant transition-colors cursor-pointer">
+<span class="font-bold text-on-surface-variant w-4">3</span>
+<img class="w-8 h-8 rounded-full object-cover" data-alt="Avatar of student ranking third. Clean, bright aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-lgkZQYaJGiB6lrz97e2ewB7AMulg0uUf0_iKGoHzZAOUOtBcRAQleAwEkc3_2ipHgY7aEj4IVlj5Yl94CTQ36dQlSASUWZhapch7VMJU6C-4f_altLjiz-UDka6Q6cF8LaoAAYa6yqGLIjQ-lq1J4G81hS2qtyYDeZ2F1ebOC06qSMhrpSkH7M-Xz8At0C9XNNQLAeBwxkmb4EokN3xBxc1gb86yVlpwGlCZyH1JmMJO1dooWOHqBA"/>
+<div class="flex-1">
+<p class="font-body-md text-sm font-semibold text-on-surface">Omar Farooq</p>
+</div>
+<span class="font-label-sm text-xs font-bold text-secondary">2,800 XP</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

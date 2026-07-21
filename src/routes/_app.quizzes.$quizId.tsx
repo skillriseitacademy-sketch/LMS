@@ -35,7 +35,7 @@ function QuizScreen() {
       if (quiz) {
         setTopic({
           title: quiz.title,
-          description: Array.isArray(quiz.topics) ? quiz.topics[0]?.description : quiz.topics?.description,
+          description: Array.isArray(quiz.topics) ? (quiz.topics[0] as any)?.description : (quiz.topics as any)?.description,
           minutes: 10
         });
       }

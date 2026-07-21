@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PlacePro Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#eaedff",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "secondary-container": "#fea619",
+                        "on-primary-container": "#dad7ff",
+                        "background": "#faf8ff",
+                        "surface-variant": "#dae2fd",
+                        "surface": "#faf8ff",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#d2d9f4",
+                        "surface-container-low": "#f2f3ff",
+                        "primary": "#3525cd",
+                        "outline": "#777587",
+                        "surface-tint": "#4d44e3",
+                        "secondary-fixed": "#ffddb8",
+                        "secondary": "#855300",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-tertiary-fixed": "#410004",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#283044",
+                        "on-primary-fixed": "#0f0069",
+                        "primary-fixed": "#e2dfff",
+                        "on-surface": "#131b2e",
+                        "tertiary-container": "#bc1d25",
+                        "primary-container": "#4f46e5",
+                        "inverse-on-surface": "#eef0ff",
+                        "surface-container-highest": "#dae2fd",
+                        "on-secondary-fixed": "#2a1700",
+                        "on-secondary-container": "#684000",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#c3c0ff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-background": "#131b2e",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "surface-container-high": "#e2e7ff",
+                        "on-surface-variant": "#464555",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "surface-bright": "#faf8ff",
+                        "on-tertiary-container": "#ffd0cc",
+                        "tertiary": "#960014",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "outline-variant": "#c7c4d8",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "2rem",
+                        "sm": "0.5rem",
+                        "sidebar-width": "280px",
+                        "xs": "0.25rem",
+                        "base": "4px",
+                        "lg": "1.5rem",
+                        "md": "1rem",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Manrope"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Manrope"],
+                        "headline-md": ["Manrope"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+        .font-jetbrains { font-family: 'JetBrains Mono', monospace; }
+        /* Tonal Layering Shadows */
+        .shadow-card { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05); }
+        .shadow-overlay { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+        /* Hide scrollbar for sidebar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .sidebar-item { transition: all 0.2s ease-in-out; }
+        .sidebar-item:hover .sidebar-label { opacity: 1; transform: translateX(0); }
+        
+        @media (min-width: 768px) {
+            .admin-sidebar { width: 80px; }
+            .admin-sidebar:hover { width: var(--spacing-sidebar-width); }
+            .admin-sidebar:hover .sidebar-label { opacity: 1; display: block; }
+            .sidebar-label { opacity: 0; display: none; white-space: nowrap; transition: opacity 0.3s; }
+        }
+    </style>
+</head>
+<body class="bg-surface-dim dark:bg-background text-on-surface min-h-screen flex">
+<!-- Admin SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen admin-sidebar transition-all duration-300 bg-surface-dim dark:bg-inverse-surface border-r border-outline-variant shadow-lg z-50 flex flex-col items-center py-lg gap-lg group overflow-hidden md:hover:items-start md:hover:px-md">
+<!-- Header / Brand -->
+<div class="flex items-center justify-center md:justify-start w-full md:group-hover:px-sm transition-all duration-300">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary" data-icon="rocket_launch">rocket_launch</span>
+</div>
+<div class="sidebar-label ml-sm flex-col">
+<h1 class="text-headline-md font-headline-md font-black text-on-surface leading-tight">PlacePro</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">System Controller</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-sm w-full mt-xl">
+<!-- Active: Admin Dashboard -->
+<a class="sidebar-item flex items-center p-sm rounded-lg text-primary font-bold bg-surface-container-high dark:bg-surface-variant relative md:group-hover:justify-start justify-center group/item w-full" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="sidebar-label ml-sm font-label-sm text-label-sm">Admin Dashboard</span>
+<!-- Active Indicator -->
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full hidden md:block"></div>
+</a>
+<a class="sidebar-item flex items-center p-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors md:group-hover:justify-start justify-center w-full" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="group">group</span>
+<span class="sidebar-label ml-sm font-label-sm text-label-sm">Users</span>
+</a>
+<a class="sidebar-item flex items-center p-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors md:group-hover:justify-start justify-center w-full" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="school">school</span>
+<span class="sidebar-label ml-sm font-label-sm text-label-sm">Teachers</span>
+</a>
+<a class="sidebar-item flex items-center p-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors md:group-hover:justify-start justify-center w-full" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="shield_person">shield_person</span>
+<span class="sidebar-label ml-sm font-label-sm text-label-sm">Admins</span>
+</a>
+<a class="sidebar-item flex items-center p-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors md:group-hover:justify-start justify-center w-full" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="analytics">analytics</span>
+<span class="sidebar-label ml-sm font-label-sm text-label-sm">Analytics</span>
+</a>
+<a class="sidebar-item flex items-center p-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors md:group-hover:justify-start justify-center w-full" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="video_stable">video_stable</span>
+<span class="sidebar-label ml-sm font-label-sm text-label-sm">Interviews</span>
+</a>
+<a class="sidebar-item flex items-center p-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors md:group-hover:justify-start justify-center w-full" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="account_tree">account_tree</span>
+<span class="sidebar-label ml-sm font-label-sm text-label-sm">Projects</span>
+</a>
+<a class="sidebar-item flex items-center p-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors md:group-hover:justify-start justify-center w-full" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="library_books">library_books</span>
+<span class="sidebar-label ml-sm font-label-sm text-label-sm">Quizzes</span>
+</a>
+<a class="sidebar-item flex items-center p-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors md:group-hover:justify-start justify-center w-full" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="topic">topic</span>
+<span class="sidebar-label ml-sm font-label-sm text-label-sm">Topics</span>
+</a>
+</nav>
+<!-- User Profile Bottom -->
+<div class="mt-auto w-full md:group-hover:px-sm pt-md border-t border-outline-variant flex justify-center md:justify-start items-center">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant shrink-0">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a female tech administrator with glasses, lit by soft studio lighting against a clean, light mode neutral background, maintaining a corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtrZS76_KOxb7eD5Ogo58jEL06mA1pBNUf0_pBgdIsxf49EYE5W9JjJKiaJGJFqFut9sjpeNWHiqVm6DjghQHjXLm-UlIlYmdVnj537HDyNPqSkTw64cnraEM2SgdZc4kx35gqbv2SZNg0bG1_NtJlmRmVtOco21z95f76b1swA08bV1V6cWNqUeeXDfgBksGgteZlcqrmVEj7BcolHnRa8bL2X7dSKMvwcJKJ3UqyudafNFmtZ6lvUQ"/>
+</div>
+<div class="sidebar-label ml-sm flex-col">
+<p class="font-label-sm text-label-sm font-bold text-on-surface">Eleanor R.</p>
+<p class="font-label-sm text-[10px] text-on-surface-variant">Super Admin</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-[80px] flex flex-col min-h-screen">
+<!-- Header -->
+<header class="sticky top-0 z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant px-xl py-md flex justify-between items-center shadow-sm">
+<h2 class="text-headline-md font-headline-md font-bold text-on-surface">Overview</h2>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-xs px-sm py-xs bg-surface-container-low rounded-full border border-outline-variant">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">System Optimal</span>
+</div>
+<button class="p-xs rounded-full hover:bg-surface-variant text-on-surface-variant transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 rounded-full bg-secondary-container"></span>
+</button>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-xl max-w-container-max mx-auto w-full flex flex-col gap-xl">
+<!-- Metrics Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-card border-l-4 border-primary flex flex-col gap-sm relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Students</p>
+<h3 class="text-headline-lg font-headline-lg text-on-surface mt-xs">24.5k</h3>
+</div>
+<div class="p-sm bg-surface-container-low rounded-lg text-primary">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+</div>
+</div>
+<div class="flex items-center gap-xs text-primary text-sm font-medium mt-auto">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span>+12% vs last month</span>
+</div>
+<!-- Decorative background element -->
+<div class="absolute -right-6 -bottom-6 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:scale-110 transition-transform"></div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-card border-l-4 border-secondary-container flex flex-col gap-sm relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Active Interviews</p>
+<h3 class="text-headline-lg font-headline-lg text-on-surface mt-xs">1.2k</h3>
+</div>
+<div class="p-sm bg-surface-container-low rounded-lg text-secondary-container">
+<span class="material-symbols-outlined" data-icon="video_chat">video_chat</span>
+</div>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant text-sm font-medium mt-auto">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span>
+<span>In progress right now</span>
+</div>
+<div class="absolute -right-6 -bottom-6 w-24 h-24 bg-secondary-container/5 rounded-full blur-xl group-hover:scale-110 transition-transform"></div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-card border-l-4 border-tertiary flex flex-col gap-sm relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Content Mastery</p>
+<h3 class="text-headline-lg font-headline-lg text-on-surface mt-xs">78%</h3>
+</div>
+<div class="p-sm bg-surface-container-low rounded-lg text-tertiary">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+</div>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant text-sm font-medium mt-auto">
+<span class="material-symbols-outlined text-[16px]" data-icon="bar_chart">bar_chart</span>
+<span>Avg platform score</span>
+</div>
+<div class="w-full bg-surface-variant h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-tertiary h-full rounded-full" style="width: 78%"></div>
+</div>
+<div class="absolute -right-6 -bottom-6 w-24 h-24 bg-tertiary/5 rounded-full blur-xl group-hover:scale-110 transition-transform"></div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-card border-l-4 border-primary-fixed-dim flex flex-col gap-sm relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Revenue / Pro</p>
+<h3 class="text-headline-lg font-headline-lg text-on-surface mt-xs">$12k</h3>
+</div>
+<div class="p-sm bg-surface-container-low rounded-lg text-primary-fixed-dim">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+</div>
+<div class="flex items-center gap-xs text-primary-fixed-dim text-sm font-medium mt-auto">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span>+5% vs last week</span>
+</div>
+<div class="absolute -right-6 -bottom-6 w-24 h-24 bg-primary-fixed-dim/10 rounded-full blur-xl group-hover:scale-110 transition-transform"></div>
+</div>
+</section>
+<!-- Charts & Data Section (Bento Layout) -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-lg h-auto lg:h-[400px]">
+<!-- Main Chart -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-card lg:col-span-2 flex flex-col">
+<div class="flex justify-between items-center mb-md">
+<h3 class="text-headline-md font-headline-md font-semibold text-on-surface">User Growth</h3>
+<select class="bg-surface-container-low border border-outline-variant text-label-sm font-label-sm rounded-md px-sm py-xs focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+<option>Last 30 Days</option>
+<option>Last Quarter</option>
+<option>Year to Date</option>
+</select>
+</div>
+<!-- Placeholder for Chart Graphic -->
+<div class="flex-1 bg-surface-variant/30 rounded-lg border border-outline-variant/50 relative overflow-hidden flex items-end">
+<!-- Simple CSS visualization for the mockup -->
+<div class="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent"></div>
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 40">
+<path d="M0,40 L0,30 C10,25 20,35 30,20 C40,5 50,25 60,15 C70,5 80,15 90,5 L100,0 L100,40 Z" fill="rgba(79, 70, 229, 0.1)"></path>
+<path d="M0,30 C10,25 20,35 30,20 C40,5 50,25 60,15 C70,5 80,15 90,5 L100,0" fill="none" stroke="#3525cd" stroke-width="0.5" vector-effect="non-scaling-stroke"></path>
+</svg>
+</div>
+</div>
+<!-- Secondary Chart / Donut -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-card flex flex-col">
+<div class="mb-md">
+<h3 class="text-headline-md font-headline-md font-semibold text-on-surface">Content Distribution</h3>
+</div>
+<!-- Placeholder for Pie Chart -->
+<div class="flex-1 flex flex-col items-center justify-center relative">
+<div class="w-40 h-40 rounded-full border-[16px] border-surface-variant relative">
+<!-- CSS approximation of a donut chart slices -->
+<div class="absolute inset-[-16px] rounded-full border-[16px] border-primary" style="clip-path: polygon(50% 50%, 100% 0, 100% 100%, 0 100%, 0 70%);"></div>
+<div class="absolute inset-[-16px] rounded-full border-[16px] border-secondary-container" style="clip-path: polygon(50% 50%, 0 70%, 0 0, 30% 0);"></div>
+<div class="absolute inset-[-16px] rounded-full border-[16px] border-tertiary" style="clip-path: polygon(50% 50%, 30% 0, 100% 0);"></div>
+<div class="absolute inset-0 flex items-center justify-center flex-col">
+<span class="text-headline-md font-headline-md font-bold text-on-surface">1.4k</span>
+<span class="text-[10px] font-label-sm text-on-surface-variant uppercase">Modules</span>
+</div>
+</div>
+<div class="mt-lg w-full flex flex-col gap-xs">
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-xs"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="text-on-surface-variant">DSA Problems</span></div>
+<span class="font-medium text-on-surface">55%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-xs"><span class="w-2 h-2 rounded-full bg-secondary-container"></span><span class="text-on-surface-variant">System Design</span></div>
+<span class="font-medium text-on-surface">30%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-xs"><span class="w-2 h-2 rounded-full bg-tertiary"></span><span class="text-on-surface-variant">Soft Skills</span></div>
+<span class="font-medium text-on-surface">15%</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Activity Feed -->
+<section class="flex flex-col gap-lg">
+<div class="flex justify-between items-center">
+<h3 class="text-headline-md font-headline-md font-semibold text-on-surface">Teacher Performance</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Average Rating Card -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-card border-l-4 border-primary flex flex-col gap-sm">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Average Rating</p>
+<div class="flex items-baseline gap-sm">
+<h4 class="text-headline-lg font-headline-lg text-on-surface">4.8/5</h4>
+<span class="text-primary text-sm font-medium flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+          +0.2
+        </span>
+</div>
+<p class="text-label-sm text-on-surface-variant">vs last month</p>
+</div>
+<!-- Course Completion Card -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-card border-l-4 border-secondary-container flex flex-col gap-sm">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Course Completion</p>
+<h4 class="text-headline-lg font-headline-lg text-on-surface">84%</h4>
+<div class="w-full bg-surface-variant h-1.5 rounded-full mt-xs overflow-hidden">
+<div class="bg-secondary-container h-full rounded-full" style="width: 84%"></div>
+</div>
+</div>
+<!-- Active Teachers Card -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-card border-l-4 border-tertiary flex flex-col gap-sm">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Active Teachers</p>
+<div class="flex items-center justify-between">
+<h4 class="text-headline-lg font-headline-lg text-on-surface">142</h4>
+<span class="px-sm py-xs bg-tertiary-container text-on-error-container rounded-full text-[10px] font-bold">+12 NEW</span>
+</div>
+<p class="text-label-sm text-on-surface-variant">this week</p>
+</div>
+</div>
+<!-- Top Teachers Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-card overflow-hidden border border-outline-variant/30">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="p-md font-label-sm text-label-sm text-on-surface-variant uppercase">Teacher</th>
+<th class="p-md font-label-sm text-label-sm text-on-surface-variant uppercase">Rating</th>
+<th class="p-md font-label-sm text-label-sm text-on-surface-variant uppercase">Students</th>
+<th class="p-md font-label-sm text-label-sm text-on-surface-variant uppercase">Completion</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-md font-medium text-on-surface">Dr. Aris V.</td>
+<td class="p-md text-on-surface-variant">4.9</td>
+<td class="p-md text-on-surface-variant">1.2k</td>
+<td class="p-md text-on-surface-variant">92%</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-md font-medium text-on-surface">Sarah Jenkins</td>
+<td class="p-md text-on-surface-variant">4.8</td>
+<td class="p-md text-on-surface-variant">850</td>
+<td class="p-md text-on-surface-variant">88%</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-md font-medium text-on-surface">Prof. Kumar</td>
+<td class="p-md text-on-surface-variant">4.7</td>
+<td class="p-md text-on-surface-variant">2.1k</td>
+<td class="p-md text-on-surface-variant">81%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section><section class="bg-surface-container-lowest rounded-xl shadow-card p-lg flex flex-col h-[400px]">
+<div class="flex justify-between items-center mb-md border-b border-outline-variant pb-sm">
+<h3 class="text-headline-md font-headline-md font-semibold text-on-surface">Recent Activity</h3>
+<button class="text-primary font-label-sm text-label-sm hover:underline flex items-center gap-xs">View All <span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span></button>
+</div>
+<div class="flex-1 overflow-y-auto pr-sm custom-scrollbar flex flex-col gap-md">
+<!-- Feed Item 1 -->
+<div class="flex items-start gap-md group">
+<div class="mt-1 w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px]" data-icon="post_add">post_add</span>
+</div>
+<div class="flex-1 border-b border-outline-variant/30 pb-md group-last:border-0 group-last:pb-0">
+<p class="text-body-md font-body-md text-on-surface"><span class="font-semibold">Sarah J.</span> added 10 new DSA problems to the <span class="text-primary cursor-pointer hover:underline">Advanced Graphs</span> module.</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant mt-xs">10 mins ago</p>
+</div>
+</div>
+<!-- Feed Item 2 -->
+<div class="flex items-start gap-md group">
+<div class="mt-1 w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px]" data-icon="campaign">campaign</span>
+</div>
+<div class="flex-1 border-b border-outline-variant/30 pb-md group-last:border-0 group-last:pb-0">
+<p class="text-body-md font-body-md text-on-surface"><span class="font-semibold">System</span>: New Interview Hub update v2.4 deployed successfully.</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant mt-xs">1 hour ago</p>
+</div>
+</div>
+<!-- Feed Item 3 -->
+<div class="flex items-start gap-md group">
+<div class="mt-1 w-8 h-8 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px]" data-icon="person_add">person_add</span>
+</div>
+<div class="flex-1 border-b border-outline-variant/30 pb-md group-last:border-0 group-last:pb-0">
+<p class="text-body-md font-body-md text-on-surface"><span class="font-semibold">Admin Team</span> invited 50 new beta testers for the Live Classes feature.</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant mt-xs">3 hours ago</p>
+</div>
+</div>
+<!-- Feed Item 4 -->
+<div class="flex items-start gap-md group">
+<div class="mt-1 w-8 h-8 rounded-full bg-tertiary-container text-on-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px]" data-icon="warning">warning</span>
+</div>
+<div class="flex-1 border-b border-outline-variant/30 pb-md group-last:border-0 group-last:pb-0">
+<p class="text-body-md font-body-md text-on-surface"><span class="font-semibold">Automated Alert</span>: High server load detected on Database Cluster B during peak quiz hours.</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant mt-xs">Yesterday, 14:30</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

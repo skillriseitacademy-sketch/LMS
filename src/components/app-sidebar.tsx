@@ -16,6 +16,18 @@ const NAV_ITEMS = [
   { to: "/rooms",       icon: "groups",          label: "Rooms" },
 ];
 
+const ADMIN_NAV_ITEMS = [
+  { to: "/admin",            icon: "admin_panel_settings", label: "Admin Hub" },
+  { to: "/admin/topics",     icon: "menu_book",            label: "Topics" },
+  { to: "/admin/quizzes",    icon: "checklist",            label: "Admin Quizzes" },
+  { to: "/admin/users",      icon: "group",                label: "Students" },
+  { to: "/admin/teachers",   icon: "school",               label: "Teachers" },
+  { to: "/admin/admins",     icon: "security",             label: "Admins" },
+  { to: "/admin/projects",   icon: "folder",               label: "Projects" },
+  { to: "/admin/interviews", icon: "mic",                  label: "Interviews" },
+  { to: "/admin/analytics",  icon: "bar_chart",            label: "Analytics" },
+];
+
 export function AppSidebar() {
   const pathname = useRouterState({ select: r => r.location.pathname });
   const { session, logoutSession } = useAuth();
@@ -72,6 +84,34 @@ export function AppSidebar() {
               </Link>
             );
           })}
+
+          {session?.role === "admin" && (
+            <>
+              <div className="pt-4 pb-2 px-3">
+                <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider" style={{ fontFamily: "JetBrains Mono" }}>Admin Controls</p>
+              </div>
+              {ADMIN_NAV_ITEMS.map(({ to, icon, label }) => {
+                const active = isActive(to);
+                return (
+                  <Link
+                    key={to}
+                    to={to}
+                    aria-current={active ? "page" : undefined}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
+                      active
+                        ? "bg-primary-container text-on-primary-container font-semibold translate-x-0.5"
+                        : "text-on-surface-variant hover:bg-surface-variant hover:text-on-surface"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[20px]" data-weight={active ? "fill" : undefined}>
+                      {icon}
+                    </span>
+                    <span className="text-sm font-medium" style={{ fontFamily: "Inter" }}>{label}</span>
+                  </Link>
+                );
+              })}
+            </>
+          )}
         </nav>
 
         {/* ── Bottom Section ── */}

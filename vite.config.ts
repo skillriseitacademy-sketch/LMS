@@ -184,7 +184,7 @@ function uploadMiddlewarePlugin() {
         const { filename, content_type, context = "post" } = body;
         if (!filename || !content_type) {
           res.writeHead(400, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ error: "filename and content_type are required" }));
+          res.end(JSON.stringify({ error: `filename and content_type are required. Got body: ${JSON.stringify(body)}` }));
           return;
         }
 

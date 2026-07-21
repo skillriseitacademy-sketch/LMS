@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Arena - Challenge List | PlacePro Career OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#d2d9f4",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-container": "#eaedff",
+                        "on-background": "#131b2e",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "surface-container-highest": "#dae2fd",
+                        "secondary-fixed": "#ffddb8",
+                        "on-secondary-fixed": "#2a1700",
+                        "secondary-container": "#fea619",
+                        "primary": "#3525cd",
+                        "on-surface-variant": "#464555",
+                        "on-primary-fixed": "#0f0069",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "secondary": "#855300",
+                        "outline-variant": "#c7c4d8",
+                        "on-surface": "#131b2e",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#e2e7ff",
+                        "surface": "#faf8ff",
+                        "on-primary-container": "#dad7ff",
+                        "primary-container": "#4f46e5",
+                        "inverse-surface": "#283044",
+                        "primary-fixed": "#e2dfff",
+                        "surface-container-low": "#f2f3ff",
+                        "surface-bright": "#faf8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#777587",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "inverse-on-surface": "#eef0ff",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "inverse-primary": "#c3c0ff",
+                        "tertiary-fixed": "#ffdad7",
+                        "tertiary-container": "#bc1d25",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "tertiary": "#960014",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#410004",
+                        "surface-variant": "#dae2fd",
+                        "on-tertiary-container": "#ffd0cc",
+                        "on-error-container": "#93000a",
+                        "background": "#faf8ff",
+                        "surface-tint": "#4d44e3",
+                        "on-secondary-container": "#684000",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "0.25rem",
+                        "base": "4px",
+                        "lg": "1.5rem",
+                        "container-max": "1280px",
+                        "xl": "2rem",
+                        "sm": "0.5rem",
+                        "md": "1rem",
+                        "sidebar-width": "280px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "headline-md": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md flex min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- App Shell - Left Sidebar -->
+<nav class="hidden md:flex flex-col h-screen w-sidebar-width fixed left-0 top-0 bg-surface-container-low dark:bg-surface-container-lowest shadow-md z-40 p-md gap-base overflow-y-auto">
+<!-- Header / Identity -->
+<div class="mb-lg px-sm pt-md">
+<h1 class="text-headline-md font-headline-md font-bold text-primary">PlacePro Career OS</h1>
+<div class="flex items-center gap-sm mt-md p-sm bg-surface-container rounded-lg border border-outline-variant/30">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm bg-surface-variant" data-alt="A modern, professional 3D style avatar portrait of a user. The lighting is soft and flattering, set against a clean, light surface background. Indigo and soft blue ambient light hints at a high-tech SaaS environment, reflecting a serious but approachable student profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4rFBLA1Iw8fNC48NSnDeKEoA05M79LC7p6uxaa31jD2yOptzM30sjRn7XhKwbNR4FYzRASub5TVkGVeUSjpYtNpsnqse7DvYMy9CL1bHCTI47pEVa19061TQnb2UQ3nkkVmAeBpep5lN0diz5pPFpprfidodiJ-yNp10NFPvUWsCl3wlTSJ0X2xYv5d-DaGCWRbL1Boz0QLXeelmlId7pUEq2m2OKR0JtlOvcOnAOBl8D08_Ght2Pbg"/>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Rank: #42 | 2500 XP</div>
+</div>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 flex flex-col gap-sm">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">rss_feed</span>
+                Feed
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">video_chat</span>
+                Interview Hub
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">quiz</span>
+                Quizzes
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">live_tv</span>
+                Live Classes
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg bg-primary-container text-on-primary-container font-bold translate-x-1 transition-transform font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+                Arena
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">work</span>
+                Jobs
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">map</span>
+                Roadmap
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">description</span>
+                Resume
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">leaderboard</span>
+                Leaderboard
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+                Profile
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">groups</span>
+                Rooms
+            </a>
+</div>
+<!-- CTA -->
+<div class="mt-auto pt-lg pb-sm">
+<button class="w-full py-sm px-md bg-secondary-container text-on-secondary-container font-label-sm text-label-sm rounded-lg hover:bg-secondary-fixed transition-colors shadow-sm flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-sm">star</span>
+                Upgrade to Pro
+            </button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-[280px] w-full min-h-screen bg-surface">
+<div class="max-w-container-max mx-auto p-md md:p-xl space-y-xl">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-md border-b border-outline-variant/40 pb-md">
+<div>
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest bg-primary/10 px-2 py-1 rounded">Topic: Data Structures</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Arrays &amp; Strings</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mt-sm">Array Manipulation Challenges</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-sm max-w-2xl">Master fundamental operations, sliding windows, and two-pointer techniques to optimize array processing algorithms.</p>
+</div>
+<div class="flex gap-sm">
+<div class="bg-surface-container rounded-lg p-sm px-md border border-outline-variant/30 text-center shadow-sm">
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-1">Topic Mastery</div>
+<div class="flex items-end justify-center gap-1">
+<span class="font-headline-md text-headline-md text-primary">64</span><span class="font-body-md text-body-md text-on-surface-variant mb-1">%</span>
+</div>
+</div>
+<div class="bg-surface-container rounded-lg p-sm px-md border border-outline-variant/30 text-center shadow-sm">
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-1">Solved</div>
+<div class="flex items-end justify-center gap-1">
+<span class="font-headline-md text-headline-md text-on-surface">14</span><span class="font-body-md text-body-md text-on-surface-variant mb-1">/22</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Featured Daily Challenge - Bento Style -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-md">
+<!-- Featured Card -->
+<div class="lg:col-span-2 bg-white rounded-xl p-lg border border-outline-variant/30 shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)] relative overflow-hidden group">
+<!-- Decor pattern -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-container/20 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+<div class="relative z-10 flex flex-col h-full justify-between">
+<div>
+<div class="flex items-center justify-between mb-md">
+<span class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                                    Daily Featured
+                                </span>
+<span class="font-label-sm text-label-sm text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">stars</span> +150 XP
+                                </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-sm">Optimal Meeting Points</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">Given a 2D grid representing a city, find the best meeting point for all employees that minimizes total travel distance using Manhattan distance.</p>
+<div class="flex flex-wrap gap-2 mt-md">
+<span class="bg-primary/5 text-primary border border-primary/20 font-label-sm text-label-sm px-2 py-1 rounded">2D Arrays</span>
+<span class="bg-primary/5 text-primary border border-primary/20 font-label-sm text-label-sm px-2 py-1 rounded">Math</span>
+<span class="bg-primary/5 text-primary border border-primary/20 font-label-sm text-label-sm px-2 py-1 rounded">Sorting</span>
+</div>
+</div>
+<div class="mt-lg flex items-center justify-between border-t border-outline-variant/30 pt-md">
+<div class="flex items-center gap-sm">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-label-sm text-label-sm text-error uppercase">Hard</span>
+</div>
+<button class="bg-primary text-on-primary font-body-md text-body-md px-lg py-sm rounded-lg hover:bg-primary-fixed-variant hover:scale-105 transition-all duration-200 shadow-sm flex items-center gap-2">
+                                Solve Challenge <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Leaderboard/Stats side card -->
+<div class="bg-surface-container rounded-xl p-lg border border-outline-variant/30 shadow-sm flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-md text-lg">Top Solvers Today</h3>
+<div class="space-y-sm flex-1">
+<div class="flex items-center justify-between bg-white p-sm rounded-lg border border-outline-variant/20 shadow-sm">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center font-bold text-on-secondary-container text-sm">1</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">Alex Chen</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">1.2s</span>
+</div>
+<div class="flex items-center justify-between bg-white p-sm rounded-lg border border-outline-variant/20">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center font-bold text-on-surface-variant text-sm">2</div>
+<span class="font-body-md text-body-md text-on-surface">Sarah J.</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">1.4s</span>
+</div>
+<div class="flex items-center justify-between bg-white p-sm rounded-lg border border-outline-variant/20">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center font-bold text-on-surface-variant text-sm">3</div>
+<span class="font-body-md text-body-md text-on-surface">Priya M.</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">1.8s</span>
+</div>
+</div>
+<button class="w-full mt-md py-sm text-primary font-label-sm text-label-sm border border-primary/30 rounded-lg hover:bg-primary/5 transition-colors">
+                        View Full Rankings
+                    </button>
+</div>
+</section>
+<!-- Challenge List -->
+<section class="bg-white rounded-xl border border-outline-variant/30 shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)] overflow-hidden">
+<!-- Filters / Actions Toolbar -->
+<div class="p-md border-b border-outline-variant/30 bg-surface-container/50 flex flex-col md:flex-row gap-md justify-between items-center">
+<div class="relative w-full md:w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-white border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-outline shadow-sm" placeholder="Search challenges..." type="text"/>
+</div>
+<div class="flex gap-sm w-full md:w-auto overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
+<button class="px-md py-1.5 bg-primary-container text-on-primary-container font-label-sm text-label-sm rounded-full whitespace-nowrap">All</button>
+<button class="px-md py-1.5 bg-surface text-on-surface-variant border border-outline-variant/50 hover:bg-surface-variant font-label-sm text-label-sm rounded-full whitespace-nowrap transition-colors">Unsolved</button>
+<button class="px-md py-1.5 bg-surface text-on-surface-variant border border-outline-variant/50 hover:bg-surface-variant font-label-sm text-label-sm rounded-full whitespace-nowrap transition-colors">Easy</button>
+<button class="px-md py-1.5 bg-surface text-on-surface-variant border border-outline-variant/50 hover:bg-surface-variant font-label-sm text-label-sm rounded-full whitespace-nowrap transition-colors">Medium</button>
+<button class="px-md py-1.5 bg-surface text-on-surface-variant border border-outline-variant/50 hover:bg-surface-variant font-label-sm text-label-sm rounded-full whitespace-nowrap transition-colors">Hard</button>
+</div>
+</div>
+<!-- List Header (Desktop Only) -->
+<div class="hidden md:grid grid-cols-12 gap-4 px-lg py-sm bg-surface/50 border-b border-outline-variant/30 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<div class="col-span-1 text-center">Status</div>
+<div class="col-span-5">Challenge</div>
+<div class="col-span-3">Tags</div>
+<div class="col-span-2 text-center">Difficulty &amp; XP</div>
+<div class="col-span-1 text-right">Action</div>
+</div>
+<!-- List Items -->
+<div class="flex flex-col divide-y divide-outline-variant/20">
+<!-- Solved Item -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 px-md md:px-lg py-md items-center hover:bg-surface-container-low transition-colors group">
+<div class="col-span-1 hidden md:flex justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="col-span-1 md:col-span-5 flex flex-col gap-1">
+<div class="flex items-center gap-2 md:hidden mb-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm text-primary">Solved</span>
+</div>
+<h4 class="font-headline-md text-base md:text-headline-md text-on-surface font-medium group-hover:text-primary transition-colors">Two Sum Variations</h4>
+<p class="font-body-md text-sm text-on-surface-variant truncate">Find pairs in sorted array matching target sum.</p>
+</div>
+<div class="col-span-1 md:col-span-3 flex flex-wrap gap-2">
+<span class="bg-primary/5 text-primary/80 border border-primary/10 font-label-sm text-[10px] px-2 py-0.5 rounded">Two Pointers</span>
+<span class="bg-primary/5 text-primary/80 border border-primary/10 font-label-sm text-[10px] px-2 py-0.5 rounded">Hash Map</span>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-row md:flex-col items-center justify-between md:justify-center gap-1">
+<span class="font-label-sm text-label-sm text-primary font-medium bg-primary/10 px-2 py-0.5 rounded">Easy</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">25 XP</span>
+</div>
+<div class="col-span-1 flex justify-end md:justify-end">
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined text-lg">code</span>
+</button>
+</div>
+</div>
+<!-- Unsolved Item (Medium) border-l-4 border-l-secondary-container -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 px-md md:px-lg py-md items-center hover:bg-surface-container-low transition-colors group relative border-l-4 border-l-secondary-container bg-surface/30">
+<div class="col-span-1 hidden md:flex justify-center">
+<span class="w-5 h-5 rounded-full border-2 border-outline-variant"></span>
+</div>
+<div class="col-span-1 md:col-span-5 flex flex-col gap-1">
+<h4 class="font-headline-md text-base md:text-headline-md text-on-surface font-medium group-hover:text-primary transition-colors">Maximum Subarray Sum</h4>
+<p class="font-body-md text-sm text-on-surface-variant truncate">Implement Kadane's algorithm to find max contiguous sum.</p>
+</div>
+<div class="col-span-1 md:col-span-3 flex flex-wrap gap-2">
+<span class="bg-primary/5 text-primary/80 border border-primary/10 font-label-sm text-[10px] px-2 py-0.5 rounded">Dynamic Prog.</span>
+<span class="bg-primary/5 text-primary/80 border border-primary/10 font-label-sm text-[10px] px-2 py-0.5 rounded">Math</span>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-row md:flex-col items-center justify-between md:justify-center gap-1">
+<span class="font-label-sm text-label-sm text-secondary-container font-medium bg-secondary-container/10 px-2 py-0.5 rounded">Medium</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">50 XP</span>
+</div>
+<div class="col-span-1 flex justify-end md:justify-end">
+<button class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-3 py-1.5 rounded hover:bg-primary hover:text-white transition-colors shadow-sm md:opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                Start
+                            </button>
+</div>
+</div>
+<!-- Unsolved Item (Hard) border-l-4 border-l-error -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 px-md md:px-lg py-md items-center hover:bg-surface-container-low transition-colors group relative border-l-4 border-l-transparent hover:border-l-error">
+<div class="col-span-1 hidden md:flex justify-center">
+<span class="w-5 h-5 rounded-full border-2 border-outline-variant"></span>
+</div>
+<div class="col-span-1 md:col-span-5 flex flex-col gap-1">
+<h4 class="font-headline-md text-base md:text-headline-md text-on-surface font-medium group-hover:text-primary transition-colors">Trapping Rain Water</h4>
+<p class="font-body-md text-sm text-on-surface-variant truncate">Compute volume of water trapped after raining on elevation map.</p>
+</div>
+<div class="col-span-1 md:col-span-3 flex flex-wrap gap-2">
+<span class="bg-primary/5 text-primary/80 border border-primary/10 font-label-sm text-[10px] px-2 py-0.5 rounded">Two Pointers</span>
+<span class="bg-primary/5 text-primary/80 border border-primary/10 font-label-sm text-[10px] px-2 py-0.5 rounded">Stack</span>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-row md:flex-col items-center justify-between md:justify-center gap-1">
+<span class="font-label-sm text-label-sm text-error font-medium bg-error/10 px-2 py-0.5 rounded">Hard</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">100 XP</span>
+</div>
+<div class="col-span-1 flex justify-end md:justify-end">
+<button class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-3 py-1.5 rounded hover:bg-primary hover:text-white transition-colors shadow-sm md:opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                Start
+                            </button>
+</div>
+</div>
+<!-- Unsolved Item (Medium) -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 px-md md:px-lg py-md items-center hover:bg-surface-container-low transition-colors group relative border-l-4 border-l-transparent hover:border-l-secondary-container">
+<div class="col-span-1 hidden md:flex justify-center">
+<span class="w-5 h-5 rounded-full border-2 border-outline-variant"></span>
+</div>
+<div class="col-span-1 md:col-span-5 flex flex-col gap-1">
+<h4 class="font-headline-md text-base md:text-headline-md text-on-surface font-medium group-hover:text-primary transition-colors">Longest Substring Without Repeating</h4>
+<p class="font-body-md text-sm text-on-surface-variant truncate">Find length of longest substring without repeating characters.</p>
+</div>
+<div class="col-span-1 md:col-span-3 flex flex-wrap gap-2">
+<span class="bg-primary/5 text-primary/80 border border-primary/10 font-label-sm text-[10px] px-2 py-0.5 rounded">Sliding Window</span>
+<span class="bg-primary/5 text-primary/80 border border-primary/10 font-label-sm text-[10px] px-2 py-0.5 rounded">Strings</span>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-row md:flex-col items-center justify-between md:justify-center gap-1">
+<span class="font-label-sm text-label-sm text-secondary-container font-medium bg-secondary-container/10 px-2 py-0.5 rounded">Medium</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">50 XP</span>
+</div>
+<div class="col-span-1 flex justify-end md:justify-end">
+<button class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-3 py-1.5 rounded hover:bg-primary hover:text-white transition-colors shadow-sm md:opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                Start
+                            </button>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="p-md border-t border-outline-variant/30 flex items-center justify-between bg-surface/50">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Showing 1-4 of 22 challenges</span>
+<div class="flex gap-1">
+<button class="w-8 h-8 rounded flex items-center justify-center border border-outline-variant text-outline cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center bg-primary text-on-primary font-label-sm shadow-sm">1</button>
+<button class="w-8 h-8 rounded flex items-center justify-center border border-outline-variant/50 text-on-surface hover:bg-surface-variant transition-colors font-label-sm">2</button>
+<button class="w-8 h-8 rounded flex items-center justify-center border border-outline-variant/50 text-on-surface hover:bg-surface-variant transition-colors font-label-sm">3</button>
+<span class="w-8 h-8 flex items-center justify-center text-on-surface-variant">...</span>
+<button class="w-8 h-8 rounded flex items-center justify-center border border-outline-variant/50 text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<style>
+        /* Utility for hiding scrollbar in horizontal scroll areas */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

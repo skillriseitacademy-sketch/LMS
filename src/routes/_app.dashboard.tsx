@@ -13,15 +13,15 @@ function DashboardPage() {
   const [enrolledTopics, setEnrolledTopics] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!session?.user?.id) return;
+    if (!session?.id) return;
     const load = async () => {
-      const { data: p } = await supabase.from('profiles').select('*, xp_transactions(amount)').eq('id', session.user.id).single();
+      const { data: p } = await supabase.from('profiles').select('*, xp_transactions(amount)').eq('id', session.id).single();
       if (p) {
         p.xp = p.xp_transactions ? p.xp_transactions.reduce((acc: number, t: any) => acc + t.amount, 0) : 0;
         setProfile(p);
       }
       
-      const { data: topics } = await supabase.from('student_topics').select('topics(*)').eq('user_id', session.user.id);
+      const { data: topics } = await supabase.from('student_topics').select('topics(*)').eq('user_id', session.id);
       if (topics) {
         setEnrolledTopics(topics.map(t => t.topics).filter(Boolean));
       }

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notification Preferences - PlacePro Career OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary": "#855300",
+                      "primary-container": "#4f46e5",
+                      "inverse-primary": "#c3c0ff",
+                      "outline": "#777587",
+                      "on-primary-container": "#dad7ff",
+                      "error-container": "#ffdad6",
+                      "on-secondary-fixed-variant": "#653e00",
+                      "tertiary-fixed": "#ffdad7",
+                      "on-tertiary-fixed": "#410004",
+                      "outline-variant": "#c7c4d8",
+                      "surface-variant": "#dae2fd",
+                      "tertiary-fixed-dim": "#ffb3ad",
+                      "surface-dim": "#d2d9f4",
+                      "on-background": "#131b2e",
+                      "surface-container": "#eaedff",
+                      "surface": "#faf8ff",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-container": "#fea619",
+                      "background": "#faf8ff",
+                      "primary-fixed": "#e2dfff",
+                      "surface-bright": "#faf8ff",
+                      "on-surface-variant": "#464555",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "inverse-on-surface": "#eef0ff",
+                      "primary": "#3525cd",
+                      "inverse-surface": "#283044",
+                      "on-secondary-fixed": "#2a1700",
+                      "on-error": "#ffffff",
+                      "surface-container-high": "#e2e7ff",
+                      "on-primary-fixed": "#0f0069",
+                      "error": "#ba1a1a",
+                      "on-secondary": "#ffffff",
+                      "tertiary": "#960014",
+                      "secondary-fixed": "#ffddb8",
+                      "on-error-container": "#93000a",
+                      "surface-container-low": "#f2f3ff",
+                      "surface-container-highest": "#dae2fd",
+                      "on-secondary-container": "#684000",
+                      "surface-tint": "#4d44e3",
+                      "on-tertiary-container": "#ffd0cc",
+                      "tertiary-container": "#bc1d25",
+                      "on-tertiary-fixed-variant": "#930013",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "on-tertiary": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#ffb95f",
+                      "on-surface": "#131b2e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sidebar-width": "280px",
+                      "md": "1rem",
+                      "lg": "1.5rem",
+                      "xl": "2rem",
+                      "container-max": "1280px",
+                      "xs": "0.25rem",
+                      "sm": "0.5rem",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "label-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-md": [
+                              "Manrope"
+                      ],
+                      "display-lg": [
+                              "Manrope"
+                      ],
+                      "headline-lg-mobile": [
+                              "Manrope"
+                      ],
+                      "headline-lg": [
+                              "Manrope"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #3525cd;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #3525cd;
+        }
+        .toggle-checkbox {
+            right: 0;
+            z-index: 1;
+            border-color: #c7c4d8;
+            transition: all 0.3s;
+        }
+        .toggle-label {
+            width: 3rem;
+            height: 1.5rem;
+            background-color: #e2e7ff;
+            border-radius: 9999px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .toggle-label::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 1.25rem;
+            height: 1.25rem;
+            background-color: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .toggle-checkbox:checked + .toggle-label::after {
+            transform: translateX(1.5rem);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-full py-lg px-md w-sidebar-width overflow-y-auto bg-surface-container-lowest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] z-50 fixed left-0 top-0">
+<div class="flex items-center gap-sm mb-xl px-sm">
+<span class="text-headline-md font-display-lg font-extrabold text-primary">PlacePro</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container py-xs px-sm rounded-full">Career OS</span>
+</div>
+<button class="w-full bg-primary text-on-primary py-sm px-md rounded-lg font-headline-md text-body-md hover:bg-primary-container transition-colors duration-200 mb-lg flex items-center justify-center gap-sm shadow-sm active:scale-[0.98]">
+<span class="material-symbols-outlined text-on-primary" style="font-size: 20px;">play_arrow</span>
+            Start Practice
+        </button>
+<div class="flex-1 flex flex-col gap-xs">
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">rss_feed</span>
+<span class="font-body-md text-body-md">Feed</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">video_chat</span>
+<span class="font-body-md text-body-md">Interview Hub</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">quiz</span>
+<span class="font-body-md text-body-md">Quizzes</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">sports_esports</span>
+<span class="font-body-md text-body-md">Arena</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">work</span>
+<span class="font-body-md text-body-md">Jobs</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-body-md text-body-md">Roadmap</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-body-md text-body-md">Resume</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-body-md text-body-md">Leaderboard</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md text-body-md">Profile</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-body-md text-body-md">Rooms</span>
+</a>
+</div>
+<div class="mt-auto pt-lg border-t border-outline-variant/30 flex flex-col gap-xs">
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container-low transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md">Logout</span>
+</a>
+<div class="mt-md px-sm flex items-center gap-sm">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant/30" data-alt="A professional headshot of a student in a modern indoor setting with soft lighting. The styling is clean and corporate modern, reflecting a bright, optimistic SaaS application aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7GZWkHiuiCCRmYTWe3BvtFoqQaDDNlJgu5s-25_ugDj0k2RJUdUqAnoB0m2l8Fvx_CK2w-gqS65I82lLH__0O1GXFQlEeZI5DLOvsyggZtVh5qJ127YU1070f1P7f20wQjOPOKL0f5VaTV4A8NpJt-DGZruTqTpfD7NPJ3HPegEl_a2OgczmMIRJH_lU_DfBpKHE1VnGVJBU5Yixunl1iLTCbSnlaOPJ6UjdcS1Z4EJ4kpLS5q0t2lQ"/>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Alex Chen</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Computer Science</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-sidebar-width flex flex-col min-h-screen relative">
+<!-- TopAppBar -->
+<header class="hidden md:flex justify-between items-center px-xl w-[calc(100%-280px)] h-16 z-40 fixed top-0 right-0 bg-surface/80 backdrop-blur-md">
+<div class="flex-1 flex items-center gap-md">
+<div class="relative w-full max-w-md focus-within:ring-2 focus-within:ring-primary/20 rounded-lg transition-all">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant/50 rounded-lg text-body-md text-on-surface placeholder-outline focus:outline-none focus:border-primary focus:bg-surface transition-colors" placeholder="Search PlacePro..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all active:scale-[0.98] relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined">workspace_premium</span>
+</button>
+<div class="ml-sm w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline-md text-[14px] cursor-pointer shadow-sm">
+                    AC
+                </div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="flex-1 p-md md:p-xl mt-0 md:mt-16 w-full max-w-container-max mx-auto">
+<div class="mb-lg">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background mb-xs">Notification Preferences</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Control how and when PlacePro communicates with you.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Main Preferences Section -->
+<div class="lg:col-span-2 space-y-lg">
+<!-- Career Opportunities -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+<div class="flex items-center gap-sm mb-md border-b border-outline-variant/30 pb-sm">
+<span class="material-symbols-outlined text-primary">work_history</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Career Opportunities</h2>
+</div>
+<div class="space-y-md">
+<div class="flex items-center justify-between py-xs">
+<div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-medium">Interview Invitations</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant mt-1">Get instantly notified when a company invites you to interview.</p>
+</div>
+<div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" id="toggle-interview" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle-interview"></label>
+</div>
+</div>
+<div class="flex items-center justify-between py-xs">
+<div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-medium">New Job Matches</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant mt-1">Alerts for new postings that align with your profile and skills.</p>
+</div>
+<div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" id="toggle-jobs" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle-jobs"></label>
+</div>
+</div>
+</div>
+</div>
+<!-- Practice & Preparation -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+<div class="flex items-center gap-sm mb-md border-b border-outline-variant/30 pb-sm">
+<span class="material-symbols-outlined text-secondary-container">sports_esports</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Practice &amp; Preparation</h2>
+</div>
+<div class="space-y-md">
+<div class="flex items-center justify-between py-xs">
+<div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-medium">Coding Arena Challenges</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant mt-1">Notifications for upcoming tournaments and daily challenges.</p>
+</div>
+<div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" id="toggle-arena" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle-arena"></label>
+</div>
+</div>
+<div class="flex items-center justify-between py-xs">
+<div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-medium">Quiz Reminders</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant mt-1">Scheduled nudges to complete your daily aptitude quizzes.</p>
+</div>
+<div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" id="toggle-quizzes" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle-quizzes"></label>
+</div>
+</div>
+</div>
+</div>
+<!-- Community -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+<div class="flex items-center gap-sm mb-md border-b border-outline-variant/30 pb-sm">
+<span class="material-symbols-outlined text-outline">forum</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Community</h2>
+</div>
+<div class="space-y-md">
+<div class="flex items-center justify-between py-xs">
+<div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-medium">Social Feed Activity</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant mt-1">Mentions, likes, and comments on your feed posts.</p>
+</div>
+<div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" id="toggle-social" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle-social"></label>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Info Panel -->
+<div class="space-y-lg">
+<div class="bg-surface-container-low rounded-xl p-lg border border-outline-variant/30">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary">mail</span>
+</div>
+<h3 class="font-headline-md text-[18px] text-on-surface mb-xs">Email Delivery</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant mb-md">Crucial updates like interview invites will always be sent to your registered email address, regardless of push notification settings.</p>
+<a class="font-label-sm text-label-sm text-primary hover:underline flex items-center gap-xs" href="#">
+                            Manage Email Settings <span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<div class="mt-xl flex justify-end gap-md">
+<button class="px-lg py-2 rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container transition-colors">Cancel</button>
+<button class="px-lg py-2 rounded-lg font-body-md text-body-md bg-primary text-on-primary hover:bg-primary-container transition-colors shadow-sm">Save Changes</button>
+</div>
+</div>
+</main>
+</body></html>

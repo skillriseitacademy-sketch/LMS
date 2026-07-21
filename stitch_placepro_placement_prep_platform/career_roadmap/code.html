@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PlacePro Career Roadmap</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "tertiary-container": "#bc1d25",
+                    "tertiary": "#960014",
+                    "surface-bright": "#faf8ff",
+                    "on-tertiary-container": "#ffd0cc",
+                    "surface-variant": "#dae2fd",
+                    "primary-fixed": "#e2dfff",
+                    "on-primary-fixed": "#0f0069",
+                    "on-tertiary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "inverse-on-surface": "#eef0ff",
+                    "on-secondary-fixed-variant": "#653e00",
+                    "tertiary-fixed": "#ffdad7",
+                    "surface-container-low": "#f2f3ff",
+                    "background": "#faf8ff",
+                    "error": "#ba1a1a",
+                    "on-secondary": "#ffffff",
+                    "surface-container-high": "#e2e7ff",
+                    "surface-container": "#eaedff",
+                    "inverse-surface": "#283044",
+                    "primary": "#3525cd",
+                    "secondary": "#855300",
+                    "on-surface": "#131b2e",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#ffb95f",
+                    "on-tertiary-fixed": "#410004",
+                    "surface-dim": "#d2d9f4",
+                    "outline": "#777587",
+                    "on-secondary-fixed": "#2a1700",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#464555",
+                    "outline-variant": "#c7c4d8",
+                    "on-background": "#131b2e",
+                    "inverse-primary": "#c3c0ff",
+                    "on-primary-container": "#dad7ff",
+                    "surface": "#faf8ff",
+                    "surface-container-highest": "#dae2fd",
+                    "primary-container": "#4f46e5",
+                    "on-secondary-container": "#684000",
+                    "surface-tint": "#4d44e3",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-fixed": "#ffddb8",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "secondary-container": "#fea619"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "4px",
+                    "xs": "0.25rem",
+                    "sidebar-width": "280px",
+                    "lg": "1.5rem",
+                    "container-max": "1280px",
+                    "sm": "0.5rem",
+                    "md": "1rem",
+                    "xl": "2rem"
+            },
+            "fontFamily": {
+                    "label-sm": [
+                            "JetBrains Mono"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Manrope"
+                    ],
+                    "headline-lg": [
+                            "Manrope"
+                    ],
+                    "display-lg": [
+                            "Manrope"
+                    ],
+                    "headline-md": [
+                            "Manrope"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "1.0",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "display-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "800"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.5",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .grid-pattern {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(119, 117, 135, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(119, 117, 135, 0.05) 1px, transparent 1px);
+        }
+        
+        .tree-line-horizontal {
+            position: absolute;
+            height: 2px;
+            background-color: theme('colors.primary');
+            top: 50%;
+            z-index: 0;
+        }
+        
+        .tree-line-vertical {
+            position: absolute;
+            width: 2px;
+            background-color: theme('colors.primary');
+            left: 50%;
+            z-index: 0;
+        }
+
+        .node-shadow {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-full p-md gap-base overflow-y-auto fixed left-0 top-0 w-sidebar-width bg-surface-container-low dark:bg-surface-container-lowest shadow-md z-20">
+<!-- Header -->
+<div class="flex flex-col items-center justify-center mb-xl mt-md">
+<div class="w-20 h-20 rounded-full overflow-hidden mb-sm border-2 border-primary-container p-1">
+<img alt="User Avatar" class="w-full h-full object-cover rounded-full" data-alt="A stylized 3D avatar of a young student professional in a casual yet smart outfit, wearing glasses and a slight smile. Clean white background with soft studio lighting. Minimalist corporate modern style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsvr_ItD5-BMxkLRCgPJhfANEj9LiSS8y0hXGiI-DRuPzaF-e-u3jThM-f_iwFeMSXrkT8ZH9WwdGCAYFUmUWxq-mTq7GhrSdLHLTrsM_35S-hOWnJqe2Z3rEbofQH_AKXQY4BksqUIBPRptBnHepipByqo7m7pjLuEw66eM2Riiqfttl45T2IW618Ff2_8QPK9fEALKtt62hodJQE6Shsn-bk6i7HCsAU9cLnkX6XK4BQ0I-su2TdnA"/>
+</div>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">PlacePro Career OS</h1>
+<p class="text-label-sm font-label-sm text-secondary bg-secondary-fixed py-1 px-3 rounded-full mt-2">Rank: #42 | 2500 XP</p>
+</div>
+<!-- Navigation Links -->
+<ul class="flex flex-col gap-1 w-full flex-grow">
+<li>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">rss_feed</span>
+<span class="font-body-md text-body-md">Feed</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">video_chat</span>
+<span class="font-body-md text-body-md">Interview Hub</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">quiz</span>
+<span class="font-body-md text-body-md">Quizzes</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">live_tv</span>
+<span class="font-body-md text-body-md">Live Classes</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">sports_esports</span>
+<span class="font-body-md text-body-md">Arena</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">work</span>
+<span class="font-body-md text-body-md">Jobs</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-sm bg-primary-container text-on-primary-container font-bold rounded-lg translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-body-md text-body-md">Roadmap</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-body-md text-body-md">Resume</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-body-md text-body-md">Leaderboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md text-body-md">Profile</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-body-md text-body-md">Rooms</span>
+</a>
+</li>
+</ul>
+<!-- CTA -->
+<div class="mt-auto pt-md">
+<button class="w-full bg-primary text-on-primary py-sm px-md rounded-lg font-body-md text-body-md hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
+                Upgrade to Pro
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="ml-0 md:ml-[280px] flex-1 flex h-full relative grid-pattern bg-background overflow-hidden">
+<!-- Interactive Roadmap Area -->
+<div class="flex-1 relative overflow-auto p-xl flex items-center justify-center cursor-grab active:cursor-grabbing" id="roadmap-canvas">
+<!-- Roadmap Tree Structure -->
+<div class="relative min-w-[1000px] min-h-[800px] flex items-center justify-center">
+<!-- Center Node (Root) -->
+<div class="absolute z-10 flex flex-col items-center cursor-pointer group">
+<div class="w-24 h-24 bg-surface-container-lowest rounded-full flex items-center justify-center node-shadow border-4 border-secondary-container transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined text-4xl text-secondary-container" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<div class="mt-3 bg-surface-container-lowest px-4 py-2 rounded-lg node-shadow text-center">
+<span class="font-label-sm text-label-sm text-secondary-container uppercase tracking-wider block mb-1">Current Status</span>
+<span class="font-body-md text-body-md font-semibold text-on-surface">B.Tech 3rd Year</span>
+</div>
+</div>
+<!-- Lines radiating from center (simplified representation) -->
+<div class="tree-line-horizontal w-64 left-1/2 ml-12"></div>
+<div class="tree-line-horizontal w-64 right-1/2 mr-12 bg-outline-variant"></div>
+<div class="tree-line-vertical h-64 top-1/2 mt-12 bg-outline-variant"></div>
+<!-- Path 1: SDE (Right) -->
+<div class="absolute z-10 right-[15%] top-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer group">
+<!-- Connective line to sub-nodes -->
+<div class="absolute left-full top-12 w-16 h-0.5 bg-primary"></div>
+<div class="absolute left-[calc(100%+4rem)] top-12 w-0.5 h-32 bg-primary -translate-y-1/2"></div>
+<div class="absolute left-[calc(100%+4rem)] top-[-2rem] w-8 h-0.5 bg-primary"></div>
+<div class="absolute left-[calc(100%+4rem)] top-[5rem] w-8 h-0.5 bg-primary"></div>
+<div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center node-shadow ring-4 ring-primary-container ring-opacity-30 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-3xl text-on-primary">code</span>
+</div>
+<div class="mt-3 bg-surface-container-lowest px-4 py-2 rounded-lg node-shadow border border-primary-container text-center max-w-[150px]">
+<span class="font-body-md text-body-md font-semibold text-primary">Software Eng.</span>
+</div>
+<!-- SDE Subnodes -->
+<div class="absolute left-[calc(100%+6rem)] top-[-4rem] flex items-center gap-2">
+<div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center text-on-secondary node-shadow">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="bg-surface-container-lowest px-2 py-1 rounded text-label-sm font-label-sm shadow-sm whitespace-nowrap border-l-2 border-secondary">Master DSA</span>
+</div>
+<div class="absolute left-[calc(100%+6rem)] top-[3rem] flex items-center gap-2">
+<div class="w-12 h-12 bg-surface-container-lowest border-2 border-primary rounded-full flex items-center justify-center text-primary node-shadow">
+<span class="material-symbols-outlined text-xl">work</span>
+</div>
+<span class="bg-surface-container-lowest px-2 py-1 rounded text-label-sm font-label-sm shadow-sm whitespace-nowrap border-l-2 border-primary">TechCorp Intern</span>
+</div>
+</div>
+<!-- Path 2: Data Science (Left - Inactive/Collapsed) -->
+<div class="absolute z-10 left-[15%] top-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer group opacity-70 hover:opacity-100 transition-opacity">
+<div class="w-16 h-16 bg-surface-container-lowest border-2 border-outline rounded-full flex items-center justify-center node-shadow transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined text-2xl text-outline">analytics</span>
+</div>
+<div class="mt-3 bg-surface-container-lowest px-3 py-1.5 rounded-lg node-shadow text-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Data Scientist</span>
+</div>
+</div>
+<!-- Path 3: Product Manager (Bottom - Inactive/Collapsed) -->
+<div class="absolute z-10 bottom-[15%] left-1/2 -translate-x-1/2 flex flex-col items-center cursor-pointer group opacity-70 hover:opacity-100 transition-opacity">
+<div class="w-16 h-16 bg-surface-container-lowest border-2 border-outline rounded-full flex items-center justify-center node-shadow transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined text-2xl text-outline">lightbulb</span>
+</div>
+<div class="mt-3 bg-surface-container-lowest px-3 py-1.5 rounded-lg node-shadow text-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Product Mgr</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Detail Panel (Right Sidebar) -->
+<aside class="w-[360px] bg-surface-container-lowest shadow-[-4px_0_15px_rgba(0,0,0,0.05)] border-l border-outline-variant flex flex-col z-20 transition-transform duration-300 transform translate-x-0">
+<!-- Panel Header -->
+<div class="p-lg border-b border-outline-variant flex justify-between items-start bg-surface-bright">
+<div>
+<span class="inline-block bg-primary-fixed text-on-primary-fixed text-label-sm font-label-sm px-2 py-1 rounded uppercase tracking-wider mb-2">Target Role</span>
+<h2 class="text-headline-md font-headline-md text-on-surface">Software Development Engineer</h2>
+</div>
+<button class="text-on-surface-variant hover:bg-surface-variant p-1 rounded-full transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Panel Content -->
+<div class="flex-1 overflow-y-auto p-lg flex flex-col gap-xl">
+<!-- Description -->
+<div>
+<p class="text-body-md font-body-md text-on-surface-variant leading-relaxed">
+                        The core engineering path focused on building robust scalable systems. Demands strong fundamentals in algorithms and system design.
+                    </p>
+</div>
+<!-- Required Skills -->
+<div>
+<h3 class="text-label-sm font-label-sm text-outline uppercase tracking-widest mb-sm">Required Skills</h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-variant text-on-surface px-3 py-1.5 rounded-full text-label-sm font-label-sm border border-outline-variant/50">Data Structures</span>
+<span class="bg-surface-variant text-on-surface px-3 py-1.5 rounded-full text-label-sm font-label-sm border border-outline-variant/50">Algorithms</span>
+<span class="bg-surface-variant text-on-surface px-3 py-1.5 rounded-full text-label-sm font-label-sm border border-outline-variant/50">System Design</span>
+<span class="bg-surface-variant text-on-surface px-3 py-1.5 rounded-full text-label-sm font-label-sm border border-outline-variant/50">Java / C++</span>
+<span class="bg-surface-variant text-on-surface px-3 py-1.5 rounded-full text-label-sm font-label-sm border border-outline-variant/50">REST APIs</span>
+</div>
+</div>
+<!-- Recommended Resources -->
+<div>
+<h3 class="text-label-sm font-label-sm text-outline uppercase tracking-widest mb-sm">Milestones</h3>
+<div class="flex flex-col gap-3">
+<!-- Completed Milestone -->
+<div class="bg-surface-container-low p-sm rounded-lg flex gap-3 items-center border-l-4 border-secondary">
+<div class="w-10 h-10 rounded bg-secondary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary-container">check_circle</span>
+</div>
+<div class="flex-1">
+<h4 class="text-body-md font-body-md font-medium text-on-surface line-through decoration-outline-variant text-opacity-70">Master DSA</h4>
+<p class="text-label-sm font-label-sm text-secondary">Completed • 500 XP</p>
+</div>
+</div>
+<!-- Active Milestone -->
+<div class="bg-surface-container-high p-sm rounded-lg flex gap-3 items-center border-l-4 border-primary">
+<div class="w-10 h-10 rounded bg-primary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">work_history</span>
+</div>
+<div class="flex-1">
+<h4 class="text-body-md font-body-md font-bold text-on-surface">Build Portfolio Project</h4>
+<p class="text-label-sm font-label-sm text-primary">In Progress • 60%</p>
+</div>
+<button class="text-primary hover:bg-primary-fixed p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- Locked Milestone -->
+<div class="bg-surface border border-outline-variant border-dashed p-sm rounded-lg flex gap-3 items-center opacity-70">
+<div class="w-10 h-10 rounded bg-surface-dim flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-outline">lock</span>
+</div>
+<div class="flex-1">
+<h4 class="text-body-md font-body-md font-medium text-on-surface-variant">Internship at TechCorp</h4>
+<p class="text-label-sm font-label-sm text-outline">Prerequisite: Portfolio</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Panel Footer Actions -->
+<div class="p-lg border-t border-outline-variant bg-surface-container-lowest">
+<button class="w-full group relative overflow-hidden bg-surface-container-low text-primary border border-primary-container py-3 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-all shadow-sm">
+<span class="material-symbols-outlined">magic_button</span>
+<span class="font-body-md text-body-md font-semibold">AI Regenerate Path</span>
+<!-- Shine effect on hover -->
+<div class="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+</button>
+<p class="text-center text-label-sm font-label-sm text-outline mt-3">Tailor this path to your current skills</p>
+</div>
+</aside>
+</main>
+</div>
+<script>
+    // Simple drag to pan functionality for the roadmap canvas
+    const canvas = document.getElementById('roadmap-canvas');
+    let isDown = false;
+    let startX;
+    let startY;
+    let scrollLeft;
+    let scrollTop;
+
+    canvas.addEventListener('mousedown', (e) => {
+        isDown = true;
+        canvas.classList.add('active');
+        startX = e.pageX - canvas.offsetLeft;
+        startY = e.pageY - canvas.offsetTop;
+        scrollLeft = canvas.scrollLeft;
+        scrollTop = canvas.scrollTop;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        isDown = false;
+        canvas.classList.remove('active');
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        isDown = false;
+        canvas.classList.remove('active');
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - canvas.offsetLeft;
+        const y = e.pageY - canvas.offsetTop;
+        const walkX = (x - startX) * 1.5; 
+        const walkY = (y - startY) * 1.5;
+        canvas.scrollLeft = scrollLeft - walkX;
+        canvas.scrollTop = scrollTop - walkY;
+    });
+</script>
+<style>
+    @keyframes shimmer {
+        100% {
+            transform: translateX(100%);
+        }
+    }
+</style>
+</body></html>

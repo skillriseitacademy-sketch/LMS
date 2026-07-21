@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PlacePro Career OS - Job Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#dae2fd",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "tertiary": "#960014",
+                        "inverse-on-surface": "#eef0ff",
+                        "tertiary-container": "#bc1d25",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "surface-container-high": "#e2e7ff",
+                        "surface-container": "#eaedff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "surface-dim": "#d2d9f4",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "on-secondary-fixed": "#2a1700",
+                        "surface-container-low": "#f2f3ff",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-primary-container": "#dad7ff",
+                        "on-tertiary-container": "#ffd0cc",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#c3c0ff",
+                        "surface-bright": "#faf8ff",
+                        "surface": "#faf8ff",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#410004",
+                        "primary": "#3525cd",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "inverse-surface": "#283044",
+                        "background": "#faf8ff",
+                        "on-background": "#131b2e",
+                        "primary-fixed": "#e2dfff",
+                        "on-surface": "#131b2e",
+                        "secondary-fixed": "#ffddb8",
+                        "secondary": "#855300",
+                        "primary-container": "#4f46e5",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#dae2fd",
+                        "secondary-container": "#fea619",
+                        "on-surface-variant": "#464555",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c7c4d8",
+                        "outline": "#777587",
+                        "on-secondary-container": "#684000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "2rem",
+                        "sm": "0.5rem",
+                        "base": "4px",
+                        "container-max": "1280px",
+                        "lg": "1.5rem",
+                        "xs": "0.25rem",
+                        "sidebar-width": "280px",
+                        "md": "1rem"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg": ["Manrope"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        @keyframes fadeInUpScale {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .animate-success-card {
+            animation: fadeInUpScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes pulseSubtle {
+            0% {
+                box-shadow: 0 0 0 0 rgba(133, 83, 0, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(133, 83, 0, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(133, 83, 0, 0);
+            }
+        }
+        .animate-btn-pulse {
+            animation: pulseSubtle 2s infinite;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            animation: confettiFall 1.5s ease-out forwards;
+            pointer-events: none;
+            z-index: 50;
+        }
+        @keyframes confettiFall {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(0);
+                opacity: 1;
+            }
+            20% {
+                transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(1);
+            }
+            100% {
+                transform: translate(var(--tx-end), var(--ty-end)) rotate(var(--rot-end)) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex text-body-md">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 dark:bg-background/80 backdrop-blur-md flex justify-between items-center px-xl z-40 hidden md:flex">
+<div class="flex items-center gap-md">
+<!-- Search removed as requested by "search_bar: on_left" but it's a detail view, let's keep it simple -->
+<div class="relative focus-within:ring-2 focus-within:ring-primary/20 rounded-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="bg-surface-container-highest border-none rounded-full py-2 pl-10 pr-4 text-body-md text-on-surface focus:ring-0 w-64 placeholder:text-outline-variant" placeholder="Search PlacePro..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button aria-label="Notifications" class="p-2 rounded-full text-on-surface-variant hover:text-primary transition-all hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button aria-label="Premium" class="p-2 rounded-full text-on-surface-variant hover:text-primary transition-all hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="workspace_premium">workspace_premium</span>
+</button>
+<img alt="Student Avatar" class="w-8 h-8 rounded-full object-cover ring-2 ring-surface-container-high cursor-pointer" data-alt="A clean, professional headshot of a college student against a neutral studio background. Bright, modern lighting, corporate modern aesthetic. High quality, crisp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIwM7pEWUUCbthNCnKp1KrS5QMVkvd02uAdjwQj7MUoZ_AW6eLU3Xbr30mRmz0WYmnlBQogDf_Ww-r6VZCwY_Bj5is5aYesc9EU8kgto9FA0-OzTHFLo-Awv2unUVIAbbN9SfeIo7uTm9Qru4KVozcOp7NEyeuj-mf96RAGq8Fb8qQocDOU8wJzmQk7a9S2BGS4WXG1r5f_K9c2tU-_iKk9ssawj1BKRb7kQy-ugezuPEaCdGP9SCEcg"/>
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex flex-col py-lg px-md overflow-y-auto hidden md:flex z-50">
+<div class="mb-xl px-sm">
+<h1 class="text-headline-md font-display-lg font-extrabold text-primary">PlacePro</h1>
+<p class="font-label-sm text-label-sm text-outline tracking-wider mt-1 uppercase">Career OS</p>
+</div>
+<div class="flex-1 flex flex-col gap-sm">
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="rss_feed">rss_feed</span>
+<span class="font-body-md text-body-md font-medium">Feed</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="video_chat">video_chat</span>
+<span class="font-body-md text-body-md font-medium">Interview Hub</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+<span class="font-body-md text-body-md font-medium">Quizzes</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="sports_esports">sports_esports</span>
+<span class="font-body-md text-body-md font-medium">Arena</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container-low transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="work" data-weight="fill" style="font-variation-settings: 'FILL' 1;">work</span>
+<span class="font-body-md text-body-md">Jobs</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-body-md text-body-md font-medium">Roadmap</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-body-md text-body-md font-medium">Resume</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-body-md text-body-md font-medium">Leaderboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-body-md text-body-md font-medium">Profile</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-body-md text-body-md font-medium">Rooms</span>
+</a>
+</div>
+<div class="mt-auto pt-xl">
+<button class="w-full bg-primary text-on-primary font-body-md text-body-md font-semibold py-3 rounded-lg hover:bg-primary/90 transition-colors duration-200 active:scale-[0.98] shadow-sm mb-lg">
+                Start Practice
+            </button>
+<div class="flex flex-col gap-sm border-t border-surface-container pt-md">
+<a class="flex items-center gap-md px-md py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="font-body-md text-[14px] font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-md px-md py-2 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+<span class="font-body-md text-[14px] font-medium">Logout</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="md:ml-[280px] w-full min-h-screen pt-16 md:pt-24 pb-24 md:pb-xl px-4 md:px-xl max-w-[1560px] mx-auto flex flex-col md:flex-row gap-xl">
+<!-- Left Column: Job Details -->
+<div class="flex-1 flex flex-col gap-lg">
+<!-- Header Section -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex items-start gap-lg relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-container/5 rounded-bl-full -z-0"></div>
+<div class="w-16 h-16 rounded-xl bg-surface-container flex items-center justify-center shrink-0 border border-outline-variant/30 z-10">
+<img alt="Company Logo" class="w-10 h-10 object-contain" data-alt="A clean, minimalist logo of a tech company, stylized 'Z', corporate modern aesthetic, white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxTgMDGPP5mlnWQfu-iASitpw2a4GHUqMvkohgsGl68deTLbLm7G02jAoPWJA6Jp4HnboF8vRrB6Veh8qlIwtu_jCjp1ABdeotEXmDp6CXROrTlFRSfsNp1i1RmwCgrPwMsVCinLmcO7shfb6dujlNEdPSZXb-fwGjheSXAxf5NiGy821OK3oqWT9aC007PEd3fPCoiyHT21LJp_fyeAOf2G-C-d5Szk6BVI4bLfoBOTSSSAbtCXhAag"/>
+</div>
+<div class="flex-1 z-10">
+<div class="flex justify-between items-start">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-1">Software Engineer, Backend</h2>
+<p class="font-body-lg text-body-lg text-primary font-medium">Zomato <span class="text-on-surface-variant font-normal mx-2">•</span> Gurgaon, India (Hybrid)</p>
+</div>
+<button class="text-outline hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+</button>
+</div>
+<div class="flex flex-wrap gap-sm mt-md">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="payments">payments</span>
+                            ₹24L - ₹32L Base
+                        </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="work">work</span>
+                            0-2 Years Exp
+                        </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span>
+                            Full-time
+                        </span>
+</div>
+</div>
+</div>
+<!-- Description -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-md">About the Role</h3>
+<p class="text-on-surface-variant mb-lg leading-relaxed">
+                    We are looking for a passionate Software Engineer to join our core backend team. You will be responsible for designing, building, and maintaining high-performance, scalable, and reliable services that power millions of food deliveries daily. This role requires a deep understanding of distributed systems, database design, and a strong problem-solving mindset.
+                </p>
+<h3 class="font-headline-md text-[20px] font-semibold text-on-surface mb-sm mt-xl">Responsibilities</h3>
+<ul class="space-y-3 text-on-surface-variant list-none pl-1 mb-lg">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5 shrink-0" data-icon="check_circle">check_circle</span>
+                        Design and implement microservices using Go and Java to handle high throughput and low latency requirements.
+                    </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5 shrink-0" data-icon="check_circle">check_circle</span>
+                        Optimize database queries and schema design (PostgreSQL, Redis) to improve application performance.
+                    </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5 shrink-0" data-icon="check_circle">check_circle</span>
+                        Collaborate with cross-functional teams (Product, Design, QA) to define and ship new features.
+                    </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5 shrink-0" data-icon="check_circle">check_circle</span>
+                        Participate in code reviews, write automated tests, and ensure code quality and maintainability.
+                    </li>
+</ul>
+<h3 class="font-headline-md text-[20px] font-semibold text-on-surface mb-sm mt-xl">Requirements</h3>
+<ul class="space-y-3 text-on-surface-variant list-none pl-1">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-outline text-[20px] mt-0.5 shrink-0" data-icon="arrow_right">arrow_right</span>
+                        B.Tech/M.Tech in Computer Science or a related field.
+                    </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-outline text-[20px] mt-0.5 shrink-0" data-icon="arrow_right">arrow_right</span>
+                        Strong proficiency in Data Structures, Algorithms, and System Design.
+                    </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-outline text-[20px] mt-0.5 shrink-0" data-icon="arrow_right">arrow_right</span>
+                        Experience with backend languages like Go, Java, or Python.
+                    </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-outline text-[20px] mt-0.5 shrink-0" data-icon="arrow_right">arrow_right</span>
+                        Familiarity with cloud platforms (AWS/GCP) and containerization (Docker, Kubernetes) is a plus.
+                    </li>
+</ul>
+</div>
+</div>
+<!-- Right Column: Sidebar -->
+<div class="w-full md:w-[380px] flex flex-col gap-lg shrink-0">
+<!-- Quick Apply Card -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border-t-4 border-primary animate-success-card">
+<h3 class="font-headline-md text-[20px] font-semibold text-on-surface mb-sm relative inline-block" id="success-heading">Application Sent! 🎉</h3>
+<p class="text-on-surface-variant text-sm mb-md">Your profile and resume have been sent to Zomato. Good luck, Alex!</p>
+<button class="w-full text-on-primary font-body-md text-body-md font-semibold py-3 rounded-lg hover:bg-primary/90 transition-all duration-200 active:scale-[0.98] shadow-sm flex items-center justify-center gap-2 group bg-secondary animate-btn-pulse"><span class="material-symbols-outlined" data-icon="check_circle">check_circle</span> Applied!</button>
+<div class="mt-4 text-center">
+<a class="text-primary hover:underline text-sm font-medium" href="#">View Application Status</a>
+</div>
+</div>
+<!-- Why You Match Card (Bento-style) -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+<div class="flex items-center gap-3 mb-md">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="radar">radar</span>
+</div>
+<h3 class="font-headline-md text-[20px] font-semibold text-on-surface">Why You Match</h3>
+</div>
+<p class="text-on-surface-variant text-sm mb-lg">Based on your Arena performance and Roadmap progress.</p>
+<div class="space-y-4">
+<!-- Match Item -->
+<div>
+<div class="flex justify-between text-sm mb-1">
+<span class="font-medium text-on-surface">System Design</span>
+<span class="text-primary font-bold">Top 10%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+<div class="bg-primary h-2 rounded-full" style="width: 90%"></div>
+</div>
+<p class="text-xs text-on-surface-variant mt-1">Matched requirement: Scalable systems</p>
+</div>
+<!-- Match Item -->
+<div>
+<div class="flex justify-between text-sm mb-1">
+<span class="font-medium text-on-surface">Go / Java</span>
+<span class="text-secondary font-bold">Advanced</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+<div class="bg-secondary h-2 rounded-full" style="width: 80%"></div>
+</div>
+<p class="text-xs text-on-surface-variant mt-1">From Roadmap: Backend Mastery</p>
+</div>
+<!-- Missing Skill -->
+<div class="p-3 bg-error-container/20 rounded-lg border border-error-container/50">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-error text-[16px]" data-icon="warning">warning</span>
+<span class="text-sm font-medium text-on-surface">Kubernetes</span>
+</div>
+<p class="text-xs text-on-surface-variant mb-2">Recommended to review before interview.</p>
+<a class="text-xs text-primary font-medium hover:underline" href="#">Start K8s Module →</a>
+</div>
+</div>
+</div>
+<!-- Company at a Glance -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+<h3 class="font-headline-md text-[20px] font-semibold text-on-surface mb-lg">Company at a Glance</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3 bg-surface rounded-lg border border-surface-container-highest">
+<span class="material-symbols-outlined text-outline-variant mb-1" data-icon="domain">domain</span>
+<p class="text-xs text-on-surface-variant uppercase tracking-wider font-label-sm">Industry</p>
+<p class="font-medium text-on-surface text-sm">Consumer Tech</p>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-surface-container-highest">
+<span class="material-symbols-outlined text-outline-variant mb-1" data-icon="group">group</span>
+<p class="text-xs text-on-surface-variant uppercase tracking-wider font-label-sm">Size</p>
+<p class="font-medium text-on-surface text-sm">5,000+ Emp.</p>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-surface-container-highest">
+<span class="material-symbols-outlined text-outline-variant mb-1" data-icon="trending_up">trending_up</span>
+<p class="text-xs text-on-surface-variant uppercase tracking-wider font-label-sm">Stage</p>
+<p class="font-medium text-on-surface text-sm">Public (IPO)</p>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-surface-container-highest">
+<span class="material-symbols-outlined text-outline-variant mb-1" data-icon="psychology">psychology</span>
+<p class="text-xs text-on-surface-variant uppercase tracking-wider font-label-sm">Culture</p>
+<p class="font-medium text-on-surface text-sm">Fast-paced</p>
+</div>
+</div>
+<div class="mt-md pt-md border-t border-surface-container-highest">
+<a class="text-primary text-sm font-medium hover:underline flex items-center gap-1" href="#">
+                         View full company profile
+                         <span class="material-symbols-outlined text-[16px]" data-icon="open_in_new">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+</main>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const heading = document.getElementById('success-heading');
+            if(!heading) return;
+            
+            // Indigo, Amber, Success Green (approx)
+            const colors = ['#3525cd', '#fea619', '#22c55e'];
+            const numConfetti = 40;
+            
+            for (let i = 0; i < numConfetti; i++) {
+                const conf = document.createElement('div');
+                conf.classList.add('confetti');
+                
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.backgroundColor = color;
+                
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 50 + Math.random() * 80;
+                const tx = Math.cos(angle) * dist;
+                const ty = Math.sin(angle) * dist - 30;
+                
+                const txEnd = tx + Math.cos(angle) * 30;
+                const tyEnd = ty + 100;
+                
+                conf.style.setProperty('--tx', `${tx}px`);
+                conf.style.setProperty('--ty', `${ty}px`);
+                conf.style.setProperty('--tx-end', `${txEnd}px`);
+                conf.style.setProperty('--ty-end', `${tyEnd}px`);
+                conf.style.setProperty('--rot', `${Math.random() * 360}deg`);
+                conf.style.setProperty('--rot-end', `${Math.random() * 720}deg`);
+                
+                conf.style.left = `50%`;
+                conf.style.top = `50%`;
+                
+                heading.appendChild(conf);
+            }
+        });
+    </script>
+</body></html>

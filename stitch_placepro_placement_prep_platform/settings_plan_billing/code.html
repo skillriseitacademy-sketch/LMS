@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Plan &amp; Billing - PlacePro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#855300",
+                        "primary-container": "#4f46e5",
+                        "inverse-primary": "#c3c0ff",
+                        "outline": "#777587",
+                        "on-primary-container": "#dad7ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-tertiary-fixed": "#410004",
+                        "outline-variant": "#c7c4d8",
+                        "surface-variant": "#dae2fd",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "surface-dim": "#d2d9f4",
+                        "on-background": "#131b2e",
+                        "surface-container": "#eaedff",
+                        "surface": "#faf8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#fea619",
+                        "background": "#faf8ff",
+                        "primary-fixed": "#e2dfff",
+                        "surface-bright": "#faf8ff",
+                        "on-surface-variant": "#464555",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "inverse-on-surface": "#eef0ff",
+                        "primary": "#3525cd",
+                        "inverse-surface": "#283044",
+                        "on-secondary-fixed": "#2a1700",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#e2e7ff",
+                        "on-primary-fixed": "#0f0069",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#960014",
+                        "secondary-fixed": "#ffddb8",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f2f3ff",
+                        "surface-container-highest": "#dae2fd",
+                        "on-secondary-container": "#684000",
+                        "surface-tint": "#4d44e3",
+                        "on-tertiary-container": "#ffd0cc",
+                        "tertiary-container": "#bc1d25",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-surface": "#131b2e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "280px",
+                        "md": "1rem",
+                        "lg": "1.5rem",
+                        "xl": "2rem",
+                        "container-max": "1280px",
+                        "xs": "0.25rem",
+                        "sm": "0.5rem",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-md": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Ambient Background */
+        body {
+            background-color: #F8FAFC;
+        }
+        
+        /* Subtle Shadows */
+        .glass-card {
+            background: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+    </style>
+</head>
+<body class="text-on-background bg-surface font-body-md antialiased overflow-x-hidden min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-full md:w-[calc(100%-280px)] h-16 bg-surface/80 dark:bg-background/80 backdrop-blur-md flex justify-between items-center px-xl z-40">
+<!-- Search -->
+<div class="flex items-center flex-1 max-w-md">
+<div class="relative w-full focus-within:ring-2 focus-within:ring-primary/20 rounded-full transition-all">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-full py-2 pl-12 pr-4 text-body-md text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search..." type="text"/>
+</div>
+</div>
+<!-- Actions & Profile -->
+<div class="flex items-center gap-md">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary transition-all hover:bg-surface-container">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary transition-all hover:bg-surface-container">
+<span class="material-symbols-outlined">workspace_premium</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-container-highest cursor-pointer ml-sm">
+<img alt="Student Avatar" class="w-full h-full object-cover" data-alt="A clean, professional portrait of a young student in a well-lit modern environment, styled for a sleek SaaS application dashboard. Soft natural lighting, neutral background, reflecting a focused and driven attitude." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWkfdMBggn-yqHF_pBK9Ao_7rLmd792Jwxn7Vm2AhMuTQvAurfoWAObQ9ZKhiu_rb1Oi_wzi3iEQHsA9nDK0UjU5fuQuktQ3GftR8r8CPoOy25j63VLod1chH2I7bgMN6eKNgrJXZlviEjw2-3CNXGomFMgaDXmXVNzSywPnEO59iquLBv-8G8QVZiZjS69nh-EzjjeM5p3tjrTxh7BUNQiHAI87tSl5RqdkhFHTlcXNMIC67I0bpG8Q"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-full py-lg px-md w-sidebar-width overflow-y-auto bg-surface-container-lowest dark:bg-inverse-surface shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] fixed left-0 top-0 z-50">
+<!-- Brand -->
+<div class="mb-xl px-md flex items-center gap-sm">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined fill">rocket_launch</span>
+</div>
+<div>
+<h1 class="text-headline-md font-display-lg font-extrabold text-primary dark:text-inverse-primary leading-none">PlacePro</h1>
+<span class="font-label-sm text-label-sm text-outline tracking-wider">Career OS</span>
+</div>
+</div>
+<!-- CTA -->
+<button class="mx-md mb-xl bg-primary text-on-primary font-body-md font-medium py-3 rounded-lg hover:bg-primary/90 transition-transform duration-150 active:scale-[0.98] shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">play_arrow</span>
+            Start Practice
+        </button>
+<!-- Navigation Links -->
+<div class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">rss_feed</span>
+<span class="font-body-md text-body-md font-medium">Feed</span>
+</a>
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">video_chat</span>
+<span class="font-body-md text-body-md font-medium">Interview Hub</span>
+</a>
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">quiz</span>
+<span class="font-body-md text-body-md font-medium">Quizzes</span>
+</a>
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">sports_esports</span>
+<span class="font-body-md text-body-md font-medium">Arena</span>
+</a>
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">work</span>
+<span class="font-body-md text-body-md font-medium">Jobs</span>
+</a>
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-body-md text-body-md font-medium">Roadmap</span>
+</a>
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-body-md text-body-md font-medium">Resume</span>
+</a>
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-body-md text-body-md font-medium">Leaderboard</span>
+</a>
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md text-body-md font-medium">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-body-md text-body-md font-medium">Rooms</span>
+</a>
+</div>
+<!-- Footer Links -->
+<div class="mt-auto pt-lg border-t border-surface-container-highest space-y-1">
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-primary dark:text-inverse-primary font-bold border-r-4 border-primary dark:border-inverse-primary bg-surface-container-low dark:bg-surface-dim transition-colors duration-200" href="#">
+<span class="material-symbols-outlined fill">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md font-medium">Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="md:ml-sidebar-width pt-16 min-h-screen">
+<div class="max-w-container-max mx-auto px-md md:px-xl py-xl space-y-xl">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Plan &amp; Billing</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage your subscription and billing details.</p>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Current Plan Card (Span 2) -->
+<div class="lg:col-span-2 glass-card rounded-2xl p-lg flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl pointer-events-none"></div>
+<div>
+<div class="flex items-center gap-sm mb-sm">
+<span class="font-label-sm text-label-sm uppercase text-outline tracking-wider">Current Plan</span>
+<span class="bg-surface-container px-2 py-1 rounded text-xs font-medium text-primary">Free Tier</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">PlacePro Basic</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">You are currently on the free tier. Upgrade to Pro to unlock advanced career preparation tools.</p>
+</div>
+<div class="mt-xl flex flex-col sm:flex-row gap-md sm:items-center justify-between border-t border-surface-container-high pt-lg">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Free forever</p>
+<p class="text-sm text-on-surface-variant">Basic access to feed and roadmap.</p>
+</div>
+<button class="bg-primary text-on-primary font-body-md font-medium py-2 px-6 rounded-lg hover:bg-primary/90 transition-transform duration-150 active:scale-[0.98] shadow-sm flex items-center justify-center gap-2 whitespace-nowrap">
+                            Upgrade to Pro
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Payment Method Mini Card -->
+<div class="glass-card rounded-2xl p-lg flex flex-col justify-between">
+<div>
+<h4 class="font-label-sm text-label-sm uppercase text-outline tracking-wider mb-md">Payment Method</h4>
+<div class="flex items-center gap-md bg-surface-container-low p-sm rounded-lg border border-surface-container-high border-dashed">
+<div class="w-10 h-10 rounded bg-surface-container-lowest border border-outline-variant flex items-center justify-center text-outline-variant">
+<span class="material-symbols-outlined">credit_card</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface-variant">No card added</p>
+</div>
+</div>
+</div>
+<button class="mt-lg w-full bg-surface-container-lowest text-primary border border-surface-container-high font-body-md font-medium py-2 rounded-lg hover:bg-surface-container transition-colors duration-200">
+                        Add Payment Method
+                    </button>
+</div>
+</div>
+<!-- Pro Features Section -->
+<div class="mt-xl">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-secondary-container fill text-[28px]">workspace_premium</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Why Upgrade to PlacePro Pro?</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- Feature 1 -->
+<div class="glass-card rounded-xl p-md border-l-4 border-l-secondary-container hover:shadow-md transition-shadow">
+<div class="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary-container mb-md">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-medium text-on-surface mb-1">AI Resume Optimization</h4>
+<p class="text-sm text-on-surface-variant">Get personalized feedback to beat ATS and stand out to recruiters.</p>
+</div>
+<!-- Feature 2 -->
+<div class="glass-card rounded-xl p-md border-l-4 border-l-secondary-container hover:shadow-md transition-shadow">
+<div class="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary-container mb-md">
+<span class="material-symbols-outlined">video_camera_front</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-medium text-on-surface mb-1">Unlimited Mock Interviews</h4>
+<p class="text-sm text-on-surface-variant">Practice anytime with our AI interviewer, complete with detailed analysis.</p>
+</div>
+<!-- Feature 3 -->
+<div class="glass-card rounded-xl p-md border-l-4 border-l-secondary-container hover:shadow-md transition-shadow">
+<div class="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary-container mb-md">
+<span class="material-symbols-outlined">military_tech</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-medium text-on-surface mb-1">Premium Arena Access</h4>
+<p class="text-sm text-on-surface-variant">Compete in exclusive coding challenges and boost your global ranking.</p>
+</div>
+</div>
+</div>
+<!-- Billing History Placeholder -->
+<div class="glass-card rounded-2xl p-lg mt-xl">
+<div class="flex justify-between items-center mb-lg">
+<h4 class="font-headline-md text-[20px] font-semibold text-on-surface">Billing History</h4>
+<button class="text-primary hover:text-primary-container text-sm font-medium transition-colors">Download All</button>
+</div>
+<div class="text-center py-xl border border-dashed border-surface-container-high rounded-xl bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[48px] text-surface-container-highest mb-sm">receipt_long</span>
+<p class="font-body-md text-on-surface-variant">No billing history available yet.</p>
+</div>
+</div>
+</div>
+</main>
+</body></html>

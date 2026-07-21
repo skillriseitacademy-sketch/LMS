@@ -1,0 +1,23 @@
+# PlacePro Master Brief
+
+## Product Vision
+A placement-prep platform for Indian college students blending social networking, LMS features, and gamification.
+
+## Audience
+Final-year and pre-final engineering/CS students in India.
+
+## Tone & Style
+Energetic, credible, achievement-driven. Clean SaaS UI, rounded cards, confident indigo primary, amber gamification pops.
+
+## Core Navigation
+- **Marketing:** Landing, Login, Signup
+- **Onboarding:** 4-step wizard
+- **App Shell (Student):** Dashboard, Feed, Interview Hub, Quizzes, Arena, Jobs, Roadmap, Resume, Leaderboard, Profile, Rooms
+- **Admin Shell:** Admin Dashboard, Users, Teachers, Analytics, Content Management
+
+## Visual Constraints
+- 12-16px border radius
+- Soft shadows
+- No heavy gradients
+- Outline iconography
+- Persistent sidebars for authenticated states

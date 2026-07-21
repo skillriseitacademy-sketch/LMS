@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PlacePro - Leaderboard</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#960014",
+                        "surface-tint": "#4d44e3",
+                        "inverse-primary": "#c3c0ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#fea619",
+                        "outline": "#777587",
+                        "on-tertiary-fixed": "#410004",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-tertiary-container": "#ffd0cc",
+                        "inverse-surface": "#283044",
+                        "on-surface-variant": "#464555",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "background": "#faf8ff",
+                        "tertiary-container": "#bc1d25",
+                        "surface": "#faf8ff",
+                        "secondary-fixed": "#ffddb8",
+                        "on-background": "#131b2e",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eef0ff",
+                        "primary-fixed": "#e2dfff",
+                        "on-primary-fixed": "#0f0069",
+                        "on-secondary-container": "#684000",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "error": "#ba1a1a",
+                        "primary-container": "#4f46e5",
+                        "surface-variant": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#dae2fd",
+                        "primary": "#3525cd",
+                        "surface-container-low": "#f2f3ff",
+                        "on-primary-container": "#dad7ff",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-dim": "#d2d9f4",
+                        "surface-bright": "#faf8ff",
+                        "surface-container-high": "#e2e7ff",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-secondary-fixed": "#2a1700",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-surface": "#131b2e",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#eaedff",
+                        "secondary": "#855300"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "1rem",
+                        "sm": "0.5rem",
+                        "sidebar-width": "280px",
+                        "xs": "0.25rem",
+                        "base": "4px",
+                        "lg": "1.5rem",
+                        "xl": "2rem",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-md": ["Manrope"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        
+        .podium-1 {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+        }
+        
+        .podium-2 {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border: 2px solid #94a3b8;
+        }
+        
+        .podium-3 {
+            background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
+            border: 2px solid #fb923c;
+        }
+
+        .avatar-glow-1 { box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+        .avatar-glow-2 { box-shadow: 0 0 20px rgba(148, 163, 184, 0.4); }
+        .avatar-glow-3 { box-shadow: 0 0 20px rgba(251, 146, 60, 0.4); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md text-body-md antialiased min-h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<aside class="hidden md:flex flex-col h-full py-lg px-md w-sidebar-width fixed left-0 top-0 bg-surface-container-lowest shadow-sm z-50 border-r border-outline-variant/30">
+<div class="mb-xl px-sm">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">PlacePro</h1>
+<p class="font-label-sm text-label-sm text-outline tracking-wider uppercase mt-1">Career OS</p>
+</div>
+<nav class="flex-1 space-y-sm overflow-y-auto pr-sm custom-scrollbar">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">forum</span>
+<span class="font-body-md text-body-md">Feed</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">record_voice_over</span>
+<span class="font-body-md text-body-md">Interview Hub</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">quiz</span>
+<span class="font-body-md text-body-md">Quizzes</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">sports_esports</span>
+<span class="font-body-md text-body-md">Arena</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">work</span>
+<span class="font-body-md text-body-md">Jobs</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">map</span>
+<span class="font-body-md text-body-md">Roadmap</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">description</span>
+<span class="font-body-md text-body-md">Resume</span>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg bg-surface-container-low text-primary font-bold border-l-4 border-primary shadow-sm transform scale-[0.98] transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-body-md text-body-md">Leaderboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">person</span>
+<span class="font-body-md text-body-md">Profile</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">groups</span>
+<span class="font-body-md text-body-md">Rooms</span>
+</a>
+</nav>
+<div class="mt-auto pt-lg space-y-md border-t border-outline-variant/30 px-sm">
+<button class="w-full bg-primary text-on-primary py-sm rounded-lg font-body-md font-semibold shadow-sm hover:bg-primary-container hover:text-on-primary-container transition-colors transform hover:scale-[1.02] active:scale-[0.98]">
+                Start Daily Challenge
+            </button>
+<div class="flex flex-col space-y-sm">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">help</span>
+<span class="font-body-md text-body-md">Help</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-sidebar-width flex flex-col min-h-screen relative pb-24 md:pb-0">
+<!-- TopAppBar (Shared Component) -->
+<header class="hidden md:flex justify-between items-center w-full h-16 px-xl bg-surface border-b border-outline-variant/30 sticky top-0 z-40">
+<div class="flex-1 max-w-md">
+<!-- Search Bar -->
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant/50 rounded-full font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all placeholder:text-outline/70" placeholder="Search students, skills..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg ml-auto">
+<button class="text-primary font-body-md font-semibold hover:text-primary-container transition-colors">Upgrade Pro</button>
+<div class="flex items-center gap-2 bg-secondary-container/20 text-secondary border border-secondary-container/50 px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm">stars</span>
+<span class="font-label-sm font-bold tracking-wider">1,250 XP</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 rounded-full text-secondary hover:bg-secondary-container/10 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</button>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/50 cursor-pointer hover:border-primary transition-colors">
+<img alt="Student avatar" class="w-full h-full object-cover" data-alt="A clean, professional headshot of a young male student in a bright, modern light-mode setting. He is wearing a simple indigo t-shirt against a pure white background. The lighting is soft and flattering, creating a premium SaaS profile picture aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgMr7Bvv3p2PNGFC7AJWqw2SeNYezh_evwybnImROPfBFH8rIWU-fQl2YNmBzjqmgSvNTkk4z3tdNbjcqMFdkAjWGX-RYEryFH1of3f7kYLKfck2rQLs-eqEIZEfjtFcNuvfitqhVyrowtWhqfGVZHjV0KOJIq_WxW6fvhcC72TU1UPOAy0fO1iNPNTbE_G62HLX-3ufqH5eS4W0apce8Lpbt8qTLJQmyO16Ea-WpOruh_Pr9GlUN7Mw"/>
+</div>
+</div>
+</header>
+<!-- Leaderboard Canvas -->
+<div class="flex-1 w-full max-w-container-max mx-auto p-md md:p-xl flex flex-col gap-xl">
+<!-- Header & Toggles -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h2 class="font-display-lg text-headline-lg-mobile md:text-display-lg text-on-surface">Arena Leaderboard</h2>
+<p class="text-on-surface-variant mt-2 font-body-md">Compete, earn XP, and secure top placement rankings.</p>
+</div>
+<div class="flex bg-surface-container-lowest p-1 rounded-lg border border-outline-variant/30 shadow-sm self-start">
+<button class="px-4 py-1.5 rounded-md text-sm font-semibold bg-primary text-on-primary shadow-sm transition-all">Weekly</button>
+<button class="px-4 py-1.5 rounded-md text-sm font-medium text-on-surface-variant hover:bg-surface-container-low transition-all">Monthly</button>
+<button class="px-4 py-1.5 rounded-md text-sm font-medium text-on-surface-variant hover:bg-surface-container-low transition-all">All-Time</button>
+</div>
+</div>
+<!-- Podium Section -->
+<div class="pt-xl pb-md">
+<div class="flex justify-center items-end gap-2 md:gap-lg h-64">
+<!-- 2nd Place -->
+<div class="flex flex-col items-center relative z-10 w-24 md:w-32 group">
+<div class="relative mb-4 transform group-hover:-translate-y-2 transition-transform duration-300">
+<img class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-surface object-cover avatar-glow-2 z-10 relative" data-alt="A bright, high-key professional profile photo of a female student with short dark hair. The image uses a clean, minimal light-mode aesthetic. She looks confident, set against a subtle slate-gray backdrop that matches the silver tier of a gamified leaderboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXpNmwUJ2ZOW4QcGwb-XDpeFbE6hQTIWLjKzObKCbi2CcNMEYUNG21Vo4uOJylo8JBi11xFol8EYW4vlrvvFBFWxrKecfx7L-RM_HDuUjKjKoeqBEYjx41Y_AnR_kU0SQhvJN_8dYzG0l0zW2kJyQhrrmVZh1Aro_imN16qmRCWbvgJxol0JpDVkiPqxD5OzbAYuJt6y9nHbM8lezT0udKr5nxayH5Eh69Xw5VqdFZmmprK0R8TDBifw"/>
+<div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-surface text-on-surface font-bold text-xs px-2 py-0.5 rounded-full border border-outline-variant shadow-sm z-20">#2</div>
+</div>
+<div class="w-full h-24 podium-2 rounded-t-xl flex flex-col items-center justify-start pt-4 shadow-inner relative overflow-hidden">
+<div class="absolute inset-0 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiM0NzU1NjkiLz48L3N2Zz4=')]"></div>
+<span class="font-headline-md text-sm md:text-base text-slate-800 relative z-10 text-center leading-tight truncate w-full px-2">Sarah L.</span>
+<span class="font-label-sm text-slate-600 relative z-10 mt-1">18.4k XP</span>
+</div>
+</div>
+<!-- 1st Place -->
+<div class="flex flex-col items-center relative z-20 w-28 md:w-40 group -mb-4">
+<div class="absolute -top-12 text-secondary animate-bounce">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div class="relative mb-4 transform group-hover:-translate-y-2 transition-transform duration-300">
+<img class="w-20 h-20 md:w-28 md:h-28 rounded-full border-4 border-surface object-cover avatar-glow-1 z-10 relative" data-alt="A premium, studio-quality headshot of a male student looking determined and victorious. He is set against a very bright, almost pure white background, fitting a sleek SaaS interface. The image is crisp, with subtle warm golden lighting accents highlighting his top-tier leaderboard position." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv_tiZII2mdPA-kt-io2dHUANg6s-w6J8F0kKNoqVw0djMckVr5q2tn_gWZrnnDjuzJmX5y7FmPtI-i5bTuncygZpWFWpq6d7exETUFwB-KOceOs_Cx5KgaG85Pcp4Y8IbCmGyDPWXrMdgvlvpvDyKCmngHTv1u8WXTZ9Qz27pTNX0pn1NlVjEn2EApSxgr18aHlN7UJvMM_ieluSxGX8LpE2yS90i3sohmtxNJK0-1s48nuJxQZRONQ"/>
+<div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-secondary text-white font-black text-sm md:text-base px-4 py-1 rounded-full border-2 border-surface shadow-md z-20">#1</div>
+</div>
+<div class="w-full h-36 podium-1 rounded-t-xl flex flex-col items-center justify-start pt-6 shadow-inner relative overflow-hidden">
+<div class="absolute inset-0 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNkOTc3MDYiLz48L3N2Zz4=')]"></div>
+<span class="font-headline-md text-base md:text-lg text-amber-900 relative z-10 text-center leading-tight truncate w-full px-2">Alex Chen</span>
+<span class="font-label-sm font-bold text-amber-700 relative z-10 mt-1">24.2k XP</span>
+</div>
+</div>
+<!-- 3rd Place -->
+<div class="flex flex-col items-center relative z-10 w-24 md:w-32 group">
+<div class="relative mb-4 transform group-hover:-translate-y-2 transition-transform duration-300">
+<img class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-surface object-cover avatar-glow-3 z-10 relative" data-alt="A clean, modern headshot of a male student wearing glasses in a light-mode environment. The background is a soft, airy white. He has a friendly expression, and the overall image feels polished and appropriate for a professional academic leaderboard context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEU5T99kDtmitx1Twv6cJqvN6oqF4J5UR_MjqaVzzcJK8CSvBpb_cW8w0PYhDQsjZYcz0nd04zITMw-5FhGO-RDT1oY4G1VfglFv4SdwQLVKcj3Z8gfqg090k5nfrXpEHjaZPtpkCh_fi4u9C9L1gyCftJ5K5DCk9mRkvS2Z3G3CgLVaTBt80WT1iawqq2GgjsrtCamg5yneviuHrFkELRTIdKHREczYrDIXPmG4ve5HHXPh-HqCUjog"/>
+<div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-surface text-on-surface font-bold text-xs px-2 py-0.5 rounded-full border border-outline-variant shadow-sm z-20">#3</div>
+</div>
+<div class="w-full h-20 podium-3 rounded-t-xl flex flex-col items-center justify-start pt-3 shadow-inner relative overflow-hidden">
+<div class="absolute inset-0 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNjMjQxMGMiLz48L3N2Zz4=')]"></div>
+<span class="font-headline-md text-sm md:text-base text-orange-900 relative z-10 text-center leading-tight truncate w-full px-2">David K.</span>
+<span class="font-label-sm text-orange-700 relative z-10 mt-1">16.8k XP</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Table Section -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col">
+<!-- Table Filters -->
+<div class="border-b border-outline-variant/30 p-md flex flex-wrap gap-4 items-center justify-between bg-surface/50">
+<div class="flex gap-2">
+<button class="px-3 py-1.5 rounded-full text-sm font-semibold bg-primary-container/10 text-primary border border-primary/20">Global</button>
+<button class="px-3 py-1.5 rounded-full text-sm font-medium text-on-surface-variant hover:bg-surface-container-low border border-transparent hover:border-outline-variant/30 transition-all">College</button>
+<button class="px-3 py-1.5 rounded-full text-sm font-medium text-on-surface-variant hover:bg-surface-container-low border border-transparent hover:border-outline-variant/30 transition-all">Friends</button>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-sm">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+<span class="font-medium">CS Majors</span>
+</div>
+</div>
+<!-- Table Content -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest text-on-surface-variant font-label-sm text-xs uppercase tracking-wider border-b border-outline-variant/30">
+<th class="p-md font-medium w-16 text-center">Rank</th>
+<th class="p-md font-medium">Student</th>
+<th class="p-md font-medium hidden sm:table-cell">Recent Activity</th>
+<th class="p-md font-medium text-right">Total XP</th>
+</tr>
+</thead>
+<tbody class="text-sm font-body-md divide-y divide-outline-variant/20">
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="p-md text-center font-bold text-on-surface-variant">4</td>
+<td class="p-md">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-primary flex items-center justify-center font-bold text-xs">EJ</div>
+<div>
+<div class="font-semibold text-on-surface">Emma Johnson</div>
+<div class="text-xs text-on-surface-variant/70">Stanford Univ.</div>
+</div>
+</div>
+</td>
+<td class="p-md hidden sm:table-cell">
+<div class="flex gap-1">
+<span class="w-2 h-6 rounded-sm bg-primary/40"></span>
+<span class="w-2 h-6 rounded-sm bg-primary/80"></span>
+<span class="w-2 h-6 rounded-sm bg-primary"></span>
+</div>
+</td>
+<td class="p-md text-right font-label-sm font-bold text-secondary">15,900</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="p-md text-center font-bold text-on-surface-variant">5</td>
+<td class="p-md">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-primary flex items-center justify-center font-bold text-xs">MP</div>
+<div>
+<div class="font-semibold text-on-surface">Michael Park</div>
+<div class="text-xs text-on-surface-variant/70">MIT</div>
+</div>
+</div>
+</td>
+<td class="p-md hidden sm:table-cell">
+<div class="flex gap-1">
+<span class="w-2 h-6 rounded-sm bg-primary/20"></span>
+<span class="w-2 h-6 rounded-sm bg-primary/60"></span>
+<span class="w-2 h-6 rounded-sm bg-primary"></span>
+</div>
+</td>
+<td class="p-md text-right font-label-sm font-bold text-secondary">14,250</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="p-md text-center font-bold text-on-surface-variant">6</td>
+<td class="p-md">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-primary flex items-center justify-center font-bold text-xs">SR</div>
+<div>
+<div class="font-semibold text-on-surface">Sofia Rodriguez</div>
+<div class="text-xs text-on-surface-variant/70">Berkeley</div>
+</div>
+</div>
+</td>
+<td class="p-md hidden sm:table-cell">
+<div class="flex gap-1">
+<span class="w-2 h-6 rounded-sm bg-primary"></span>
+<span class="w-2 h-6 rounded-sm bg-primary/80"></span>
+<span class="w-2 h-6 rounded-sm bg-primary/40"></span>
+</div>
+</td>
+<td class="p-md text-right font-label-sm font-bold text-secondary">13,800</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Sticky User Rank Bar (Desktop) -->
+<div class="hidden md:block sticky bottom-0 w-full bg-primary text-on-primary border-t border-primary-container shadow-[0_-8px_30px_rgb(53,37,205,0.2)] z-30">
+<div class="max-w-container-max mx-auto px-xl py-3 flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border-2 border-white/20 bg-white/10 flex items-center justify-center font-bold font-headline-md">
+                        #42
+                    </div>
+<div>
+<div class="font-semibold text-sm">Your Current Rank</div>
+<div class="text-xs text-on-primary/80">Top 5% of Global CS Students</div>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="text-right">
+<div class="font-label-sm font-bold text-secondary-fixed">8,450 XP</div>
+<div class="text-xs text-on-primary/80">450 XP to rank up</div>
+</div>
+<div class="w-32 h-2 bg-black/20 rounded-full overflow-hidden">
+<div class="w-[85%] h-full bg-secondary-fixed rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom Navigation (Conceptual representation based on rules) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant/30 flex justify-around items-center h-16 z-50 px-sm pb-safe shadow-[0_-4px_6px_-1px_rgb(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center w-16 h-full text-on-surface-variant" href="#">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+<span class="text-[10px] font-medium mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center w-16 h-full text-on-surface-variant" href="#">
+<span class="material-symbols-outlined text-[24px]">work</span>
+<span class="text-[10px] font-medium mt-1">Jobs</span>
+</a>
+<!-- Active -->
+<a class="flex flex-col items-center justify-center w-16 h-full text-primary relative" href="#">
+<div class="absolute -top-3 bg-surface p-1 rounded-full border border-outline-variant/20 shadow-sm">
+<div class="bg-primary/10 rounded-full p-2">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+</div>
+</div>
+<span class="text-[10px] font-bold mt-6">Rank</span>
+</a>
+<a class="flex flex-col items-center justify-center w-16 h-full text-on-surface-variant" href="#">
+<span class="material-symbols-outlined text-[24px]">sports_esports</span>
+<span class="text-[10px] font-medium mt-1">Arena</span>
+</a>
+<a class="flex flex-col items-center justify-center w-16 h-full text-on-surface-variant" href="#">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-[10px] font-medium mt-1">Profile</span>
+</a>
+</nav>
+<!-- Mobile Sticky Rank (Sits above nav) -->
+<div class="md:hidden fixed bottom-16 left-0 w-full bg-primary text-on-primary py-2 px-md z-40 shadow-[0_-4px_10px_rgb(53,37,205,0.2)] flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="font-bold font-headline-md text-lg">#42</div>
+<div class="text-xs leading-tight">
+<div class="font-semibold">Your Rank</div>
+<div class="text-on-primary/80">8,450 XP</div>
+</div>
+</div>
+<div class="w-20 h-1.5 bg-black/20 rounded-full overflow-hidden">
+<div class="w-[85%] h-full bg-secondary-fixed rounded-full"></div>
+</div>
+</div>
+</body></html>

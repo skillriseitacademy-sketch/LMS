@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PlacePro - Resume Builder Templates</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f2f3ff",
+                        "tertiary-fixed": "#ffdad7",
+                        "tertiary-container": "#bc1d25",
+                        "tertiary": "#960014",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "on-primary-container": "#dad7ff",
+                        "surface-dim": "#d2d9f4",
+                        "secondary-container": "#fea619",
+                        "on-tertiary-fixed": "#410004",
+                        "on-background": "#131b2e",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary": "#855300",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "on-surface": "#131b2e",
+                        "on-primary-fixed": "#0f0069",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "primary": "#3525cd",
+                        "background": "#faf8ff",
+                        "secondary-fixed": "#ffddb8",
+                        "inverse-primary": "#c3c0ff",
+                        "inverse-on-surface": "#eef0ff",
+                        "surface": "#faf8ff",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e2e7ff",
+                        "surface-bright": "#faf8ff",
+                        "surface-container-highest": "#dae2fd",
+                        "primary-container": "#4f46e5",
+                        "inverse-surface": "#283044",
+                        "on-tertiary-container": "#ffd0cc",
+                        "surface-variant": "#dae2fd",
+                        "primary-fixed": "#e2dfff",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "on-surface-variant": "#464555",
+                        "on-secondary-fixed": "#2a1700",
+                        "surface-tint": "#4d44e3",
+                        "outline": "#777587",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#eaedff",
+                        "on-secondary-container": "#684000",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "280px",
+                        "md": "1rem",
+                        "container-max": "1280px",
+                        "base": "4px",
+                        "sm": "0.5rem",
+                        "lg": "1.5rem",
+                        "xs": "0.25rem",
+                        "xl": "2rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Manrope"],
+                        "headline-md": ["Manrope"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #faf8ff; }
+        .template-card:hover .template-overlay { opacity: 1; }
+        .pattern-bg {
+            background-image: radial-gradient(#c7c4d8 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md text-on-background flex h-screen overflow-hidden antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<nav class="w-sidebar-width h-full fixed left-0 top-0 bg-surface-container-lowest shadow-sm flex flex-col h-full py-lg px-md z-50 hidden md:flex">
+<div class="flex items-center gap-sm mb-xl px-sm">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">work</span>
+<span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">PlacePro</span>
+<span class="font-label-sm text-label-sm text-outline ml-auto bg-surface-container px-2 py-1 rounded-full">Career OS</span>
+</div>
+<div class="flex-1 overflow-y-auto pr-2 space-y-1">
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">dashboard</span>
+<span class="font-body-md text-body-md font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">forum</span>
+<span class="font-body-md text-body-md font-medium">Feed</span>
+</a>
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">record_voice_over</span>
+<span class="font-body-md text-body-md font-medium">Interview Hub</span>
+</a>
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">quiz</span>
+<span class="font-body-md text-body-md font-medium">Quizzes</span>
+</a>
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">sports_esports</span>
+<span class="font-body-md text-body-md font-medium">Arena</span>
+</a>
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">work</span>
+<span class="font-body-md text-body-md font-medium">Jobs</span>
+</a>
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">map</span>
+<span class="font-body-md text-body-md font-medium">Roadmap</span>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg bg-surface-container-low text-primary font-bold border-r-4 border-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-body-md text-body-md">Resume</span>
+</a>
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">leaderboard</span>
+<span class="font-body-md text-body-md font-medium">Leaderboard</span>
+</a>
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">person</span>
+<span class="font-body-md text-body-md font-medium">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">groups</span>
+<span class="font-body-md text-body-md font-medium">Rooms</span>
+</a>
+</div>
+<div class="mt-auto pt-lg border-t border-outline-variant/30 space-y-1">
+<button class="w-full bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container font-body-md text-body-md font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 mb-4 group">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">rocket_launch</span>
+                Start Daily Challenge
+            </button>
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">settings</span>
+<span class="font-body-md text-body-md font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">help</span>
+<span class="font-body-md text-body-md font-medium">Help</span>
+</a>
+<div class="flex items-center gap-3 px-sm py-2 mt-2">
+<img alt="User profile photo" class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A small circular avatar portrait of a modern, professional student looking confident. Shot on a clean studio background with bright, even lighting, emphasizing a corporate modern aesthetic with subtle indigo tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuKBOdk9LR4zkST9UlndnK2skshjVjN3rjxMpfCqxSjfILx7ScS5ifjCP2lr70r7rxt9FTw1jIo4rij4rO_P9vwk4sDl3VGBaM_nXfNB8xtn_ooAXGJ3VvFmkt0R7Ezx1gfXDo5zqqlr9_DJVTrR24CB4a32wE2JTly7TyF4zx5O8TFb8CmXiIeOVEj79C9pICl9fXYjZBzLmIDJpV5mPhc_Y1c2YdpxJx6TXA9wcI5Xal9h-4nRqz2Q"/>
+<div class="flex flex-col">
+<span class="font-body-md text-[14px] font-semibold text-on-surface leading-tight">Alex Rivera</span>
+<span class="font-label-sm text-label-sm text-outline">Pro Member</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col md:ml-[280px] w-full max-w-container-max mx-auto h-screen relative bg-surface-bright pattern-bg">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full h-16 px-xl bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 sticky top-0 z-40">
+<div class="flex items-center gap-4">
+<h1 class="font-headline-md text-headline-md font-bold text-on-background">Choose your resume template</h1>
+</div>
+<div class="flex items-center gap-6">
+<!-- Search -->
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant/50 rounded-full font-body-md text-[14px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-64 transition-all placeholder:text-outline/70 shadow-sm" placeholder="Search templates..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary-container/20 text-secondary-fixed-dim hover:bg-secondary-container/30 transition-colors">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-label-sm font-bold">1,250 XP</span>
+</button>
+<button class="relative p-2 rounded-full text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="px-4 py-1.5 rounded-full bg-primary text-on-primary font-body-md text-[14px] font-medium hover:bg-primary-fixed-dim transition-colors shadow-sm active:scale-95">
+                        Upgrade Pro
+                    </button>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 overflow-y-auto p-xl">
+<!-- Filters -->
+<div class="flex flex-wrap items-center gap-3 mb-8">
+<span class="font-label-sm text-outline mr-2 uppercase tracking-wider">Filters:</span>
+<button class="px-4 py-1.5 rounded-full bg-primary/10 text-primary font-body-md text-[14px] font-medium border border-primary/20 hover:bg-primary/20 transition-colors shadow-sm">
+                    All
+                </button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-body-md text-[14px] border border-outline-variant/50 hover:bg-surface-container transition-colors shadow-sm">
+                    ATS-Friendly
+                </button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-body-md text-[14px] border border-outline-variant/50 hover:bg-surface-container transition-colors shadow-sm">
+                    Single Page
+                </button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-body-md text-[14px] border border-outline-variant/50 hover:bg-surface-container transition-colors shadow-sm">
+                    Two Column
+                </button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-body-md text-[14px] border border-outline-variant/50 hover:bg-surface-container transition-colors shadow-sm ml-auto flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+                    More Filters
+                </button>
+</div>
+<!-- Templates Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-lg">
+<!-- Template 1: Active -->
+<div class="group template-card relative flex flex-col bg-surface-container-lowest rounded-xl border-2 border-primary shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)] overflow-hidden transition-all hover:shadow-lg">
+<div class="absolute top-3 left-3 z-10">
+<span class="px-3 py-1 bg-primary text-on-primary font-label-sm text-label-sm rounded-full shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Active
+                        </span>
+</div>
+<div class="relative w-full aspect-[1/1.4] bg-surface-variant p-4">
+<!-- Placeholder for visual representation of resume -->
+<div class="w-full h-full bg-cover bg-center rounded bg-surface-container-lowest shadow-sm border border-outline-variant/20" data-alt="A pristine, minimalist resume layout on a slightly warm off-white background. The design features crisp, dark indigo typography with generous whitespace, a single-column structure, and elegant serif headings. It embodies a high-end corporate aesthetic, clean and authoritative, under bright studio lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuASkMfGN9c5h3cqvR-Xg3DXrdN-EPQVd0nGcSI4wAYjHKrqUQ8ipmD9lyU-gcJkqJYZQ1UxwE75fxTRg8phSTdTMBGmdTSmJh5Fy7PP6EbAP0y9MtoFuZxjSsZ4xKtkIB8e6QLOrnE9keGm8hgyUumHNEPcTIUSGaJEjL_5j4KwUX8aabWAHFxi2Rj-isqBWKZ739G-CW5LAMIzmGknzXhbcEvcmU8MBN0Xk-DWqIbs__URqynhx-aYAA')"></div>
+<!-- Overlay Actions -->
+<div class="template-overlay absolute inset-0 bg-on-surface/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 z-20">
+<button class="w-3/4 py-2 bg-primary text-on-primary font-body-md font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105">
+                                Use This Template
+                            </button>
+<button class="w-3/4 py-2 bg-surface-container-lowest text-on-surface font-body-md font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+                                Preview Full
+                            </button>
+</div>
+</div>
+<div class="p-4 border-t border-outline-variant/20 bg-surface-container-lowest z-10">
+<h3 class="font-headline-md text-[18px] font-semibold text-on-surface mb-1">The Minimalist</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant">Clean, text-heavy. Perfect for ATS parsing.</p>
+<div class="flex gap-2 mt-3">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant font-label-sm text-[10px] rounded uppercase tracking-wider">ATS</span>
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant font-label-sm text-[10px] rounded uppercase tracking-wider">1 Col</span>
+</div>
+</div>
+</div>
+<!-- Template 2 -->
+<div class="group template-card relative flex flex-col bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all hover:shadow-md hover:border-outline-variant">
+<div class="relative w-full aspect-[1/1.4] bg-surface-variant p-4">
+<div class="w-full h-full bg-cover bg-center rounded bg-surface-container-lowest shadow-sm border border-outline-variant/20" data-alt="A modern, single-column resume design featuring a subtle light-blue header area. The layout is highly organized with distinct sections separated by thin, elegant lines. Typography is sans-serif, sharp, and highly legible. Shot flat on a clean studio table under diffused daylight, reflecting a sleek tech-forward vibe." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCDAy6EwYHxws8ZGrgAcEP1z1a0HxT8lsgbrOEktOpu5dPzXHwcSdg6xZCx-tqnvM0_PhjB5P-54tAEmg-zynS79LC6GEe9xXOac39Zb6IOJjNYNfCz5zYaHJUC6GcTrUbEYH5EOid8fqQePa243fgL9gYVlC0oXWausPSR5RG88EqR8MB-sXPPSoxbyl7uy8FHiXAxY1bRegnn9Elu4D8yn4XtRqJ6eH3jzA0NqZdkraNGDj6uj1ZV7A')"></div>
+<!-- Overlay Actions -->
+<div class="template-overlay absolute inset-0 bg-on-surface/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 z-20">
+<button class="w-3/4 py-2 bg-primary text-on-primary font-body-md font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105">
+                                Use This Template
+                            </button>
+<button class="w-3/4 py-2 bg-surface-container-lowest text-on-surface font-body-md font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+                                Preview Full
+                            </button>
+</div>
+</div>
+<div class="p-4 border-t border-outline-variant/20 bg-surface-container-lowest z-10">
+<h3 class="font-headline-md text-[18px] font-semibold text-on-surface mb-1">The Modernist</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant">Sleek, single column layout for tech roles.</p>
+<div class="flex gap-2 mt-3">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant font-label-sm text-[10px] rounded uppercase tracking-wider">ATS</span>
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant font-label-sm text-[10px] rounded uppercase tracking-wider">Modern</span>
+</div>
+</div>
+</div>
+<!-- Template 3 -->
+<div class="group template-card relative flex flex-col bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all hover:shadow-md hover:border-outline-variant">
+<div class="relative w-full aspect-[1/1.4] bg-surface-variant p-4">
+<div class="w-full h-full bg-cover bg-center rounded bg-surface-container-lowest shadow-sm border border-outline-variant/20" data-alt="An executive-style resume layout showcasing bold, commanding typography and strong horizontal dividers. The design utilizes a strict black and white palette with perhaps a touch of deep slate. It conveys authority, experience, and clarity, presented beautifully in a high-end, bright professional context." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAEq5IKiBg-c1XyOh6sJphJ6eHQLUMkzZhIcqGtkIlmFQfetrHXHtrKqMcDfMlgJ8DtxV5dZWFpcbb4z_FYuxgQWmh22EkmSUkuIjKxjvmibS81KbCeOmn5D6s2yEBW0yGEwq41N-pDDkS9S5_JdNMSWw3GIOyrMKaGflpVLAKLZl10VElHgVi3AkvvNmW9UVr13MypuHRbDYW192gJQv9ylzXHboUQI7QFj0bJkOwZ8-ukuHfgr9dZ-Q')"></div>
+<!-- Overlay Actions -->
+<div class="template-overlay absolute inset-0 bg-on-surface/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 z-20">
+<button class="w-3/4 py-2 bg-primary text-on-primary font-body-md font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105">
+                                Use This Template
+                            </button>
+<button class="w-3/4 py-2 bg-surface-container-lowest text-on-surface font-body-md font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+                                Preview Full
+                            </button>
+</div>
+</div>
+<div class="p-4 border-t border-outline-variant/20 bg-surface-container-lowest z-10">
+<h3 class="font-headline-md text-[18px] font-semibold text-on-surface mb-1">The Executive</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant">Bold headers, strong hierarchy.</p>
+<div class="flex gap-2 mt-3">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant font-label-sm text-[10px] rounded uppercase tracking-wider">Classic</span>
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant font-label-sm text-[10px] rounded uppercase tracking-wider">Multi-page</span>
+</div>
+</div>
+</div>
+<!-- Template 4 -->
+<div class="group template-card relative flex flex-col bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all hover:shadow-md hover:border-outline-variant">
+<div class="absolute top-3 right-3 z-10">
+<span class="px-2 py-1 bg-secondary-container/80 text-on-secondary-container font-label-sm text-[10px] rounded-full shadow-sm uppercase tracking-wider font-bold backdrop-blur-sm">
+                            New
+                        </span>
+</div>
+<div class="relative w-full aspect-[1/1.4] bg-surface-variant p-4">
+<div class="w-full h-full bg-cover bg-center rounded bg-surface-container-lowest shadow-sm border border-outline-variant/20" data-alt="A creative two-column resume design featuring a subtle, muted indigo sidebar on the left and a clean white main content area. The aesthetic is modern, approachable, and slightly gamified, with small icons and progress-bar style skill indicators. The lighting is soft and inviting, emphasizing the polished UI feel." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAyHgJgEx5SctxRIjbahcq2dCfiyYytJwX6F1WhXYLlpHRyb1adKBdSFDpagQyiruODuszTzphRTuxo2x-55Ovyg6du9cq34ChsRSnbOSrdshVk9K34aMY5ME7d0ReFlLE2OhjPAuHnO7VoyqcC-b_CJMxpOch8u3dBu6de2s1cnm1UQQRFQrnTCaeSRUONYVJpW7BpHiRg00dDl0EtL0VT2ATvgNKY4b_WHdfLxq9sU6CZqh7Iw7z38A')"></div>
+<!-- Overlay Actions -->
+<div class="template-overlay absolute inset-0 bg-on-surface/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 z-20">
+<button class="w-3/4 py-2 bg-primary text-on-primary font-body-md font-medium rounded-lg shadow-md hover:bg-primary-fixed-dim transition-colors transform hover:scale-105">
+                                Use This Template
+                            </button>
+<button class="w-3/4 py-2 bg-surface-container-lowest text-on-surface font-body-md font-medium rounded-lg shadow-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+                                Preview Full
+                            </button>
+</div>
+</div>
+<div class="p-4 border-t border-outline-variant/20 bg-surface-container-lowest z-10">
+<h3 class="font-headline-md text-[18px] font-semibold text-on-surface mb-1">The Creative</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant">Subtle sidebar column for skills &amp; contact.</p>
+<div class="flex gap-2 mt-3">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant font-label-sm text-[10px] rounded uppercase tracking-wider">2 Col</span>
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant font-label-sm text-[10px] rounded uppercase tracking-wider">Design</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-xl pb-xl text-center">
+<p class="text-on-surface-variant font-body-md">Don't see what you need? <a class="text-primary font-semibold hover:underline" href="#">Request a new template</a>.</p>
+</div>
+</main>
+</div>
+</body></html>
