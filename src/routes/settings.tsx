@@ -9,7 +9,7 @@ const NAV_ITEMS = [
   { to: "/settings/notifications", icon: "notifications", label: "Notifications" },
   { to: "/settings/billing", icon: "credit_card", label: "Plan & Billing" },
   { to: "/settings/security", icon: "lock", label: "Security & Privacy" },
-  { to: "/profile", icon: "person", label: "Profile Settings" },
+  { to: "/settings/profile", icon: "person", label: "Profile Settings" },
 ];
 
 function SettingsLayout() {
