@@ -68,6 +68,9 @@ function ProfileViewPage() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Cover Image */}
       <div className="w-full h-48 md:h-64 lg:h-80 bg-gradient-to-r from-primary/20 via-primary/10 to-background relative overflow-hidden">
+        {profile.cover_url && (
+          <img src={profile.cover_url} alt="Cover" className="w-full h-full object-cover absolute inset-0" />
+        )}
       </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 w-full -mt-16 sm:-mt-24 relative z-10">

@@ -80,7 +80,7 @@ function ProfileSettingsPage() {
       if (!session?.id) return;
       const { data } = await supabase
         .from("profiles")
-        .select("name, username, bio, avatar_url, headline, skills, visibility")
+        .select("name, username, bio, avatar_url, cover_url, headline, skills, visibility")
         .eq("id", session.id)
         .single();
 
@@ -96,8 +96,7 @@ function ProfileSettingsPage() {
           githubUrl: "",
         });
         setAvatarUrl(data.avatar_url || "");
-        // setCoverUrl(data.cover_url || ""); // Uncomment when cover_url is added to DB
-        setAvatarUrl(data.avatar_url || "");
+        setCoverUrl(data.cover_url || "");
         // Skills repurposed as target roles for now
         if (data.skills?.length) {
           setPreferences(p => ({ ...p, targetRoles: data.skills }));
@@ -123,8 +122,8 @@ function ProfileSettingsPage() {
     openCoverPicker(async (result) => {
       setCoverUrl(result.publicUrl);
       if (session?.id) {
-        // await supabase.from("profiles").update({ cover_url: result.publicUrl }).eq("id", session.id);
-        setMessage({ text: "Cover photo uploaded! Please note it won't persist until the database is updated.", type: "success" });
+        await supabase.from("profiles").update({ cover_url: result.publicUrl }).eq("id", session.id);
+        setMessage({ text: "Cover photo updated successfully!", type: "success" });
         setTimeout(() => setMessage({ text: "", type: "" }), 3000);
       }
     });
