@@ -7,6 +7,7 @@ import { Bookmark, MessageCircle, ThumbsUp, MoreHorizontal, Calendar, BadgeCheck
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { PostComposer } from "@/components/social/post-composer";
+import { PostCard } from "@/components/social/post-card";
 
 export const Route = createFileRoute("/_app/profile")({
   component: ProfileViewPage,
@@ -32,7 +33,9 @@ function ProfileViewPage() {
       .from("posts")
       .select(`
         id, content, created_at, user_id, media_urls,
-        profiles(id, name, username, avatar_url)
+        profiles(id, name, username, avatar_url, role),
+        post_reactions(reaction_type, user_id),
+        post_comments(id)
       `)
       .eq("user_id", session.id)
       .order("created_at", { ascending: false });
@@ -177,42 +180,13 @@ function ProfileViewPage() {
             {activeTab === "Posts" && (
               <div className="flex flex-col gap-6">
                 <PostComposer onPostSuccess={fetchPosts} />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-0">
                   {posts.length > 0 ? (
                   posts.map((post) => (
-                    <div key={post.id} className="flex flex-col gap-3 group">
-                      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-muted border border-border">
-                        {post.media_urls && post.media_urls.length > 0 ? (
-                          <img src={post.media_urls[0]} alt="Post" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center p-6 bg-gradient-to-br from-muted to-background">
-                            <p className="text-foreground text-lg line-clamp-4 font-medium" style={{ fontFamily: "Manrope" }}>{post.content}</p>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center justify-between px-1">
-                        <div className="flex items-center gap-2">
-                          <Avatar className="w-6 h-6">
-                            <AvatarImage src={post.profiles?.avatar_url || ""} />
-                            <AvatarFallback className="text-[10px] bg-primary text-primary-foreground">{post.profiles?.name?.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm font-medium text-foreground">{post.profiles?.name}</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-muted-foreground">
-                          <div className="flex items-center gap-1.5 hover:text-foreground cursor-pointer transition-colors">
-                            <ThumbsUp className="w-4 h-4" />
-                            <span className="text-xs font-medium">45</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 hover:text-foreground cursor-pointer transition-colors">
-                            <MessageCircle className="w-4 h-4" />
-                            <span className="text-xs font-medium">13</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <PostCard key={post.id} post={post} />
                   ))
                 ) : (
-                  <div className="col-span-1 sm:col-span-2 py-12 text-center text-muted-foreground border-2 border-dashed border-border rounded-3xl">
+                  <div className="py-12 text-center text-muted-foreground border-2 border-dashed border-border rounded-3xl">
                     <p className="font-medium">No posts yet</p>
                     <p className="text-sm mt-1">When you share posts or photos, they will appear here.</p>
                   </div>
