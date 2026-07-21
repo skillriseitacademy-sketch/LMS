@@ -2,10 +2,12 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/card";
-import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check, UserPlus, X, Home, Calendar, Bell, Settings, LogOut, MessageSquare, LayoutGrid, Menu, MonitorUp, ChevronLeft, BarChart2, SwitchCamera } from "lucide-react";
+import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check, UserPlus, X, Home, Calendar, Bell, Settings, LogOut, MessageSquare, LayoutGrid, Menu, MonitorUp, ChevronLeft, BarChart2, SwitchCamera, Hand } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-store";
 import { useWebRTC } from "@/hooks/useWebRTC";
+import { ChatPanel } from "@/components/room/ChatPanel";
+import { PollsPanel } from "@/components/room/PollsPanel";
 
 export const Route = createFileRoute("/rooms/$roomCode")({
   component: RoomView,
@@ -74,6 +76,7 @@ function RoomView() {
   const [guestStatus, setGuestStatus] = useState<'prejoin' | 'waiting' | 'admitted' | 'rejected'>('prejoin');
   const [waitingParticipants, setWaitingParticipants] = useState<any[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [activeTab, setActiveTab] = useState<'participants' | 'chat' | 'polls'>('participants');
 
   const isHost = session?.id && roomData?.host_id === session.id;
 
@@ -93,16 +96,21 @@ function RoomView() {
     isMicMuted,
     isCamOff,
     streamError,
+    isScreenSharing,
+    facingMode,
+    chatMessages,
+    polls,
+    handRaised,
+    myPeerId,
     initLocalStream,
     joinRoom,
     leaveRoom,
     toggleMic,
     toggleCam,
     toggleScreenShare,
-    isScreenSharing,
-    facingMode,
     flipCamera,
-    endMeeting
+    endMeeting,
+    broadcastData
   } = useWebRTC(roomCode, userName, () => {
     alert("The host has ended the meeting.");
     navigate({ to: "/rooms" });
@@ -464,22 +472,34 @@ function RoomView() {
           </button>
 
           <button 
-            onClick={() => alert("Chat room is coming soon!")}
-            className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white"
+            onClick={() => {
+              setActiveTab('chat');
+              setShowSidebar(true);
+            }}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${activeTab === 'chat' && showSidebar ? 'bg-brand text-brand-foreground shadow-lg shadow-brand/20' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
             title="Chat Room"
           >
             <MessageSquare className="w-5 h-5" />
           </button>
 
-          {isHost && (
-            <button 
-              onClick={() => alert("Polling is coming soon!")}
-              className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white"
-              title="Add Poll"
-            >
-              <BarChart2 className="w-5 h-5" />
-            </button>
-          )}
+          <button 
+            onClick={() => {
+              setActiveTab('polls');
+              setShowSidebar(true);
+            }}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${activeTab === 'polls' && showSidebar ? 'bg-brand text-brand-foreground shadow-lg shadow-brand/20' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+            title="Polls"
+          >
+            <BarChart2 className="w-5 h-5" />
+          </button>
+          
+          <button 
+            onClick={() => broadcastData('hand_raise', { peerId: myPeerId, isRaised: !handRaised[myPeerId] })}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${handRaised[myPeerId] ? 'bg-yellow-500 text-yellow-950 shadow-lg shadow-yellow-500/20' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+            title="Raise Hand"
+          >
+            <Hand className="w-5 h-5" />
+          </button>
           
           <button 
             onClick={() => alert("Settings are coming soon!")}
@@ -538,8 +558,11 @@ function RoomView() {
             </div>
             <div className="flex items-center gap-2 md:gap-3">
               <button 
-                onClick={() => setShowSidebar(!showSidebar)}
-                className={`flex items-center gap-2 border rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${showSidebar ? 'bg-brand/20 text-brand border-brand/30' : 'bg-transparent border-white/20 hover:bg-white/5 text-white/90'}`}
+                onClick={() => {
+                  setActiveTab('participants');
+                  setShowSidebar(!showSidebar || activeTab !== 'participants');
+                }}
+                className={`flex items-center gap-2 border rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${showSidebar && activeTab === 'participants' ? 'bg-brand/20 text-brand border-brand/30' : 'bg-transparent border-white/20 hover:bg-white/5 text-white/90'}`}
               >
                 <Users className="w-4 h-4" /> {totalParticipants}
               </button>
@@ -574,21 +597,39 @@ function RoomView() {
       </main>
 
       {/* Right Sidebar */}
-      <aside className={`w-[340px] bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl p-6 flex-col absolute md:relative right-3 top-3 bottom-3 z-30 transition-transform md:translate-x-0 ${showSidebar ? 'flex translate-x-0' : 'hidden md:hidden lg:flex translate-x-[120%]'}`}>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-            <Users className="w-5 h-5 text-brand" /> Participants
-          </h2>
+      <aside className={`w-[340px] bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl overflow-hidden flex-col absolute md:relative right-3 top-3 bottom-3 z-30 transition-transform md:translate-x-0 ${showSidebar ? 'flex translate-x-0' : 'hidden md:hidden lg:flex translate-x-[120%]'}`}>
+        
+        {/* Sidebar Header with Tabs */}
+        <div className="flex items-center border-b border-white/10 shrink-0">
+          <button 
+            onClick={() => setActiveTab('participants')}
+            className={`flex-1 py-4 text-sm font-semibold transition-colors border-b-2 ${activeTab === 'participants' ? 'text-brand border-brand' : 'text-white/50 border-transparent hover:text-white'}`}
+          >
+            Participants
+          </button>
+          <button 
+            onClick={() => setActiveTab('chat')}
+            className={`flex-1 py-4 text-sm font-semibold transition-colors border-b-2 ${activeTab === 'chat' ? 'text-brand border-brand' : 'text-white/50 border-transparent hover:text-white'}`}
+          >
+            Chat
+          </button>
+          <button 
+            onClick={() => setActiveTab('polls')}
+            className={`flex-1 py-4 text-sm font-semibold transition-colors border-b-2 ${activeTab === 'polls' ? 'text-brand border-brand' : 'text-white/50 border-transparent hover:text-white'}`}
+          >
+            Polls
+          </button>
           <button 
             onClick={() => setShowSidebar(false)}
-            className="lg:hidden text-white/50 hover:text-white transition-colors"
+            className="p-4 lg:hidden text-white/50 hover:text-white transition-colors"
           >
-            <Settings className="w-5 h-5" /> {/* Use X icon if imported, else fallback */}
+            <X className="w-5 h-5" />
           </button>
         </div>
         
-        <div className="flex-1 overflow-y-auto pr-2 -mr-2">
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+        <div className="flex-1 overflow-hidden relative">
+          {activeTab === 'participants' && (
+            <div className="absolute inset-0 overflow-y-auto p-6 space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               {/* Waiting Room Section (Host Only) */}
               {isHost && waitingParticipants.length > 0 && (
                 <div>
@@ -613,12 +654,15 @@ function RoomView() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between group">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-brand/20 flex items-center justify-center text-brand font-medium">
+                      <div className="w-10 h-10 rounded-full bg-brand/20 flex items-center justify-center text-brand font-medium relative">
                         {userName[0].toUpperCase()}
                       </div>
                       <span className="font-medium text-sm">{userName} (You)</span>
                     </div>
-                    {isHost && <span className="text-xs text-brand bg-brand/10 px-2 py-1 rounded-md">Host</span>}
+                    <div className="flex items-center gap-2">
+                      {handRaised[myPeerId] && <Hand className="w-4 h-4 text-yellow-500 fill-yellow-500" />}
+                      {isHost && <span className="text-xs text-brand bg-brand/10 px-2 py-1 rounded-md">Host</span>}
+                    </div>
                   </div>
                   
                   {remoteStreams.map(remote => (
@@ -629,13 +673,65 @@ function RoomView() {
                         </div>
                         <span className="font-medium text-sm text-white/90">{remote.userName}</span>
                       </div>
-                      <Mic className="w-4 h-4 text-white/30" />
+                      <div className="flex items-center gap-3">
+                        {handRaised[remote.peerId] && <Hand className="w-4 h-4 text-yellow-500 fill-yellow-500 animate-bounce" />}
+                        <Mic className="w-4 h-4 text-white/30" />
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-          </div>
+          )}
+
+          {activeTab === 'chat' && (
+            <div className="absolute inset-0 animate-in fade-in slide-in-from-right-4 duration-300">
+              <ChatPanel 
+                messages={chatMessages} 
+                myPeerId={myPeerId}
+                onSendMessage={(text) => {
+                  broadcastData('chat', {
+                    message: {
+                      id: Math.random().toString(36).substring(7),
+                      senderId: myPeerId,
+                      senderName: userName,
+                      text,
+                      timestamp: Date.now()
+                    }
+                  });
+                }}
+              />
+            </div>
+          )}
+
+          {activeTab === 'polls' && (
+            <div className="absolute inset-0 animate-in fade-in slide-in-from-right-4 duration-300">
+              <PollsPanel 
+                polls={polls}
+                isHost={isHost}
+                myPeerId={myPeerId}
+                onCreatePoll={(question, options) => {
+                  broadcastData('poll_new', {
+                    poll: {
+                      id: Math.random().toString(36).substring(7),
+                      question,
+                      options: options.map(opt => ({ id: Math.random().toString(36).substring(7), text: opt, votes: [] })),
+                      createdBy: myPeerId,
+                      active: true
+                    }
+                  });
+                }}
+                onVote={(pollId, optionId) => {
+                  broadcastData('poll_vote', {
+                    pollId,
+                    optionId,
+                    voterId: myPeerId
+                  });
+                }}
+              />
+            </div>
+          )}
+        </div>
       </aside>
     </div>
   );

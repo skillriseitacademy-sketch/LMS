@@ -7,6 +7,28 @@ export interface RemoteStream {
   stream: MediaStream;
 }
 
+export interface ChatMessage {
+  id: string;
+  senderId: string;
+  senderName: string;
+  text: string;
+  timestamp: number;
+}
+
+export interface PollOption {
+  id: string;
+  text: string;
+  votes: string[]; // array of peerIds
+}
+
+export interface Poll {
+  id: string;
+  question: string;
+  options: PollOption[];
+  createdBy: string;
+  active: boolean;
+}
+
 export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: () => void) {
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStreams, setRemoteStreams] = useState<Record<string, RemoteStream>>({});
@@ -18,6 +40,11 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [streamError, setStreamError] = useState("");
 
+  // In-Meeting Features State
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [polls, setPolls] = useState<Poll[]>([]);
+  const [handRaised, setHandRaised] = useState<Record<string, boolean>>({});
+
   const localStreamRef = useRef<MediaStream | null>(null);
   const originalVideoTrackRef = useRef<MediaStreamTrack | null>(null);
   const peerConnectionsRef = useRef<Record<string, RTCPeerConnection>>({});
@@ -27,6 +54,9 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
   const iceServersRef = useRef<RTCIceServer[]>([]);
   const iceCandidatesQueueRef = useRef<Record<string, RTCIceCandidateInit[]>>({});
   const iceCandidateTimerRef = useRef<Record<string, NodeJS.Timeout | null>>({});
+  
+  // Data Channel references for P2P messaging
+  const dataChannelsRef = useRef<Record<string, RTCDataChannel>>({});
 
   // Initialize local media
   const initLocalStream = useCallback(async (forcedFacingMode?: 'user' | 'environment') => {
@@ -200,6 +230,21 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     
     const pc = new RTCPeerConnection(getConfiguration());
     
+    // --- Security Layer: Create Data Channel for P2P encrypted/secure messaging ---
+    const dc = pc.createDataChannel('meeting-data');
+    dataChannelsRef.current[peerId] = dc;
+    
+    dc.onmessage = (event) => {
+      handleDataChannelMessage(peerId, event.data);
+    };
+
+    pc.ondatachannel = (event) => {
+      event.channel.onmessage = (ev) => {
+        handleDataChannelMessage(peerId, ev.data);
+      };
+    };
+    // --------------------------------------------------------------------------
+
     // Add local tracks
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => {
@@ -281,12 +326,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
           delete peerConnectionsRef.current[peerId];
         });
       } else if (pc.connectionState === 'disconnected' || pc.connectionState === 'closed') {
-        setRemoteStreams(prev => {
-          const next = { ...prev };
-          delete next[peerId];
-          return next;
-        });
-        delete peerConnectionsRef.current[peerId];
+        cleanupPeer(peerId);
       }
     };
 
@@ -294,18 +334,80 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
       console.log(`[WebRTC] iceConnectionState for ${peerId} changed to: ${pc.iceConnectionState}`);
       // Don't clean up on 'disconnected' — wait for connectionState handler to attempt restart
       if (pc.iceConnectionState === 'closed') {
-        setRemoteStreams(prev => {
-          const next = { ...prev };
-          delete next[peerId];
-          return next;
-        });
-        delete peerConnectionsRef.current[peerId];
+        cleanupPeer(peerId);
       }
     };
 
     peerConnectionsRef.current[peerId] = pc;
     return pc;
   };
+
+  const cleanupPeer = (peerId: string) => {
+    setRemoteStreams(prev => {
+      const next = { ...prev };
+      delete next[peerId];
+      return next;
+    });
+    setHandRaised(prev => {
+      const next = { ...prev };
+      delete next[peerId];
+      return next;
+    });
+    delete peerConnectionsRef.current[peerId];
+    delete dataChannelsRef.current[peerId];
+  };
+
+  // Handle incoming data channel messages
+  const handleDataChannelMessage = useCallback((peerId: string, dataStr: string) => {
+    try {
+      const data = JSON.parse(dataStr);
+      switch (data.type) {
+        case 'chat':
+          setChatMessages(prev => [...prev, data.message]);
+          break;
+        case 'poll_new':
+          setPolls(prev => [...prev, data.poll]);
+          break;
+        case 'poll_vote':
+          setPolls(prev => prev.map(p => {
+            if (p.id === data.pollId) {
+              const newOptions = p.options.map(opt => {
+                // Remove vote from other options
+                const votes = opt.votes.filter(id => id !== data.voterId);
+                // Add vote to new option
+                if (opt.id === data.optionId) {
+                  votes.push(data.voterId);
+                }
+                return { ...opt, votes };
+              });
+              return { ...p, options: newOptions };
+            }
+            return p;
+          }));
+          break;
+        case 'hand_raise':
+          setHandRaised(prev => ({ ...prev, [data.peerId]: data.isRaised }));
+          break;
+      }
+    } catch (err) {
+      console.error("[WebRTC] Failed to parse data channel message:", err);
+    }
+  }, []);
+
+  // Broadcast data securely over P2P DataChannels
+  const broadcastData = useCallback((type: string, payload: any) => {
+    const dataStr = JSON.stringify({ type, ...payload });
+    
+    // Send to all connected peers
+    Object.values(dataChannelsRef.current).forEach(dc => {
+      if (dc.readyState === 'open') {
+        dc.send(dataStr);
+      }
+    });
+
+    // Also apply locally
+    handleDataChannelMessage(myPeerId.current, dataStr);
+  }, [handleDataChannelMessage]);
 
   const joinRoom = useCallback(async () => {
     if (isJoined || channelRef.current) return;
@@ -534,6 +636,10 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     isScreenSharing,
     streamError,
     facingMode,
+    chatMessages,
+    polls,
+    handRaised,
+    myPeerId: myPeerId.current,
     initLocalStream,
     joinRoom,
     leaveRoom,
@@ -541,6 +647,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     toggleMic,
     toggleCam,
     toggleScreenShare,
-    flipCamera
+    flipCamera,
+    broadcastData
   };
 }
