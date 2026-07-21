@@ -1,13 +1,20 @@
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-store";
-import { ImageIcon, Loader2, Video, BarChart2 } from "lucide-react";
+import { ImageIcon, Loader2, Video, BarChart2, X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { useR2Upload } from "@/hooks/use-r2-upload";
 
 export function PostComposer({ onPostSuccess }: { onPostSuccess?: () => void }) {
   const { session } = useAuth();
   const [content, setContent] = useState("");
   const [visibility, setVisibility] = useState<"public" | "connections" | "private">("connections");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mediaUrls, setMediaUrls] = useState<string[]>([]);
+
+  const { openPicker: openPhotoPicker, uploading: photoUploading } = useR2Upload({
+    context: "post",
+    accept: "image/jpeg,image/png,image/webp,image/gif",
+  });
 
   if (!session) return null;
 
@@ -15,10 +22,12 @@ export function PostComposer({ onPostSuccess }: { onPostSuccess?: () => void }) 
   const firstName = session.name?.split(" ")[0] || "there";
 
   const handleSubmit = async () => {
-    if (!content.trim()) return;
+    if (!content.trim() && mediaUrls.length === 0) return;
     setIsSubmitting(true);
     try {
-      const token = (supabase as any).realtime?.accessToken ?? "";
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      const token = currentSession?.access_token ?? "";
+      
       const res = await fetch("/api/posts", {
         method: "POST",
         headers: {
@@ -29,11 +38,12 @@ export function PostComposer({ onPostSuccess }: { onPostSuccess?: () => void }) 
           content,
           visibility,
           type: "text",
-          media_urls: [],
+          media_urls: mediaUrls,
         }),
       });
       if (res.ok) {
         setContent("");
+        setMediaUrls([]);
         onPostSuccess?.();
       }
     } finally {
@@ -84,6 +94,21 @@ export function PostComposer({ onPostSuccess }: { onPostSuccess?: () => void }) 
               }
             }}
           />
+          {mediaUrls.length > 0 && (
+            <div className="mt-3 flex gap-2 flex-wrap">
+              {mediaUrls.map((url, idx) => (
+                <div key={idx} className="relative w-24 h-24 rounded-xl overflow-hidden border border-border">
+                  <img src={url} alt="Upload preview" className="w-full h-full object-cover" />
+                  <button 
+                    onClick={() => setMediaUrls(prev => prev.filter((_, i) => i !== idx))}
+                    className="absolute top-1 right-1 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -93,7 +118,13 @@ export function PostComposer({ onPostSuccess }: { onPostSuccess?: () => void }) 
       >
         <div className="flex gap-2">
           <button 
-            className="flex items-center gap-1 px-2 py-1 rounded-md transition-colors text-sm"
+            onClick={() => {
+              openPhotoPicker((result) => {
+                setMediaUrls((prev) => [...prev, result.publicUrl]);
+              });
+            }}
+            disabled={photoUploading}
+            className="flex items-center gap-1 px-2 py-1 rounded-md transition-colors text-sm disabled:opacity-50"
             style={{ color: "var(--pp-on-surface-variant)" }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.backgroundColor = "color-mix(in srgb, var(--pp-primary-fixed-dim) 20%, transparent)";
@@ -104,7 +135,7 @@ export function PostComposer({ onPostSuccess }: { onPostSuccess?: () => void }) 
               (e.currentTarget as HTMLElement).style.color = "var(--pp-on-surface-variant)";
             }}
           >
-            <ImageIcon className="w-5 h-5" />
+            {photoUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImageIcon className="w-5 h-5" />}
             <span className="hidden sm:inline">Photo</span>
           </button>
           <button 
@@ -144,10 +175,10 @@ export function PostComposer({ onPostSuccess }: { onPostSuccess?: () => void }) 
           style={{ 
             backgroundColor: "var(--pp-primary)", 
             color: "var(--pp-on-primary)",
-            opacity: (!content.trim() || isSubmitting) ? 0.5 : 1,
-            cursor: (!content.trim() || isSubmitting) ? "not-allowed" : "pointer"
+            opacity: ((!content.trim() && mediaUrls.length === 0) || isSubmitting || photoUploading) ? 0.5 : 1,
+            cursor: ((!content.trim() && mediaUrls.length === 0) || isSubmitting || photoUploading) ? "not-allowed" : "pointer"
           }}
-          disabled={!content.trim() || isSubmitting}
+          disabled={(!content.trim() && mediaUrls.length === 0) || isSubmitting || photoUploading}
           onClick={handleSubmit}
         >
           {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mx-2" /> : "Post"}

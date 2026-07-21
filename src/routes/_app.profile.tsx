@@ -31,10 +31,10 @@ function ProfileViewPage() {
     const { data: userPosts } = await supabase
       .from("posts")
       .select(`
-        id, content, created_at, author_id, image_url,
-        author:profiles(id, name, username, avatar_url)
+        id, content, created_at, user_id, media_urls,
+        profiles(id, name, username, avatar_url)
       `)
-      .eq("author_id", session.id)
+      .eq("user_id", session.id)
       .order("created_at", { ascending: false });
 
     if (userPosts) {
@@ -182,8 +182,8 @@ function ProfileViewPage() {
                   posts.map((post) => (
                     <div key={post.id} className="flex flex-col gap-3 group">
                       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-muted border border-border">
-                        {post.image_url ? (
-                          <img src={post.image_url} alt="Post" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        {post.media_urls && post.media_urls.length > 0 ? (
+                          <img src={post.media_urls[0]} alt="Post" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center p-6 bg-gradient-to-br from-muted to-background">
                             <p className="text-foreground text-lg line-clamp-4 font-medium" style={{ fontFamily: "Manrope" }}>{post.content}</p>
@@ -193,10 +193,10 @@ function ProfileViewPage() {
                       <div className="flex items-center justify-between px-1">
                         <div className="flex items-center gap-2">
                           <Avatar className="w-6 h-6">
-                            <AvatarImage src={post.author?.avatar_url} />
-                            <AvatarFallback className="text-[10px] bg-primary text-primary-foreground">{post.author?.name?.charAt(0)}</AvatarFallback>
+                            <AvatarImage src={post.profiles?.avatar_url || ""} />
+                            <AvatarFallback className="text-[10px] bg-primary text-primary-foreground">{post.profiles?.name?.charAt(0)}</AvatarFallback>
                           </Avatar>
-                          <span className="text-sm font-medium text-foreground">{post.author?.name}</span>
+                          <span className="text-sm font-medium text-foreground">{post.profiles?.name}</span>
                         </div>
                         <div className="flex items-center gap-3 text-muted-foreground">
                           <div className="flex items-center gap-1.5 hover:text-foreground cursor-pointer transition-colors">
