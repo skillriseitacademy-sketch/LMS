@@ -19,10 +19,10 @@ function ProfileViewPage() {
   const [activeTab, setActiveTab] = useState("Posts");
 
   const [stats, setStats] = useState({
-    followers: "13.5k",
-    posts: "345",
-    collections: "43",
-    likes: "11.2k"
+    followers: "0",
+    posts: "0",
+    collections: "0",
+    likes: "0"
   });
 
   useEffect(() => {
@@ -67,13 +67,7 @@ function ProfileViewPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Cover Image */}
-      <div className="w-full h-48 md:h-64 lg:h-80 bg-muted relative overflow-hidden">
-        {/* Placeholder cover image */}
-        <img
-          src="https://images.unsplash.com/photo-1707343843437-caacff5cfa74?q=80&w=2000&auto=format&fit=crop"
-          alt="Cover"
-          className="w-full h-full object-cover"
-        />
+      <div className="w-full h-48 md:h-64 lg:h-80 bg-gradient-to-r from-primary/20 via-primary/10 to-background relative overflow-hidden">
       </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 w-full -mt-16 sm:-mt-24 relative z-10">
@@ -102,7 +96,7 @@ function ProfileViewPage() {
 
             {/* Bio */}
             <p className="text-foreground/90 text-sm leading-relaxed" style={{ fontFamily: "Inter" }}>
-              {profile.bio || "Look again at that dot. That's here. That's home. That's us. On it everyone you love, everyone you know, everyone you ever heard of, every human being who ever was, lived out their lives."}
+              {profile.bio || "No bio provided."}
             </p>
 
             {/* Stats Card */}
@@ -127,17 +121,7 @@ function ProfileViewPage() {
               </div>
             </div>
 
-            {/* Subscription Info */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground bg-muted/50 px-3 py-2 rounded-lg w-max">
-                <Calendar className="w-4 h-4" />
-                Subscribed Dec 08
-              </div>
-              <div className="flex items-center gap-2 text-xs font-medium text-destructive bg-destructive/10 px-3 py-2 rounded-lg w-max">
-                <Calendar className="w-4 h-4" />
-                Expires June 03
-              </div>
-            </div>
+
           </div>
 
           {/* Right Column (Content) */}
@@ -160,9 +144,9 @@ function ProfileViewPage() {
                   >
                     {tab}
                     {tab === "Posts" && <span className="bg-muted px-2 py-0.5 rounded text-[10px]">{stats.posts}</span>}
-                    {tab === "Photos" && <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded text-[10px]">45</span>}
-                    {tab === "Videos" && <span className="bg-muted px-2 py-0.5 rounded text-[10px]">23</span>}
-                    {tab === "Likes" && <span className="bg-muted px-2 py-0.5 rounded text-[10px]">11</span>}
+                    {tab === "Photos" && <span className="bg-muted px-2 py-0.5 rounded text-[10px]">0</span>}
+                    {tab === "Videos" && <span className="bg-muted px-2 py-0.5 rounded text-[10px]">0</span>}
+                    {tab === "Likes" && <span className="bg-muted px-2 py-0.5 rounded text-[10px]">0</span>}
                   </button>
                 ))}
               </div>
@@ -223,41 +207,7 @@ function ProfileViewPage() {
                   </div>
                 )}
                 
-                {/* Fallback mockup images if no actual posts */}
-                {posts.length === 0 && (
-                  <>
-                    <div className="flex flex-col gap-3 group opacity-50">
-                      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-muted border border-border">
-                        <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      </div>
-                      <div className="flex items-center justify-between px-1">
-                        <div className="flex items-center gap-2">
-                          <Avatar className="w-6 h-6"><AvatarFallback>DN</AvatarFallback></Avatar>
-                          <span className="text-sm font-medium">Dr. Nancy Huels</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-muted-foreground">
-                          <div className="flex items-center gap-1.5"><ThumbsUp className="w-4 h-4" /><span className="text-xs font-medium">45</span></div>
-                          <div className="flex items-center gap-1.5"><MessageCircle className="w-4 h-4" /><span className="text-xs font-medium">13</span></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-3 group opacity-50">
-                      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-muted border border-border">
-                        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      </div>
-                      <div className="flex items-center justify-between px-1">
-                        <div className="flex items-center gap-2">
-                          <Avatar className="w-6 h-6"><AvatarFallback>GM</AvatarFallback></Avatar>
-                          <span className="text-sm font-medium">Gary Mueller</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-muted-foreground">
-                          <div className="flex items-center gap-1.5"><ThumbsUp className="w-4 h-4" /><span className="text-xs font-medium">45</span></div>
-                          <div className="flex items-center gap-1.5"><MessageCircle className="w-4 h-4" /><span className="text-xs font-medium">13</span></div>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
+
               </div>
             )}
             
