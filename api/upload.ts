@@ -59,6 +59,7 @@ export default async function handler(req: any, res: any) {
       post: { bucket: process.env.R2_BUCKET_MEDIA || "placepro-media", publicUrl: process.env.R2_PUBLIC_URL_MEDIA || "" },
       story: { bucket: process.env.R2_BUCKET_MEDIA || "placepro-media", publicUrl: process.env.R2_PUBLIC_URL_MEDIA || "" },
       avatar: { bucket: process.env.R2_BUCKET_MEDIA || "placepro-media", publicUrl: process.env.R2_PUBLIC_URL_MEDIA || "" },
+      cover: { bucket: process.env.R2_BUCKET_MEDIA || "placepro-media", publicUrl: process.env.R2_PUBLIC_URL_MEDIA || "" },
       interview: { bucket: process.env.R2_BUCKET_RECORDINGS || "placepro-recordings", publicUrl: process.env.R2_PUBLIC_URL_RECORDINGS || "" },
       course: { bucket: process.env.R2_BUCKET_CONTENT || "placepro-content", publicUrl: process.env.R2_PUBLIC_URL_CONTENT || "" },
     };

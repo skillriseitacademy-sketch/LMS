@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
-export type UploadContext = "post" | "story" | "avatar" | "interview" | "course";
+export type UploadContext = "post" | "story" | "avatar" | "interview" | "course" | "cover";
 
 export interface UploadResult {
   publicUrl: string;
