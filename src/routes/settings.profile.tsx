@@ -124,7 +124,7 @@ function ProfileSettingsPage() {
       setCoverUrl(result.publicUrl);
       if (session?.id) {
         // await supabase.from("profiles").update({ cover_url: result.publicUrl }).eq("id", session.id);
-        setMessage({ text: "Cover photo updated locally! (Add cover_url to DB to persist)", type: "success" });
+        setMessage({ text: "Cover photo uploaded! Please note it won't persist until the database is updated.", type: "success" });
         setTimeout(() => setMessage({ text: "", type: "" }), 3000);
       }
     });
