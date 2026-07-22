@@ -165,7 +165,6 @@ export function StoryCreator({ open, onClose }: StoryCreatorProps) {
         mediaUrl = publicUrl;
       }
 
-      // Create the story
       const storyRes = await fetch("/api/stories", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -175,7 +174,16 @@ export function StoryCreator({ open, onClose }: StoryCreatorProps) {
           story_type: storyType,
         }),
       });
-      if (!storyRes.ok) throw new Error("Failed to create story");
+      if (!storyRes.ok) {
+        let errText = "Failed to create story";
+        try {
+          const errData = await storyRes.json();
+          if (errData.error) errText = errData.error;
+        } catch {
+          errText = await storyRes.text();
+        }
+        throw new Error(errText || "Failed to create story");
+      }
 
       // Invalidate stories query so the strip updates immediately
       queryClient.invalidateQueries({ queryKey: STORIES_KEY });
