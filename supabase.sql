@@ -8,7 +8,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- 1. BASE TABLES & AUTH
 -- ==============================================================================
 
-CREATE TABLE profiles (
+CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   role TEXT NOT NULL CHECK (role IN ('student', 'teacher', 'admin')),
   name TEXT NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE profiles (
   updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE teachers (
+CREATE TABLE IF NOT EXISTS teachers (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   bio TEXT,
   specialization TEXT[],
@@ -67,14 +67,14 @@ CREATE TRIGGER on_auth_user_created
 -- 2. LMS CORE (COURSES, TOPICS, QUIZZES)
 -- ==============================================================================
 
-CREATE TABLE topics (
+CREATE TABLE IF NOT EXISTS topics (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE student_topics (
+CREATE TABLE IF NOT EXISTS student_topics (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   topic_id UUID NOT NULL REFERENCES topics(id) ON DELETE CASCADE,
@@ -83,14 +83,14 @@ CREATE TABLE student_topics (
   UNIQUE(user_id, topic_id)
 );
 
-CREATE TABLE quizzes (
+CREATE TABLE IF NOT EXISTS quizzes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   topic_id UUID NOT NULL REFERENCES topics(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE quiz_questions (
+CREATE TABLE IF NOT EXISTS quiz_questions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   quiz_id UUID NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE,
   prompt TEXT NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE quiz_questions (
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE quiz_attempts (
+CREATE TABLE IF NOT EXISTS quiz_attempts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   quiz_id UUID NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE,
@@ -112,7 +112,7 @@ CREATE TABLE quiz_attempts (
 -- 3. LIVE CLASSES
 -- ==============================================================================
 
-CREATE TABLE live_classes (
+CREATE TABLE IF NOT EXISTS live_classes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   teacher_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   topic_id UUID NOT NULL REFERENCES topics(id) ON DELETE CASCADE,
@@ -127,7 +127,7 @@ CREATE TABLE live_classes (
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE class_attendance (
+CREATE TABLE IF NOT EXISTS class_attendance (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   class_id UUID NOT NULL REFERENCES live_classes(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -139,7 +139,7 @@ CREATE TABLE class_attendance (
 -- 4. INTERVIEWS & PROCTORING
 -- ==============================================================================
 
-CREATE TABLE interview_sessions (
+CREATE TABLE IF NOT EXISTS interview_sessions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   topic_id UUID REFERENCES topics(id) ON DELETE CASCADE,
@@ -157,7 +157,7 @@ CREATE TABLE interview_sessions (
 -- 5. CODE CHALLENGES & RESUMES
 -- ==============================================================================
 
-CREATE TABLE code_challenges (
+CREATE TABLE IF NOT EXISTS code_challenges (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   difficulty TEXT NOT NULL,
@@ -166,7 +166,7 @@ CREATE TABLE code_challenges (
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE code_submissions (
+CREATE TABLE IF NOT EXISTS code_submissions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   challenge_id UUID NOT NULL REFERENCES code_challenges(id) ON DELETE CASCADE,
@@ -176,7 +176,7 @@ CREATE TABLE code_submissions (
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE resumes (
+CREATE TABLE IF NOT EXISTS resumes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   content JSONB NOT NULL,
@@ -188,7 +188,7 @@ CREATE TABLE resumes (
 -- 6. GAMIFICATION & LEADERBOARD
 -- ==============================================================================
 
-CREATE TABLE xp_transactions (
+CREATE TABLE IF NOT EXISTS xp_transactions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   amount INTEGER NOT NULL,
@@ -196,7 +196,7 @@ CREATE TABLE xp_transactions (
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE badges (
+CREATE TABLE IF NOT EXISTS badges (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL UNIQUE,
   description TEXT NOT NULL,
@@ -204,7 +204,7 @@ CREATE TABLE badges (
   required_xp INTEGER NOT NULL DEFAULT 0
 );
 
-CREATE TABLE user_badges (
+CREATE TABLE IF NOT EXISTS user_badges (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   badge_id UUID NOT NULL REFERENCES badges(id) ON DELETE CASCADE,
@@ -212,7 +212,7 @@ CREATE TABLE user_badges (
   UNIQUE(user_id, badge_id)
 );
 
-CREATE TABLE streak_history (
+CREATE TABLE IF NOT EXISTS streak_history (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
@@ -220,7 +220,7 @@ CREATE TABLE streak_history (
   UNIQUE(user_id, date)
 );
 
-CREATE TABLE daily_missions (
+CREATE TABLE IF NOT EXISTS daily_missions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
@@ -230,7 +230,7 @@ CREATE TABLE daily_missions (
   UNIQUE(user_id, date)
 );
 
-CREATE TABLE leaderboard_snapshots (
+CREATE TABLE IF NOT EXISTS leaderboard_snapshots (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   date DATE NOT NULL UNIQUE,
   rankings JSONB NOT NULL,
@@ -241,7 +241,7 @@ CREATE TABLE leaderboard_snapshots (
 -- 7. CAREER ROADMAP & PROJECTS
 -- ==============================================================================
 
-CREATE TABLE job_listings (
+CREATE TABLE IF NOT EXISTS job_listings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   company TEXT NOT NULL,
@@ -252,14 +252,14 @@ CREATE TABLE job_listings (
   UNIQUE(source, external_id)
 );
 
-CREATE TABLE career_roles (
+CREATE TABLE IF NOT EXISTS career_roles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL UNIQUE,
   description TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE user_roadmap_progress (
+CREATE TABLE IF NOT EXISTS user_roadmap_progress (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   target_job TEXT NOT NULL,
@@ -269,14 +269,14 @@ CREATE TABLE user_roadmap_progress (
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE roadmap_cache (
+CREATE TABLE IF NOT EXISTS roadmap_cache (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   cache_key TEXT NOT NULL UNIQUE,
   roadmap_json JSONB NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE roadmap_nodes (
+CREATE TABLE IF NOT EXISTS roadmap_nodes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   parent_id UUID REFERENCES roadmap_nodes(id) ON DELETE CASCADE,
@@ -288,7 +288,7 @@ CREATE TABLE roadmap_nodes (
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE projects (
+CREATE TABLE IF NOT EXISTS projects (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
@@ -767,6 +767,23 @@ ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view their own notifications" ON notifications FOR SELECT USING (auth.uid() = user_id);
 
 ALTER TABLE stories ADD CONSTRAINT stories_user_id_profiles_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+
+-- ==============================================================================
+-- NOTIFICATIONS ARCHITECTURE
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  actor_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  type TEXT NOT NULL CHECK (type IN ('like', 'comment', 'follow', 'mention')),
+  ref_id UUID,
+  is_read BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+);
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view their own notifications" ON notifications FOR SELECT USING (auth.uid() = user_id);
+
+ALTER TABLE stories ADD CONSTRAINT stories_user_id_profiles_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE instant_rooms ADD CONSTRAINT instant_rooms_host_id_profiles_fkey FOREIGN KEY (host_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE notifications ADD CONSTRAINT notifications_actor_id_profiles_fkey FOREIGN KEY (actor_id) REFERENCES profiles(id) ON DELETE CASCADE;
 
@@ -774,3 +791,123 @@ ALTER TABLE notifications ADD CONSTRAINT notifications_actor_id_profiles_fkey FO
 ALTER TABLE post_comments ADD CONSTRAINT post_comments_user_id_profiles_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE post_reactions ADD CONSTRAINT post_reactions_user_id_profiles_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 
+-- ==============================================================================
+-- PHASE 6 — STORY VIEWS + CHAT SYSTEM — Applied 2026-07-22
+-- ==============================================================================
+
+-- ── Story view tracking ────────────────────────────────────────────────────────
+
+-- Index for expiry cleanup queries (already used in RLS but benefits from index)
+CREATE INDEX IF NOT EXISTS stories_expires_at_idx ON stories(expires_at);
+
+CREATE TABLE IF NOT EXISTS story_views (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  story_id    UUID NOT NULL REFERENCES stories(id) ON DELETE CASCADE,
+  viewer_id   UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  viewed_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(story_id, viewer_id)
+);
+CREATE INDEX IF NOT EXISTS story_views_story_id_idx ON story_views(story_id);
+CREATE INDEX IF NOT EXISTS story_views_viewer_id_idx ON story_views(viewer_id);
+
+ALTER TABLE story_views ENABLE ROW LEVEL SECURITY;
+
+-- Viewers can insert their own view row (ON CONFLICT DO NOTHING handled by app)
+CREATE POLICY "Viewers insert own view" ON story_views FOR INSERT
+  WITH CHECK (auth.uid() = viewer_id);
+
+-- Story owner can see all views on their stories
+CREATE POLICY "Story owner sees views" ON story_views FOR SELECT
+  USING (
+    auth.uid() = viewer_id
+    OR EXISTS (
+      SELECT 1 FROM stories s WHERE s.id = story_id AND s.user_id = auth.uid()
+    )
+  );
+
+-- ── Chat: conversations ────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS conversations (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  is_group   BOOLEAN NOT NULL DEFAULT false,
+  name       TEXT,           -- optional label for group convs
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
+
+-- A user can only see conversations they're a participant in
+CREATE POLICY "Participants can view conversations" ON conversations FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM conversation_participants cp
+      WHERE cp.conversation_id = id AND cp.user_id = auth.uid()
+    )
+  );
+
+-- ── Chat: participants ─────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS conversation_participants (
+  conversation_id UUID NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+  user_id         UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  last_read_at    TIMESTAMPTZ,
+  is_bot_thread   BOOLEAN NOT NULL DEFAULT false,  -- true = pinned AI assistant thread
+  joined_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (conversation_id, user_id)
+);
+CREATE INDEX IF NOT EXISTS conv_participants_user_id_idx ON conversation_participants(user_id);
+CREATE INDEX IF NOT EXISTS conv_participants_conv_id_idx ON conversation_participants(conversation_id);
+
+ALTER TABLE conversation_participants ENABLE ROW LEVEL SECURITY;
+
+-- Participants can read their own participant rows
+CREATE POLICY "Users see own participation rows" ON conversation_participants FOR SELECT
+  USING (auth.uid() = user_id);
+
+-- Users can update their own last_read_at
+CREATE POLICY "Users update own last_read_at" ON conversation_participants FOR UPDATE
+  USING (auth.uid() = user_id);
+
+-- Service role inserts participants (handled server-side only)
+-- No INSERT policy for anon/authenticated role — all inserts go through API routes with service key
+
+-- ── Chat: messages ─────────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS messages (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  conversation_id UUID NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+  -- sender_id is NULL for bot/system messages (inserted with service role key)
+  sender_id       UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  body            TEXT NOT NULL,
+  -- Optional: links the message to a story (story-reply DM flow)
+  story_id        UUID REFERENCES stories(id) ON DELETE SET NULL,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Hot-path index: fetch latest messages for a conversation
+CREATE INDEX IF NOT EXISTS messages_conv_created_idx ON messages(conversation_id, created_at DESC);
+-- Index for sender queries (read receipts, "your messages" filtering)
+CREATE INDEX IF NOT EXISTS messages_sender_idx ON messages(sender_id);
+
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+
+-- Users can read messages in conversations they participate in
+CREATE POLICY "Participants can read messages" ON messages FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM conversation_participants cp
+      WHERE cp.conversation_id = messages.conversation_id
+        AND cp.user_id = auth.uid()
+    )
+  );
+
+-- Users can insert their own messages (sender_id must match)
+-- Bot messages (sender_id = null) are inserted server-side with service role key — no RLS needed
+CREATE POLICY "Users insert own messages" ON messages FOR INSERT
+  WITH CHECK (
+    auth.uid() = sender_id
+    AND EXISTS (
+      SELECT 1 FROM conversation_participants cp
+      WHERE cp.conversation_id = messages.conversation_id
+        AND cp.user_id = auth.uid()
+    )
+  );

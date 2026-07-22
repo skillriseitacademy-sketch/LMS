@@ -212,13 +212,318 @@ const { object } = await generateObject({
 5. **Response:** Server returns the OpenAI ephemeral `client_secret` and the DB `session_id`.
 6. **Client:** Uses the ephemeral key to connect directly to OpenAI via WebRTC for real-time audio.
 
-## 11. Deployment Architecture
+---
+
+## 11. Code Deep-Dives
+
+This section provides annotated code walkthroughs for the most complex feature areas. Use this as your primary onboarding guide when working on a new feature area.
+
+---
+
+### 11.1 WebRTC Live Rooms (`src/hooks/useWebRTC.ts`)
+
+The entire peer-to-peer video/audio experience for live classes is encapsulated in the `useWebRTC` hook. Understanding this hook is essential before working on `_app.room.$roomCode.tsx`.
+
+#### Architecture: How Two Peers Connect
+
+Supabase Realtime Broadcast is used **only for signaling** (exchanging metadata to set up the connection). After the WebRTC handshake, all audio, video, and in-meeting data flows **directly P2P** and never touches Supabase.
+
+```
+Peer A                    Supabase Realtime              Peer B
+  |                      (Signaling Only)                   |
+  |--- broadcast('join') ---------------------------------> |
+  |                                                         |
+  | <-- broadcast('offer': SDP) ----------------------- -- |
+  |                                                         |
+  |--- broadcast('answer': SDP) -----------------------> -- |
+  |                                                         |
+  | <--> broadcast('ice-candidates-batch') <-----------> -- |
+  |                                                         |
+  |====== Direct P2P WebRTC Connection Established ======== |
+  |   (audio tracks, video tracks, RTCDataChannel)          |
+```
+
+#### Key State & Refs
+
+```typescript
+// useWebRTC.ts — Key refs explained
+
+// Holds all active RTCPeerConnection objects, keyed by peerId
+const peerConnectionsRef = useRef<Record<string, RTCPeerConnection>>({});
+
+// RTCDataChannel references for P2P encrypted chat/polls/hand-raises
+const dataChannelsRef = useRef<Record<string, RTCDataChannel>>({});
+
+// ICE candidates are batched (250ms window) before sending to reduce
+// Supabase Realtime message volume
+const iceCandidatesQueueRef = useRef<Record<string, RTCIceCandidateInit[]>>({});
+const iceCandidateTimerRef  = useRef<Record<string, NodeJS.Timeout | null>>({});
+
+// Buffer for ICE candidates that arrive before setRemoteDescription()
+// is called — they are queued here and "flushed" after the SDP answer
+const candidateBufferRef = useRef<Record<string, RTCIceCandidateInit[]>>({});
+```
+
+#### Step-by-Step: Joining a Room
+
+```typescript
+// 1. joinRoom() — called when user clicks "Enter Room"
+const joinRoom = useCallback(async () => {
+  // Step 1: Fetch dynamic TURN server credentials from our own /api/turn endpoint
+  const turnRes = await fetch("/api/turn");
+  iceServersRef.current = await turnRes.json(); // Stored for RTCPeerConnection config
+
+  // Step 2: Request camera + mic permissions from the browser
+  const stream = await initLocalStream();
+  // localStreamRef.current = stream (also sets React state for the local video tile)
+
+  // Step 3: Subscribe to the Supabase Realtime channel for this room
+  const channel = supabase.channel(`room:${roomCode}`);
+
+  // Step 4: Announce our arrival to all other peers
+  channel.subscribe(async (status) => {
+    if (status === 'SUBSCRIBED') {
+      channel.send({ type: 'broadcast', event: 'join', payload: { from: myPeerId, userName } });
+    }
+  });
+}, []);
+```
+
+#### Creating a Peer Connection
+
+```typescript
+// createPeerConnection() is called whenever we need to connect to a new peer.
+// It is idempotent — calling it with the same peerId returns the existing connection.
+const createPeerConnection = (peerId: string, peerName: string) => {
+  if (peerConnectionsRef.current[peerId]) return peerConnectionsRef.current[peerId];
+
+  const pc = new RTCPeerConnection({
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' }, // Public Google STUN for NAT traversal
+      ...iceServersRef.current                   // Metered TURN servers (for strict NATs)
+    ]
+  });
+
+  // Attach local audio/video tracks so the remote peer receives our stream
+  localStreamRef.current?.getTracks().forEach(track => pc.addTrack(track, localStreamRef.current!));
+
+  // When remote peer's track arrives, add it to remoteStreams state (renders their video tile)
+  pc.ontrack = (event) => {
+    setRemoteStreams(prev => {
+      const existingStream = prev[peerId]?.stream || new MediaStream();
+      existingStream.addTrack(event.track); // Both audio & video tracks arrive via this handler
+      return { ...prev, [peerId]: { peerId, userName: peerName, stream: existingStream } };
+    });
+  };
+
+  // ICE candidates are batched into a 250ms window before broadcasting
+  pc.onicecandidate = (event) => {
+    if (event.candidate) {
+      iceCandidatesQueueRef.current[peerId] ??= [];
+      iceCandidatesQueueRef.current[peerId].push(event.candidate);
+      // Timer debounces the send — only one Supabase message per 250ms burst
+      iceCandidateTimerRef.current[peerId] ??= setTimeout(() => {
+        channel.send({ event: 'ice-candidates-batch', payload: { to: peerId, candidates: [...] } });
+      }, 250);
+    }
+  };
+
+  // Auto-ICE restart on connection failure (before removing the peer)
+  pc.onconnectionstatechange = () => {
+    if (pc.connectionState === 'failed') pc.restartIce();
+    if (pc.connectionState === 'disconnected') cleanupPeer(peerId);
+  };
+
+  return pc;
+};
+```
+
+#### In-Meeting Features: P2P DataChannel
+
+Chat messages, polls, and hand-raises are **NOT routed through Supabase**. They travel directly over an `RTCDataChannel`, which is more secure and has lower latency.
+
+```typescript
+// All in-meeting events are dispatched with broadcastData()
+broadcastData('chat',       { message: { id, senderId, text, timestamp } });
+broadcastData('poll_new',   { poll: { id, question, options } });
+broadcastData('poll_vote',  { pollId, optionId, voterId });
+broadcastData('hand_raise', { peerId: myPeerId.current, isRaised: true });
+
+// handleDataChannelMessage() is the single router for incoming P2P events
+const handleDataChannelMessage = (peerId: string, dataStr: string) => {
+  const data = JSON.parse(dataStr);
+  switch (data.type) {
+    case 'chat':       setChatMessages(prev => [...prev, data.message]); break;
+    case 'poll_new':   setPolls(prev => [...prev, data.poll]); break;
+    case 'poll_vote':  setPolls(prev => prev.map(p => /* update vote counts */)); break;
+    case 'hand_raise': setHandRaised(prev => ({ ...prev, [data.peerId]: data.isRaised })); break;
+  }
+};
+```
+
+---
+
+### 11.2 Quiz Engine (`src/routes/_app.quizzes.$quizId.tsx`)
+
+The quiz page is a self-contained state machine. Understanding the state variables is the key to modifying it.
+
+#### State Machine
+
+```
+[loading] -> [question N displayed] -> [answer selected] -> [answer revealed]
+                                                                    |
+                                            [last question?] -------+-------> [finish() -> /results]
+                                            [more questions?]       |-> [next question -> index++]
+```
+
+#### Key State Variables
+
+```typescript
+const [index,      setIndex]      = useState(0);           // Current question index (0-based)
+const [selected,   setSelected]   = useState<number | null>(null); // Which option the user clicked
+const [revealed,   setRevealed]   = useState(false);       // true = show correct/wrong feedback
+const [answers,    setAnswers]    = useState<number[]>([]);// All submitted answers (for results)
+const [secondsLeft,setSecondsLeft]= useState(10 * 60);     // Countdown timer (auto-submits at 0)
+```
+
+#### Data Fetching Pattern
+
+```typescript
+// The quiz route uses a plain useEffect + direct Supabase query (no React Query).
+// Two sequential fetches: quiz metadata first, then questions.
+useEffect(() => {
+  async function loadQuiz() {
+    // Fetch quiz title via a Supabase join with the parent topics table
+    const { data: quiz } = await supabase
+      .from("quizzes")
+      .select(`id, title, topics ( title, description )`)
+      .eq("id", quizId)
+      .single();
+
+    // Fetch all questions for this quiz, ordered by creation time
+    const { data: qs } = await supabase
+      .from("quiz_questions")
+      .select("*")
+      .eq("quiz_id", quizId)
+      .order("created_at", { ascending: true });
+
+    setQuestions(qs.map(q => ({ ...q, correctIndex: q.correct_index })));
+    setLoading(false);
+  }
+  loadQuiz();
+}, [quizId]);
+```
+
+#### Finishing a Quiz
+
+```typescript
+// Results are passed to the next page via sessionStorage (not URL params or server state).
+// This means results are lost on hard refresh of the results page.
+const finish = (finalAnswers: number[]) => {
+  sessionStorage.setItem(
+    `quiz-result-${quizId}`,
+    JSON.stringify({ answers: finalAnswers, ts: Date.now() })
+  );
+  navigate({ to: "/quizzes/$quizId/results", params: { quizId } });
+};
+```
+
+> ⚠️ **Known Limitation:** Quiz results are stored in `sessionStorage` and are ephemeral. They are not persisted to Supabase (`quiz_attempts`) in the current implementation. This is a feature gap to address.
+
+---
+
+### 11.3 Social Stories (`src/components/social/story-row.tsx`)
+
+Stories are simple but have a visual type system that maps to different ring colors and icons.
+
+#### Story Type → Visual Mapping
+
+```typescript
+// story_type from the DB maps to a TailwindCSS ring color class
+const storyTypeRing: Record<string, string> = {
+  streak:      "ring-streak",       // 🔥 orange/amber
+  achievement: "ring-xp-gold",      // ⭐ gold
+  media:       "ring-brand",        // 📷 primary brand color
+  status:      "ring-success",      // 💬 green
+};
+
+// Expiry countdown is computed client-side from the DB `expires_at` timestamp
+const msLeft  = new Date(story.expires_at).getTime() - Date.now();
+const hrsLeft = Math.max(0, Math.floor(msLeft / 3_600_000)); // "Xh left"
+```
+
+#### Component Structure
+
+```
+<StoryRow stories={Story[]}>         ← Scrollable horizontal strip
+  <Link to="/profile/$username">     ← Each story links to author's profile
+    <StoryCard story={story} />      ← Avatar + ring color + type icon + timer
+  </Link>
+</StoryRow>
+```
+
+#### Adding a New Story Type
+
+To add a new type (e.g., `event`):
+1. Insert a row in the `stories` table with `story_type = 'event'`.
+2. Add an entry to `storyTypeRing` in `story-row.tsx`: `event: "ring-purple-500"`.
+3. Add the emoji/icon condition in the icon overlay `<span>` block.
+
+---
+
+### 11.4 Admin Analytics (`src/routes/admin.analytics.tsx`)
+
+The analytics page fetches live KPI counts from Supabase and renders charts using **Recharts**.
+
+#### Current Data Sources
+
+```typescript
+// KPIs are fetched directly via Supabase count queries.
+// This pattern uses { count: "exact", head: true } to get only the row count
+// without fetching actual data — very efficient for large tables.
+const { count: usersCount }       = await supabase.from("profiles").select("*", { count: "exact", head: true });
+const { count: enrollmentsCount } = await supabase.from("student_topics").select("*", { count: "exact", head: true });
+
+setKpis([
+  { label: "Total Users",       value: usersCount.toString() },
+  { label: "Total Enrollments", value: enrollmentsCount.toString() },
+  { label: "Completion Rate",   value: "85%" }, // ← ⚠️ HARDCODED, not from DB
+]);
+```
+
+> ⚠️ **Known Issue:** The `Completion Rate` KPI and the time-series chart data (`series`) are currently hardcoded placeholder values. The `period` selector (`7d`, `30d`, `90d`) re-fires the `useEffect` but the data doesn't actually change. This needs to be connected to a real Supabase query filtering by `created_at`.
+
+#### Chart Components Used
+
+```tsx
+// Line chart for time-series data (active learners trend)
+<LineChart data={series}>
+  <Line type="monotone" dataKey="learners" stroke="var(--brand)" strokeWidth={2} dot={false} />
+  <XAxis dataKey="day" />
+  <Tooltip />
+</LineChart>
+
+// Bar chart for enrollments per day
+<BarChart data={series}>
+  <Bar dataKey="enrollments" fill="var(--brand)" radius={[4, 4, 0, 0]} />
+</BarChart>
+```
+
+#### How to Add a New KPI Card
+
+1. Add a new Supabase count query in the `loadData()` function.
+2. Push a new `{ label, value }` object to the `kpis` array via `setKpis`.
+3. The KPI cards are rendered from the `kpis` array automatically — no UI changes needed.
+
+---
+
+## 12. Deployment Architecture
 
 - **Hosting:** The application is designed to be hosted on Vercel or Cloudflare. The `vercel.json` rewrite rules route `/api/*` to the Nitro backend and everything else to `index.html` (SPA fallback).
 - **Media Storage:** Cloudflare R2 is explicitly configured for robust media storage, reducing egress costs compared to standard Vercel blob storage.
 - **Database:** Supabase acts as a standalone external database provider.
 
-## 12. Known Issues / TODOs
+## 13. Known Issues / TODOs
 
 ### 🔴 Critical
 - **Unauthenticated API Route:** The `/api/roadmap.ts` endpoint lacks Supabase token verification. Anyone can POST to this endpoint and consume the server's `GEMINI_API_KEY` quota.
@@ -226,10 +531,12 @@ const { object } = await generateObject({
 ### 🟡 Important
 - **State Management Anti-Pattern:** Global state (`src/lib/store.ts`) relies on `window.dispatchEvent(new Event(...))`. This can lead to race conditions and brittle react reactivity. Since `@tanstack/react-query` is installed, state syncing should ideally be migrated to query mutations and invalidations.
 - **Missing Global Rate Limiting:** No rate limiting is configured in Nitro, making AI endpoints vulnerable to abuse.
+- **Quiz Results Not Persisted:** `quiz_attempts` table exists in the schema but quiz results are currently only saved to `sessionStorage`. They should be written to Supabase after quiz completion.
+- **Analytics Charts Hardcoded:** The time-series chart data in `admin.analytics.tsx` uses static placeholder values. The period filter (`7d/30d/90d`) does not affect the data.
 
 ### 🟢 Feature Stubs
 - The database schema introduces an `arena_mode` for CTFs (`topic_leaderboards`, `flag_submitted`), which appear to be recent structural additions likely still in active development on the frontend (`_app.arena.tsx`).
 
 ---
-*Document Generation Date: 2026-07-15*
+*Document Generation Date: 2026-07-22*
 *Codebase Version/Branch: Local Development Workspace*

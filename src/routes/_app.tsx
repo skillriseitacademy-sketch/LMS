@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
 import { supabase } from "@/lib/supabase";
+import { ChatDock } from "@/components/chat/chat-dock";
 
 export const Route = createFileRoute("/_app")({
   beforeLoad: async () => {
@@ -32,6 +33,8 @@ function AppLayout() {
       <div className="flex-1 w-full min-h-screen md:pl-[280px]">
         <Outlet />
       </div>
+      {/* Global chat dock — persists across all app routes */}
+      <ChatDock />
     </div>
   );
 }

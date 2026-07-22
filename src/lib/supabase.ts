@@ -246,3 +246,55 @@ export type TopicLeaderboardRow = {
   challenges_solved: number;
   updated_at: string;
 };
+
+// ─── Phase 6: Story Views + Chat (2026-07-22) ────────────────────────────────
+
+export type StoryViewRow = {
+  id: string;
+  story_id: string;
+  viewer_id: string;
+  viewed_at: string;
+};
+
+export type ConversationRow = {
+  id: string;
+  is_group: boolean;
+  name: string | null;
+  created_at: string;
+};
+
+export type ConversationParticipantRow = {
+  conversation_id: string;
+  user_id: string;
+  last_read_at: string | null;
+  is_bot_thread: boolean;
+  joined_at: string;
+};
+
+export type MessageRow = {
+  id: string;
+  conversation_id: string;
+  /** null = AI bot message */
+  sender_id: string | null;
+  body: string;
+  story_id: string | null;
+  created_at: string;
+};
+
+/** Enriched conversation returned by GET /api/chat/conversations */
+export type ConversationSummary = ConversationRow & {
+  participants: Array<{
+    user_id: string;
+    name: string;
+    avatar_url: string | null;
+    is_bot_thread: boolean;
+  }>;
+  last_message: MessageRow | null;
+  unread_count: number;
+  is_bot_thread: boolean;
+};
+
+/** Enriched message with sender profile attached */
+export type MessageWithSender = MessageRow & {
+  sender: { name: string; avatar_url: string | null } | null;
+};

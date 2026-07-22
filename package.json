@@ -59,7 +59,10 @@
     "@tanstack/react-query": "^5.101.1",
     "@tanstack/react-router": "^1.170.17",
     "@tanstack/react-start": "^1.168.27",
+    "@tanstack/react-virtual": "^3.14.7",
+    "@types/busboy": "^1.5.4",
     "ai": "6.0.209",
+    "busboy": "^1.6.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -88,9 +91,7 @@
     "use-stick-to-bottom": "^1.1.6",
     "vaul": "^1.1.2",
     "zod": "^3.24.2",
-    "zustand": "^5.0.14",
-    "busboy": "^1.6.0",
-    "@types/busboy": "^1.5.4"
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
