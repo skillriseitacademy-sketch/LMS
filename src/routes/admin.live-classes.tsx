@@ -21,6 +21,7 @@ interface LiveClass {
   title: string;
   description: string;
   start_time: string;
+  scheduled_at: string;
   duration_minutes: number;
   daily_room_url: string;
   status: string;
@@ -69,7 +70,7 @@ function AdminLiveClasses() {
     if (teachersRes.error) toast.error("Failed to fetch teachers: " + teachersRes.error.message);
     else {
       setTeachers(teachersRes.data || []);
-      if (teachersRes.data && teachersRes.data.length > 0 && !teacherId) setTeacherId(session?.user?.id || teachersRes.data[0].id);
+      if (teachersRes.data && teachersRes.data.length > 0 && !teacherId) setTeacherId(session?.id || teachersRes.data[0].id);
     }
     setLoading(false);
   };
