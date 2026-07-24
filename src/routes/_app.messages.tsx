@@ -69,7 +69,7 @@ function MessagesPage() {
           if (existingConv) {
             setActiveConvId(existingConv.id);
             // Remove userId from URL to avoid re-triggering
-            router.navigate({ search: {} });
+            router.navigate({ search: (prev: any) => ({ ...prev, userId: undefined }) });
           } else {
             // Need to create new conversation
             const createRes = await fetch("/api/chat/conversations", {
@@ -83,7 +83,7 @@ function MessagesPage() {
             if (createRes.ok) {
               const { conversationId } = await createRes.json();
               setActiveConvId(conversationId);
-              router.navigate({ search: {} });
+              router.navigate({ search: (prev: any) => ({ ...prev, userId: undefined }) });
               fetchConversations(); // refresh list
             }
           }

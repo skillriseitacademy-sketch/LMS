@@ -50,6 +50,7 @@ import { Route as AppRoadmapRouteImport } from './routes/_app.roadmap'
 import { Route as AppResumeRouteImport } from './routes/_app.resume'
 import { Route as AppQuizzesRouteImport } from './routes/_app.quizzes'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AppMessagesRouteImport } from './routes/_app.messages'
 import { Route as AppLeaderboardRouteImport } from './routes/_app.leaderboard'
 import { Route as AppJobsRouteImport } from './routes/_app.jobs'
 import { Route as AppInterviewRouteImport } from './routes/_app.interview'
@@ -299,6 +300,11 @@ const AppProfileRoute = AppProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMessagesRoute = AppMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppLeaderboardRoute = AppLeaderboardRouteImport.update({
   id: '/leaderboard',
   path: '/leaderboard',
@@ -539,6 +545,7 @@ export interface FileRoutesByFullPath {
   '/interview': typeof AppInterviewRouteWithChildren
   '/jobs': typeof AppJobsRoute
   '/leaderboard': typeof AppLeaderboardRoute
+  '/messages': typeof AppMessagesRoute
   '/profile': typeof AppProfileRouteWithChildren
   '/quizzes': typeof AppQuizzesRouteWithChildren
   '/resume': typeof AppResumeRouteWithChildren
@@ -622,6 +629,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AppDashboardRoute
   '/jobs': typeof AppJobsRoute
   '/leaderboard': typeof AppLeaderboardRoute
+  '/messages': typeof AppMessagesRoute
   '/profile': typeof AppProfileRouteWithChildren
   '/roadmap': typeof AppRoadmapRoute
   '/admin/admins': typeof AdminAdminsRoute
@@ -708,6 +716,7 @@ export interface FileRoutesById {
   '/_app/interview': typeof AppInterviewRouteWithChildren
   '/_app/jobs': typeof AppJobsRoute
   '/_app/leaderboard': typeof AppLeaderboardRoute
+  '/_app/messages': typeof AppMessagesRoute
   '/_app/profile': typeof AppProfileRouteWithChildren
   '/_app/quizzes': typeof AppQuizzesRouteWithChildren
   '/_app/resume': typeof AppResumeRouteWithChildren
@@ -796,6 +805,7 @@ export interface FileRouteTypes {
     | '/interview'
     | '/jobs'
     | '/leaderboard'
+    | '/messages'
     | '/profile'
     | '/quizzes'
     | '/resume'
@@ -879,6 +889,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/jobs'
     | '/leaderboard'
+    | '/messages'
     | '/profile'
     | '/roadmap'
     | '/admin/admins'
@@ -964,6 +975,7 @@ export interface FileRouteTypes {
     | '/_app/interview'
     | '/_app/jobs'
     | '/_app/leaderboard'
+    | '/_app/messages'
     | '/_app/profile'
     | '/_app/quizzes'
     | '/_app/resume'
@@ -1358,6 +1370,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/messages': {
+      id: '/_app/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AppMessagesRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/leaderboard': {
@@ -1807,6 +1826,7 @@ interface AppRouteChildren {
   AppInterviewRoute: typeof AppInterviewRouteWithChildren
   AppJobsRoute: typeof AppJobsRoute
   AppLeaderboardRoute: typeof AppLeaderboardRoute
+  AppMessagesRoute: typeof AppMessagesRoute
   AppProfileRoute: typeof AppProfileRouteWithChildren
   AppQuizzesRoute: typeof AppQuizzesRouteWithChildren
   AppResumeRoute: typeof AppResumeRouteWithChildren
@@ -1824,6 +1844,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppInterviewRoute: AppInterviewRouteWithChildren,
   AppJobsRoute: AppJobsRoute,
   AppLeaderboardRoute: AppLeaderboardRoute,
+  AppMessagesRoute: AppMessagesRoute,
   AppProfileRoute: AppProfileRouteWithChildren,
   AppQuizzesRoute: AppQuizzesRouteWithChildren,
   AppResumeRoute: AppResumeRouteWithChildren,
