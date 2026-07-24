@@ -17,7 +17,7 @@ type Filter = "all" | "online" | "new";
 
 type AdminUsersSearch = { filter?: Filter; period?: string };
 
-export const Route = createFileRoute("/admin/users")({
+export const Route = createFileRoute("/_app/admin/users")({
   validateSearch: (s: Record<string, unknown>): AdminUsersSearch => ({
     filter: (s.filter as Filter) || "all",
     period: (s.period as string) || undefined,
@@ -33,7 +33,7 @@ const filters: { id: Filter; label: string }[] = [
 ];
 
 function Users() {
-  const search = useSearch({ from: "/admin/users" });
+  const search = useSearch({ from: "/_app/admin/users" });
   const [filter, setFilter] = useState<Filter>(search.filter || "all");
   const [query, setQuery] = useState("");
   const { profile } = useProfile();

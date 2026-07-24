@@ -25,7 +25,7 @@ interface LiveClass {
   teacher?: Profile;
 }
 
-export const Route = createFileRoute("/admin/recorded-sessions")({
+export const Route = createFileRoute("/_app/admin/recorded-sessions")({
   head: () => ({ meta: [{ title: "Recorded Sessions — PlacePro LMS" }] }),
   component: AdminRecordedSessions,
 });

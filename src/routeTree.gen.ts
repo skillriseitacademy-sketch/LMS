@@ -13,10 +13,8 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SettingsSecurityRouteImport } from './routes/settings.security'
 import { Route as SettingsProfileRouteImport } from './routes/settings.profile'
 import { Route as SettingsNotificationsRouteImport } from './routes/settings.notifications'
@@ -36,16 +34,6 @@ import { Route as ApiJobsRouteImport } from './routes/api/jobs'
 import { Route as ApiFeedRouteImport } from './routes/api/feed'
 import { Route as ApiConnectionsRouteImport } from './routes/api/connections'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
-import { Route as AdminUsersRouteImport } from './routes/admin.users'
-import { Route as AdminTopicsRouteImport } from './routes/admin.topics'
-import { Route as AdminTeachersRouteImport } from './routes/admin.teachers'
-import { Route as AdminRecordedSessionsRouteImport } from './routes/admin.recorded-sessions'
-import { Route as AdminQuizzesRouteImport } from './routes/admin.quizzes'
-import { Route as AdminProjectsRouteImport } from './routes/admin.projects'
-import { Route as AdminLiveClassesRouteImport } from './routes/admin.live-classes'
-import { Route as AdminInterviewsRouteImport } from './routes/admin.interviews'
-import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
-import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
 import { Route as AppRoadmapRouteImport } from './routes/_app.roadmap'
 import { Route as AppResumeRouteImport } from './routes/_app.resume'
 import { Route as AppQuizzesRouteImport } from './routes/_app.quizzes'
@@ -58,12 +46,14 @@ import { Route as AppFeedRouteImport } from './routes/_app.feed'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCodeRouteImport } from './routes/_app.code'
 import { Route as AppArenaRouteImport } from './routes/_app.arena'
+import { Route as AppAdminRouteImport } from './routes/_app.admin'
 import { Route as AppRoomsIndexRouteImport } from './routes/_app.rooms.index'
 import { Route as AppResumeIndexRouteImport } from './routes/_app.resume.index'
 import { Route as AppQuizzesIndexRouteImport } from './routes/_app.quizzes.index'
 import { Route as AppLiveIndexRouteImport } from './routes/_app.live.index'
 import { Route as AppInterviewIndexRouteImport } from './routes/_app.interview.index'
 import { Route as AppFeedIndexRouteImport } from './routes/_app.feed.index'
+import { Route as AppAdminIndexRouteImport } from './routes/_app.admin.index'
 import { Route as ApiUsersSearchRouteImport } from './routes/api/users.search'
 import { Route as ApiUsersCheckUsernameRouteImport } from './routes/api/users.check-username'
 import { Route as ApiStoriesViewsRouteImport } from './routes/api/stories.views'
@@ -85,6 +75,16 @@ import { Route as AppProfileUsernameRouteImport } from './routes/_app.profile.$u
 import { Route as AppLiveClassIdRouteImport } from './routes/_app.live.$classId'
 import { Route as AppCodeChallengeIdRouteImport } from './routes/_app.code.$challengeId'
 import { Route as AppArenaTopicIdRouteImport } from './routes/_app.arena.$topicId'
+import { Route as AppAdminUsersRouteImport } from './routes/_app.admin.users'
+import { Route as AppAdminTopicsRouteImport } from './routes/_app.admin.topics'
+import { Route as AppAdminTeachersRouteImport } from './routes/_app.admin.teachers'
+import { Route as AppAdminRecordedSessionsRouteImport } from './routes/_app.admin.recorded-sessions'
+import { Route as AppAdminQuizzesRouteImport } from './routes/_app.admin.quizzes'
+import { Route as AppAdminProjectsRouteImport } from './routes/_app.admin.projects'
+import { Route as AppAdminLiveClassesRouteImport } from './routes/_app.admin.live-classes'
+import { Route as AppAdminInterviewsRouteImport } from './routes/_app.admin.interviews'
+import { Route as AppAdminAnalyticsRouteImport } from './routes/_app.admin.analytics'
+import { Route as AppAdminAdminsRouteImport } from './routes/_app.admin.admins'
 import { Route as ApiRoomsJoinCodeRouteImport } from './routes/api/rooms.join.$code'
 import { Route as ApiPostsPostIdReactRouteImport } from './routes/api/posts.$postId.react'
 import { Route as ApiPostsPostIdCommentsRouteImport } from './routes/api/posts.$postId.comments'
@@ -116,11 +116,6 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
@@ -129,11 +124,6 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
 } as any)
 const SettingsSecurityRoute = SettingsSecurityRouteImport.update({
   id: '/security',
@@ -230,56 +220,6 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTopicsRoute = AdminTopicsRouteImport.update({
-  id: '/topics',
-  path: '/topics',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTeachersRoute = AdminTeachersRouteImport.update({
-  id: '/teachers',
-  path: '/teachers',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminRecordedSessionsRoute = AdminRecordedSessionsRouteImport.update({
-  id: '/recorded-sessions',
-  path: '/recorded-sessions',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminQuizzesRoute = AdminQuizzesRouteImport.update({
-  id: '/quizzes',
-  path: '/quizzes',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminProjectsRoute = AdminProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminLiveClassesRoute = AdminLiveClassesRouteImport.update({
-  id: '/live-classes',
-  path: '/live-classes',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminInterviewsRoute = AdminInterviewsRouteImport.update({
-  id: '/interviews',
-  path: '/interviews',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAdminsRoute = AdminAdminsRouteImport.update({
-  id: '/admins',
-  path: '/admins',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AppRoadmapRoute = AppRoadmapRouteImport.update({
   id: '/roadmap',
   path: '/roadmap',
@@ -340,6 +280,11 @@ const AppArenaRoute = AppArenaRouteImport.update({
   path: '/arena',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppRoomsIndexRoute = AppRoomsIndexRouteImport.update({
   id: '/rooms/',
   path: '/rooms/',
@@ -369,6 +314,11 @@ const AppFeedIndexRoute = AppFeedIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppFeedRoute,
+} as any)
+const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminRoute,
 } as any)
 const ApiUsersSearchRoute = ApiUsersSearchRouteImport.update({
   id: '/api/users/search',
@@ -475,6 +425,57 @@ const AppArenaTopicIdRoute = AppArenaTopicIdRouteImport.update({
   path: '/$topicId',
   getParentRoute: () => AppArenaRoute,
 } as any)
+const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminTopicsRoute = AppAdminTopicsRouteImport.update({
+  id: '/topics',
+  path: '/topics',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminTeachersRoute = AppAdminTeachersRouteImport.update({
+  id: '/teachers',
+  path: '/teachers',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminRecordedSessionsRoute =
+  AppAdminRecordedSessionsRouteImport.update({
+    id: '/recorded-sessions',
+    path: '/recorded-sessions',
+    getParentRoute: () => AppAdminRoute,
+  } as any)
+const AppAdminQuizzesRoute = AppAdminQuizzesRouteImport.update({
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminProjectsRoute = AppAdminProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminLiveClassesRoute = AppAdminLiveClassesRouteImport.update({
+  id: '/live-classes',
+  path: '/live-classes',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminInterviewsRoute = AppAdminInterviewsRouteImport.update({
+  id: '/interviews',
+  path: '/interviews',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminAnalyticsRoute = AppAdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminAdminsRoute = AppAdminAdminsRouteImport.update({
+  id: '/admins',
+  path: '/admins',
+  getParentRoute: () => AppAdminRoute,
+} as any)
 const ApiRoomsJoinCodeRoute = ApiRoomsJoinCodeRouteImport.update({
   id: '/api/rooms/join/$code',
   path: '/api/rooms/join/$code',
@@ -533,11 +534,11 @@ const ApiChatConversationsConversationIdReadRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRouteWithChildren
   '/signup': typeof SignupRoute
+  '/admin': typeof AppAdminRouteWithChildren
   '/arena': typeof AppArenaRouteWithChildren
   '/code': typeof AppCodeRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
@@ -550,16 +551,6 @@ export interface FileRoutesByFullPath {
   '/quizzes': typeof AppQuizzesRouteWithChildren
   '/resume': typeof AppResumeRouteWithChildren
   '/roadmap': typeof AppRoadmapRoute
-  '/admin/admins': typeof AdminAdminsRoute
-  '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/interviews': typeof AdminInterviewsRoute
-  '/admin/live-classes': typeof AdminLiveClassesRoute
-  '/admin/projects': typeof AdminProjectsRoute
-  '/admin/quizzes': typeof AdminQuizzesRoute
-  '/admin/recorded-sessions': typeof AdminRecordedSessionsRoute
-  '/admin/teachers': typeof AdminTeachersRoute
-  '/admin/topics': typeof AdminTopicsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/api/chat': typeof ApiChatRouteWithChildren
   '/api/connections': typeof ApiConnectionsRoute
   '/api/feed': typeof ApiFeedRoute
@@ -579,7 +570,16 @@ export interface FileRoutesByFullPath {
   '/settings/notifications': typeof SettingsNotificationsRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
-  '/admin/': typeof AdminIndexRoute
+  '/admin/admins': typeof AppAdminAdminsRoute
+  '/admin/analytics': typeof AppAdminAnalyticsRoute
+  '/admin/interviews': typeof AppAdminInterviewsRoute
+  '/admin/live-classes': typeof AppAdminLiveClassesRoute
+  '/admin/projects': typeof AppAdminProjectsRoute
+  '/admin/quizzes': typeof AppAdminQuizzesRoute
+  '/admin/recorded-sessions': typeof AppAdminRecordedSessionsRoute
+  '/admin/teachers': typeof AppAdminTeachersRoute
+  '/admin/topics': typeof AppAdminTopicsRoute
+  '/admin/users': typeof AppAdminUsersRoute
   '/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
   '/code/$challengeId': typeof AppCodeChallengeIdRoute
   '/live/$classId': typeof AppLiveClassIdRoute
@@ -601,6 +601,7 @@ export interface FileRoutesByFullPath {
   '/api/stories/views': typeof ApiStoriesViewsRoute
   '/api/users/check-username': typeof ApiUsersCheckUsernameRoute
   '/api/users/search': typeof ApiUsersSearchRoute
+  '/admin/': typeof AppAdminIndexRoute
   '/feed/': typeof AppFeedIndexRoute
   '/interview/': typeof AppInterviewIndexRoute
   '/live/': typeof AppLiveIndexRoute
@@ -632,16 +633,6 @@ export interface FileRoutesByTo {
   '/messages': typeof AppMessagesRoute
   '/profile': typeof AppProfileRouteWithChildren
   '/roadmap': typeof AppRoadmapRoute
-  '/admin/admins': typeof AdminAdminsRoute
-  '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/interviews': typeof AdminInterviewsRoute
-  '/admin/live-classes': typeof AdminLiveClassesRoute
-  '/admin/projects': typeof AdminProjectsRoute
-  '/admin/quizzes': typeof AdminQuizzesRoute
-  '/admin/recorded-sessions': typeof AdminRecordedSessionsRoute
-  '/admin/teachers': typeof AdminTeachersRoute
-  '/admin/topics': typeof AdminTopicsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/api/chat': typeof ApiChatRouteWithChildren
   '/api/connections': typeof ApiConnectionsRoute
   '/api/feed': typeof ApiFeedRoute
@@ -661,7 +652,16 @@ export interface FileRoutesByTo {
   '/settings/notifications': typeof SettingsNotificationsRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
-  '/admin': typeof AdminIndexRoute
+  '/admin/admins': typeof AppAdminAdminsRoute
+  '/admin/analytics': typeof AppAdminAnalyticsRoute
+  '/admin/interviews': typeof AppAdminInterviewsRoute
+  '/admin/live-classes': typeof AppAdminLiveClassesRoute
+  '/admin/projects': typeof AppAdminProjectsRoute
+  '/admin/quizzes': typeof AppAdminQuizzesRoute
+  '/admin/recorded-sessions': typeof AppAdminRecordedSessionsRoute
+  '/admin/teachers': typeof AppAdminTeachersRoute
+  '/admin/topics': typeof AppAdminTopicsRoute
+  '/admin/users': typeof AppAdminUsersRoute
   '/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
   '/code/$challengeId': typeof AppCodeChallengeIdRoute
   '/live/$classId': typeof AppLiveClassIdRoute
@@ -683,6 +683,7 @@ export interface FileRoutesByTo {
   '/api/stories/views': typeof ApiStoriesViewsRoute
   '/api/users/check-username': typeof ApiUsersCheckUsernameRoute
   '/api/users/search': typeof ApiUsersSearchRoute
+  '/admin': typeof AppAdminIndexRoute
   '/feed': typeof AppFeedIndexRoute
   '/interview': typeof AppInterviewIndexRoute
   '/live': typeof AppLiveIndexRoute
@@ -704,11 +705,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
-  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRouteWithChildren
   '/signup': typeof SignupRoute
+  '/_app/admin': typeof AppAdminRouteWithChildren
   '/_app/arena': typeof AppArenaRouteWithChildren
   '/_app/code': typeof AppCodeRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
@@ -721,16 +722,6 @@ export interface FileRoutesById {
   '/_app/quizzes': typeof AppQuizzesRouteWithChildren
   '/_app/resume': typeof AppResumeRouteWithChildren
   '/_app/roadmap': typeof AppRoadmapRoute
-  '/admin/admins': typeof AdminAdminsRoute
-  '/admin/analytics': typeof AdminAnalyticsRoute
-  '/admin/interviews': typeof AdminInterviewsRoute
-  '/admin/live-classes': typeof AdminLiveClassesRoute
-  '/admin/projects': typeof AdminProjectsRoute
-  '/admin/quizzes': typeof AdminQuizzesRoute
-  '/admin/recorded-sessions': typeof AdminRecordedSessionsRoute
-  '/admin/teachers': typeof AdminTeachersRoute
-  '/admin/topics': typeof AdminTopicsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/api/chat': typeof ApiChatRouteWithChildren
   '/api/connections': typeof ApiConnectionsRoute
   '/api/feed': typeof ApiFeedRoute
@@ -750,7 +741,16 @@ export interface FileRoutesById {
   '/settings/notifications': typeof SettingsNotificationsRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
-  '/admin/': typeof AdminIndexRoute
+  '/_app/admin/admins': typeof AppAdminAdminsRoute
+  '/_app/admin/analytics': typeof AppAdminAnalyticsRoute
+  '/_app/admin/interviews': typeof AppAdminInterviewsRoute
+  '/_app/admin/live-classes': typeof AppAdminLiveClassesRoute
+  '/_app/admin/projects': typeof AppAdminProjectsRoute
+  '/_app/admin/quizzes': typeof AppAdminQuizzesRoute
+  '/_app/admin/recorded-sessions': typeof AppAdminRecordedSessionsRoute
+  '/_app/admin/teachers': typeof AppAdminTeachersRoute
+  '/_app/admin/topics': typeof AppAdminTopicsRoute
+  '/_app/admin/users': typeof AppAdminUsersRoute
   '/_app/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
   '/_app/code/$challengeId': typeof AppCodeChallengeIdRoute
   '/_app/live/$classId': typeof AppLiveClassIdRoute
@@ -772,6 +772,7 @@ export interface FileRoutesById {
   '/api/stories/views': typeof ApiStoriesViewsRoute
   '/api/users/check-username': typeof ApiUsersCheckUsernameRoute
   '/api/users/search': typeof ApiUsersSearchRoute
+  '/_app/admin/': typeof AppAdminIndexRoute
   '/_app/feed/': typeof AppFeedIndexRoute
   '/_app/interview/': typeof AppInterviewIndexRoute
   '/_app/live/': typeof AppLiveIndexRoute
@@ -793,11 +794,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/admin'
     | '/login'
     | '/onboarding'
     | '/settings'
     | '/signup'
+    | '/admin'
     | '/arena'
     | '/code'
     | '/dashboard'
@@ -810,16 +811,6 @@ export interface FileRouteTypes {
     | '/quizzes'
     | '/resume'
     | '/roadmap'
-    | '/admin/admins'
-    | '/admin/analytics'
-    | '/admin/interviews'
-    | '/admin/live-classes'
-    | '/admin/projects'
-    | '/admin/quizzes'
-    | '/admin/recorded-sessions'
-    | '/admin/teachers'
-    | '/admin/topics'
-    | '/admin/users'
     | '/api/chat'
     | '/api/connections'
     | '/api/feed'
@@ -839,7 +830,16 @@ export interface FileRouteTypes {
     | '/settings/notifications'
     | '/settings/profile'
     | '/settings/security'
-    | '/admin/'
+    | '/admin/admins'
+    | '/admin/analytics'
+    | '/admin/interviews'
+    | '/admin/live-classes'
+    | '/admin/projects'
+    | '/admin/quizzes'
+    | '/admin/recorded-sessions'
+    | '/admin/teachers'
+    | '/admin/topics'
+    | '/admin/users'
     | '/arena/$topicId'
     | '/code/$challengeId'
     | '/live/$classId'
@@ -861,6 +861,7 @@ export interface FileRouteTypes {
     | '/api/stories/views'
     | '/api/users/check-username'
     | '/api/users/search'
+    | '/admin/'
     | '/feed/'
     | '/interview/'
     | '/live/'
@@ -892,16 +893,6 @@ export interface FileRouteTypes {
     | '/messages'
     | '/profile'
     | '/roadmap'
-    | '/admin/admins'
-    | '/admin/analytics'
-    | '/admin/interviews'
-    | '/admin/live-classes'
-    | '/admin/projects'
-    | '/admin/quizzes'
-    | '/admin/recorded-sessions'
-    | '/admin/teachers'
-    | '/admin/topics'
-    | '/admin/users'
     | '/api/chat'
     | '/api/connections'
     | '/api/feed'
@@ -921,7 +912,16 @@ export interface FileRouteTypes {
     | '/settings/notifications'
     | '/settings/profile'
     | '/settings/security'
-    | '/admin'
+    | '/admin/admins'
+    | '/admin/analytics'
+    | '/admin/interviews'
+    | '/admin/live-classes'
+    | '/admin/projects'
+    | '/admin/quizzes'
+    | '/admin/recorded-sessions'
+    | '/admin/teachers'
+    | '/admin/topics'
+    | '/admin/users'
     | '/arena/$topicId'
     | '/code/$challengeId'
     | '/live/$classId'
@@ -943,6 +943,7 @@ export interface FileRouteTypes {
     | '/api/stories/views'
     | '/api/users/check-username'
     | '/api/users/search'
+    | '/admin'
     | '/feed'
     | '/interview'
     | '/live'
@@ -963,11 +964,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
-    | '/admin'
     | '/login'
     | '/onboarding'
     | '/settings'
     | '/signup'
+    | '/_app/admin'
     | '/_app/arena'
     | '/_app/code'
     | '/_app/dashboard'
@@ -980,16 +981,6 @@ export interface FileRouteTypes {
     | '/_app/quizzes'
     | '/_app/resume'
     | '/_app/roadmap'
-    | '/admin/admins'
-    | '/admin/analytics'
-    | '/admin/interviews'
-    | '/admin/live-classes'
-    | '/admin/projects'
-    | '/admin/quizzes'
-    | '/admin/recorded-sessions'
-    | '/admin/teachers'
-    | '/admin/topics'
-    | '/admin/users'
     | '/api/chat'
     | '/api/connections'
     | '/api/feed'
@@ -1009,7 +1000,16 @@ export interface FileRouteTypes {
     | '/settings/notifications'
     | '/settings/profile'
     | '/settings/security'
-    | '/admin/'
+    | '/_app/admin/admins'
+    | '/_app/admin/analytics'
+    | '/_app/admin/interviews'
+    | '/_app/admin/live-classes'
+    | '/_app/admin/projects'
+    | '/_app/admin/quizzes'
+    | '/_app/admin/recorded-sessions'
+    | '/_app/admin/teachers'
+    | '/_app/admin/topics'
+    | '/_app/admin/users'
     | '/_app/arena/$topicId'
     | '/_app/code/$challengeId'
     | '/_app/live/$classId'
@@ -1031,6 +1031,7 @@ export interface FileRouteTypes {
     | '/api/stories/views'
     | '/api/users/check-username'
     | '/api/users/search'
+    | '/_app/admin/'
     | '/_app/feed/'
     | '/_app/interview/'
     | '/_app/live/'
@@ -1052,7 +1053,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
-  AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   SettingsRoute: typeof SettingsRouteWithChildren
@@ -1113,13 +1113,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_app': {
       id: '/_app'
       path: ''
@@ -1133,13 +1126,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
     }
     '/settings/security': {
       id: '/settings/security'
@@ -1274,76 +1260,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/topics': {
-      id: '/admin/topics'
-      path: '/topics'
-      fullPath: '/admin/topics'
-      preLoaderRoute: typeof AdminTopicsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/teachers': {
-      id: '/admin/teachers'
-      path: '/teachers'
-      fullPath: '/admin/teachers'
-      preLoaderRoute: typeof AdminTeachersRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/recorded-sessions': {
-      id: '/admin/recorded-sessions'
-      path: '/recorded-sessions'
-      fullPath: '/admin/recorded-sessions'
-      preLoaderRoute: typeof AdminRecordedSessionsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/quizzes': {
-      id: '/admin/quizzes'
-      path: '/quizzes'
-      fullPath: '/admin/quizzes'
-      preLoaderRoute: typeof AdminQuizzesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/projects': {
-      id: '/admin/projects'
-      path: '/projects'
-      fullPath: '/admin/projects'
-      preLoaderRoute: typeof AdminProjectsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/live-classes': {
-      id: '/admin/live-classes'
-      path: '/live-classes'
-      fullPath: '/admin/live-classes'
-      preLoaderRoute: typeof AdminLiveClassesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/interviews': {
-      id: '/admin/interviews'
-      path: '/interviews'
-      fullPath: '/admin/interviews'
-      preLoaderRoute: typeof AdminInterviewsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/analytics': {
-      id: '/admin/analytics'
-      path: '/analytics'
-      fullPath: '/admin/analytics'
-      preLoaderRoute: typeof AdminAnalyticsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/admins': {
-      id: '/admin/admins'
-      path: '/admins'
-      fullPath: '/admin/admins'
-      preLoaderRoute: typeof AdminAdminsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/_app/roadmap': {
       id: '/_app/roadmap'
       path: '/roadmap'
@@ -1428,6 +1344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppArenaRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/rooms/': {
       id: '/_app/rooms/'
       path: '/rooms'
@@ -1469,6 +1392,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/feed/'
       preLoaderRoute: typeof AppFeedIndexRouteImport
       parentRoute: typeof AppFeedRoute
+    }
+    '/_app/admin/': {
+      id: '/_app/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AppAdminIndexRouteImport
+      parentRoute: typeof AppAdminRoute
     }
     '/api/users/search': {
       id: '/api/users/search'
@@ -1617,6 +1547,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppArenaTopicIdRouteImport
       parentRoute: typeof AppArenaRoute
     }
+    '/_app/admin/users': {
+      id: '/_app/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AppAdminUsersRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/admin/topics': {
+      id: '/_app/admin/topics'
+      path: '/topics'
+      fullPath: '/admin/topics'
+      preLoaderRoute: typeof AppAdminTopicsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/admin/teachers': {
+      id: '/_app/admin/teachers'
+      path: '/teachers'
+      fullPath: '/admin/teachers'
+      preLoaderRoute: typeof AppAdminTeachersRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/admin/recorded-sessions': {
+      id: '/_app/admin/recorded-sessions'
+      path: '/recorded-sessions'
+      fullPath: '/admin/recorded-sessions'
+      preLoaderRoute: typeof AppAdminRecordedSessionsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/admin/quizzes': {
+      id: '/_app/admin/quizzes'
+      path: '/quizzes'
+      fullPath: '/admin/quizzes'
+      preLoaderRoute: typeof AppAdminQuizzesRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/admin/projects': {
+      id: '/_app/admin/projects'
+      path: '/projects'
+      fullPath: '/admin/projects'
+      preLoaderRoute: typeof AppAdminProjectsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/admin/live-classes': {
+      id: '/_app/admin/live-classes'
+      path: '/live-classes'
+      fullPath: '/admin/live-classes'
+      preLoaderRoute: typeof AppAdminLiveClassesRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/admin/interviews': {
+      id: '/_app/admin/interviews'
+      path: '/interviews'
+      fullPath: '/admin/interviews'
+      preLoaderRoute: typeof AppAdminInterviewsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/admin/analytics': {
+      id: '/_app/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AppAdminAnalyticsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/_app/admin/admins': {
+      id: '/_app/admin/admins'
+      path: '/admins'
+      fullPath: '/admin/admins'
+      preLoaderRoute: typeof AppAdminAdminsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
     '/api/rooms/join/$code': {
       id: '/api/rooms/join/$code'
       path: '/api/rooms/join/$code'
@@ -1689,6 +1689,38 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AppAdminRouteChildren {
+  AppAdminAdminsRoute: typeof AppAdminAdminsRoute
+  AppAdminAnalyticsRoute: typeof AppAdminAnalyticsRoute
+  AppAdminInterviewsRoute: typeof AppAdminInterviewsRoute
+  AppAdminLiveClassesRoute: typeof AppAdminLiveClassesRoute
+  AppAdminProjectsRoute: typeof AppAdminProjectsRoute
+  AppAdminQuizzesRoute: typeof AppAdminQuizzesRoute
+  AppAdminRecordedSessionsRoute: typeof AppAdminRecordedSessionsRoute
+  AppAdminTeachersRoute: typeof AppAdminTeachersRoute
+  AppAdminTopicsRoute: typeof AppAdminTopicsRoute
+  AppAdminUsersRoute: typeof AppAdminUsersRoute
+  AppAdminIndexRoute: typeof AppAdminIndexRoute
+}
+
+const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminAdminsRoute: AppAdminAdminsRoute,
+  AppAdminAnalyticsRoute: AppAdminAnalyticsRoute,
+  AppAdminInterviewsRoute: AppAdminInterviewsRoute,
+  AppAdminLiveClassesRoute: AppAdminLiveClassesRoute,
+  AppAdminProjectsRoute: AppAdminProjectsRoute,
+  AppAdminQuizzesRoute: AppAdminQuizzesRoute,
+  AppAdminRecordedSessionsRoute: AppAdminRecordedSessionsRoute,
+  AppAdminTeachersRoute: AppAdminTeachersRoute,
+  AppAdminTopicsRoute: AppAdminTopicsRoute,
+  AppAdminUsersRoute: AppAdminUsersRoute,
+  AppAdminIndexRoute: AppAdminIndexRoute,
+}
+
+const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(
+  AppAdminRouteChildren,
+)
 
 interface AppArenaTopicIdRouteChildren {
   AppArenaTopicIdChallengeIdRoute: typeof AppArenaTopicIdChallengeIdRoute
@@ -1819,6 +1851,7 @@ const AppResumeRouteWithChildren = AppResumeRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRouteWithChildren
   AppArenaRoute: typeof AppArenaRouteWithChildren
   AppCodeRoute: typeof AppCodeRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
@@ -1837,6 +1870,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRouteWithChildren,
   AppArenaRoute: AppArenaRouteWithChildren,
   AppCodeRoute: AppCodeRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
@@ -1855,36 +1889,6 @@ const AppRouteChildren: AppRouteChildren = {
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
-
-interface AdminRouteChildren {
-  AdminAdminsRoute: typeof AdminAdminsRoute
-  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
-  AdminInterviewsRoute: typeof AdminInterviewsRoute
-  AdminLiveClassesRoute: typeof AdminLiveClassesRoute
-  AdminProjectsRoute: typeof AdminProjectsRoute
-  AdminQuizzesRoute: typeof AdminQuizzesRoute
-  AdminRecordedSessionsRoute: typeof AdminRecordedSessionsRoute
-  AdminTeachersRoute: typeof AdminTeachersRoute
-  AdminTopicsRoute: typeof AdminTopicsRoute
-  AdminUsersRoute: typeof AdminUsersRoute
-  AdminIndexRoute: typeof AdminIndexRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminAdminsRoute: AdminAdminsRoute,
-  AdminAnalyticsRoute: AdminAnalyticsRoute,
-  AdminInterviewsRoute: AdminInterviewsRoute,
-  AdminLiveClassesRoute: AdminLiveClassesRoute,
-  AdminProjectsRoute: AdminProjectsRoute,
-  AdminQuizzesRoute: AdminQuizzesRoute,
-  AdminRecordedSessionsRoute: AdminRecordedSessionsRoute,
-  AdminTeachersRoute: AdminTeachersRoute,
-  AdminTopicsRoute: AdminTopicsRoute,
-  AdminUsersRoute: AdminUsersRoute,
-  AdminIndexRoute: AdminIndexRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface SettingsRouteChildren {
   SettingsBillingRoute: typeof SettingsBillingRoute
@@ -1974,7 +1978,6 @@ const ApiStoriesRouteWithChildren = ApiStoriesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
-  AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   SettingsRoute: SettingsRouteWithChildren,

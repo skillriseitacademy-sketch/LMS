@@ -14,7 +14,7 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGri
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/lib/supabase";
 
-export const Route = createFileRoute("/admin/")({
+export const Route = createFileRoute("/_app/admin/")({
   head: () => ({ meta: [{ title: "Admin Dashboard — PlacePro LMS" }] }),
   component: AdminDashboard,
 });

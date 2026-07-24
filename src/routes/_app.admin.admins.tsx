@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export const Route = createFileRoute("/admin/admins")({
+export const Route = createFileRoute("/_app/admin/admins")({
   head: () => ({ meta: [{ title: "Admins — Admin · PlacePro LMS" }] }),
   component: Admins,
 });

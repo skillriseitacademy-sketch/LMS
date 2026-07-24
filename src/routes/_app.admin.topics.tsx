@@ -12,7 +12,7 @@ interface Topic {
   arena_mode: string;
 }
 
-export const Route = createFileRoute("/admin/topics")({
+export const Route = createFileRoute("/_app/admin/topics")({
   head: () => ({ meta: [{ title: "Topics — PlacePro LMS" }] }),
   component: AdminTopics,
 });

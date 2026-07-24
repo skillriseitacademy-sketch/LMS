@@ -176,11 +176,12 @@ export function StoryCreator({ open, onClose }: StoryCreatorProps) {
       });
       if (!storyRes.ok) {
         let errText = "Failed to create story";
+        const rawText = await storyRes.text();
         try {
-          const errData = await storyRes.json();
+          const errData = JSON.parse(rawText);
           if (errData.error) errText = errData.error;
         } catch {
-          errText = await storyRes.text();
+          errText = rawText;
         }
         throw new Error(errText || "Failed to create story");
       }

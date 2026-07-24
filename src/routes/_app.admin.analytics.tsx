@@ -14,7 +14,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-export const Route = createFileRoute("/admin/analytics")({
+export const Route = createFileRoute("/_app/admin/analytics")({
   head: () => ({ meta: [{ title: "Analytics — PlacePro LMS" }] }),
   component: Analytics,
 });

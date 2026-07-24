@@ -1,9 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { AdminSidebar } from "@/components/admin-sidebar";
 import { supabase } from "@/lib/supabase";
 
-export const Route = createFileRoute("/admin")({
+export const Route = createFileRoute("/_app/admin")({
   beforeLoad: async () => {
     const {
       data: { session },
@@ -25,13 +23,8 @@ export const Route = createFileRoute("/admin")({
 
 function AdminLayout() {
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-muted/30">
-        <AdminSidebar />
-        <SidebarInset className="bg-transparent">
-          <Outlet />
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+    <div className="flex-1 w-full relative">
+      <Outlet />
+    </div>
   );
 }

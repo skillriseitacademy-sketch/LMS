@@ -29,7 +29,7 @@ interface LiveClass {
   teacher?: Profile;
 }
 
-export const Route = createFileRoute("/admin/live-classes")({
+export const Route = createFileRoute("/_app/admin/live-classes")({
   head: () => ({ meta: [{ title: "Live Classes — PlacePro LMS" }] }),
   component: AdminLiveClasses,
 });

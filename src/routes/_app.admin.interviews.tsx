@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { SessionCard } from "@/components/monitoring/session-card";
 import { LayoutDashboard, Users, Activity } from "lucide-react";
 
-export const Route = createFileRoute("/admin/interviews")({
+export const Route = createFileRoute("/_app/admin/interviews")({
   component: AdminInterviews,
 });
 

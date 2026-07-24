@@ -4,7 +4,7 @@ import { useState } from "react";
 import { TopBar } from "@/components/top-bar";
 import { useProjects } from "@/lib/auth-store";
 
-export const Route = createFileRoute("/admin/projects")({
+export const Route = createFileRoute("/_app/admin/projects")({
   head: () => ({ meta: [{ title: "Projects — PlacePro LMS" }] }),
   component: AdminProjects,
 });

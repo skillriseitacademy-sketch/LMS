@@ -17,7 +17,7 @@ interface Quiz {
   topic?: Topic;
 }
 
-export const Route = createFileRoute("/admin/quizzes")({
+export const Route = createFileRoute("/_app/admin/quizzes")({
   head: () => ({ meta: [{ title: "Quizzes — PlacePro LMS" }] }),
   component: AdminQuizzes,
 });
