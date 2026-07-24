@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/lib/auth-store";
 import { supabase } from "@/lib/supabase";
@@ -36,7 +36,7 @@ type Message = {
 function MessagesPage() {
   const { session } = useAuth();
   const search = Route.useSearch();
-  const router = useRouter();
+  const navigate = Route.useNavigate();
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConvId, setActiveConvId] = useState<string | null>(null);
@@ -69,7 +69,7 @@ function MessagesPage() {
           if (existingConv) {
             setActiveConvId(existingConv.id);
             // Remove userId from URL to avoid re-triggering
-            router.navigate({ search: (prev: any) => ({ ...prev, userId: undefined }) });
+            navigate({ search: (prev: { userId?: string }) => ({ ...prev, userId: undefined }) });
           } else {
             // Need to create new conversation
             const createRes = await fetch("/api/chat/conversations", {
@@ -83,7 +83,7 @@ function MessagesPage() {
             if (createRes.ok) {
               const { conversationId } = await createRes.json();
               setActiveConvId(conversationId);
-              router.navigate({ search: (prev: any) => ({ ...prev, userId: undefined }) });
+              navigate({ search: (prev: { userId?: string }) => ({ ...prev, userId: undefined }) });
               fetchConversations(); // refresh list
             }
           }
