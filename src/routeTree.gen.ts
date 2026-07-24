@@ -30,6 +30,7 @@ import { Route as ApiStoriesRouteImport } from './routes/api/stories'
 import { Route as ApiRoadmapRouteImport } from './routes/api/roadmap'
 import { Route as ApiReportsRouteImport } from './routes/api/reports'
 import { Route as ApiPostsRouteImport } from './routes/api/posts'
+import { Route as ApiNotificationsRouteImport } from './routes/api/notifications'
 import { Route as ApiLeaderboardRouteImport } from './routes/api/leaderboard'
 import { Route as ApiJobsRouteImport } from './routes/api/jobs'
 import { Route as ApiFeedRouteImport } from './routes/api/feed'
@@ -38,8 +39,10 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminTopicsRouteImport } from './routes/admin.topics'
 import { Route as AdminTeachersRouteImport } from './routes/admin.teachers'
+import { Route as AdminRecordedSessionsRouteImport } from './routes/admin.recorded-sessions'
 import { Route as AdminQuizzesRouteImport } from './routes/admin.quizzes'
 import { Route as AdminProjectsRouteImport } from './routes/admin.projects'
+import { Route as AdminLiveClassesRouteImport } from './routes/admin.live-classes'
 import { Route as AdminInterviewsRouteImport } from './routes/admin.interviews'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminAdminsRouteImport } from './routes/admin.admins'
@@ -62,6 +65,7 @@ import { Route as AppInterviewIndexRouteImport } from './routes/_app.interview.i
 import { Route as AppFeedIndexRouteImport } from './routes/_app.feed.index'
 import { Route as ApiUsersSearchRouteImport } from './routes/api/users.search'
 import { Route as ApiUsersCheckUsernameRouteImport } from './routes/api/users.check-username'
+import { Route as ApiStoriesViewsRouteImport } from './routes/api/stories.views'
 import { Route as ApiRoomsInstantRouteImport } from './routes/api/rooms.instant'
 import { Route as ApiPostsPostIdRouteImport } from './routes/api/posts.$postId'
 import { Route as ApiOnboardingCompleteRouteImport } from './routes/api/onboarding.complete'
@@ -69,6 +73,10 @@ import { Route as ApiInterviewStartRouteImport } from './routes/api/interview.st
 import { Route as ApiCoursesEnrolledRouteImport } from './routes/api/courses.enrolled'
 import { Route as ApiCoursesEnrollRouteImport } from './routes/api/courses.enroll'
 import { Route as ApiClassesCreateRouteImport } from './routes/api/classes.create'
+import { Route as ApiChatMessagesRouteImport } from './routes/api/chat.messages'
+import { Route as ApiChatEnsureBotThreadRouteImport } from './routes/api/chat.ensure-bot-thread'
+import { Route as ApiChatConversationsRouteImport } from './routes/api/chat.conversations'
+import { Route as ApiChatBotRouteImport } from './routes/api/chat.bot'
 import { Route as AppResumeTemplatesRouteImport } from './routes/_app.resume.templates'
 import { Route as AppResumeCreateRouteImport } from './routes/_app.resume.create'
 import { Route as AppQuizzesQuizIdRouteImport } from './routes/_app.quizzes.$quizId'
@@ -85,6 +93,7 @@ import { Route as AppInterviewManualSessionIdRouteImport } from './routes/_app.i
 import { Route as AppInterviewAiSessionIdRouteImport } from './routes/_app.interview.ai.$sessionId'
 import { Route as AppInterviewSessionIdFeedbackRouteImport } from './routes/_app.interview.$sessionId.feedback'
 import { Route as AppArenaTopicIdChallengeIdRouteImport } from './routes/_app.arena.$topicId.$challengeId'
+import { Route as ApiChatConversationsConversationIdReadRouteImport } from './routes/api/chat.conversations.$conversationId.read'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -190,6 +199,11 @@ const ApiPostsRoute = ApiPostsRouteImport.update({
   path: '/api/posts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiNotificationsRoute = ApiNotificationsRouteImport.update({
+  id: '/api/notifications',
+  path: '/api/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiLeaderboardRoute = ApiLeaderboardRouteImport.update({
   id: '/api/leaderboard',
   path: '/api/leaderboard',
@@ -230,6 +244,11 @@ const AdminTeachersRoute = AdminTeachersRouteImport.update({
   path: '/teachers',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminRecordedSessionsRoute = AdminRecordedSessionsRouteImport.update({
+  id: '/recorded-sessions',
+  path: '/recorded-sessions',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminQuizzesRoute = AdminQuizzesRouteImport.update({
   id: '/quizzes',
   path: '/quizzes',
@@ -238,6 +257,11 @@ const AdminQuizzesRoute = AdminQuizzesRouteImport.update({
 const AdminProjectsRoute = AdminProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLiveClassesRoute = AdminLiveClassesRouteImport.update({
+  id: '/live-classes',
+  path: '/live-classes',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminInterviewsRoute = AdminInterviewsRouteImport.update({
@@ -350,6 +374,11 @@ const ApiUsersCheckUsernameRoute = ApiUsersCheckUsernameRouteImport.update({
   path: '/api/users/check-username',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiStoriesViewsRoute = ApiStoriesViewsRouteImport.update({
+  id: '/views',
+  path: '/views',
+  getParentRoute: () => ApiStoriesRoute,
+} as any)
 const ApiRoomsInstantRoute = ApiRoomsInstantRouteImport.update({
   id: '/api/rooms/instant',
   path: '/api/rooms/instant',
@@ -384,6 +413,26 @@ const ApiClassesCreateRoute = ApiClassesCreateRouteImport.update({
   id: '/api/classes/create',
   path: '/api/classes/create',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatMessagesRoute = ApiChatMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => ApiChatRoute,
+} as any)
+const ApiChatEnsureBotThreadRoute = ApiChatEnsureBotThreadRouteImport.update({
+  id: '/ensure-bot-thread',
+  path: '/ensure-bot-thread',
+  getParentRoute: () => ApiChatRoute,
+} as any)
+const ApiChatConversationsRoute = ApiChatConversationsRouteImport.update({
+  id: '/conversations',
+  path: '/conversations',
+  getParentRoute: () => ApiChatRoute,
+} as any)
+const ApiChatBotRoute = ApiChatBotRouteImport.update({
+  id: '/bot',
+  path: '/bot',
+  getParentRoute: () => ApiChatRoute,
 } as any)
 const AppResumeTemplatesRoute = AppResumeTemplatesRouteImport.update({
   id: '/templates',
@@ -469,6 +518,12 @@ const AppArenaTopicIdChallengeIdRoute =
     path: '/$challengeId',
     getParentRoute: () => AppArenaTopicIdRoute,
   } as any)
+const ApiChatConversationsConversationIdReadRoute =
+  ApiChatConversationsConversationIdReadRouteImport.update({
+    id: '/$conversationId/read',
+    path: '/$conversationId/read',
+    getParentRoute: () => ApiChatConversationsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -491,20 +546,23 @@ export interface FileRoutesByFullPath {
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/interviews': typeof AdminInterviewsRoute
+  '/admin/live-classes': typeof AdminLiveClassesRoute
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/quizzes': typeof AdminQuizzesRoute
+  '/admin/recorded-sessions': typeof AdminRecordedSessionsRoute
   '/admin/teachers': typeof AdminTeachersRoute
   '/admin/topics': typeof AdminTopicsRoute
   '/admin/users': typeof AdminUsersRoute
-  '/api/chat': typeof ApiChatRoute
+  '/api/chat': typeof ApiChatRouteWithChildren
   '/api/connections': typeof ApiConnectionsRoute
   '/api/feed': typeof ApiFeedRoute
   '/api/jobs': typeof ApiJobsRoute
   '/api/leaderboard': typeof ApiLeaderboardRoute
+  '/api/notifications': typeof ApiNotificationsRoute
   '/api/posts': typeof ApiPostsRouteWithChildren
   '/api/reports': typeof ApiReportsRoute
   '/api/roadmap': typeof ApiRoadmapRoute
-  '/api/stories': typeof ApiStoriesRoute
+  '/api/stories': typeof ApiStoriesRouteWithChildren
   '/api/suggestions': typeof ApiSuggestionsRoute
   '/api/turn': typeof ApiTurnRoute
   '/api/upload': typeof ApiUploadRoute
@@ -522,6 +580,10 @@ export interface FileRoutesByFullPath {
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
+  '/api/chat/bot': typeof ApiChatBotRoute
+  '/api/chat/conversations': typeof ApiChatConversationsRouteWithChildren
+  '/api/chat/ensure-bot-thread': typeof ApiChatEnsureBotThreadRoute
+  '/api/chat/messages': typeof ApiChatMessagesRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -529,6 +591,7 @@ export interface FileRoutesByFullPath {
   '/api/onboarding/complete': typeof ApiOnboardingCompleteRoute
   '/api/posts/$postId': typeof ApiPostsPostIdRouteWithChildren
   '/api/rooms/instant': typeof ApiRoomsInstantRoute
+  '/api/stories/views': typeof ApiStoriesViewsRoute
   '/api/users/check-username': typeof ApiUsersCheckUsernameRoute
   '/api/users/search': typeof ApiUsersSearchRoute
   '/feed/': typeof AppFeedIndexRoute
@@ -546,6 +609,7 @@ export interface FileRoutesByFullPath {
   '/api/posts/$postId/comments': typeof ApiPostsPostIdCommentsRoute
   '/api/posts/$postId/react': typeof ApiPostsPostIdReactRoute
   '/api/rooms/join/$code': typeof ApiRoomsJoinCodeRoute
+  '/api/chat/conversations/$conversationId/read': typeof ApiChatConversationsConversationIdReadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -563,20 +627,23 @@ export interface FileRoutesByTo {
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/interviews': typeof AdminInterviewsRoute
+  '/admin/live-classes': typeof AdminLiveClassesRoute
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/quizzes': typeof AdminQuizzesRoute
+  '/admin/recorded-sessions': typeof AdminRecordedSessionsRoute
   '/admin/teachers': typeof AdminTeachersRoute
   '/admin/topics': typeof AdminTopicsRoute
   '/admin/users': typeof AdminUsersRoute
-  '/api/chat': typeof ApiChatRoute
+  '/api/chat': typeof ApiChatRouteWithChildren
   '/api/connections': typeof ApiConnectionsRoute
   '/api/feed': typeof ApiFeedRoute
   '/api/jobs': typeof ApiJobsRoute
   '/api/leaderboard': typeof ApiLeaderboardRoute
+  '/api/notifications': typeof ApiNotificationsRoute
   '/api/posts': typeof ApiPostsRouteWithChildren
   '/api/reports': typeof ApiReportsRoute
   '/api/roadmap': typeof ApiRoadmapRoute
-  '/api/stories': typeof ApiStoriesRoute
+  '/api/stories': typeof ApiStoriesRouteWithChildren
   '/api/suggestions': typeof ApiSuggestionsRoute
   '/api/turn': typeof ApiTurnRoute
   '/api/upload': typeof ApiUploadRoute
@@ -594,6 +661,10 @@ export interface FileRoutesByTo {
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
+  '/api/chat/bot': typeof ApiChatBotRoute
+  '/api/chat/conversations': typeof ApiChatConversationsRouteWithChildren
+  '/api/chat/ensure-bot-thread': typeof ApiChatEnsureBotThreadRoute
+  '/api/chat/messages': typeof ApiChatMessagesRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -601,6 +672,7 @@ export interface FileRoutesByTo {
   '/api/onboarding/complete': typeof ApiOnboardingCompleteRoute
   '/api/posts/$postId': typeof ApiPostsPostIdRouteWithChildren
   '/api/rooms/instant': typeof ApiRoomsInstantRoute
+  '/api/stories/views': typeof ApiStoriesViewsRoute
   '/api/users/check-username': typeof ApiUsersCheckUsernameRoute
   '/api/users/search': typeof ApiUsersSearchRoute
   '/feed': typeof AppFeedIndexRoute
@@ -618,6 +690,7 @@ export interface FileRoutesByTo {
   '/api/posts/$postId/comments': typeof ApiPostsPostIdCommentsRoute
   '/api/posts/$postId/react': typeof ApiPostsPostIdReactRoute
   '/api/rooms/join/$code': typeof ApiRoomsJoinCodeRoute
+  '/api/chat/conversations/$conversationId/read': typeof ApiChatConversationsConversationIdReadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -642,20 +715,23 @@ export interface FileRoutesById {
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/interviews': typeof AdminInterviewsRoute
+  '/admin/live-classes': typeof AdminLiveClassesRoute
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/quizzes': typeof AdminQuizzesRoute
+  '/admin/recorded-sessions': typeof AdminRecordedSessionsRoute
   '/admin/teachers': typeof AdminTeachersRoute
   '/admin/topics': typeof AdminTopicsRoute
   '/admin/users': typeof AdminUsersRoute
-  '/api/chat': typeof ApiChatRoute
+  '/api/chat': typeof ApiChatRouteWithChildren
   '/api/connections': typeof ApiConnectionsRoute
   '/api/feed': typeof ApiFeedRoute
   '/api/jobs': typeof ApiJobsRoute
   '/api/leaderboard': typeof ApiLeaderboardRoute
+  '/api/notifications': typeof ApiNotificationsRoute
   '/api/posts': typeof ApiPostsRouteWithChildren
   '/api/reports': typeof ApiReportsRoute
   '/api/roadmap': typeof ApiRoadmapRoute
-  '/api/stories': typeof ApiStoriesRoute
+  '/api/stories': typeof ApiStoriesRouteWithChildren
   '/api/suggestions': typeof ApiSuggestionsRoute
   '/api/turn': typeof ApiTurnRoute
   '/api/upload': typeof ApiUploadRoute
@@ -673,6 +749,10 @@ export interface FileRoutesById {
   '/_app/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/_app/resume/create': typeof AppResumeCreateRoute
   '/_app/resume/templates': typeof AppResumeTemplatesRoute
+  '/api/chat/bot': typeof ApiChatBotRoute
+  '/api/chat/conversations': typeof ApiChatConversationsRouteWithChildren
+  '/api/chat/ensure-bot-thread': typeof ApiChatEnsureBotThreadRoute
+  '/api/chat/messages': typeof ApiChatMessagesRoute
   '/api/classes/create': typeof ApiClassesCreateRoute
   '/api/courses/enroll': typeof ApiCoursesEnrollRoute
   '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
@@ -680,6 +760,7 @@ export interface FileRoutesById {
   '/api/onboarding/complete': typeof ApiOnboardingCompleteRoute
   '/api/posts/$postId': typeof ApiPostsPostIdRouteWithChildren
   '/api/rooms/instant': typeof ApiRoomsInstantRoute
+  '/api/stories/views': typeof ApiStoriesViewsRoute
   '/api/users/check-username': typeof ApiUsersCheckUsernameRoute
   '/api/users/search': typeof ApiUsersSearchRoute
   '/_app/feed/': typeof AppFeedIndexRoute
@@ -697,6 +778,7 @@ export interface FileRoutesById {
   '/api/posts/$postId/comments': typeof ApiPostsPostIdCommentsRoute
   '/api/posts/$postId/react': typeof ApiPostsPostIdReactRoute
   '/api/rooms/join/$code': typeof ApiRoomsJoinCodeRoute
+  '/api/chat/conversations/$conversationId/read': typeof ApiChatConversationsConversationIdReadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -721,8 +803,10 @@ export interface FileRouteTypes {
     | '/admin/admins'
     | '/admin/analytics'
     | '/admin/interviews'
+    | '/admin/live-classes'
     | '/admin/projects'
     | '/admin/quizzes'
+    | '/admin/recorded-sessions'
     | '/admin/teachers'
     | '/admin/topics'
     | '/admin/users'
@@ -731,6 +815,7 @@ export interface FileRouteTypes {
     | '/api/feed'
     | '/api/jobs'
     | '/api/leaderboard'
+    | '/api/notifications'
     | '/api/posts'
     | '/api/reports'
     | '/api/roadmap'
@@ -752,6 +837,10 @@ export interface FileRouteTypes {
     | '/quizzes/$quizId'
     | '/resume/create'
     | '/resume/templates'
+    | '/api/chat/bot'
+    | '/api/chat/conversations'
+    | '/api/chat/ensure-bot-thread'
+    | '/api/chat/messages'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -759,6 +848,7 @@ export interface FileRouteTypes {
     | '/api/onboarding/complete'
     | '/api/posts/$postId'
     | '/api/rooms/instant'
+    | '/api/stories/views'
     | '/api/users/check-username'
     | '/api/users/search'
     | '/feed/'
@@ -776,6 +866,7 @@ export interface FileRouteTypes {
     | '/api/posts/$postId/comments'
     | '/api/posts/$postId/react'
     | '/api/rooms/join/$code'
+    | '/api/chat/conversations/$conversationId/read'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -793,8 +884,10 @@ export interface FileRouteTypes {
     | '/admin/admins'
     | '/admin/analytics'
     | '/admin/interviews'
+    | '/admin/live-classes'
     | '/admin/projects'
     | '/admin/quizzes'
+    | '/admin/recorded-sessions'
     | '/admin/teachers'
     | '/admin/topics'
     | '/admin/users'
@@ -803,6 +896,7 @@ export interface FileRouteTypes {
     | '/api/feed'
     | '/api/jobs'
     | '/api/leaderboard'
+    | '/api/notifications'
     | '/api/posts'
     | '/api/reports'
     | '/api/roadmap'
@@ -824,6 +918,10 @@ export interface FileRouteTypes {
     | '/quizzes/$quizId'
     | '/resume/create'
     | '/resume/templates'
+    | '/api/chat/bot'
+    | '/api/chat/conversations'
+    | '/api/chat/ensure-bot-thread'
+    | '/api/chat/messages'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -831,6 +929,7 @@ export interface FileRouteTypes {
     | '/api/onboarding/complete'
     | '/api/posts/$postId'
     | '/api/rooms/instant'
+    | '/api/stories/views'
     | '/api/users/check-username'
     | '/api/users/search'
     | '/feed'
@@ -848,6 +947,7 @@ export interface FileRouteTypes {
     | '/api/posts/$postId/comments'
     | '/api/posts/$postId/react'
     | '/api/rooms/join/$code'
+    | '/api/chat/conversations/$conversationId/read'
   id:
     | '__root__'
     | '/'
@@ -871,8 +971,10 @@ export interface FileRouteTypes {
     | '/admin/admins'
     | '/admin/analytics'
     | '/admin/interviews'
+    | '/admin/live-classes'
     | '/admin/projects'
     | '/admin/quizzes'
+    | '/admin/recorded-sessions'
     | '/admin/teachers'
     | '/admin/topics'
     | '/admin/users'
@@ -881,6 +983,7 @@ export interface FileRouteTypes {
     | '/api/feed'
     | '/api/jobs'
     | '/api/leaderboard'
+    | '/api/notifications'
     | '/api/posts'
     | '/api/reports'
     | '/api/roadmap'
@@ -902,6 +1005,10 @@ export interface FileRouteTypes {
     | '/_app/quizzes/$quizId'
     | '/_app/resume/create'
     | '/_app/resume/templates'
+    | '/api/chat/bot'
+    | '/api/chat/conversations'
+    | '/api/chat/ensure-bot-thread'
+    | '/api/chat/messages'
     | '/api/classes/create'
     | '/api/courses/enroll'
     | '/api/courses/enrolled'
@@ -909,6 +1016,7 @@ export interface FileRouteTypes {
     | '/api/onboarding/complete'
     | '/api/posts/$postId'
     | '/api/rooms/instant'
+    | '/api/stories/views'
     | '/api/users/check-username'
     | '/api/users/search'
     | '/_app/feed/'
@@ -926,6 +1034,7 @@ export interface FileRouteTypes {
     | '/api/posts/$postId/comments'
     | '/api/posts/$postId/react'
     | '/api/rooms/join/$code'
+    | '/api/chat/conversations/$conversationId/read'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -936,15 +1045,16 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   SettingsRoute: typeof SettingsRouteWithChildren
   SignupRoute: typeof SignupRoute
-  ApiChatRoute: typeof ApiChatRoute
+  ApiChatRoute: typeof ApiChatRouteWithChildren
   ApiConnectionsRoute: typeof ApiConnectionsRoute
   ApiFeedRoute: typeof ApiFeedRoute
   ApiJobsRoute: typeof ApiJobsRoute
   ApiLeaderboardRoute: typeof ApiLeaderboardRoute
+  ApiNotificationsRoute: typeof ApiNotificationsRoute
   ApiPostsRoute: typeof ApiPostsRouteWithChildren
   ApiReportsRoute: typeof ApiReportsRoute
   ApiRoadmapRoute: typeof ApiRoadmapRoute
-  ApiStoriesRoute: typeof ApiStoriesRoute
+  ApiStoriesRoute: typeof ApiStoriesRouteWithChildren
   ApiSuggestionsRoute: typeof ApiSuggestionsRoute
   ApiTurnRoute: typeof ApiTurnRoute
   ApiUploadRoute: typeof ApiUploadRoute
@@ -1110,6 +1220,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPostsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/notifications': {
+      id: '/api/notifications'
+      path: '/api/notifications'
+      fullPath: '/api/notifications'
+      preLoaderRoute: typeof ApiNotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/leaderboard': {
       id: '/api/leaderboard'
       path: '/api/leaderboard'
@@ -1166,6 +1283,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTeachersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/recorded-sessions': {
+      id: '/admin/recorded-sessions'
+      path: '/recorded-sessions'
+      fullPath: '/admin/recorded-sessions'
+      preLoaderRoute: typeof AdminRecordedSessionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/quizzes': {
       id: '/admin/quizzes'
       path: '/quizzes'
@@ -1178,6 +1302,13 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/admin/projects'
       preLoaderRoute: typeof AdminProjectsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/live-classes': {
+      id: '/admin/live-classes'
+      path: '/live-classes'
+      fullPath: '/admin/live-classes'
+      preLoaderRoute: typeof AdminLiveClassesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/interviews': {
@@ -1334,6 +1465,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiUsersCheckUsernameRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/stories/views': {
+      id: '/api/stories/views'
+      path: '/views'
+      fullPath: '/api/stories/views'
+      preLoaderRoute: typeof ApiStoriesViewsRouteImport
+      parentRoute: typeof ApiStoriesRoute
+    }
     '/api/rooms/instant': {
       id: '/api/rooms/instant'
       path: '/api/rooms/instant'
@@ -1382,6 +1520,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/classes/create'
       preLoaderRoute: typeof ApiClassesCreateRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/messages': {
+      id: '/api/chat/messages'
+      path: '/messages'
+      fullPath: '/api/chat/messages'
+      preLoaderRoute: typeof ApiChatMessagesRouteImport
+      parentRoute: typeof ApiChatRoute
+    }
+    '/api/chat/ensure-bot-thread': {
+      id: '/api/chat/ensure-bot-thread'
+      path: '/ensure-bot-thread'
+      fullPath: '/api/chat/ensure-bot-thread'
+      preLoaderRoute: typeof ApiChatEnsureBotThreadRouteImport
+      parentRoute: typeof ApiChatRoute
+    }
+    '/api/chat/conversations': {
+      id: '/api/chat/conversations'
+      path: '/conversations'
+      fullPath: '/api/chat/conversations'
+      preLoaderRoute: typeof ApiChatConversationsRouteImport
+      parentRoute: typeof ApiChatRoute
+    }
+    '/api/chat/bot': {
+      id: '/api/chat/bot'
+      path: '/bot'
+      fullPath: '/api/chat/bot'
+      preLoaderRoute: typeof ApiChatBotRouteImport
+      parentRoute: typeof ApiChatRoute
     }
     '/_app/resume/templates': {
       id: '/_app/resume/templates'
@@ -1494,6 +1660,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/arena/$topicId/$challengeId'
       preLoaderRoute: typeof AppArenaTopicIdChallengeIdRouteImport
       parentRoute: typeof AppArenaTopicIdRoute
+    }
+    '/api/chat/conversations/$conversationId/read': {
+      id: '/api/chat/conversations/$conversationId/read'
+      path: '/$conversationId/read'
+      fullPath: '/api/chat/conversations/$conversationId/read'
+      preLoaderRoute: typeof ApiChatConversationsConversationIdReadRouteImport
+      parentRoute: typeof ApiChatConversationsRoute
     }
   }
 }
@@ -1666,8 +1839,10 @@ interface AdminRouteChildren {
   AdminAdminsRoute: typeof AdminAdminsRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminInterviewsRoute: typeof AdminInterviewsRoute
+  AdminLiveClassesRoute: typeof AdminLiveClassesRoute
   AdminProjectsRoute: typeof AdminProjectsRoute
   AdminQuizzesRoute: typeof AdminQuizzesRoute
+  AdminRecordedSessionsRoute: typeof AdminRecordedSessionsRoute
   AdminTeachersRoute: typeof AdminTeachersRoute
   AdminTopicsRoute: typeof AdminTopicsRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -1678,8 +1853,10 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminsRoute: AdminAdminsRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminInterviewsRoute: AdminInterviewsRoute,
+  AdminLiveClassesRoute: AdminLiveClassesRoute,
   AdminProjectsRoute: AdminProjectsRoute,
   AdminQuizzesRoute: AdminQuizzesRoute,
+  AdminRecordedSessionsRoute: AdminRecordedSessionsRoute,
   AdminTeachersRoute: AdminTeachersRoute,
   AdminTopicsRoute: AdminTopicsRoute,
   AdminUsersRoute: AdminUsersRoute,
@@ -1705,6 +1882,35 @@ const SettingsRouteChildren: SettingsRouteChildren = {
 const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
   SettingsRouteChildren,
 )
+
+interface ApiChatConversationsRouteChildren {
+  ApiChatConversationsConversationIdReadRoute: typeof ApiChatConversationsConversationIdReadRoute
+}
+
+const ApiChatConversationsRouteChildren: ApiChatConversationsRouteChildren = {
+  ApiChatConversationsConversationIdReadRoute:
+    ApiChatConversationsConversationIdReadRoute,
+}
+
+const ApiChatConversationsRouteWithChildren =
+  ApiChatConversationsRoute._addFileChildren(ApiChatConversationsRouteChildren)
+
+interface ApiChatRouteChildren {
+  ApiChatBotRoute: typeof ApiChatBotRoute
+  ApiChatConversationsRoute: typeof ApiChatConversationsRouteWithChildren
+  ApiChatEnsureBotThreadRoute: typeof ApiChatEnsureBotThreadRoute
+  ApiChatMessagesRoute: typeof ApiChatMessagesRoute
+}
+
+const ApiChatRouteChildren: ApiChatRouteChildren = {
+  ApiChatBotRoute: ApiChatBotRoute,
+  ApiChatConversationsRoute: ApiChatConversationsRouteWithChildren,
+  ApiChatEnsureBotThreadRoute: ApiChatEnsureBotThreadRoute,
+  ApiChatMessagesRoute: ApiChatMessagesRoute,
+}
+
+const ApiChatRouteWithChildren =
+  ApiChatRoute._addFileChildren(ApiChatRouteChildren)
 
 interface ApiPostsPostIdRouteChildren {
   ApiPostsPostIdCommentsRoute: typeof ApiPostsPostIdCommentsRoute
@@ -1732,6 +1938,18 @@ const ApiPostsRouteWithChildren = ApiPostsRoute._addFileChildren(
   ApiPostsRouteChildren,
 )
 
+interface ApiStoriesRouteChildren {
+  ApiStoriesViewsRoute: typeof ApiStoriesViewsRoute
+}
+
+const ApiStoriesRouteChildren: ApiStoriesRouteChildren = {
+  ApiStoriesViewsRoute: ApiStoriesViewsRoute,
+}
+
+const ApiStoriesRouteWithChildren = ApiStoriesRoute._addFileChildren(
+  ApiStoriesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
@@ -1740,15 +1958,16 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   SettingsRoute: SettingsRouteWithChildren,
   SignupRoute: SignupRoute,
-  ApiChatRoute: ApiChatRoute,
+  ApiChatRoute: ApiChatRouteWithChildren,
   ApiConnectionsRoute: ApiConnectionsRoute,
   ApiFeedRoute: ApiFeedRoute,
   ApiJobsRoute: ApiJobsRoute,
   ApiLeaderboardRoute: ApiLeaderboardRoute,
+  ApiNotificationsRoute: ApiNotificationsRoute,
   ApiPostsRoute: ApiPostsRouteWithChildren,
   ApiReportsRoute: ApiReportsRoute,
   ApiRoadmapRoute: ApiRoadmapRoute,
-  ApiStoriesRoute: ApiStoriesRoute,
+  ApiStoriesRoute: ApiStoriesRouteWithChildren,
   ApiSuggestionsRoute: ApiSuggestionsRoute,
   ApiTurnRoute: ApiTurnRoute,
   ApiUploadRoute: ApiUploadRoute,

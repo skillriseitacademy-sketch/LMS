@@ -20,6 +20,8 @@ const ADMIN_NAV_ITEMS = [
   { to: "/admin",            icon: "admin_panel_settings", label: "Admin Hub" },
   { to: "/admin/topics",     icon: "menu_book",            label: "Topics" },
   { to: "/admin/quizzes",    icon: "checklist",            label: "Admin Quizzes" },
+  { to: "/admin/live-classes", icon: "live_tv",            label: "Live Classes" },
+  { to: "/admin/recorded-sessions", icon: "smart_display", label: "Recorded Sessions" },
   { to: "/admin/users",      icon: "group",                label: "Students" },
   { to: "/admin/teachers",   icon: "school",               label: "Teachers" },
   { to: "/admin/admins",     icon: "security",             label: "Admins" },
