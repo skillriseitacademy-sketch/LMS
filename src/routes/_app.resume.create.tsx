@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-store";
 import { supabase } from "@/lib/supabase";
+import { MinimalistTemplate } from "@/components/resume/templates/MinimalistTemplate";
+import { ModernistTemplate } from "@/components/resume/templates/ModernistTemplate";
+import { ExecutiveTemplate } from "@/components/resume/templates/ExecutiveTemplate";
 
 export const Route = createFileRoute("/_app/resume/create")({
   component: ResumeEditorPage,
@@ -9,6 +12,7 @@ export const Route = createFileRoute("/_app/resume/create")({
 
 function ResumeEditorPage() {
   const { session } = useAuth();
+  const [selectedTemplate, setSelectedTemplate] = useState("Minimalist");
   const [resumeData, setResumeData] = useState({
     firstName: "",
     lastName: "",
@@ -75,6 +79,15 @@ function ResumeEditorPage() {
           </span>
         </div>
         <div className="flex items-center gap-3 md:gap-4">
+          <select 
+            value={selectedTemplate} 
+            onChange={e => setSelectedTemplate(e.target.value)}
+            className="hidden md:block bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-3 py-2 text-sm text-on-surface font-medium outline-none focus:border-primary"
+          >
+            <option value="Minimalist">The Minimalist</option>
+            <option value="Modernist">The Modernist</option>
+            <option value="Executive">The Executive</option>
+          </select>
           <button onClick={saveResumeToDatabase} disabled={saving} className="flex items-center gap-2 bg-surface-container text-on-surface px-4 py-2 rounded-lg font-body-md font-medium hover:bg-surface-container-high transition-all">
             Save to DB
           </button>
@@ -191,49 +204,10 @@ function ResumeEditorPage() {
           </div>
 
           {/* The A4 Resume Preview Page */}
-          <div className="w-[850px] min-h-[1100px] bg-white shadow-xl origin-top scale-[0.6] xl:scale-[0.75] transition-transform flex-shrink-0" style={{ transformOrigin: 'top center' }}>
-            <div className="p-12 h-full flex flex-col font-sans text-gray-900">
-              
-              {/* Header */}
-              <div className="text-center border-b-2 border-gray-200 pb-6 mb-6">
-                <h1 className="text-4xl font-light tracking-tight text-gray-900 uppercase">{resumeData.firstName} <span className="font-bold">{resumeData.lastName}</span></h1>
-                <h2 className="text-lg text-primary font-medium mt-1 uppercase tracking-widest">{resumeData.title}</h2>
-                <div className="flex items-center justify-center gap-4 mt-4 text-sm text-gray-600">
-                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">mail</span> {resumeData.email}</span>
-                  <span>|</span>
-                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">call</span> {resumeData.phone}</span>
-                </div>
-              </div>
-
-              {/* Experience */}
-              <div className="mb-6">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-4 flex items-center gap-2"><span className="w-4 h-px bg-primary"></span> Experience</h3>
-                
-                {resumeData.experiences.map((exp) => (
-                  <div key={exp.id} className="mb-5">
-                    <div className="flex justify-between items-baseline mb-1">
-                      <h4 className="text-md font-bold text-gray-900">{exp.title}</h4>
-                      <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{exp.startDate} - {exp.endDate}</span>
-                    </div>
-                    <div className="text-sm font-medium text-primary mb-2">{exp.employer}</div>
-                    <ul className="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1 leading-relaxed">
-                      {exp.description.split('\n').filter(line => line.trim()).map((line, i) => (
-                        <li key={i} className="pl-1">{line}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Placeholder for Education/Skills to fill space */}
-              <div className="mt-auto pt-6 border-t-2 border-gray-200 opacity-50">
-                <div className="h-4 bg-gray-200 w-1/4 mb-4 rounded"></div>
-                <div className="h-3 bg-gray-200 w-full mb-2 rounded"></div>
-                <div className="h-3 bg-gray-200 w-5/6 mb-2 rounded"></div>
-                <div className="h-3 bg-gray-200 w-full mb-2 rounded"></div>
-              </div>
-
-            </div>
+          <div className="w-[800px] min-h-[1056px] bg-white shadow-xl origin-top scale-[0.6] xl:scale-[0.75] transition-transform flex-shrink-0" style={{ transformOrigin: 'top center' }}>
+            {selectedTemplate === "Minimalist" && <MinimalistTemplate data={resumeData} />}
+            {selectedTemplate === "Modernist" && <ModernistTemplate data={resumeData} />}
+            {selectedTemplate === "Executive" && <ExecutiveTemplate data={resumeData} />}
           </div>
         </section>
         

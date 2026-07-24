@@ -11,6 +11,8 @@ import {
   GraduationCap,
   Mic,
   ShieldAlert,
+  Video,
+  PlaySquare,
 } from "lucide-react";
 import {
   Sidebar,
@@ -28,6 +30,8 @@ const items = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard, exact: true },
   { title: "Topics", url: "/admin/topics", icon: BookOpen },
   { title: "Quizzes", url: "/admin/quizzes", icon: ListChecks },
+  { title: "Live Classes", url: "/admin/live-classes", icon: Video },
+  { title: "Recorded Sessions", url: "/admin/recorded-sessions", icon: PlaySquare },
   { title: "Students", url: "/admin/users", icon: Users },
   { title: "Teachers", url: "/admin/teachers", icon: GraduationCap },
   { title: "Admins", url: "/admin/admins", icon: ShieldAlert },

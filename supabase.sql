@@ -908,6 +908,40 @@ CREATE POLICY "Users insert own messages" ON messages FOR INSERT
     AND EXISTS (
       SELECT 1 FROM conversation_participants cp
       WHERE cp.conversation_id = messages.conversation_id
-        AND cp.user_id = auth.uid()
     )
   );
+
+-- ==============================================================================
+-- PHASE 7 — ARENA DYNAMIC STATS — Applied 2026-07-22
+-- ==============================================================================
+
+CREATE OR REPLACE FUNCTION get_user_arena_stats(user_id_param UUID)
+RETURNS TABLE (
+  total_solved BIGINT,
+  global_rank BIGINT
+)
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
+DECLARE
+  solved_count BIGINT;
+  rank_num BIGINT;
+BEGIN
+  -- Count challenges passed by this user
+  SELECT COUNT(*) INTO solved_count 
+  FROM code_submissions 
+  WHERE user_id = user_id_param AND (status = 'passed' OR passed = true);
+  
+  -- Calculate global rank: 1 + number of users who have MORE solved challenges
+  SELECT 1 + COUNT(DISTINCT user_id) INTO rank_num
+  FROM (
+    SELECT user_id, COUNT(*) as c
+    FROM code_submissions
+    WHERE (status = 'passed' OR passed = true)
+    GROUP BY user_id
+  ) as user_counts
+  WHERE c > solved_count;
+
+  RETURN QUERY SELECT solved_count, rank_num;
+END;
+$$;

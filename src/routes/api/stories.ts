@@ -65,7 +65,7 @@ export const Route = createFileRoute("/api/stories")({
           .gt("expires_at", new Date().toISOString())
           .order("created_at", { ascending: false });
 
-        if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+        if (error) { console.error('API STORIES ERROR:', error); return new Response(JSON.stringify({ error: error.message }), { status: 500 }); }
 
         return new Response(JSON.stringify(data ?? []), {
           headers: { "Content-Type": "application/json" },
@@ -97,7 +97,7 @@ export const Route = createFileRoute("/api/stories")({
         const cleanContent = sanitizeText(body.content, 500);
         const isMediaUrlValid = isValidUrl(body.media_url ?? "");
 
-        if (!cleanContent && !isMediaUrlValid) {
+        if (!cleanContent && !isMediaUrlValid) { console.error('API STORIES 400 ERROR. Content:', cleanContent, 'Media:', isMediaUrlValid, 'Raw media_url:', body.media_url);
           return new Response("valid content or media_url is required", { status: 400 });
         }
 

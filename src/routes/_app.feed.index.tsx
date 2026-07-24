@@ -64,6 +64,9 @@ function FeedPage() {
   const [topStudents, setTopStudents] = useState<TopStudent[]>([]);
   const [xpData, setXpData] = useState({ total: 0, rank: 0 });
   const [showReactions, setShowReactions] = useState<string | null>(null);
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [editingPostContent, setEditingPostContent] = useState("");
+  const [showPostMenu, setShowPostMenu] = useState<string | null>(null);
 
   const { stacks, isLoading: storiesLoading } = useStories(session?.id ?? "");
   const [viewingStoryIdx, setViewingStoryIdx] = useState<number | null>(null);
@@ -178,6 +181,19 @@ function FeedPage() {
     openPhotoPicker((result) => {
       setPendingImageUrl(result.publicUrl);
     });
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    if (!session) return;
+    await supabase.from("posts").delete().eq("id", postId).eq("user_id", session.id);
+    setPosts(prev => prev.filter(p => p.id !== postId));
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingPostId || !session) return;
+    await supabase.from("posts").update({ content: editingPostContent.trim() }).eq("id", editingPostId).eq("user_id", session.id);
+    setPosts(prev => prev.map(p => p.id === editingPostId ? { ...p, content: editingPostContent.trim() } : p));
+    setEditingPostId(null);
   };
 
   // Story creation is now handled by StoryCreator component
@@ -315,7 +331,7 @@ function FeedPage() {
                 onKeyDown={e => e.key === "Enter" && !e.shiftKey && handlePost()}
                 className="w-full bg-surface-container-low border border-outline-variant rounded-full px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm text-on-surface placeholder:text-on-surface-variant outline-none"
                 style={{ fontFamily: "Inter" }}
-                placeholder={`What's on your mind, ${session?.name?.split(" ")[0] || ""}?`}
+                placeholder={`Share a post, image, or description, ${session?.name?.split(" ")[0] || ""}...`}
               />
             </div>
 
@@ -378,7 +394,7 @@ function FeedPage() {
             posts.map(post => (
               <div key={post.id} className="bg-surface-container-lowest rounded-2xl shadow-sm p-5 border-l-4 border-primary">
                 {/* Post Header */}
-                <div className="flex items-start justify-between mb-3">
+                <div className="flex items-start justify-between mb-3 relative">
                   <div className="flex gap-3 items-center">
                     <div className="w-10 h-10 rounded-full overflow-hidden bg-surface-variant flex-shrink-0">
                       {post.profiles?.avatar_url
@@ -397,13 +413,60 @@ function FeedPage() {
                       </p>
                     </div>
                   </div>
+                  
+                  {/* Post Options Menu */}
+                  {post.user_id === session?.id && (
+                    <div className="relative">
+                      <button onClick={() => setShowPostMenu(showPostMenu === post.id ? null : post.id)} className="p-1 rounded-full text-on-surface-variant hover:bg-surface-container">
+                        <span className="material-symbols-outlined text-[20px]">more_horiz</span>
+                      </button>
+                      {showPostMenu === post.id && (
+                        <div className="absolute right-0 top-full mt-1 w-32 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg z-20 py-1 overflow-hidden">
+                          <button 
+                            onClick={() => {
+                              setEditingPostId(post.id);
+                              setEditingPostContent(post.content);
+                              setShowPostMenu(null);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-surface-container flex items-center gap-2"
+                          >
+                            <span className="material-symbols-outlined text-[16px]">edit</span> Edit
+                          </button>
+                          <button 
+                            onClick={() => {
+                              handleDeletePost(post.id);
+                              setShowPostMenu(null);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-error hover:bg-error/10 flex items-center gap-2"
+                          >
+                            <span className="material-symbols-outlined text-[16px]">delete</span> Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Post Body */}
-                {post.content.trim() && (
-                  <p className="text-sm text-on-surface leading-relaxed mb-3" style={{ fontFamily: "Inter" }}>
-                    {post.content}
-                  </p>
+                {editingPostId === post.id ? (
+                  <div className="mb-3">
+                    <textarea 
+                      value={editingPostContent} 
+                      onChange={e => setEditingPostContent(e.target.value)}
+                      className="w-full bg-surface-container-low border border-outline-variant rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
+                      rows={3}
+                    />
+                    <div className="flex justify-end gap-2 mt-2">
+                      <button onClick={() => setEditingPostId(null)} className="text-xs px-3 py-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg font-medium">Cancel</button>
+                      <button onClick={handleSaveEdit} className="text-xs px-3 py-1.5 bg-primary text-on-primary rounded-lg hover:bg-primary/90 font-medium">Save</button>
+                    </div>
+                  </div>
+                ) : (
+                  post.content.trim() && (
+                    <p className="text-sm text-on-surface leading-relaxed mb-3 whitespace-pre-wrap" style={{ fontFamily: "Inter" }}>
+                      {post.content}
+                    </p>
+                  )
                 )}
 
                 {/* Media */}

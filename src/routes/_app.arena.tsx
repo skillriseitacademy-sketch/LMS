@@ -2,6 +2,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/auth-store";
 import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/arena")({
@@ -17,8 +18,10 @@ interface TopicStats {
 }
 
 function ArenaPage() {
+  const { session } = useAuth();
   const [topics, setTopics] = useState<any[]>([]);
   const [stats, setStats] = useState<Record<string, TopicStats>>({});
+  const [globalStats, setGlobalStats] = useState({ rank: 0, solved: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,6 +31,17 @@ function ArenaPage() {
       
       // Fetch challenges to calculate stats
       const { data: challengesData } = await supabase.from("code_challenges").select("topic_id, difficulty");
+      
+      // Fetch global arena stats
+      if (session?.id) {
+        const { data: userStats } = await supabase.rpc("get_user_arena_stats", { user_id_param: session.id });
+        if (userStats && userStats.length > 0) {
+          setGlobalStats({
+            solved: Number(userStats[0].total_solved),
+            rank: Number(userStats[0].global_rank)
+          });
+        }
+      }
       
       if (topicsData) {
         setTopics(topicsData);
@@ -50,7 +64,7 @@ function ArenaPage() {
       setLoading(false);
     }
     loadData();
-  }, []);
+  }, [session?.id]);
 
   return (
     <div className="flex-1 w-full max-w-container-max mx-auto px-4 md:px-8 py-8 pb-32">
@@ -68,11 +82,15 @@ function ArenaPage() {
         <div className="flex gap-4 bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm">
           <div className="text-center px-4 border-r border-outline-variant">
             <p className="text-xs tracking-[0.05em] font-medium text-outline mb-1" style={{ fontFamily: "JetBrains Mono" }}>Global Rank</p>
-            <p className="text-[24px] md:text-[32px] font-semibold leading-[1.3] text-primary" style={{ fontFamily: "Manrope" }}>#42</p>
+            <p className="text-[24px] md:text-[32px] font-semibold leading-[1.3] text-primary" style={{ fontFamily: "Manrope" }}>
+              #{globalStats.rank > 0 ? globalStats.rank : "--"}
+            </p>
           </div>
           <div className="text-center px-4">
             <p className="text-xs tracking-[0.05em] font-medium text-outline mb-1" style={{ fontFamily: "JetBrains Mono" }}>Total Solved</p>
-            <p className="text-[24px] md:text-[32px] font-semibold leading-[1.3] text-on-surface" style={{ fontFamily: "Manrope" }}>348</p>
+            <p className="text-[24px] md:text-[32px] font-semibold leading-[1.3] text-on-surface" style={{ fontFamily: "Manrope" }}>
+              {globalStats.solved}
+            </p>
           </div>
         </div>
       </header>
