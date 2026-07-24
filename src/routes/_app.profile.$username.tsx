@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { TopBar } from "@/components/top-bar";
 import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
@@ -104,6 +104,13 @@ function ProfileRoute() {
                 initialStatus={null}
                 targetVisibility={profile.visibility}
               />
+              <Link
+                to="/messages"
+                search={{ userId: profile.id }}
+                className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-foreground hover:opacity-90"
+              >
+                Message
+              </Link>
             </div>
           </section>
         )}

@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { to: "/resume",      icon: "description",     label: "Resume" },
   { to: "/leaderboard", icon: "leaderboard",     label: "Leaderboard" },
   { to: "/profile",     icon: "person",          label: "Profile" },
+  { to: "/messages",    icon: "chat",            label: "Messages" },
   { to: "/rooms",       icon: "groups",          label: "Rooms" },
 ];
 

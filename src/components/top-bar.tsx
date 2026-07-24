@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Link } from "@tanstack/react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserSearch } from "@/components/social/user-search";
 
 interface TopBarProps {
   title?: string;
@@ -65,26 +66,8 @@ export function TopBar({ title }: TopBarProps) {
       }}
     >
       {/* Search */}
-      <div className="flex-1 flex items-center gap-4 max-w-sm">
-        <div
-          className="relative w-full transition-all focus-within:ring-2 rounded-full"
-          style={{ outline: "2px solid transparent" }}
-        >
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
-            style={{ color: "var(--pp-outline-variant)" }}
-          />
-          <input
-            type="text"
-            placeholder="Search PlacePro..."
-            className="w-full rounded-full py-2 pl-10 pr-4 text-sm border-0 outline-none"
-            style={{
-              backgroundColor: "var(--pp-surface-container-low)",
-              color: "var(--pp-on-surface)",
-              fontFamily: "var(--font-sans)",
-            }}
-          />
-        </div>
+      <div className="flex-1 flex items-center gap-4 max-w-sm mt-6">
+        <UserSearch />
       </div>
 
       {/* Right actions */}
