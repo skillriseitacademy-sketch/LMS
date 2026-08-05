@@ -6,21 +6,26 @@ export const Route = createFileRoute("/api/turn")({
       GET: async () => {
         try {
           const apiKey = process.env.METERED_API_KEY;
-          
+
           if (!apiKey) {
             console.error("Missing METERED_API_KEY in environment variables");
             return new Response("TURN server configuration error", { status: 500 });
           }
 
-          const response = await fetch(`https://skillriseitacademy.metered.live/api/v1/turn/credentials?apiKey=${apiKey}`);
-          
+          const response = await fetch(
+            `https://skillriseitacademy.metered.live/api/v1/turn/credentials?apiKey=${apiKey}`,
+          );
+
           if (!response.ok) {
-            console.error("Failed to fetch TURN credentials from Metered API:", response.statusText);
+            console.error(
+              "Failed to fetch TURN credentials from Metered API:",
+              response.statusText,
+            );
             return new Response("Failed to fetch TURN credentials", { status: 500 });
           }
 
           const iceServers = await response.json();
-          
+
           return new Response(JSON.stringify(iceServers), {
             headers: { "Content-Type": "application/json" },
           });

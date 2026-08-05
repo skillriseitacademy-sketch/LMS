@@ -1,0 +1,457 @@
+import { createFileRoute } from "@tanstack/react-router";
+
+export const Route = createFileRoute("/mockup/coding_arena_pro_challenges_with_live_activity")({
+  component: CodingArenaProChallengesWithLiveActivityPage,
+});
+
+function CodingArenaProChallengesWithLiveActivityPage() {
+  return (
+    <>
+      <nav className="hidden lg:flex flex-col h-full py-xl px-md space-y-md bg-surface-container-lowest dark:bg-on-surface shadow-md w-sidebar-width sticky top-0 left-0 z-10">
+        <div className="flex items-center gap-sm mb-lg">
+          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-md">
+            P
+          </div>
+          <div>
+            <h1 className="font-headline-md text-headline-md font-black text-primary dark:text-primary-fixed-dim">
+              PlacePro
+            </h1>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">Career OS</p>
+          </div>
+        </div>
+        <div className="flex-1 space-y-sm">
+          <a
+            className="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:text-primary hover:bg-surface-container-low dark:hover:bg-surface-variant transition-all hover:translate-x-1 duration-200"
+            href="#"
+          >
+            <span className="material-symbols-outlined">school</span>
+            <span className="font-label-sm text-label-sm">Curriculum</span>
+          </a>
+          <a
+            className="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:text-primary hover:bg-surface-container-low dark:hover:bg-surface-variant transition-all hover:translate-x-1 duration-200"
+            href="#"
+          >
+            <span className="material-symbols-outlined">quiz</span>
+            <span className="font-label-sm text-label-sm">Mock Tests</span>
+          </a>
+          <a
+            className="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:text-primary hover:bg-surface-container-low dark:hover:bg-surface-variant transition-all hover:translate-x-1 duration-200"
+            href="#"
+          >
+            <span className="material-symbols-outlined">work</span>
+            <span className="font-label-sm text-label-sm">Jobs</span>
+          </a>
+          <a
+            className="flex items-center gap-sm px-sm py-sm rounded-lg text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary bg-surface-container-low"
+            href="#"
+          >
+            <span
+              className="material-symbols-outlined"
+              style={{ fontVariationSettings: "'FILL' 1" }}
+            >
+              workspace_premium
+            </span>
+            <span className="font-label-sm text-label-sm">Premium Arena</span>
+          </a>
+        </div>
+        <div className="mt-auto space-y-sm">
+          <button className="w-full py-sm px-md bg-secondary-container text-on-secondary-container rounded-lg font-label-sm text-label-sm font-bold shadow-sm hover:scale-95 transition-transform">
+            Upgrade to Pro
+          </button>
+          <a
+            className="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:text-primary hover:bg-surface-container-low dark:hover:bg-surface-variant transition-all hover:translate-x-1 duration-200"
+            href="#"
+          >
+            <span className="material-symbols-outlined">settings</span>
+            <span className="font-label-sm text-label-sm">Settings</span>
+          </a>
+          <a
+            className="flex items-center gap-sm px-sm py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:text-primary hover:bg-surface-container-low dark:hover:bg-surface-variant transition-all hover:translate-x-1 duration-200"
+            href="#"
+          >
+            <span className="material-symbols-outlined">contact_support</span>
+            <span className="font-label-sm text-label-sm">Support</span>
+          </a>
+        </div>
+      </nav>
+
+      <div className="flex-1 flex flex-col h-full overflow-y-auto">
+        <header className="flex justify-between items-center w-full px-lg py-sm max-w-container-max mx-auto bg-surface dark:bg-on-surface shadow-sm sticky top-0 z-20">
+          <div className="lg:hidden">
+            <h1 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">
+              PlacePro Pro
+            </h1>
+          </div>
+          <div className="hidden lg:block"></div>
+          <div className="flex items-center gap-sm">
+            <button className="text-on-surface-variant hover:text-primary transition-colors duration-200 p-sm rounded-full hover:bg-surface-container-low active:scale-95 transition-transform">
+              <span className="material-symbols-outlined">help</span>
+            </button>
+            <button className="text-on-surface-variant hover:text-primary transition-colors duration-200 p-sm rounded-full hover:bg-surface-container-low active:scale-95 transition-transform">
+              <span className="material-symbols-outlined">account_circle</span>
+            </button>
+          </div>
+        </header>
+
+        <main className="flex-1 max-w-container-max mx-auto w-full p-md lg:p-xl flex flex-col gap-xl">
+          <section className="relative rounded-2xl bg-primary text-on-primary p-xl overflow-hidden shadow-lg border border-primary-fixed-dim">
+            <div
+              className="absolute inset-0 opacity-10 pointer-events-none"
+              style={{
+                backgroundImage: "radial-gradient(circle at 80% 20%, #fea619 0%, transparent 40%)",
+              }}
+            ></div>
+            <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-lg">
+              <div>
+                <div className="flex items-center gap-sm mb-sm">
+                  <span className="bg-secondary-container text-on-secondary-container px-sm py-xs rounded-full font-label-sm text-label-sm font-bold flex items-center gap-xs">
+                    <span
+                      className="material-symbols-outlined text-[16px]"
+                      style={{ fontVariationSettings: "'FILL' 1" }}
+                    >
+                      star
+                    </span>
+                    PRO ARENA
+                  </span>
+                </div>
+                <h2 className="font-display-lg text-display-lg mb-sm">Elite Challenges</h2>
+                <p className="font-body-lg text-body-lg text-primary-fixed-dim max-w-2xl">
+                  High-stakes algorithmic and system design scenarios curated by top-tier
+                  recruiters. Compete for visibility and elite badges.
+                </p>
+              </div>
+              <div className="glass-card rounded-xl p-md text-center min-w-[200px] border border-on-primary/20 bg-on-primary/10">
+                <p className="font-label-sm text-label-sm text-primary-fixed-dim mb-xs uppercase">
+                  Next High-Stakes Tournament
+                </p>
+                <div className="font-headline-lg text-headline-lg font-bold text-secondary-fixed">
+                  48:12:05
+                </div>
+                <p className="font-label-sm text-label-sm text-primary-fixed mt-xs">H, M, S</p>
+              </div>
+            </div>
+          </section>
+
+          <div className="flex flex-col lg:flex-row gap-xl">
+            <div className="flex-1 flex flex-col gap-lg">
+              <div className="flex justify-between items-end">
+                <h3 className="font-headline-md text-headline-md text-on-surface">
+                  Active Pro Challenges
+                </h3>
+                <div className="flex gap-sm">
+                  <button className="px-md py-sm rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-variant transition-colors border border-outline-variant">
+                    Filter
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
+                <div className="bg-surface-container-lowest rounded-2xl p-lg shadow-sm border-l-4 border-secondary-container hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden pro-glow border-y border-r border-outline-variant/30">
+                  <div className="flex justify-between items-start mb-md">
+                    <div className="flex gap-sm">
+                      <span className="bg-primary/10 text-primary px-sm py-xs rounded font-label-sm text-label-sm">
+                        System Design
+                      </span>
+                      <span className="bg-secondary-container/20 text-on-secondary-container px-sm py-xs rounded font-label-sm text-label-sm font-bold flex items-center gap-xs">
+                        <span className="material-symbols-outlined text-[14px]">bolt</span> 2x XP
+                      </span>
+                    </div>
+                    <span className="material-symbols-outlined text-outline">bookmark_border</span>
+                  </div>
+                  <h4 className="font-headline-md text-headline-md text-on-surface mb-sm">
+                    Scalable Microservices Architecture
+                  </h4>
+                  <p className="font-body-md text-body-md text-on-surface-variant mb-lg line-clamp-2">
+                    Design a highly available distributed system capable of handling 10k TPS during
+                    peak events.
+                  </p>
+                  <div className="flex justify-between items-center mt-auto pt-md border-t border-surface-variant">
+                    <div className="flex items-center gap-md">
+                      <div className="flex items-center gap-xs text-secondary font-label-sm text-label-sm">
+                        <span className="material-symbols-outlined text-[16px]">visibility</span>
+                        Recruiter-Tracked
+                      </div>
+                      <div className="flex items-center gap-xs text-outline font-label-sm text-label-sm">
+                        <span className="material-symbols-outlined text-[16px]">group</span>
+                        1.2k Active
+                      </div>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-surface-container-lowest rounded-2xl p-lg shadow-sm border border-outline-variant hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden">
+                  <div className="flex justify-between items-start mb-md">
+                    <div className="flex gap-sm">
+                      <span className="bg-primary/10 text-primary px-sm py-xs rounded font-label-sm text-label-sm">
+                        Algorithms
+                      </span>
+                    </div>
+                    <span className="material-symbols-outlined text-outline">bookmark_border</span>
+                  </div>
+                  <h4 className="font-headline-md text-headline-md text-on-surface mb-sm">
+                    Algorithmic Optimization: O(1) Search
+                  </h4>
+                  <p className="font-body-md text-body-md text-on-surface-variant mb-lg line-clamp-2">
+                    Optimize a legacy search function handling millions of records to achieve
+                    constant time complexity.
+                  </p>
+                  <div className="flex justify-between items-center mt-auto pt-md border-t border-surface-variant">
+                    <div className="flex items-center gap-md">
+                      <div className="flex items-center gap-xs text-error font-label-sm text-label-sm">
+                        <span className="material-symbols-outlined text-[16px]">
+                          local_fire_department
+                        </span>
+                        Hard
+                      </div>
+                      <div className="flex items-center gap-xs text-outline font-label-sm text-label-sm">
+                        <span className="material-symbols-outlined text-[16px]">group</span>
+                        850 Active
+                      </div>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center hover:bg-primary-container hover:text-on-primary-container transition-colors">
+                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full lg:w-[320px] flex flex-col gap-lg">
+              <div className="bg-surface-container-lowest rounded-2xl p-lg shadow-sm border border-outline-variant">
+                <div className="flex items-center gap-sm mb-md pb-sm border-b border-surface-variant">
+                  <span
+                    className="material-symbols-outlined text-secondary-container"
+                    style={{ fontVariationSettings: "'FILL' 1" }}
+                  >
+                    emoji_events
+                  </span>
+                  <h4 className="font-headline-md text-headline-md text-on-surface">
+                    Pro Leaderboard
+                  </h4>
+                </div>
+                <div className="space-y-md">
+                  <div className="flex items-center justify-between p-md rounded-xl bg-secondary-container/10 border border-secondary-container/30 pro-glow">
+                    <div className="flex items-center gap-md">
+                      <div className="relative">
+                        <div className="w-12 h-12 rounded-full border-2 border-secondary-container overflow-hidden">
+                          <img
+                            alt="Alex C."
+                            className="w-full h-full object-cover"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmUadWMWVz_vv4IKStdKzvuqA3AHAIYfrtNJOzrJB9rQC2wdvnsYYddWnKLjUjibsKbV0mRhU_FCxkn8fw-FxYNEGhrY1GAiqemMWxqKtHJ-AkZrV1WUDa_FoQCnPwhLZdz_bJgPZQI1VyaMXZvYfEgFWSklSfyFw3eN79Oub8GcpeZ3c1opY9SZrPb9ZJk6nNbDtyFK59650pDUNAuW6z_HRsh-bH7Mi2ELJn9qxw1XM6J7lb_-eUmw"
+                          />
+                        </div>
+                        <span
+                          className="absolute -top-1 -right-1 material-symbols-outlined text-secondary-container bg-surface rounded-full text-[20px]"
+                          style={{ fontVariationSettings: "'FILL' 1" }}
+                        >
+                          stars
+                        </span>
+                      </div>
+                      <div>
+                        <p className="font-body-md font-bold text-on-surface">Alex C.</p>
+                        <p className="text-[10px] uppercase tracking-wider text-outline font-bold">
+                          Global Rank #1
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-label-sm text-primary font-bold">12.4k XP</p>
+                      <p className="text-[10px] text-on-surface-variant">98% Win Rate</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between p-md rounded-xl bg-surface-container-high/50 border border-outline-variant/30">
+                    <div className="flex items-center gap-md">
+                      <div className="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
+                        <img
+                          alt="Sarah K."
+                          className="w-full h-full object-cover"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxlmSg4MSzBz7pmclDrgtvm4R_YzDilfwK-_fPXpybb5sgTpgy2cuB1KLUXvK4ZbHuXkhsWaYT7DmnS170px333YHWVnGskAAWbtqK2Q9EEX9QhgDr7W2q-mVUWGzXHhvqHdObltD6gooofvcSpPEz0XgkWHvuMJOzJE_nq2xtrjJLP1dfKTJ9SYWti7PgQYY0jHB5UvkVMzBdFK2sXPWdiOAFwiMwJQfzyYeVJUlitm079DKh-bV46w"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-body-md font-medium text-on-surface">Sarah K.</p>
+                        <p className="text-[10px] uppercase text-outline">Global Rank #2</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-label-sm text-primary">11.8k XP</p>
+                      <p className="text-[10px] text-on-surface-variant">92% Win Rate</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between p-md rounded-xl bg-surface-container-high/30 border border-outline-variant/20">
+                    <div className="flex items-center gap-md">
+                      <div className="w-10 h-10 rounded-full border-2 border-tertiary-fixed-dim overflow-hidden">
+                        <div className="w-full h-full flex items-center justify-center bg-primary text-on-primary font-label-sm">
+                          JD
+                        </div>
+                      </div>
+                      <div>
+                        <p className="font-body-md font-medium text-on-surface">John D.</p>
+                        <p className="text-[10px] uppercase text-outline">Global Rank #3</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-label-sm text-primary">10.2k XP</p>
+                      <p className="text-[10px] text-on-surface-variant">89% Win Rate</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between px-md py-sm">
+                    <div className="flex items-center gap-md">
+                      <span className="w-6 text-center font-bold text-outline-variant">4</span>
+                      <p className="font-body-md text-on-surface">Michael R.</p>
+                    </div>
+                    <span className="font-label-sm text-outline">9.8k XP</span>
+                  </div>
+
+                  <div className="flex items-center justify-between px-md py-sm">
+                    <div className="flex items-center gap-md">
+                      <span className="w-6 text-center font-bold text-outline-variant">5</span>
+                      <p className="font-body-md text-on-surface">Elena V.</p>
+                    </div>
+                    <span className="font-label-sm text-outline">9.5k XP</span>
+                  </div>
+
+                  <div className="mt-md pt-md border-t border-dashed border-outline-variant">
+                    <div className="flex items-center justify-between p-md rounded-xl bg-primary/5 border border-primary/20">
+                      <div className="flex items-center gap-md">
+                        <div className="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xs">
+                          YOU
+                        </div>
+                        <div>
+                          <p className="font-body-md font-bold text-primary">Rank #42</p>
+                          <p className="text-[10px] text-on-surface-variant">Top 5% of Arena</p>
+                        </div>
+                      </div>
+                      <p className="font-label-sm font-bold text-primary">8,240 XP</p>
+                    </div>
+                  </div>
+                </div>
+                <button className="w-full mt-md py-sm text-primary font-label-sm text-label-sm hover:underline">
+                  View Full Rankings
+                </button>
+              </div>
+
+              <div className="bg-inverse-surface text-inverse-on-surface rounded-2xl p-lg shadow-md relative overflow-hidden">
+                <div className="absolute -right-4 -top-4 text-primary-container opacity-20">
+                  <span
+                    className="material-symbols-outlined text-[100px]"
+                    style={{ fontVariationSettings: "'FILL' 1" }}
+                  >
+                    chat_bubble
+                  </span>
+                </div>
+                <div className="relative z-10">
+                  <h4 className="font-headline-md text-headline-md mb-sm">
+                    Unlock Recruiter Credits
+                  </h4>
+                  <p className="font-body-md text-body-md text-outline-variant mb-lg text-sm">
+                    Complete Pro Arena challenges to earn direct message credits with recruiters
+                    from top tech firms.
+                  </p>
+                  <button className="w-full py-sm px-md bg-primary-container text-on-primary-container rounded-lg font-label-sm text-label-sm font-bold shadow-sm hover:scale-95 transition-transform">
+                    View Credit Balance
+                  </button>
+                </div>
+              </div>
+              <div className="bg-surface-container-lowest rounded-2xl p-lg shadow-sm border border-outline-variant mt-lg">
+                <div className="flex items-center justify-between mb-md pb-sm border-b border-surface-variant">
+                  <div className="flex items-center gap-sm">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-error"></span>
+                    </span>
+                    <h4 className="font-headline-md text-headline-md text-on-surface">
+                      Live Activity
+                    </h4>
+                  </div>
+                  <span className="text-[10px] font-bold text-outline uppercase tracking-widest">
+                    Real-time
+                  </span>
+                </div>
+                <div className="space-y-md">
+                  <div className="flex gap-md items-start">
+                    <div className="mt-1 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                      <span className="material-symbols-outlined text-[18px]">code</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-body-md text-sm text-on-surface">
+                        <span className="font-bold text-primary">Alex C.</span> just solved
+                        'Scalable Microservices' in 12m
+                      </p>
+                      <p className="text-[10px] text-outline mt-xs">2 minutes ago</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-md items-start">
+                    <div className="mt-1 w-8 h-8 rounded-lg bg-secondary-container/10 flex items-center justify-center text-secondary">
+                      <span className="material-symbols-outlined text-[18px]">emoji_events</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-body-md text-sm text-on-surface">
+                        <span className="font-bold text-primary">Sarah K.</span> earned a 'System
+                        Design' badge
+                      </p>
+                      <p className="text-[10px] text-outline mt-xs">15 minutes ago</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-md items-start">
+                    <div className="mt-1 w-8 h-8 rounded-lg bg-tertiary-fixed-dim/20 flex items-center justify-center text-tertiary">
+                      <span className="material-symbols-outlined text-[18px]">timer</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-body-md text-sm text-on-surface">
+                        New Tournament starting in{" "}
+                        <span className="font-bold text-tertiary">45m</span>
+                      </p>
+                      <p className="text-[10px] text-outline mt-xs">System Update</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <nav className="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-md py-sm pb-safe bg-surface dark:bg-on-surface shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] rounded-t-xl">
+        <a
+          className="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high scale-up transition-transform duration-200 p-sm rounded-xl"
+          href="#"
+        >
+          <span className="material-symbols-outlined">home</span>
+          <span className="font-label-sm text-label-sm">Home</span>
+        </a>
+        <a
+          className="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high scale-up transition-transform duration-200 p-sm rounded-xl"
+          href="#"
+        >
+          <span className="material-symbols-outlined">quiz</span>
+          <span className="font-label-sm text-label-sm">Mocks</span>
+        </a>
+        <a
+          className="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 scale-up transition-transform duration-200"
+          href="#"
+        >
+          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
+            workspace_premium
+          </span>
+          <span className="font-label-sm text-label-sm">Arena</span>
+        </a>
+        <a
+          className="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high scale-up transition-transform duration-200 p-sm rounded-xl"
+          href="#"
+        >
+          <span className="material-symbols-outlined">stars</span>
+          <span className="font-label-sm text-label-sm">Pro</span>
+        </a>
+      </nav>
+    </>
+  );
+}

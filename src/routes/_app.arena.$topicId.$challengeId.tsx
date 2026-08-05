@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,7 @@ function ChallengeRoom() {
   const { topicId, challengeId } = Route.useParams();
   const navigate = useNavigate();
   const { session } = useAuth();
-  
+
   const [challenge, setChallenge] = useState<any>(null);
   const [submission, setSubmission] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -44,9 +44,7 @@ function ChallengeRoom() {
 
     // Check if correct (in a real app, this should be done on the server, not client!)
     // But since API routes are disabled, we will simulate it here to demonstrate functionality.
-    const isCorrect = isCTF 
-      ? submission.trim() === challenge.flag 
-      : submission.length > 10; // fake code check
+    const isCorrect = isCTF ? submission.trim() === challenge.flag : submission.length > 10; // fake code check
 
     try {
       const { data: insertData, error } = await supabase
@@ -88,7 +86,10 @@ function ChallengeRoom() {
             <Badge variant="secondary" className="uppercase text-[10px] tracking-wider">
               {challenge.category}
             </Badge>
-            <Badge variant="outline" className="text-yellow-600 border-yellow-600/30 bg-yellow-600/10">
+            <Badge
+              variant="outline"
+              className="text-yellow-600 border-yellow-600/30 bg-yellow-600/10"
+            >
               {challenge.points} pts
             </Badge>
           </div>
@@ -103,10 +104,14 @@ function ChallengeRoom() {
 
         <Card className="flex flex-col">
           <div className="p-4 border-b border-border bg-muted/20 flex items-center gap-2">
-            {isCTF ? <Flag className="w-5 h-5 text-destructive" /> : <Code2 className="w-5 h-5 text-primary" />}
+            {isCTF ? (
+              <Flag className="w-5 h-5 text-destructive" />
+            ) : (
+              <Code2 className="w-5 h-5 text-primary" />
+            )}
             <h3 className="font-semibold">{isCTF ? "Submit Flag" : "Code Editor"}</h3>
           </div>
-          
+
           <div className="p-4 flex-1 flex flex-col gap-4">
             {isCTF ? (
               <Input
@@ -140,11 +145,13 @@ function ChallengeRoom() {
               </div>
             )}
 
-            <Button 
-              size="lg" 
-              onClick={handleSubmit} 
+            <Button
+              size="lg"
+              onClick={handleSubmit}
               disabled={status === "submitting" || status === "success" || !submission.trim()}
-              className={isCTF ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
+              className={
+                isCTF ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""
+              }
             >
               {status === "submitting" ? "Submitting..." : isCTF ? "Capture Flag" : "Run Code"}
             </Button>

@@ -6,19 +6,18 @@ PlacePro LMS is a full-stack, AI-powered Learning Management System targeted at 
 
 ### Tech Stack Summary
 
-| Layer | Technology |
-|---|---|
-| **Frontend** | React 19, TanStack Router (`@tanstack/react-router`) |
-| **Styling** | TailwindCSS v4, shadcn/ui (Radix Primitives), Framer Motion, GSAP |
-| **Backend / API** | TanStack Start (Nitro runtime via Vite), Node.js |
-| **AI-LLM** | Vercel AI SDK (Gemini 1.5 Flash), OpenAI Realtime API (GPT-4o) |
-| **Database** | Supabase (PostgreSQL with Row Level Security) |
-| **Auth** | Supabase Auth (JWT based) |
-| **Hosting** | Vercel (indicated by `vercel.json`), Cloudflare R2 for media |
-| **Build** | Vite 8, Bun |
-| **Third-party** | MediaPipe (Proctoring face detection) |
-| **Live Video** | Custom Peer-to-Peer WebRTC with Supabase Realtime (Broadcast) signaling |
-
+| Layer             | Technology                                                              |
+| ----------------- | ----------------------------------------------------------------------- |
+| **Frontend**      | React 19, TanStack Router (`@tanstack/react-router`)                    |
+| **Styling**       | TailwindCSS v4, shadcn/ui (Radix Primitives), Framer Motion, GSAP       |
+| **Backend / API** | TanStack Start (Nitro runtime via Vite), Node.js                        |
+| **AI-LLM**        | Vercel AI SDK (OpenRouter), OpenAI Realtime API (GPT-4o)                |
+| **Database**      | Supabase (PostgreSQL with Row Level Security)                           |
+| **Auth**          | Supabase Auth (JWT based)                                               |
+| **Hosting**       | Vercel (indicated by `vercel.json`), Cloudflare R2 for media            |
+| **Build**         | Vite 8, Bun                                                             |
+| **Third-party**   | MediaPipe (Proctoring face detection)                                   |
+| **Live Video**    | Custom Peer-to-Peer WebRTC with Supabase Realtime (Broadcast) signaling |
 
 ## 2. Folder Structure
 
@@ -81,23 +80,25 @@ c:\Users\Mani\Projects\pixel-perfect-preview
 ## 4. Frontend Architecture
 
 - **Routing:** Handled entirely by `@tanstack/react-router` using file-based routing. The `__root.tsx` defines the main layout and QueryClient provider.
-- **State Management:** 
+- **State Management:**
   - **Auth:** Managed via `src/lib/auth-store.ts` using a custom hook `useAuth()` that subscribes to `supabase.auth.onAuthStateChange`.
   - **Client State:** A hybrid approach using `localStorage` coupled with native DOM Event dispatching (`window.dispatchEvent(new Event("profile-updated"))`) to trigger re-renders across components in `src/lib/store.ts`.
   - **Server State:** `@tanstack/react-query` is installed and initialized in the router, intended for async data fetching.
 - **Animations:** Heavy use of `framer-motion` for UI interactions and `gsap` (with ScrollTrigger) for complex landing page canvas animations.
 
 ### Routing Table Example
-| Path | File | Description |
-|---|---|---|
-| `/` | `index.tsx` | Main GSAP-animated landing page |
-| `/login` | `login.tsx` | Authentication login page |
-| `/onboarding` | `onboarding.tsx` | Personalized onboarding flow |
-| `/dashboard` | `_app.dashboard.tsx` | Main student dashboard |
-| `/interview/ai/:sessionId` | `_app.interview.ai.$sessionId.tsx` | Active AI voice interview room |
-| `/admin/users` | `admin.users.tsx` | Admin panel for user management |
+
+| Path                       | File                               | Description                     |
+| -------------------------- | ---------------------------------- | ------------------------------- |
+| `/`                        | `index.tsx`                        | Main GSAP-animated landing page |
+| `/login`                   | `login.tsx`                        | Authentication login page       |
+| `/onboarding`              | `onboarding.tsx`                   | Personalized onboarding flow    |
+| `/dashboard`               | `_app.dashboard.tsx`               | Main student dashboard          |
+| `/interview/ai/:sessionId` | `_app.interview.ai.$sessionId.tsx` | Active AI voice interview room  |
+| `/admin/users`             | `admin.users.tsx`                  | Admin panel for user management |
 
 ### Code Snippet: State Management (`src/lib/store.ts`)
+
 ```typescript
 export function saveProfile(profile: ProfileData) {
   if (typeof window === "undefined") return;
@@ -111,23 +112,28 @@ export function saveProfile(profile: ProfileData) {
 - **Framework:** TanStack Start API Routes (running on Nitro).
 - **Middleware:** A custom Vite middleware (`api-invite-middleware` in `vite.config.ts`) bypasses standard Nitro routing during development to handle admin user invitations securely via the Supabase Service Role Key.
 - **Security & Validation:** Cross-platform input sanitization is implemented for API routes (e.g., chat, posts, stories) using `src/lib/sanitize.ts` to prevent injection attacks.
-- **Missing Protections:** 🔴 **No global rate limiting** is evident. 🔴 Some API routes (e.g., `/api/roadmap`) **lack authentication checks** entirely, allowing unauthorized access to paid AI integrations. CORS is manually handled in the Vite dev middleware but relies on hosting config in production.
+- **Missing Protections:** 🔴 **No global rate limiting** is evident (though AI endpoints have targeted rate limiting). CORS is manually handled in the Vite dev middleware but relies on hosting config in production.
 
 ### Endpoint Table
-| Method | Route | Description | Auth Required? |
-|---|---|---|---|
-| `POST` | `/api/invite` | Invites a user via service role key | Yes (Admin) |
-| `POST` | `/api/interview/start` | Fetches OpenAI ephemeral key and creates DB session | Yes |
-| `POST` | `/api/onboarding/complete` | Updates user profile and topics | Yes |
-| `POST` | `/api/roadmap` | Generates career roadmap via Gemini | **NO (Missing)** |
+
+| Method | Route                      | Description                                         | Auth Required? |
+| ------ | -------------------------- | --------------------------------------------------- | -------------- |
+| `POST` | `/api/invite`              | Invites a user via service role key                 | Yes (Admin)    |
+| `POST` | `/api/interview/start`     | Fetches OpenAI ephemeral key and creates DB session | Yes            |
+| `POST` | `/api/onboarding/complete` | Updates user profile and topics                     | Yes            |
+| `POST` | `/api/roadmap`             | Generates career roadmap via OpenRouter             | Yes            |
 
 ### Code Snippet: Route Handler (`src/routes/api/interview.start.ts`)
+
 ```typescript
 const authHeader = request.headers.get("Authorization");
 const token = authHeader?.replace("Bearer ", "");
 if (!token) return new Response("Unauthorized", { status: 401 });
 
-const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+const {
+  data: { user },
+  error: authError,
+} = await supabase.auth.getUser(token);
 if (authError || !user) return new Response("Unauthorized", { status: 401 });
 
 const response = await fetch("https://api.openai.com/v1/realtime/sessions", {
@@ -142,6 +148,7 @@ const response = await fetch("https://api.openai.com/v1/realtime/sessions", {
 The application uses PostgreSQL (via Supabase). The full schema is maintained in `supabase.sql`.
 
 ### Core Entities
+
 - **Auth & Profiles:** `profiles` (links to `auth.users`), `teachers`, `connections`.
 - **LMS Content:** `topics`, `quizzes`, `quiz_questions`, `code_challenges`.
 - **User Activity:** `student_topics`, `quiz_attempts`, `code_submissions`, `interview_sessions`.
@@ -150,6 +157,7 @@ The application uses PostgreSQL (via Supabase). The full schema is maintained in
 - **Social:** `posts`, `post_reactions`, `post_comments`, `stories`.
 
 ### ER Diagram (Mermaid)
+
 ```mermaid
 erDiagram
     auth_users ||--o| profiles : "has profile"
@@ -167,7 +175,7 @@ erDiagram
 
 ## 7. Authentication & Authorization
 
-- **Authentication Method:** Supabase JWT Tokens. Users authenticate on the client, and tokens are stored by the Supabase SDK. 
+- **Authentication Method:** Supabase JWT Tokens. Users authenticate on the client, and tokens are stored by the Supabase SDK.
 - **Authorization / Roles:** The system defines three roles: `student`, `teacher`, and `admin` within the `profiles` table.
 - **Enforcement Mechanisms:**
   - **Client-side:** `useAuth()` hook determines UI visibility.
@@ -176,35 +184,36 @@ erDiagram
 
 ## 8. Third-Party Integrations
 
-1. **Supabase:** Core database, authentication, RLS, and **Realtime Broadcast** for WebRTC signaling (live rooms). 
+1. **Supabase:** Core database, authentication, RLS, and **Realtime Broadcast** for WebRTC signaling (live rooms).
 2. **OpenAI (Realtime API):** Used for AI voice interviews. Generates an ephemeral WebRTC token for the client.
-3. **Google Gemini (Vercel AI SDK):** Used for generating structured Career Roadmaps (`/api/roadmap`).
+3. **OpenRouter (Vercel AI SDK):** Used for generating structured Career Roadmaps (`/api/roadmap`) with dynamic model selection.
 4. **Cloudflare R2:** Used for media storage (images/recordings). Configured via AWS S3 SDK compatibility (`@aws-sdk/client-s3`).
 
-### Code Snippet: Gemini Integration (`api/roadmap.ts`)
+### Code Snippet: OpenRouter Integration (`api/roadmap.ts`)
+
 ```typescript
-const google = createGoogleGenerativeAI({ apiKey: key });
-const { object } = await generateObject({
-  model: google("gemini-1.5-flash") as any,
-  schema: z.object({ title: z.string(), steps: z.array(...) }),
-  prompt: `Generate a detailed step-by-step career roadmap...`
+const { object, usage } = await generateObject({
+  model: openRouter(defaultModel) as any,
+  schema: z.object({ nodeId: z.string(), label: z.string(), children: z.array(...) }),
+  prompt: `Generate realistic career and education next-steps...`
 });
 ```
 
 ## 9. Environment Variables
 
-| Variable | Purpose | Scope | Status |
-|---|---|---|---|
-| `VITE_SUPABASE_URL` | Supabase instance URL | Client/Server | Present |
-| `VITE_SUPABASE_ANON_KEY` | Public Supabase anon key | Client/Server | Present |
-| `SUPABASE_SERVICE_ROLE_KEY` | Admin access to Supabase | Server Only | Present |
-| `GEMINI_API_KEY` | Roadmap generation | Server Only | Present |
-| `OPENAI_API_KEY` | Realtime voice interviews | Server Only | Present |
-| `R2_ACCOUNT_ID`... | Cloudflare R2 configurations | Server Only | Present |
+| Variable                    | Purpose                           | Scope         | Status  |
+| --------------------------- | --------------------------------- | ------------- | ------- |
+| `VITE_SUPABASE_URL`         | Supabase instance URL             | Client/Server | Present |
+| `VITE_SUPABASE_ANON_KEY`    | Public Supabase anon key          | Client/Server | Present |
+| `SUPABASE_SERVICE_ROLE_KEY` | Admin access to Supabase          | Server Only   | Present |
+| `OPENROUTER_API_KEY`        | Roadmap generation via OpenRouter | Server Only   | Present |
+| `OPENAI_API_KEY`            | Realtime voice interviews         | Server Only   | Present |
+| `R2_ACCOUNT_ID`...          | Cloudflare R2 configurations      | Server Only   | Present |
 
 ## 10. Data Flow Walkthroughs
 
 ### Flow 1: AI Interview Initialization
+
 1. **User Action:** Clicks "Start AI Interview" on the frontend.
 2. **Client:** Calls `POST /api/interview/start` passing their Supabase JWT.
 3. **Server:** Verifies the JWT via Supabase. Calls the OpenAI API (`/v1/realtime/sessions`) using the secure server-side `OPENAI_API_KEY`.
@@ -257,7 +266,7 @@ const dataChannelsRef = useRef<Record<string, RTCDataChannel>>({});
 // ICE candidates are batched (250ms window) before sending to reduce
 // Supabase Realtime message volume
 const iceCandidatesQueueRef = useRef<Record<string, RTCIceCandidateInit[]>>({});
-const iceCandidateTimerRef  = useRef<Record<string, NodeJS.Timeout | null>>({});
+const iceCandidateTimerRef = useRef<Record<string, NodeJS.Timeout | null>>({});
 
 // Buffer for ICE candidates that arrive before setRemoteDescription()
 // is called — they are queued here and "flushed" after the SDP answer
@@ -282,8 +291,8 @@ const joinRoom = useCallback(async () => {
 
   // Step 4: Announce our arrival to all other peers
   channel.subscribe(async (status) => {
-    if (status === 'SUBSCRIBED') {
-      channel.send({ type: 'broadcast', event: 'join', payload: { from: myPeerId, userName } });
+    if (status === "SUBSCRIBED") {
+      channel.send({ type: "broadcast", event: "join", payload: { from: myPeerId, userName } });
     }
   });
 }, []);
@@ -379,11 +388,11 @@ The quiz page is a self-contained state machine. Understanding the state variabl
 #### Key State Variables
 
 ```typescript
-const [index,      setIndex]      = useState(0);           // Current question index (0-based)
-const [selected,   setSelected]   = useState<number | null>(null); // Which option the user clicked
-const [revealed,   setRevealed]   = useState(false);       // true = show correct/wrong feedback
-const [answers,    setAnswers]    = useState<number[]>([]);// All submitted answers (for results)
-const [secondsLeft,setSecondsLeft]= useState(10 * 60);     // Countdown timer (auto-submits at 0)
+const [index, setIndex] = useState(0); // Current question index (0-based)
+const [selected, setSelected] = useState<number | null>(null); // Which option the user clicked
+const [revealed, setRevealed] = useState(false); // true = show correct/wrong feedback
+const [answers, setAnswers] = useState<number[]>([]); // All submitted answers (for results)
+const [secondsLeft, setSecondsLeft] = useState(10 * 60); // Countdown timer (auto-submits at 0)
 ```
 
 #### Data Fetching Pattern
@@ -407,7 +416,7 @@ useEffect(() => {
       .eq("quiz_id", quizId)
       .order("created_at", { ascending: true });
 
-    setQuestions(qs.map(q => ({ ...q, correctIndex: q.correct_index })));
+    setQuestions(qs.map((q) => ({ ...q, correctIndex: q.correct_index })));
     setLoading(false);
   }
   loadQuiz();
@@ -422,13 +431,13 @@ useEffect(() => {
 const finish = (finalAnswers: number[]) => {
   sessionStorage.setItem(
     `quiz-result-${quizId}`,
-    JSON.stringify({ answers: finalAnswers, ts: Date.now() })
+    JSON.stringify({ answers: finalAnswers, ts: Date.now() }),
   );
   navigate({ to: "/quizzes/$quizId/results", params: { quizId } });
 };
 ```
 
-> ⚠️ **Known Limitation:** Quiz results are stored in `sessionStorage` and are ephemeral. They are not persisted to Supabase (`quiz_attempts`) in the current implementation. This is a feature gap to address.
+> ✅ **Fixed:** Quiz results are now correctly saved to the `quiz_attempts` table in Supabase via the `saveQuizAttempt` utility.
 
 ---
 
@@ -441,14 +450,14 @@ Stories are simple but have a visual type system that maps to different ring col
 ```typescript
 // story_type from the DB maps to a TailwindCSS ring color class
 const storyTypeRing: Record<string, string> = {
-  streak:      "ring-streak",       // 🔥 orange/amber
-  achievement: "ring-xp-gold",      // ⭐ gold
-  media:       "ring-brand",        // 📷 primary brand color
-  status:      "ring-success",      // 💬 green
+  streak: "ring-streak", // 🔥 orange/amber
+  achievement: "ring-xp-gold", // ⭐ gold
+  media: "ring-brand", // 📷 primary brand color
+  status: "ring-success", // 💬 green
 };
 
 // Expiry countdown is computed client-side from the DB `expires_at` timestamp
-const msLeft  = new Date(story.expires_at).getTime() - Date.now();
+const msLeft = new Date(story.expires_at).getTime() - Date.now();
 const hrsLeft = Math.max(0, Math.floor(msLeft / 3_600_000)); // "Xh left"
 ```
 
@@ -465,6 +474,7 @@ const hrsLeft = Math.max(0, Math.floor(msLeft / 3_600_000)); // "Xh left"
 #### Adding a New Story Type
 
 To add a new type (e.g., `event`):
+
 1. Insert a row in the `stories` table with `story_type = 'event'`.
 2. Add an entry to `storyTypeRing` in `story-row.tsx`: `event: "ring-purple-500"`.
 3. Add the emoji/icon condition in the icon overlay `<span>` block.
@@ -481,13 +491,17 @@ The analytics page fetches live KPI counts from Supabase and renders charts usin
 // KPIs are fetched directly via Supabase count queries.
 // This pattern uses { count: "exact", head: true } to get only the row count
 // without fetching actual data — very efficient for large tables.
-const { count: usersCount }       = await supabase.from("profiles").select("*", { count: "exact", head: true });
-const { count: enrollmentsCount } = await supabase.from("student_topics").select("*", { count: "exact", head: true });
+const { count: usersCount } = await supabase
+  .from("profiles")
+  .select("*", { count: "exact", head: true });
+const { count: enrollmentsCount } = await supabase
+  .from("student_topics")
+  .select("*", { count: "exact", head: true });
 
 setKpis([
-  { label: "Total Users",       value: usersCount.toString() },
+  { label: "Total Users", value: usersCount.toString() },
   { label: "Total Enrollments", value: enrollmentsCount.toString() },
-  { label: "Completion Rate",   value: "85%" }, // ← ⚠️ HARDCODED, not from DB
+  { label: "Completion Rate", value: "85%" }, // ← ⚠️ HARDCODED, not from DB
 ]);
 ```
 
@@ -517,6 +531,13 @@ setKpis([
 
 ---
 
+### 11.5 Social Reactions & Gamification
+
+- **Gamification (`useGamification`)**: XP and streaks are computed dynamically by querying the `xp_transactions` and `streak_history` tables. The `saveQuizAttempt` function logs completed quizzes, contributing to user progress.
+- **Social Posts**: The `/api/posts/$postId/react` API allows users to toggle reaction types (`like`, `fire`, `clap`, `brain`, `rocket`). It uses an upsert mechanism where matching an existing reaction type deletes it, and a new type replaces the old one. Additionally, it records a notification for the post author.
+
+---
+
 ## 12. Deployment Architecture
 
 - **Hosting:** The application is designed to be hosted on Vercel or Cloudflare. The `vercel.json` rewrite rules route `/api/*` to the Nitro backend and everything else to `index.html` (SPA fallback).
@@ -526,17 +547,20 @@ setKpis([
 ## 13. Known Issues / TODOs
 
 ### 🔴 Critical
-- **Unauthenticated API Route:** The `/api/roadmap.ts` endpoint lacks Supabase token verification. Anyone can POST to this endpoint and consume the server's `GEMINI_API_KEY` quota.
+
+- None currently identified. (Roadmap authentication has been fixed).
 
 ### 🟡 Important
+
 - **State Management Anti-Pattern:** Global state (`src/lib/store.ts`) relies on `window.dispatchEvent(new Event(...))`. This can lead to race conditions and brittle react reactivity. Since `@tanstack/react-query` is installed, state syncing should ideally be migrated to query mutations and invalidations.
-- **Missing Global Rate Limiting:** No rate limiting is configured in Nitro, making AI endpoints vulnerable to abuse.
-- **Quiz Results Not Persisted:** `quiz_attempts` table exists in the schema but quiz results are currently only saved to `sessionStorage`. They should be written to Supabase after quiz completion.
-- **Analytics Charts Hardcoded:** The time-series chart data in `admin.analytics.tsx` uses static placeholder values. The period filter (`7d/30d/90d`) does not affect the data.
+- **Missing Global Rate Limiting:** No global rate limiting is configured in Nitro, although AI endpoints now have targeted rate limiting.
+- **Analytics Charts Hardcoded:** The time-series chart data in `_app.admin.analytics.tsx` uses static placeholder values. The period filter (`7d/30d/90d`) does not affect the data.
 
 ### 🟢 Feature Stubs
+
 - The database schema introduces an `arena_mode` for CTFs (`topic_leaderboards`, `flag_submitted`), which appear to be recent structural additions likely still in active development on the frontend (`_app.arena.tsx`).
 
 ---
-*Document Generation Date: 2026-07-22*
-*Codebase Version/Branch: Local Development Workspace*
+
+_Document Generation Date: 2026-07-22_
+_Codebase Version/Branch: Local Development Workspace_

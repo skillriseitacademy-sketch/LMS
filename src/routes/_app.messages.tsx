@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useRef } from "react";
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
 import { TopBar } from "@/components/top-bar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -51,20 +51,23 @@ function MessagesPage() {
   const fetchConversations = async () => {
     if (!session?.id) return;
     try {
-      const { data: { session: supabaseSession } } = await supabase.auth.getSession();
+      const {
+        data: { session: supabaseSession },
+      } = await supabase.auth.getSession();
       const token = supabaseSession?.access_token;
-      
+
       const res = await fetch("/api/chat/conversations", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
         const data = await res.json();
         setConversations(data);
-        
+
         // Handle auto-select or auto-create from query param
         if (search.userId) {
-          const existingConv = data.find((c: Conversation) => 
-            !c.is_group && c.participants.some(p => p.user_id === search.userId)
+          const existingConv = data.find(
+            (c: Conversation) =>
+              !c.is_group && c.participants.some((p) => p.user_id === search.userId),
           );
           if (existingConv) {
             setActiveConvId(existingConv.id);
@@ -74,9 +77,9 @@ function MessagesPage() {
             // Need to create new conversation
             const createRes = await fetch("/api/chat/conversations", {
               method: "POST",
-              headers: { 
+              headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}` 
+                Authorization: `Bearer ${token}`,
               },
               body: JSON.stringify({ other_user_id: search.userId }),
             });
@@ -109,7 +112,9 @@ function MessagesPage() {
 
     const loadMessages = async () => {
       try {
-        const { data: { session: supabaseSession } } = await supabase.auth.getSession();
+        const {
+          data: { session: supabaseSession },
+        } = await supabase.auth.getSession();
         const token = supabaseSession?.access_token;
         const res = await fetch(`/api/chat/messages?conversation_id=${activeConvId}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -117,17 +122,17 @@ function MessagesPage() {
         if (res.ok && mounted) {
           const data = await res.json();
           setMessages(data.reverse()); // backend returns DESC, we want ASC for UI
-          
+
           // Mark as read
           await fetch(`/api/chat/conversations/${activeConvId}/read`, {
             method: "PATCH",
             headers: { Authorization: `Bearer ${token}` },
           });
-          
+
           // Update unread count locally
-          setConversations(prev => prev.map(c => 
-            c.id === activeConvId ? { ...c, unread_count: 0 } : c
-          ));
+          setConversations((prev) =>
+            prev.map((c) => (c.id === activeConvId ? { ...c, unread_count: 0 } : c)),
+          );
         }
       } catch (err) {
         console.error("Failed to load messages", err);
@@ -139,10 +144,11 @@ function MessagesPage() {
     loadMessages();
 
     // Setup Realtime subscription for new messages
-    const channel = supabase.channel(`chat:${activeConvId}`)
+    const channel = supabase
+      .channel(`chat:${activeConvId}`)
       .on("broadcast", { event: "new_message" }, (payload) => {
         if (mounted) {
-          setMessages(prev => [...prev, payload.payload]);
+          setMessages((prev) => [...prev, payload.payload]);
           // Re-mark read
           supabase.auth.getSession().then(({ data: { session: s } }) => {
             fetch(`/api/chat/conversations/${activeConvId}/read`, {
@@ -174,34 +180,43 @@ function MessagesPage() {
     setSending(true);
 
     try {
-      const { data: { session: supabaseSession } } = await supabase.auth.getSession();
+      const {
+        data: { session: supabaseSession },
+      } = await supabase.auth.getSession();
       const token = supabaseSession?.access_token;
       const res = await fetch("/api/chat/messages", {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}` 
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           conversation_id: activeConvId,
           body: messageText,
         }),
       });
-      
+
       if (!res.ok) {
         toast.error("Failed to send message");
         setNewMessage(messageText); // restore
       } else {
         // Update local conversation list's last_message
         const newMsgData = await res.json();
-        setConversations(prev => {
-          const convs = prev.map(c => 
-            c.id === activeConvId 
-              ? { ...c, last_message: { body: messageText, created_at: new Date().toISOString(), sender_id: session.id } }
-              : c
+        setConversations((prev) => {
+          const convs = prev.map((c) =>
+            c.id === activeConvId
+              ? {
+                  ...c,
+                  last_message: {
+                    body: messageText,
+                    created_at: new Date().toISOString(),
+                    sender_id: session.id,
+                  },
+                }
+              : c,
           );
           // Move to top
-          const targetIndex = convs.findIndex(c => c.id === activeConvId);
+          const targetIndex = convs.findIndex((c) => c.id === activeConvId);
           if (targetIndex > 0) {
             const target = convs.splice(targetIndex, 1)[0];
             convs.unshift(target);
@@ -217,10 +232,10 @@ function MessagesPage() {
     }
   };
 
-  const activeConv = conversations.find(c => c.id === activeConvId);
-  const otherParticipant = activeConv?.participants.find(p => p.user_id !== session?.id);
-  const convName = activeConv?.is_group 
-    ? activeConv.name 
+  const activeConv = conversations.find((c) => c.id === activeConvId);
+  const otherParticipant = activeConv?.participants.find((p) => p.user_id !== session?.id);
+  const convName = activeConv?.is_group
+    ? activeConv.name
     : otherParticipant?.name || "Unknown User";
   const convAvatar = !activeConv?.is_group ? otherParticipant?.avatar_url : null;
 
@@ -228,32 +243,35 @@ function MessagesPage() {
     <>
       <TopBar breadcrumb={["App", "Messages"]} title="Messages" />
       <div className="flex flex-1 overflow-hidden h-[calc(100vh-4rem)]">
-        
         {/* Sidebar - Conversation List */}
-        <div className={`w-full md:w-80 border-r border-border bg-card flex flex-col ${activeConvId ? 'hidden md:flex' : 'flex'}`}>
+        <div
+          className={`w-full md:w-80 border-r border-border bg-card flex flex-col ${activeConvId ? "hidden md:flex" : "flex"}`}
+        >
           <div className="flex-1 overflow-y-auto">
             {loadingConvs ? (
-              <div className="flex justify-center p-8"><Loader2 className="animate-spin text-muted-foreground w-6 h-6" /></div>
+              <div className="flex justify-center p-8">
+                <Loader2 className="animate-spin text-muted-foreground w-6 h-6" />
+              </div>
             ) : conversations.length === 0 ? (
               <div className="p-8 text-center text-sm text-muted-foreground">
                 No messages yet. Find someone in the Feed to start a chat!
               </div>
             ) : (
-              conversations.map(conv => {
-                const other = conv.participants.find(p => p.user_id !== session?.id);
-                const name = conv.is_group ? conv.name : (other?.name || "Unknown");
+              conversations.map((conv) => {
+                const other = conv.participants.find((p) => p.user_id !== session?.id);
+                const name = conv.is_group ? conv.name : other?.name || "Unknown";
                 const avatar = conv.is_group ? null : other?.avatar_url;
-                
+
                 return (
                   <button
                     key={conv.id}
                     onClick={() => setActiveConvId(conv.id)}
-                    className={`w-full flex items-start gap-3 p-4 border-b border-border transition-colors hover:bg-muted/50 ${activeConvId === conv.id ? 'bg-brand/5 border-l-4 border-l-brand' : 'border-l-4 border-l-transparent'}`}
+                    className={`w-full flex items-start gap-3 p-4 border-b border-border transition-colors hover:bg-muted/50 ${activeConvId === conv.id ? "bg-brand/5 border-l-4 border-l-brand" : "border-l-4 border-l-transparent"}`}
                   >
                     <Avatar className="w-12 h-12 shrink-0 border border-border">
                       <AvatarImage src={avatar || undefined} />
                       <AvatarFallback className="bg-brand/10 text-brand font-bold text-sm">
-                        {name?.substring(0,2).toUpperCase()}
+                        {name?.substring(0, 2).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0 text-left">
@@ -265,13 +283,17 @@ function MessagesPage() {
                           </span>
                         )}
                       </div>
-                      <p className={`text-xs truncate ${conv.unread_count > 0 ? 'text-foreground font-semibold' : 'text-muted-foreground'}`}>
+                      <p
+                        className={`text-xs truncate ${conv.unread_count > 0 ? "text-foreground font-semibold" : "text-muted-foreground"}`}
+                      >
                         {conv.last_message ? (
                           <>
                             {conv.last_message.sender_id === session?.id ? "You: " : ""}
                             {conv.last_message.body}
                           </>
-                        ) : "No messages yet"}
+                        ) : (
+                          "No messages yet"
+                        )}
                       </p>
                     </div>
                     {conv.unread_count > 0 && (
@@ -285,18 +307,22 @@ function MessagesPage() {
         </div>
 
         {/* Main Chat Area */}
-        <div className={`flex-1 flex flex-col bg-card ${!activeConvId ? 'hidden md:flex' : 'flex'}`}>
+        <div
+          className={`flex-1 flex flex-col bg-card ${!activeConvId ? "hidden md:flex" : "flex"}`}
+        >
           {!activeConvId ? (
             <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-8 text-center bg-muted/20">
               <span className="material-symbols-outlined text-6xl mb-4 opacity-50">forum</span>
               <p className="text-lg font-medium text-foreground">Your Messages</p>
-              <p className="text-sm mt-1 max-w-sm">Select a conversation from the sidebar or start a new one to connect with peers.</p>
+              <p className="text-sm mt-1 max-w-sm">
+                Select a conversation from the sidebar or start a new one to connect with peers.
+              </p>
             </div>
           ) : (
             <>
               {/* Chat Header */}
               <div className="h-16 border-b border-border bg-card flex items-center px-4 gap-3 shrink-0">
-                <button 
+                <button
                   onClick={() => setActiveConvId(null)}
                   className="md:hidden p-2 -ml-2 rounded-full hover:bg-muted"
                 >
@@ -305,7 +331,7 @@ function MessagesPage() {
                 <Avatar className="w-10 h-10 border border-border">
                   <AvatarImage src={convAvatar || undefined} />
                   <AvatarFallback className="bg-brand/10 text-brand font-bold text-sm">
-                    {convName?.substring(0,2).toUpperCase()}
+                    {convName?.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div>
@@ -316,7 +342,9 @@ function MessagesPage() {
               {/* Messages List */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/20">
                 {loadingMessages ? (
-                  <div className="flex justify-center p-8"><Loader2 className="animate-spin text-brand w-8 h-8" /></div>
+                  <div className="flex justify-center p-8">
+                    <Loader2 className="animate-spin text-brand w-8 h-8" />
+                  </div>
                 ) : messages.length === 0 ? (
                   <div className="text-center text-sm text-muted-foreground p-8">
                     Send a message to start the conversation!
@@ -324,10 +352,15 @@ function MessagesPage() {
                 ) : (
                   messages.map((msg, i) => {
                     const isMine = msg.sender_id === session?.id;
-                    const showAvatar = !isMine && (i === messages.length - 1 || messages[i+1]?.sender_id !== msg.sender_id);
-                    
+                    const showAvatar =
+                      !isMine &&
+                      (i === messages.length - 1 || messages[i + 1]?.sender_id !== msg.sender_id);
+
                     return (
-                      <div key={msg.id} className={`flex ${isMine ? 'justify-end' : 'justify-start'} gap-2`}>
+                      <div
+                        key={msg.id}
+                        className={`flex ${isMine ? "justify-end" : "justify-start"} gap-2`}
+                      >
                         {!isMine && (
                           <div className="w-8 shrink-0 flex items-end">
                             {showAvatar && (
@@ -340,10 +373,17 @@ function MessagesPage() {
                             )}
                           </div>
                         )}
-                        <div className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm ${isMine ? 'bg-brand text-brand-foreground rounded-br-sm' : 'bg-card border border-border text-foreground rounded-bl-sm shadow-sm'}`}>
+                        <div
+                          className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm ${isMine ? "bg-brand text-brand-foreground rounded-br-sm" : "bg-card border border-border text-foreground rounded-bl-sm shadow-sm"}`}
+                        >
                           <p className="whitespace-pre-wrap leading-relaxed">{msg.body}</p>
-                          <span className={`text-[9px] block mt-1 text-right ${isMine ? 'text-brand-foreground/70' : 'text-muted-foreground'}`}>
-                            {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          <span
+                            className={`text-[9px] block mt-1 text-right ${isMine ? "text-brand-foreground/70" : "text-muted-foreground"}`}
+                          >
+                            {new Date(msg.created_at).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
                           </span>
                         </div>
                       </div>
@@ -368,14 +408,17 @@ function MessagesPage() {
                     disabled={!newMessage.trim() || sending}
                     className="w-12 h-12 rounded-full bg-brand text-brand-foreground flex items-center justify-center hover:opacity-90 disabled:opacity-50 transition-opacity shrink-0"
                   >
-                    {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5 ml-0.5" />}
+                    {sending ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <Send className="w-5 h-5 ml-0.5" />
+                    )}
                   </button>
                 </form>
               </div>
             </>
           )}
         </div>
-
       </div>
     </>
   );

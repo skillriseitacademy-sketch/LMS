@@ -7,21 +7,25 @@ export const Route = createFileRoute("/_app/leaderboard")({
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 
 function LeaderboardPage() {
   const [users, setUsers] = useState<any[]>([]);
   const { session } = useAuth();
-  
+
   useEffect(() => {
     async function load() {
       // Get profiles and sum xp transactions
-      const { data } = await supabase.from('profiles').select('*, xp_transactions(amount)');
+      const { data } = await supabase.from("profiles").select("*, xp_transactions(amount)");
       if (data) {
-        const withXp = data.map((u: any) => ({
-          ...u,
-          xp: u.xp_transactions ? u.xp_transactions.reduce((acc: number, t: any) => acc + t.amount, 0) : 0
-        })).sort((a: any, b: any) => b.xp - a.xp);
+        const withXp = data
+          .map((u: any) => ({
+            ...u,
+            xp: u.xp_transactions
+              ? u.xp_transactions.reduce((acc: number, t: any) => acc + t.amount, 0)
+              : 0,
+          }))
+          .sort((a: any, b: any) => b.xp - a.xp);
         setUsers(withXp);
       }
     }
@@ -78,7 +82,10 @@ function LeaderboardPage() {
                 <div className="relative mb-4 transform group-hover:-translate-y-2 transition-transform duration-300">
                   <img
                     className="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-surface object-cover avatar-glow-2 z-10 relative shadow-[0_0_20px_rgba(71,85,105,0.4)]"
-                    src={users[1].avatar_url || `https://ui-avatars.com/api/?name=${users[1].first_name}+${users[1].last_name}&background=random`}
+                    src={
+                      users[1].avatar_url ||
+                      `https://ui-avatars.com/api/?name=${users[1].first_name}+${users[1].last_name}&background=random`
+                    }
                     alt="2nd Place"
                   />
                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-surface text-on-surface font-bold text-xs px-2 py-0.5 rounded-full border border-outline-variant shadow-sm z-20">
@@ -112,7 +119,10 @@ function LeaderboardPage() {
                 <div className="relative mb-4 transform group-hover:-translate-y-2 transition-transform duration-300">
                   <img
                     className="w-20 h-20 md:w-28 md:h-28 rounded-full border-4 border-surface object-cover avatar-glow-1 z-10 relative shadow-[0_0_25px_rgba(217,119,6,0.6)]"
-                    src={users[0].avatar_url || `https://ui-avatars.com/api/?name=${users[0].first_name}+${users[0].last_name}&background=random`}
+                    src={
+                      users[0].avatar_url ||
+                      `https://ui-avatars.com/api/?name=${users[0].first_name}+${users[0].last_name}&background=random`
+                    }
                     alt="1st Place"
                   />
                   <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-secondary text-white font-black text-sm md:text-base px-4 py-1 rounded-full border-2 border-surface shadow-md z-20">
@@ -143,7 +153,10 @@ function LeaderboardPage() {
                 <div className="relative mb-4 transform group-hover:-translate-y-2 transition-transform duration-300">
                   <img
                     className="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-surface object-cover avatar-glow-3 z-10 relative shadow-[0_0_15px_rgba(194,65,12,0.4)]"
-                    src={users[2].avatar_url || `https://ui-avatars.com/api/?name=${users[2].first_name}+${users[2].last_name}&background=random`}
+                    src={
+                      users[2].avatar_url ||
+                      `https://ui-avatars.com/api/?name=${users[2].first_name}+${users[2].last_name}&background=random`
+                    }
                     alt="3rd Place"
                   />
                   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-surface text-on-surface font-bold text-xs px-2 py-0.5 rounded-full border border-outline-variant shadow-sm z-20">
@@ -212,20 +225,32 @@ function LeaderboardPage() {
                 style={{ fontFamily: "Inter" }}
               >
                 {users.slice(3).map((u, i) => (
-                  <tr key={u.id} className="hover:bg-surface-container-low/50 transition-colors group">
+                  <tr
+                    key={u.id}
+                    className="hover:bg-surface-container-low/50 transition-colors group"
+                  >
                     <td className="p-4 text-center font-bold text-on-surface-variant">{i + 4}</td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         {u.avatar_url ? (
-                          <img src={u.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover" />
+                          <img
+                            src={u.avatar_url}
+                            alt=""
+                            className="w-8 h-8 rounded-full object-cover"
+                          />
                         ) : (
                           <div className="w-8 h-8 rounded-full bg-surface-variant text-primary flex items-center justify-center font-bold text-xs">
-                            {u.first_name?.[0]}{u.last_name?.[0]}
+                            {u.first_name?.[0]}
+                            {u.last_name?.[0]}
                           </div>
                         )}
                         <div>
-                          <div className="font-semibold text-on-surface">{u.first_name} {u.last_name}</div>
-                          <div className="text-xs text-on-surface-variant/70">{u.college || "University"}</div>
+                          <div className="font-semibold text-on-surface">
+                            {u.first_name} {u.last_name}
+                          </div>
+                          <div className="text-xs text-on-surface-variant/70">
+                            {u.college || "University"}
+                          </div>
                         </div>
                       </div>
                     </td>
@@ -245,7 +270,11 @@ function LeaderboardPage() {
                   </tr>
                 ))}
                 {users.length <= 3 && (
-                   <tr><td colSpan={4} className="p-8 text-center text-on-surface-variant">No other players found.</td></tr>
+                  <tr>
+                    <td colSpan={4} className="p-8 text-center text-on-surface-variant">
+                      No other players found.
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>

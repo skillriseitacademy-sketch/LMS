@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { generateObject } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { openRouter, defaultModel } from "@/lib/openrouter";
 import { z } from "zod";
 
 const InterviewFeedbackInput = z.object({
@@ -24,17 +24,12 @@ export type InterviewFeedback = z.infer<typeof FeedbackSchema>;
 export const generateInterviewFeedback = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InterviewFeedbackInput.parse(input))
   .handler(async ({ data }) => {
-    const key = process.env.GEMINI_API_KEY;
-    if (!key) throw new Error("Missing GEMINI_API_KEY");
-
-    const google = createGoogleGenerativeAI({ apiKey: key });
-
     const transcriptText = data.transcript
       .map((t) => `${t.role === "interviewer" ? "Interviewer" : "Candidate"}: ${t.text}`)
       .join("\n");
 
     const { object } = await generateObject({
-      model: google("gemini-1.5-flash") as any,
+      model: openRouter(defaultModel) as any,
       schema: FeedbackSchema,
       system:
         "You are an expert interview coach. Score the candidate on communication (clarity, articulation, listening), technical depth (accuracy, depth, problem-solving), and confidence (tone, assertiveness, composure) on a scale of 0-100. Be specific and actionable in your feedback.",

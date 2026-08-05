@@ -2,7 +2,7 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { TopBar } from "@/components/top-bar";
 import { Trophy, Check, X, RotateCcw, Share2, Loader2 } from "lucide-react";
-import { saveQuizAttempt } from "@/lib/store";
+import { saveQuizAttempt } from "@/hooks/useQuizzes";
 import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/_app/quizzes/$quizId/results")({
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_app/quizzes/$quizId/results")({
 
 function Results() {
   const { quizId } = useParams({ from: "/_app/quizzes/$quizId/results" });
-  
+
   const [topic, setTopic] = useState<any>(null);
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +25,7 @@ function Results() {
         .select(`id, title`)
         .eq("id", quizId)
         .single();
-      
+
       if (quiz) {
         setTopic(quiz);
       }
@@ -37,10 +37,12 @@ function Results() {
         .order("created_at", { ascending: true });
 
       if (qs) {
-        setQuestions(qs.map(q => ({
-          ...q,
-          correctIndex: q.correct_index,
-        })));
+        setQuestions(
+          qs.map((q) => ({
+            ...q,
+            correctIndex: q.correct_index,
+          })),
+        );
       }
       setLoading(false);
     }

@@ -18,7 +18,9 @@ export function FeedLayout({ left, center, right }: FeedLayoutProps) {
         )}
 
         {/* Center Feed */}
-        <div className={`col-span-1 ${left && right ? 'lg:col-span-6' : 'lg:col-span-9'} space-y-6 min-w-0`}>
+        <div
+          className={`col-span-1 ${left && right ? "lg:col-span-6" : "lg:col-span-9"} space-y-6 min-w-0`}
+        >
           {center}
         </div>
 

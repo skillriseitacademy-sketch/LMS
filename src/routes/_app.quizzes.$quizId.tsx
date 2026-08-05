@@ -31,12 +31,14 @@ function QuizScreen() {
         .select(`id, title, topics ( title, description )`)
         .eq("id", quizId)
         .single();
-      
+
       if (quiz) {
         setTopic({
           title: quiz.title,
-          description: Array.isArray(quiz.topics) ? (quiz.topics[0] as any)?.description : (quiz.topics as any)?.description,
-          minutes: 10
+          description: Array.isArray(quiz.topics)
+            ? (quiz.topics[0] as any)?.description
+            : (quiz.topics as any)?.description,
+          minutes: 10,
         });
       }
 
@@ -48,10 +50,12 @@ function QuizScreen() {
         .order("created_at", { ascending: true });
 
       if (qs) {
-        setQuestions(qs.map(q => ({
-          ...q,
-          correctIndex: q.correct_index,
-        })));
+        setQuestions(
+          qs.map((q) => ({
+            ...q,
+            correctIndex: q.correct_index,
+          })),
+        );
       }
       setLoading(false);
     }

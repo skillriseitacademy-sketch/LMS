@@ -5,6 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "path";
 import { createClient } from "@supabase/supabase-js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { apiRoutesPlugin } from "./src/lib/api-middleware";
 
 // Vite plugin that handles /api/invite during local development
 function apiMiddlewarePlugin() {
@@ -41,7 +42,11 @@ function apiMiddlewarePlugin() {
 
           if (!supabaseUrl || !serviceKey) {
             res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ error: "Missing VITE_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env" }));
+            res.end(
+              JSON.stringify({
+                error: "Missing VITE_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env",
+              }),
+            );
             return;
           }
 
@@ -88,17 +93,22 @@ function apiMiddlewarePlugin() {
           const { email, role, name, password } = body;
           if (!email || !role || !name || !password) {
             res.writeHead(400, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ error: `Missing required fields. Got: email=${!!email}, role=${!!role}, name=${!!name}, password=${!!password}` }));
+            res.end(
+              JSON.stringify({
+                error: `Missing required fields. Got: email=${!!email}, role=${!!role}, name=${!!name}, password=${!!password}`,
+              }),
+            );
             return;
           }
 
           // Create the user
-          const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.createUser({
-            email,
-            password,
-            email_confirm: true,
-            user_metadata: { role, name },
-          });
+          const { data: inviteData, error: inviteError } =
+            await serviceClient.auth.admin.createUser({
+              email,
+              password,
+              email_confirm: true,
+              user_metadata: { role, name },
+            });
 
           if (inviteError) {
             console.error("Supabase createUser error:", inviteError);
@@ -155,11 +165,11 @@ function uploadMiddlewarePlugin() {
           return;
         }
 
-        const supa = createClient(
-          env.VITE_SUPABASE_URL,
-          env.SUPABASE_SERVICE_ROLE_KEY,
-        );
-        const { data: { user }, error: authErr } = await supa.auth.getUser(token);
+        const supa = createClient(env.VITE_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
+        const {
+          data: { user },
+          error: authErr,
+        } = await supa.auth.getUser(token);
         if (authErr || !user) {
           res.writeHead(401, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ error: "Unauthorized" }));
@@ -184,17 +194,36 @@ function uploadMiddlewarePlugin() {
         const { filename, content_type, context = "post" } = body;
         if (!filename || !content_type) {
           res.writeHead(400, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ error: `filename and content_type are required. Got body: ${JSON.stringify(body)}` }));
+          res.end(
+            JSON.stringify({
+              error: `filename and content_type are required. Got body: ${JSON.stringify(body)}`,
+            }),
+          );
           return;
         }
 
         // ── Choose bucket based on context ────────────────────────────────
-        const BUCKET_MAP: Record<string, { bucket: string, publicUrl: string }> = {
-          post: { bucket: env.R2_BUCKET_MEDIA || "placepro-media", publicUrl: env.R2_PUBLIC_URL_MEDIA || "" },
-          story: { bucket: env.R2_BUCKET_MEDIA || "placepro-media", publicUrl: env.R2_PUBLIC_URL_MEDIA || "" },
-          avatar: { bucket: env.R2_BUCKET_MEDIA || "placepro-media", publicUrl: env.R2_PUBLIC_URL_MEDIA || "" },
-          interview: { bucket: env.R2_BUCKET_RECORDINGS || "placepro-recordings", publicUrl: env.R2_PUBLIC_URL_RECORDINGS || "" },
-          course: { bucket: env.R2_BUCKET_CONTENT || "placepro-content", publicUrl: env.R2_PUBLIC_URL_CONTENT || "" },
+        const BUCKET_MAP: Record<string, { bucket: string; publicUrl: string }> = {
+          post: {
+            bucket: env.R2_BUCKET_MEDIA || "placepro-media",
+            publicUrl: env.R2_PUBLIC_URL_MEDIA || "",
+          },
+          story: {
+            bucket: env.R2_BUCKET_MEDIA || "placepro-media",
+            publicUrl: env.R2_PUBLIC_URL_MEDIA || "",
+          },
+          avatar: {
+            bucket: env.R2_BUCKET_MEDIA || "placepro-media",
+            publicUrl: env.R2_PUBLIC_URL_MEDIA || "",
+          },
+          interview: {
+            bucket: env.R2_BUCKET_RECORDINGS || "placepro-recordings",
+            publicUrl: env.R2_PUBLIC_URL_RECORDINGS || "",
+          },
+          course: {
+            bucket: env.R2_BUCKET_CONTENT || "placepro-content",
+            publicUrl: env.R2_PUBLIC_URL_CONTENT || "",
+          },
         };
 
         const bucketConfig = BUCKET_MAP[context];
@@ -228,8 +257,8 @@ function uploadMiddlewarePlugin() {
           });
 
           const uploadUrl = await getSignedUrl(r2, command, { expiresIn: 300 });
-          const publicUrl = bucketConfig.publicUrl 
-            ? `${bucketConfig.publicUrl.replace(/\/$/, "")}/${key}` 
+          const publicUrl = bucketConfig.publicUrl
+            ? `${bucketConfig.publicUrl.replace(/\/$/, "")}/${key}`
             : `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${bucketConfig.bucket}/${key}`;
 
           res.writeHead(200, { "Content-Type": "application/json" });
@@ -246,9 +275,14 @@ function uploadMiddlewarePlugin() {
 
 export default defineConfig({
   plugins: [
-    TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
+    TanStackRouterVite({
+      target: "react",
+      autoCodeSplitting: true,
+      routeFileIgnorePattern: ".ts$",
+    }),
     react(),
     tailwindcss(),
+    apiRoutesPlugin(),
     apiMiddlewarePlugin(),
     uploadMiddlewarePlugin(),
   ],

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/lib/supabase";
+import { checkRateLimit, logAIUsage } from "@/lib/ai-monitor.server";
 
 export const Route = createFileRoute("/api/interview/start")({
   server: {
@@ -17,6 +18,13 @@ export const Route = createFileRoute("/api/interview/start")({
           if (authError || !user) return new Response("Unauthorized", { status: 401 });
 
           const { topic_id } = await request.json();
+
+          // Check Rate Limit (DB Backed)
+          try {
+            await checkRateLimit(user.id);
+          } catch (limitErr: any) {
+            return new Response("Daily AI budget exceeded.", { status: 429 });
+          }
 
           // 1. Get OpenAI Token
           const openAiKey = process.env.OPENAI_API_KEY;
@@ -62,6 +70,18 @@ export const Route = createFileRoute("/api/interview/start")({
             console.error("DB Error:", dbError);
             return new Response("Database error", { status: 500 });
           }
+
+          // Log fixed cost AI usage for starting an interview session
+          // We override the cost since realtime API usage is tracked client-side
+          await logAIUsage({
+            userId: user.id,
+            provider: "openai",
+            model: "gpt-4o-realtime-preview",
+            promptTokens: 0,
+            completionTokens: 0,
+            actionType: "interview_start",
+            costOverride: 0.1, // $0.10 fixed cost approximation for session start
+          });
 
           return new Response(
             JSON.stringify({

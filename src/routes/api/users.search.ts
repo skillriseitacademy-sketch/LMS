@@ -83,22 +83,24 @@ export const Route = createFileRoute("/api/users/search")({
               .from("connections")
               .select("status, follower_id")
               .or(
-                `and(follower_id.eq.${user.id},following_id.eq.${u.id}),and(follower_id.eq.${u.id},following_id.eq.${user.id})`
+                `and(follower_id.eq.${user.id},following_id.eq.${u.id}),and(follower_id.eq.${u.id},following_id.eq.${user.id})`,
               )
               .maybeSingle();
 
             let connectionStatus = "none";
             if (conn) {
               if (conn.status === "accepted") connectionStatus = "connected";
-              else if (conn.status === "pending" && conn.follower_id === user.id) connectionStatus = "pending";
-              else if (conn.status === "pending" && conn.follower_id === u.id) connectionStatus = "received";
+              else if (conn.status === "pending" && conn.follower_id === user.id)
+                connectionStatus = "pending";
+              else if (conn.status === "pending" && conn.follower_id === u.id)
+                connectionStatus = "received";
             }
 
             return {
               ...u,
               connectionStatus,
             };
-          })
+          }),
         );
 
         return new Response(JSON.stringify({ users: enrichedUsers }), {

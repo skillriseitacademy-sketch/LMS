@@ -8,17 +8,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
 
 function serviceClient() {
-  return createClient(
-    process.env.VITE_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
+  return createClient(process.env.VITE_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 }
 
 async function getUser(request: Request) {
   const token = request.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
   const sc = serviceClient();
-  const { data: { user }, error } = await sc.auth.getUser(token);
+  const {
+    data: { user },
+    error,
+  } = await sc.auth.getUser(token);
   if (error || !user) return null;
   return user;
 }

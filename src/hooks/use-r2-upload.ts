@@ -61,7 +61,9 @@ export function useR2Upload(options: { context: UploadContext; accept?: string }
 
       try {
         // 1. Get auth token
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         if (!session) throw new Error("Not authenticated — please log in again");
 
         // 2. Ask the server for a pre-signed upload URL

@@ -2,21 +2,21 @@ import { createClient } from "@supabase/supabase-js";
 
 export default async function handler(req: any, res: any) {
   // Set CORS headers if needed
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
   res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization",
   );
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     res.status(200).end();
     return;
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
@@ -29,13 +29,16 @@ export default async function handler(req: any, res: any) {
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceKey) {
-       console.error("Missing Supabase env vars");
-       return res.status(500).json({ error: "Server Configuration Error: Missing Supabase keys" });
+      console.error("Missing Supabase env vars");
+      return res.status(500).json({ error: "Server Configuration Error: Missing Supabase keys" });
     }
 
     const serviceClient = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { data: { user }, error: authError } = await serviceClient.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await serviceClient.auth.getUser(token);
     if (authError || !user) return res.status(401).json({ error: "Unauthorized" });
 
     const { data: profile } = await serviceClient
@@ -49,7 +52,7 @@ export default async function handler(req: any, res: any) {
     }
 
     let body = req.body;
-    if (typeof body === 'string') {
+    if (typeof body === "string") {
       try {
         body = JSON.parse(body);
       } catch (e) {
@@ -74,14 +77,15 @@ export default async function handler(req: any, res: any) {
       let errorStr = "Failed to create user";
       if (inviteError.message) {
         errorStr = inviteError.message;
-      } else if (typeof inviteError === 'string') {
+      } else if (typeof inviteError === "string") {
         errorStr = inviteError;
       } else if (inviteError instanceof Error) {
         errorStr = inviteError.toString();
       } else {
         try {
           const str = JSON.stringify(inviteError);
-          errorStr = str !== "{}" ? str : "Empty error object returned from Supabase. Check Vercel logs.";
+          errorStr =
+            str !== "{}" ? str : "Empty error object returned from Supabase. Check Vercel logs.";
         } catch (e) {}
       }
       return res.status(400).json({ error: errorStr });

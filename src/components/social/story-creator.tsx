@@ -58,15 +58,21 @@ async function compressImage(file: File): Promise<File> {
 
       canvas.toBlob(
         (blob) => {
-          if (!blob) { reject(new Error("Canvas compression failed")); return; }
+          if (!blob) {
+            reject(new Error("Canvas compression failed"));
+            return;
+          }
           resolve(new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" }));
         },
         "image/jpeg",
-        QUALITY
+        QUALITY,
       );
     };
 
-    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Failed to load image")); };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load image"));
+    };
     img.src = url;
   });
 }
@@ -135,7 +141,9 @@ export function StoryCreator({ open, onClose }: StoryCreatorProps) {
     setError(null);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) throw new Error("Not authenticated");
       const token = session.access_token;
 
@@ -205,7 +213,9 @@ export function StoryCreator({ open, onClose }: StoryCreatorProps) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
-        onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) handleClose();
+        }}
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
@@ -256,7 +266,9 @@ export function StoryCreator({ open, onClose }: StoryCreatorProps) {
                   className="rounded-xl h-48 flex items-center justify-center p-4 text-white text-center font-bold text-lg leading-snug transition-all"
                   style={{ background: selectedGradient }}
                 >
-                  {textContent || <span className="opacity-50 font-normal text-base">Your text appears here</span>}
+                  {textContent || (
+                    <span className="opacity-50 font-normal text-base">Your text appears here</span>
+                  )}
                 </div>
 
                 <textarea
@@ -303,13 +315,26 @@ export function StoryCreator({ open, onClose }: StoryCreatorProps) {
               <div className="space-y-3">
                 <div className="rounded-xl overflow-hidden bg-black aspect-[9/16] max-h-64 flex items-center justify-center">
                   {mediaFile?.type.startsWith("video/") ? (
-                    <video src={mediaPreview} className="max-h-64 max-w-full object-contain" controls muted />
+                    <video
+                      src={mediaPreview}
+                      className="max-h-64 max-w-full object-contain"
+                      controls
+                      muted
+                    />
                   ) : (
-                    <img src={mediaPreview} alt="Preview" className="max-h-64 max-w-full object-contain" />
+                    <img
+                      src={mediaPreview}
+                      alt="Preview"
+                      className="max-h-64 max-w-full object-contain"
+                    />
                   )}
                 </div>
                 <button
-                  onClick={() => { setMode("pick"); setMediaPreview(null); setMediaFile(null); }}
+                  onClick={() => {
+                    setMode("pick");
+                    setMediaPreview(null);
+                    setMediaFile(null);
+                  }}
                   className="text-xs text-muted-foreground hover:text-foreground underline"
                 >
                   Choose different file
@@ -318,7 +343,9 @@ export function StoryCreator({ open, onClose }: StoryCreatorProps) {
             )}
 
             {error && (
-              <p className="text-destructive text-sm bg-destructive/10 rounded-lg px-3 py-2">{error}</p>
+              <p className="text-destructive text-sm bg-destructive/10 rounded-lg px-3 py-2">
+                {error}
+              </p>
             )}
           </div>
 
@@ -327,10 +354,20 @@ export function StoryCreator({ open, onClose }: StoryCreatorProps) {
             <div className="p-4 pt-0">
               <button
                 onClick={handleSubmit}
-                disabled={uploading || (mode === "text" && !textContent.trim()) || (mode === "preview" && !mediaFile)}
+                disabled={
+                  uploading ||
+                  (mode === "text" && !textContent.trim()) ||
+                  (mode === "preview" && !mediaFile)
+                }
                 className="w-full rounded-full bg-brand text-white font-semibold py-2.5 text-sm hover:bg-brand-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {uploading ? <><Loader2 className="h-4 w-4 animate-spin" /> Posting...</> : "Share Story"}
+                {uploading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" /> Posting...
+                  </>
+                ) : (
+                  "Share Story"
+                )}
               </button>
             </div>
           )}

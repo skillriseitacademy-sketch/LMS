@@ -47,15 +47,15 @@ const tabKeyMap: Record<Tab, "signups" | "enrollments" | "learners"> = {
 function AdminDashboard() {
   const [period, setPeriod] = useState<Period>("7d");
   const [tab, setTab] = useState<Tab>("New signups");
-  
+
   // Real Data State
-  const [kpis, setKpis] = useState<{label: string, value: string}[]>([]);
+  const [kpis, setKpis] = useState<{ label: string; value: string }[]>([]);
   const [series, setSeries] = useState<any[]>([]);
   const [newUsers, setNewUsers] = useState<any[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [events, setEvents] = useState<any[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
-  
+
   const dataKey = tabKeyMap[tab];
   const navigate = useNavigate();
 
@@ -63,37 +63,45 @@ function AdminDashboard() {
     async function loadData() {
       // Fake charts series based on real aggregates (since we don't have historical daily snaps)
       // A full implementation would query grouped by DATE(created_at)
-      
-      const { count: usersCount } = await supabase.from("profiles").select("*", { count: "exact", head: true });
-      const { count: enrollmentsCount } = await supabase.from("student_topics").select("*", { count: "exact", head: true });
-      
+
+      const { count: usersCount } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true });
+      const { count: enrollmentsCount } = await supabase
+        .from("student_topics")
+        .select("*", { count: "exact", head: true });
+
       // Fetch recent users
       const { data: recentProfiles } = await supabase
         .from("profiles")
         .select("id, name, created_at, role")
         .order("created_at", { ascending: false })
         .limit(10);
-        
+
       if (recentProfiles) {
-        setNewUsers(recentProfiles.slice(0, 5).map(p => ({
-          name: p.name,
-          initials: p.name.substring(0, 2).toUpperCase(),
-          time: new Date(p.created_at).toLocaleDateString()
-        })));
-        setOnlineUsers(recentProfiles.slice(0, 3).map(p => ({
-          name: p.name,
-          initials: p.name.substring(0, 2).toUpperCase(),
-          time: "Just now"
-        })));
+        setNewUsers(
+          recentProfiles.slice(0, 5).map((p) => ({
+            name: p.name,
+            initials: p.name.substring(0, 2).toUpperCase(),
+            time: new Date(p.created_at).toLocaleDateString(),
+          })),
+        );
+        setOnlineUsers(
+          recentProfiles.slice(0, 3).map((p) => ({
+            name: p.name,
+            initials: p.name.substring(0, 2).toUpperCase(),
+            time: "Just now",
+          })),
+        );
       }
-      
+
       setKpis([
         { label: "Total Users", value: (usersCount || 0).toString() },
         { label: "New signups", value: (newUsers.length || 0).toString() },
         { label: "Active learners", value: (onlineUsers.length || 0).toString() },
         { label: "Total Enrollments", value: (enrollmentsCount || 0).toString() },
       ]);
-      
+
       setSeries([
         { day: "Mon", signups: 2, enrollments: 1, learners: 5 },
         { day: "Tue", signups: 4, enrollments: 3, learners: 8 },
@@ -101,29 +109,41 @@ function AdminDashboard() {
         { day: "Thu", signups: 7, enrollments: 4, learners: 12 },
         { day: "Fri", signups: 3, enrollments: 1, learners: 9 },
       ]);
-      
+
       setBlogs([
-        { title: "Platform Launch Announcement", color: "border-brand", days: "2 days ago", new: true },
-        { title: "New Resume Builder Feature", color: "border-purple-500", days: "1 week ago", new: false }
+        {
+          title: "Platform Launch Announcement",
+          color: "border-brand",
+          days: "2 days ago",
+          new: true,
+        },
+        {
+          title: "New Resume Builder Feature",
+          color: "border-purple-500",
+          days: "1 week ago",
+          new: false,
+        },
       ]);
-      
+
       // Fetch recent xp transactions as "events"
       const { data: recentXp } = await supabase
         .from("xp_transactions")
         .select("amount, reason, created_at, profiles(name)")
         .order("created_at", { ascending: false })
         .limit(5);
-        
+
       if (recentXp) {
-        setEvents(recentXp.map((x: any) => ({
-          name: x.profiles?.name || "User",
-          status: `Earned ${x.amount} XP`,
-          time: new Date(x.created_at).toLocaleDateString(),
-          tone: "success"
-        })));
+        setEvents(
+          recentXp.map((x: any) => ({
+            name: x.profiles?.name || "User",
+            status: `Earned ${x.amount} XP`,
+            time: new Date(x.created_at).toLocaleDateString(),
+            tone: "success",
+          })),
+        );
       }
     }
-    
+
     loadData();
   }, [period]);
 

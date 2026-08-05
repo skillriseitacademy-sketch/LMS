@@ -12,11 +12,14 @@ export const Route = createFileRoute("/api/leaderboard")({
 
           const serviceClient = createClient(
             process.env.VITE_SUPABASE_URL!,
-            process.env.SUPABASE_SERVICE_ROLE_KEY!
+            process.env.SUPABASE_SERVICE_ROLE_KEY!,
           );
 
           // Get the current user
-          const { data: { user }, error: authError } = await serviceClient.auth.getUser(token);
+          const {
+            data: { user },
+            error: authError,
+          } = await serviceClient.auth.getUser(token);
           if (authError || !user) return new Response("Unauthorized", { status: 401 });
 
           // Fetch all students who are public or the user themselves, and aggregate XP
@@ -29,7 +32,9 @@ export const Route = createFileRoute("/api/leaderboard")({
 
           // Note: In a large production app, we'd do this via a SQL View or RPC.
           // For now, we fetch XP and streaks and join in memory for the top N.
-          const { data: xpData } = await serviceClient.from("xp_transactions").select("user_id, amount");
+          const { data: xpData } = await serviceClient
+            .from("xp_transactions")
+            .select("user_id, amount");
           const { data: streakData } = await serviceClient.from("streak_history").select("user_id");
 
           // Calculate totals
@@ -45,18 +50,23 @@ export const Route = createFileRoute("/api/leaderboard")({
 
           // Build leaderboard array
           const board = profiles
-            .filter(p => p.visibility === "public" || p.id === user.id)
-            .map(p => ({
+            .filter((p) => p.visibility === "public" || p.id === user.id)
+            .map((p) => ({
               id: p.id,
               name: p.name,
               username: p.username,
               avatar_url: p.avatar_url,
-              initials: p.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2),
+              initials: p.name
+                .split(" ")
+                .map((n: string) => n[0])
+                .join("")
+                .toUpperCase()
+                .slice(0, 2),
               xp: xpMap.get(p.id) || 0,
               level: Math.floor((xpMap.get(p.id) || 0) / 200) + 1,
               streak: streakMap.get(p.id) || 0,
               quizzes: 0, // Placeholder if we don't fetch quiz counts
-              you: p.id === user.id
+              you: p.id === user.id,
             }))
             .sort((a, b) => b.xp - a.xp)
             .map((p, index) => ({ ...p, rank: index + 1 }));

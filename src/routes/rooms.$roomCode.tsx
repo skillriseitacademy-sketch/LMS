@@ -1,30 +1,68 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/card";
-import { Loader2, ArrowLeft, Mic, MicOff, Video, VideoOff, PhoneOff, Users, Copy, Check, UserPlus, X, Home, Calendar, Bell, Settings, LogOut, MessageSquare, LayoutGrid, Menu, MonitorUp, ChevronLeft, BarChart2, SwitchCamera, Hand } from "lucide-react";
+import {
+  Loader2,
+  ArrowLeft,
+  Mic,
+  MicOff,
+  Video,
+  VideoOff,
+  PhoneOff,
+  Users,
+  Copy,
+  Check,
+  UserPlus,
+  X,
+  Home,
+  Calendar,
+  Bell,
+  Settings,
+  LogOut,
+  MessageSquare,
+  LayoutGrid,
+  Menu,
+  MonitorUp,
+  ChevronLeft,
+  BarChart2,
+  SwitchCamera,
+  Hand,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 import { useWebRTC } from "@/hooks/useWebRTC";
 import { ChatPanel } from "@/components/room/ChatPanel";
 import { PollsPanel } from "@/components/room/PollsPanel";
+import { ClassRoomView } from "@/components/room/ClassRoomView";
 
 export const Route = createFileRoute("/rooms/$roomCode")({
   component: RoomView,
 });
 
-function VideoPlayer({ stream, muted = false, userName, isLocal = false }: { stream: MediaStream; muted?: boolean; userName?: string, isLocal?: boolean }) {
+function VideoPlayer({
+  stream,
+  muted = false,
+  userName,
+  isLocal = false,
+}: {
+  stream: MediaStream;
+  muted?: boolean;
+  userName?: string;
+  isLocal?: boolean;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  
+
   // Check if track is muted/disabled
   const audioTrack = stream.getAudioTracks()[0];
   const isAudioMuted = audioTrack ? !audioTrack.enabled : true;
 
   useEffect(() => {
-    if (videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
+    const videoElement = videoRef.current;
+    if (videoElement && stream) {
+      videoElement.srcObject = stream;
       // Only call play() if the video is paused and in the DOM
-      const playPromise = videoRef.current.play();
+      const playPromise = videoElement.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
           // Silently handle AbortError — this is expected when React re-renders
@@ -33,14 +71,16 @@ function VideoPlayer({ stream, muted = false, userName, isLocal = false }: { str
     }
     return () => {
       // Clean up srcObject on unmount to prevent stale references
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
+      if (videoElement) {
+        videoElement.srcObject = null;
       }
     };
   }, [stream]);
 
   return (
-    <div className={`relative w-full h-full bg-[#1A1D24] rounded-3xl overflow-hidden flex items-center justify-center border-4 ${isLocal ? 'border-brand' : 'border-transparent'}`}>
+    <div
+      className={`relative w-full h-full bg-[#1A1D24] rounded-3xl overflow-hidden flex items-center justify-center border-4 ${isLocal ? "border-brand" : "border-transparent"}`}
+    >
       <video
         ref={videoRef}
         autoPlay
@@ -72,22 +112,24 @@ function RoomView() {
   const [hasEnteredGuestInfo, setHasEnteredGuestInfo] = useState(false);
   const [copied, setCopied] = useState(false);
   const [roomData, setRoomData] = useState<any>(null);
-  
-  const [guestStatus, setGuestStatus] = useState<'prejoin' | 'waiting' | 'admitted' | 'rejected'>('prejoin');
+
+  const [guestStatus, setGuestStatus] = useState<"prejoin" | "waiting" | "admitted" | "rejected">(
+    "prejoin",
+  );
   const [waitingParticipants, setWaitingParticipants] = useState<any[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
-  const [activeTab, setActiveTab] = useState<'participants' | 'chat' | 'polls'>('participants');
+  const [activeTab, setActiveTab] = useState<"participants" | "chat" | "polls">("participants");
 
   const isHost = session?.id && roomData?.host_id === session.id;
 
-  const handleCopyLink = () => {
+  const handleCopyLink = useCallback(() => {
     const link = `${window.location.origin}/rooms/${roomCode}`;
     navigator.clipboard.writeText(link);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
+  }, [roomCode]);
 
-  const userName = session?.name || guestEmail.split('@')[0] || "Guest";
+  const userName = session?.name || guestEmail.split("@")[0] || "Guest";
 
   const {
     localStream,
@@ -110,7 +152,7 @@ function RoomView() {
     toggleScreenShare,
     flipCamera,
     endMeeting,
-    broadcastData
+    broadcastData,
   } = useWebRTC(roomCode, userName, () => {
     alert("The host has ended the meeting.");
     navigate({ to: "/rooms" });
@@ -135,7 +177,8 @@ function RoomView() {
       if (dbError || !data) {
         setError("Room not found or has ended.");
       } else {
-        const roomAgeHours = (new Date().getTime() - new Date(data.created_at).getTime()) / (1000 * 60 * 60);
+        const roomAgeHours =
+          (new Date().getTime() - new Date(data.created_at).getTime()) / (1000 * 60 * 60);
         if (roomAgeHours > 24) {
           setError("This room has expired. Instant rooms are only active for 24 hours.");
           setDbLoading(false);
@@ -145,67 +188,74 @@ function RoomView() {
         setRoomData(data);
         if (session?.id && data.host_id === session.id) {
           // Host automatically bypasses waiting room
-          setGuestStatus('admitted');
+          setGuestStatus("admitted");
           if (!isJoined) initLocalStream();
-        } else if (!isJoined && guestStatus === 'prejoin') {
+        } else if (!isJoined && guestStatus === "prejoin") {
           // Check if guest is already in the database
           const { data: participantData } = await supabase
-            .from('room_participants')
-            .select('status')
-            .eq('room_code', roomCode)
-            .eq('user_name', userName)
-            .order('created_at', { ascending: false })
+            .from("room_participants")
+            .select("status")
+            .eq("room_code", roomCode)
+            .eq("user_name", userName)
+            .order("created_at", { ascending: false })
             .limit(1)
             .maybeSingle();
 
-          if (participantData?.status === 'admitted') {
-            setGuestStatus('admitted');
-          } else if (participantData?.status === 'waiting') {
-            setGuestStatus('waiting');
+          if (participantData?.status === "admitted") {
+            setGuestStatus("admitted");
+          } else if (participantData?.status === "waiting") {
+            setGuestStatus("waiting");
           }
-          
+
           // Initialize camera on the pre-join screen for guests
           initLocalStream();
         }
       }
-      
+
       setDbLoading(false);
     }
     checkRoom();
-  }, [roomCode, session, authLoading, hasEnteredGuestInfo, initLocalStream, isJoined, guestStatus]);
+  }, [roomCode, session, authLoading, hasEnteredGuestInfo, initLocalStream, isJoined, guestStatus, userName]);
 
   // Realtime subscription for guest to know when they are admitted
   useEffect(() => {
-    if (isHost || guestStatus !== 'waiting') return;
-    
-    const channel = supabase.channel(`guest-wait-${roomCode}`)
-      .on('postgres_changes', { 
-        event: 'UPDATE', 
-        schema: 'public', 
-        table: 'room_participants',
-        filter: `room_code=eq.${roomCode}`
-      }, (payload) => {
-        if (payload.new.user_name === userName) {
-          if (payload.new.status === 'admitted') {
-            setGuestStatus('admitted');
-            sessionStorage.setItem(`auto_join_${roomCode}`, 'true');
-            joinRoom();
-          } else if (payload.new.status === 'rejected') {
-            setGuestStatus('rejected');
-            setError("The host has declined your request to join.");
+    if (isHost || guestStatus !== "waiting") return;
+
+    const channel = supabase
+      .channel(`guest-wait-${roomCode}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "room_participants",
+          filter: `room_code=eq.${roomCode}`,
+        },
+        (payload) => {
+          if (payload.new.user_name === userName) {
+            if (payload.new.status === "admitted") {
+              setGuestStatus("admitted");
+              sessionStorage.setItem(`auto_join_${roomCode}`, "true");
+              joinRoom();
+            } else if (payload.new.status === "rejected") {
+              setGuestStatus("rejected");
+              setError("The host has declined your request to join.");
+            }
           }
-        }
-      })
+        },
+      )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); }
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [isHost, guestStatus, roomCode, userName, joinRoom]);
 
   // Auto-join on refresh if previously joined
   useEffect(() => {
-    if (localStream && !isJoined && sessionStorage.getItem(`auto_join_${roomCode}`) === 'true') {
+    if (localStream && !isJoined && sessionStorage.getItem(`auto_join_${roomCode}`) === "true") {
       joinRoom();
-      if (!isHost) setGuestStatus('admitted');
+      if (!isHost) setGuestStatus("admitted");
     }
   }, [localStream, isJoined, roomCode, isHost, joinRoom]);
 
@@ -214,66 +264,72 @@ function RoomView() {
     if (!isHost) return;
 
     // Fetch initial
-    supabase.from('room_participants')
-      .select('*')
-      .eq('room_code', roomCode)
-      .eq('status', 'waiting')
-      .then(({data}) => {
+    supabase
+      .from("room_participants")
+      .select("*")
+      .eq("room_code", roomCode)
+      .eq("status", "waiting")
+      .then(({ data }) => {
         if (data && data.length > 0) {
           setWaitingParticipants(data);
           setShowSidebar(true);
         }
       });
 
-    const channel = supabase.channel(`host-wait-${roomCode}`)
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'room_participants',
-        filter: `room_code=eq.${roomCode}`
-      }, (payload) => {
-        if (payload.eventType === 'INSERT' && payload.new.status === 'waiting') {
-          setWaitingParticipants(prev => [...prev, payload.new]);
-          setShowSidebar(true);
-        } else if (payload.eventType === 'UPDATE') {
-          if (payload.new.status === 'waiting') {
-             setWaitingParticipants(prev => {
-                if (!prev.find(p => p.id === payload.new.id)) {
-                   setShowSidebar(true);
-                   return [...prev, payload.new];
+    const channel = supabase
+      .channel(`host-wait-${roomCode}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "room_participants",
+          filter: `room_code=eq.${roomCode}`,
+        },
+        (payload) => {
+          if (payload.eventType === "INSERT" && payload.new.status === "waiting") {
+            setWaitingParticipants((prev) => [...prev, payload.new]);
+            setShowSidebar(true);
+          } else if (payload.eventType === "UPDATE") {
+            if (payload.new.status === "waiting") {
+              setWaitingParticipants((prev) => {
+                if (!prev.find((p) => p.id === payload.new.id)) {
+                  setShowSidebar(true);
+                  return [...prev, payload.new];
                 }
                 return prev;
-             });
-          } else {
-             setWaitingParticipants(prev => prev.filter(p => p.id !== payload.new.id));
+              });
+            } else {
+              setWaitingParticipants((prev) => prev.filter((p) => p.id !== payload.new.id));
+            }
           }
-        }
-      })
+        },
+      )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); }
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [isHost, roomCode]);
 
-  const handleJoinClick = async () => {
-    if (isHost || guestStatus === 'admitted') {
-      sessionStorage.setItem(`auto_join_${roomCode}`, 'true');
+  const handleJoinClick = useCallback(async () => {
+    if (isHost || guestStatus === "admitted") {
+      sessionStorage.setItem(`auto_join_${roomCode}`, "true");
       joinRoom();
       return;
     }
-    setGuestStatus('waiting');
-    await supabase.from('room_participants').insert({
+    setGuestStatus("waiting");
+    await supabase.from("room_participants").insert({
       room_code: roomCode,
       user_id: session?.id || null,
       user_name: userName,
-      status: 'waiting'
+      status: "waiting",
     });
-  };
+  }, [isHost, guestStatus, roomCode, joinRoom, session?.id, userName]);
 
-  const handleAdmit = async (participantId: string, status: 'admitted' | 'rejected') => {
-    await supabase.from('room_participants')
-      .update({ status })
-      .eq('id', participantId);
-  };
+  const handleAdmit = useCallback(async (participantId: string, status: "admitted" | "rejected") => {
+    await supabase.from("room_participants").update({ status }).eq("id", participantId);
+  }, []);
 
   if (authLoading || dbLoading) {
     return (
@@ -305,7 +361,7 @@ function RoomView() {
             <h2 className="text-2xl font-bold mb-2">Join Room {roomCode}</h2>
             <p className="text-muted-foreground">Please enter your email to join this session.</p>
           </div>
-          <form 
+          <form
             onSubmit={(e) => {
               e.preventDefault();
               if (guestEmail.trim()) {
@@ -328,7 +384,10 @@ function RoomView() {
               Continue
             </Button>
             <div className="text-center mt-4 text-sm text-muted-foreground">
-              Already have an account? <Button variant="link" className="p-0" onClick={() => navigate({ to: "/login" })}>Log in</Button>
+              Already have an account?{" "}
+              <Button variant="link" className="p-0" onClick={() => navigate({ to: "/login" })}>
+                Log in
+              </Button>
             </div>
           </form>
         </Card>
@@ -344,7 +403,9 @@ function RoomView() {
           <div className="flex-1 w-full max-w-2xl aspect-video bg-black rounded-2xl overflow-hidden relative shadow-2xl">
             {localStream ? (
               <video
-                ref={(ref) => { if (ref) ref.srcObject = localStream; }}
+                ref={(ref) => {
+                  if (ref) ref.srcObject = localStream;
+                }}
                 autoPlay
                 playsInline
                 muted
@@ -356,13 +417,13 @@ function RoomView() {
                 <p>Starting camera...</p>
               </div>
             )}
-            
+
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-black/60 backdrop-blur-md px-6 py-3 rounded-2xl">
               <Button
                 variant="outline"
                 size="icon"
                 onClick={toggleMic}
-                className={`rounded-full w-12 h-12 border-0 ${isMicMuted ? 'bg-destructive hover:bg-destructive/90 text-white' : 'bg-white/10 hover:bg-white/20 text-white'}`}
+                className={`rounded-full w-12 h-12 border-0 ${isMicMuted ? "bg-destructive hover:bg-destructive/90 text-white" : "bg-white/10 hover:bg-white/20 text-white"}`}
               >
                 {isMicMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
               </Button>
@@ -370,7 +431,7 @@ function RoomView() {
                 variant="outline"
                 size="icon"
                 onClick={toggleCam}
-                className={`rounded-full w-12 h-12 border-0 ${isCamOff ? 'bg-destructive hover:bg-destructive/90 text-white' : 'bg-white/10 hover:bg-white/20 text-white'}`}
+                className={`rounded-full w-12 h-12 border-0 ${isCamOff ? "bg-destructive hover:bg-destructive/90 text-white" : "bg-white/10 hover:bg-white/20 text-white"}`}
               >
                 {isCamOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
               </Button>
@@ -379,8 +440,10 @@ function RoomView() {
 
           <div className="w-full max-w-sm flex flex-col items-center text-center">
             <h1 className="text-3xl font-bold mb-2">Ready to join?</h1>
-            <p className="text-muted-foreground mb-8">Room Code: <span className="font-mono text-foreground">{roomCode}</span></p>
-            
+            <p className="text-muted-foreground mb-8">
+              Room Code: <span className="font-mono text-foreground">{roomCode}</span>
+            </p>
+
             {streamError && (
               <div className="w-full p-4 mb-6 bg-destructive/10 text-destructive rounded-xl text-sm border border-destructive/20 text-left">
                 {streamError}
@@ -392,31 +455,33 @@ function RoomView() {
               onClick={handleCopyLink}
               className="w-full py-6 text-lg font-semibold rounded-xl mb-4 border-2"
             >
-              {copied ? <Check className="w-5 h-5 mr-2 text-green-500" /> : <Copy className="w-5 h-5 mr-2" />}
+              {copied ? (
+                <Check className="w-5 h-5 mr-2 text-green-500" />
+              ) : (
+                <Copy className="w-5 h-5 mr-2" />
+              )}
               {copied ? "Copied Link!" : "Copy Invite Link"}
             </Button>
 
-            {guestStatus === 'waiting' ? (
+            {guestStatus === "waiting" ? (
               <div className="w-full flex flex-col items-center p-6 bg-surface-container-low rounded-2xl border border-outline-variant mt-4">
                 <Loader2 className="w-10 h-10 animate-spin text-brand mb-4" />
                 <h2 className="text-xl font-bold mb-2">Waiting for the host...</h2>
-                <p className="text-sm text-muted-foreground">You will join automatically once admitted.</p>
+                <p className="text-sm text-muted-foreground">
+                  You will join automatically once admitted.
+                </p>
               </div>
             ) : (
-              <Button 
+              <Button
                 onClick={handleJoinClick}
                 disabled={!localStream}
                 className="w-full py-6 text-lg font-bold rounded-xl bg-brand hover:bg-brand/90 text-brand-foreground shadow-lg shadow-brand/20 transition-all hover:scale-[1.02]"
               >
-                {isHost || guestStatus === 'admitted' ? "Join Now" : "Ask to Join"}
+                {isHost || guestStatus === "admitted" ? "Join Now" : "Ask to Join"}
               </Button>
             )}
-            
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate({ to: "/rooms" })}
-              className="mt-4"
-            >
+
+            <Button variant="ghost" onClick={() => navigate({ to: "/rooms" })} className="mt-4">
               Cancel
             </Button>
           </div>
@@ -425,40 +490,56 @@ function RoomView() {
     );
   }
 
-  // Active Room UI
+  // Use LiveKit for class rooms
+  if (roomData?.room_type === "class") {
+    return (
+      <ClassRoomView
+        roomCode={roomCode}
+        roomId={roomData.id}
+        isHost={Boolean(isHost)}
+        userName={userName}
+      />
+    );
+  }
+
+  // Active Room UI (P2P Mesh for Study Groups)
   const totalParticipants = remoteStreams.length + 1;
-  const gridClass = 
-    totalParticipants === 1 ? "grid-cols-1 grid-rows-1" :
-    totalParticipants === 2 ? "grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1" :
-    totalParticipants <= 4 ? "grid-cols-2 grid-rows-2" :
-    totalParticipants <= 6 ? "grid-cols-2 md:grid-cols-3 grid-rows-3 md:grid-rows-2" :
-    "grid-cols-3 md:grid-cols-4 grid-rows-[repeat(auto-fit,minmax(200px,1fr))]";
+  const gridClass =
+    totalParticipants === 1
+      ? "grid-cols-1 grid-rows-1"
+      : totalParticipants === 2
+        ? "grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1"
+        : totalParticipants <= 4
+          ? "grid-cols-2 grid-rows-2"
+          : totalParticipants <= 6
+            ? "grid-cols-2 md:grid-cols-3 grid-rows-3 md:grid-rows-2"
+            : "grid-cols-3 md:grid-cols-4 grid-rows-[repeat(auto-fit,minmax(200px,1fr))]";
 
   return (
     <div className="h-screen flex bg-[#0F1115] text-white overflow-hidden p-3 gap-3">
       {/* Left Sidebar Navigation */}
       <aside className="flex w-[64px] md:w-[72px] flex-col items-center py-6 bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl justify-between z-20 shrink-0">
         <div className="flex flex-col gap-4 md:gap-5 w-full items-center">
-          <button 
+          <button
             onClick={toggleScreenShare}
             title={isScreenSharing ? "Stop sharing" : "Share Screen"}
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform ${isScreenSharing ? 'bg-brand text-brand-foreground shadow-lg shadow-brand/20' : 'bg-[#2A2E38] hover:bg-[#323642] text-white hover:scale-105 mb-2'}`}
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform ${isScreenSharing ? "bg-brand text-brand-foreground shadow-lg shadow-brand/20" : "bg-[#2A2E38] hover:bg-[#323642] text-white hover:scale-105 mb-2"}`}
           >
             <MonitorUp className="w-5 h-5" />
           </button>
-          
+
           <button
             onClick={toggleMic}
             title={isMicMuted ? "Unmute" : "Mute"}
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${isMicMuted ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${isMicMuted ? "bg-[#2A2E38] text-white/50" : "bg-[#2A2E38] hover:bg-[#323642] text-white"}`}
           >
             {isMicMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
           </button>
-          
+
           <button
             onClick={toggleCam}
             title={isCamOff ? "Turn on camera" : "Turn off camera"}
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${isCamOff ? 'bg-[#2A2E38] text-white/50' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${isCamOff ? "bg-[#2A2E38] text-white/50" : "bg-[#2A2E38] hover:bg-[#323642] text-white"}`}
           >
             {isCamOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
           </button>
@@ -468,40 +549,46 @@ function RoomView() {
             title="Flip Camera"
             className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white md:hidden"
           >
-            {facingMode === 'user' ? <SwitchCamera className="w-5 h-5" /> : <SwitchCamera className="w-5 h-5 opacity-70" />}
+            {facingMode === "user" ? (
+              <SwitchCamera className="w-5 h-5" />
+            ) : (
+              <SwitchCamera className="w-5 h-5 opacity-70" />
+            )}
           </button>
 
-          <button 
+          <button
             onClick={() => {
-              setActiveTab('chat');
+              setActiveTab("chat");
               setShowSidebar(true);
             }}
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${activeTab === 'chat' && showSidebar ? 'bg-brand text-brand-foreground shadow-lg shadow-brand/20' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${activeTab === "chat" && showSidebar ? "bg-brand text-brand-foreground shadow-lg shadow-brand/20" : "bg-[#2A2E38] hover:bg-[#323642] text-white"}`}
             title="Chat Room"
           >
             <MessageSquare className="w-5 h-5" />
           </button>
 
-          <button 
+          <button
             onClick={() => {
-              setActiveTab('polls');
+              setActiveTab("polls");
               setShowSidebar(true);
             }}
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${activeTab === 'polls' && showSidebar ? 'bg-brand text-brand-foreground shadow-lg shadow-brand/20' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${activeTab === "polls" && showSidebar ? "bg-brand text-brand-foreground shadow-lg shadow-brand/20" : "bg-[#2A2E38] hover:bg-[#323642] text-white"}`}
             title="Polls"
           >
             <BarChart2 className="w-5 h-5" />
           </button>
-          
-          <button 
-            onClick={() => broadcastData('hand_raise', { peerId: myPeerId, isRaised: !handRaised[myPeerId] })}
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${handRaised[myPeerId] ? 'bg-yellow-500 text-yellow-950 shadow-lg shadow-yellow-500/20' : 'bg-[#2A2E38] hover:bg-[#323642] text-white'}`}
+
+          <button
+            onClick={() =>
+              broadcastData("hand_raise", { peerId: myPeerId, isRaised: !handRaised[myPeerId] })
+            }
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${handRaised[myPeerId] ? "bg-yellow-500 text-yellow-950 shadow-lg shadow-yellow-500/20" : "bg-[#2A2E38] hover:bg-[#323642] text-white"}`}
             title="Raise Hand"
           >
             <Hand className="w-5 h-5" />
           </button>
-          
-          <button 
+
+          <button
             onClick={() => alert("Settings are coming soon!")}
             className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-[#2A2E38] hover:bg-[#323642] flex items-center justify-center transition-all text-white"
             title="Settings"
@@ -509,13 +596,16 @@ function RoomView() {
             <Settings className="w-5 h-5 text-white/70 hover:text-white transition-colors" />
           </button>
         </div>
-        
+
         <button
           className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-red-500 hover:bg-red-600 flex items-center justify-center transition-all shadow-lg shadow-red-500/20 mt-auto"
           onClick={async () => {
             sessionStorage.removeItem(`auto_join_${roomCode}`);
             if (isHost) {
-              await supabase.from('instant_rooms').update({ is_active: false }).eq('room_code', roomCode);
+              await supabase
+                .from("instant_rooms")
+                .update({ is_active: false })
+                .eq("room_code", roomCode);
               endMeeting();
             } else {
               leaveRoom();
@@ -536,7 +626,9 @@ function RoomView() {
             <button className="text-white hover:text-brand transition-colors">
               <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
             </button>
-            <h2 className="text-lg md:text-xl font-bold tracking-tight truncate max-w-[120px] md:max-w-none">Design meeting</h2>
+            <h2 className="text-lg md:text-xl font-bold tracking-tight truncate max-w-[120px] md:max-w-none">
+              Design meeting
+            </h2>
             <div className="hidden sm:flex bg-brand/20 text-brand px-3 py-1 rounded-full text-xs font-semibold items-center gap-1.5 ml-2">
               <Users className="w-3.5 h-3.5" /> Group
             </div>
@@ -557,16 +649,19 @@ function RoomView() {
               </button>
             </div>
             <div className="flex items-center gap-2 md:gap-3">
-              <button 
+              <button
                 onClick={() => {
-                  setActiveTab('participants');
-                  setShowSidebar(!showSidebar || activeTab !== 'participants');
+                  setActiveTab("participants");
+                  setShowSidebar(!showSidebar || activeTab !== "participants");
                 }}
-                className={`flex items-center gap-2 border rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${showSidebar && activeTab === 'participants' ? 'bg-brand/20 text-brand border-brand/30' : 'bg-transparent border-white/20 hover:bg-white/5 text-white/90'}`}
+                className={`flex items-center gap-2 border rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${showSidebar && activeTab === "participants" ? "bg-brand/20 text-brand border-brand/30" : "bg-transparent border-white/20 hover:bg-white/5 text-white/90"}`}
               >
                 <Users className="w-4 h-4" /> {totalParticipants}
               </button>
-              <button className="hidden sm:flex text-brand text-sm font-medium hover:text-brand/80 transition-colors items-center gap-1.5" onClick={handleCopyLink}>
+              <button
+                className="hidden sm:flex text-brand text-sm font-medium hover:text-brand/80 transition-colors items-center gap-1.5"
+                onClick={handleCopyLink}
+              >
                 {copied ? <Check className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
                 {copied ? "Copied" : "Invite"}
               </button>
@@ -583,9 +678,11 @@ function RoomView() {
           <div className={`w-full h-full grid gap-4 ${gridClass}`}>
             {/* Local User */}
             <div className="relative w-full h-full min-h-[200px]">
-              {localStream && <VideoPlayer stream={localStream} muted userName="You" isLocal={true} />}
+              {localStream && (
+                <VideoPlayer stream={localStream} muted userName="You" isLocal={true} />
+              )}
             </div>
-            
+
             {/* Remote Users */}
             {remoteStreams.map((remote) => (
               <div key={remote.peerId} className="relative w-full h-full min-h-[200px]">
@@ -597,50 +694,69 @@ function RoomView() {
       </main>
 
       {/* Right Sidebar */}
-      <aside className={`w-[340px] bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl overflow-hidden flex-col absolute md:relative right-3 top-3 bottom-3 z-30 transition-transform md:translate-x-0 ${showSidebar ? 'flex translate-x-0' : 'hidden md:hidden lg:flex translate-x-[120%]'}`}>
-        
+      <aside
+        className={`w-[340px] bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl overflow-hidden flex-col absolute md:relative right-3 top-3 bottom-3 z-30 transition-transform md:translate-x-0 ${showSidebar ? "flex translate-x-0" : "hidden md:hidden lg:flex translate-x-[120%]"}`}
+      >
         {/* Sidebar Header with Tabs */}
         <div className="flex items-center border-b border-white/10 shrink-0">
-          <button 
-            onClick={() => setActiveTab('participants')}
-            className={`flex-1 py-4 text-sm font-semibold transition-colors border-b-2 ${activeTab === 'participants' ? 'text-brand border-brand' : 'text-white/50 border-transparent hover:text-white'}`}
+          <button
+            onClick={() => setActiveTab("participants")}
+            className={`flex-1 py-4 text-sm font-semibold transition-colors border-b-2 ${activeTab === "participants" ? "text-brand border-brand" : "text-white/50 border-transparent hover:text-white"}`}
           >
             Participants
           </button>
-          <button 
-            onClick={() => setActiveTab('chat')}
-            className={`flex-1 py-4 text-sm font-semibold transition-colors border-b-2 ${activeTab === 'chat' ? 'text-brand border-brand' : 'text-white/50 border-transparent hover:text-white'}`}
+          <button
+            onClick={() => setActiveTab("chat")}
+            className={`flex-1 py-4 text-sm font-semibold transition-colors border-b-2 ${activeTab === "chat" ? "text-brand border-brand" : "text-white/50 border-transparent hover:text-white"}`}
           >
             Chat
           </button>
-          <button 
-            onClick={() => setActiveTab('polls')}
-            className={`flex-1 py-4 text-sm font-semibold transition-colors border-b-2 ${activeTab === 'polls' ? 'text-brand border-brand' : 'text-white/50 border-transparent hover:text-white'}`}
+          <button
+            onClick={() => setActiveTab("polls")}
+            className={`flex-1 py-4 text-sm font-semibold transition-colors border-b-2 ${activeTab === "polls" ? "text-brand border-brand" : "text-white/50 border-transparent hover:text-white"}`}
           >
             Polls
           </button>
-          <button 
+          <button
             onClick={() => setShowSidebar(false)}
             className="p-4 lg:hidden text-white/50 hover:text-white transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
-        
+
         <div className="flex-1 overflow-hidden relative">
-          {activeTab === 'participants' && (
+          {activeTab === "participants" && (
             <div className="absolute inset-0 overflow-y-auto p-6 space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
               {/* Waiting Room Section (Host Only) */}
               {isHost && waitingParticipants.length > 0 && (
                 <div>
-                  <h3 className="text-xs font-bold text-brand uppercase tracking-wider mb-3">Waiting to Join ({waitingParticipants.length})</h3>
+                  <h3 className="text-xs font-bold text-brand uppercase tracking-wider mb-3">
+                    Waiting to Join ({waitingParticipants.length})
+                  </h3>
                   <div className="space-y-3">
-                    {waitingParticipants.map(p => (
-                      <div key={p.id} className="bg-brand/5 rounded-2xl p-4 border border-brand/20 flex flex-col gap-3">
+                    {waitingParticipants.map((p) => (
+                      <div
+                        key={p.id}
+                        className="bg-brand/5 rounded-2xl p-4 border border-brand/20 flex flex-col gap-3"
+                      >
                         <span className="font-medium">{p.user_name}</span>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline" className="flex-1 bg-white/5 border-white/10 hover:bg-white/10 text-white" onClick={() => handleAdmit(p.id, 'rejected')}>Deny</Button>
-                          <Button size="sm" className="flex-1 bg-brand hover:bg-brand/90 text-brand-foreground" onClick={() => handleAdmit(p.id, 'admitted')}>Admit</Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1 bg-white/5 border-white/10 hover:bg-white/10 text-white"
+                            onClick={() => handleAdmit(p.id, "rejected")}
+                          >
+                            Deny
+                          </Button>
+                          <Button
+                            size="sm"
+                            className="flex-1 bg-brand hover:bg-brand/90 text-brand-foreground"
+                            onClick={() => handleAdmit(p.id, "admitted")}
+                          >
+                            Admit
+                          </Button>
                         </div>
                       </div>
                     ))}
@@ -650,7 +766,9 @@ function RoomView() {
 
               {/* In Call Section */}
               <div>
-                <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-3">In Call ({totalParticipants})</h3>
+                <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-3">
+                  In Call ({totalParticipants})
+                </h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between group">
                     <div className="flex items-center gap-3">
@@ -660,12 +778,18 @@ function RoomView() {
                       <span className="font-medium text-sm">{userName} (You)</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      {handRaised[myPeerId] && <Hand className="w-4 h-4 text-yellow-500 fill-yellow-500" />}
-                      {isHost && <span className="text-xs text-brand bg-brand/10 px-2 py-1 rounded-md">Host</span>}
+                      {handRaised[myPeerId] && (
+                        <Hand className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                      )}
+                      {isHost && (
+                        <span className="text-xs text-brand bg-brand/10 px-2 py-1 rounded-md">
+                          Host
+                        </span>
+                      )}
                     </div>
                   </div>
-                  
-                  {remoteStreams.map(remote => (
+
+                  {remoteStreams.map((remote) => (
                     <div key={remote.peerId} className="flex items-center justify-between group">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 font-medium">
@@ -674,7 +798,9 @@ function RoomView() {
                         <span className="font-medium text-sm text-white/90">{remote.userName}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        {handRaised[remote.peerId] && <Hand className="w-4 h-4 text-yellow-500 fill-yellow-500 animate-bounce" />}
+                        {handRaised[remote.peerId] && (
+                          <Hand className="w-4 h-4 text-yellow-500 fill-yellow-500 animate-bounce" />
+                        )}
                         <Mic className="w-4 h-4 text-white/30" />
                       </div>
                     </div>
@@ -684,48 +810,52 @@ function RoomView() {
             </div>
           )}
 
-          {activeTab === 'chat' && (
+          {activeTab === "chat" && (
             <div className="absolute inset-0 animate-in fade-in slide-in-from-right-4 duration-300">
-              <ChatPanel 
-                messages={chatMessages} 
+              <ChatPanel
+                messages={chatMessages}
                 myPeerId={myPeerId}
                 onSendMessage={(text) => {
-                  broadcastData('chat', {
+                  broadcastData("chat", {
                     message: {
                       id: Math.random().toString(36).substring(7),
                       senderId: myPeerId,
                       senderName: userName,
                       text,
-                      timestamp: Date.now()
-                    }
+                      timestamp: Date.now(),
+                    },
                   });
                 }}
               />
             </div>
           )}
 
-          {activeTab === 'polls' && (
+          {activeTab === "polls" && (
             <div className="absolute inset-0 animate-in fade-in slide-in-from-right-4 duration-300">
-              <PollsPanel 
+              <PollsPanel
                 polls={polls}
                 isHost={Boolean(isHost)}
                 myPeerId={myPeerId}
                 onCreatePoll={(question, options) => {
-                  broadcastData('poll_new', {
+                  broadcastData("poll_new", {
                     poll: {
                       id: Math.random().toString(36).substring(7),
                       question,
-                      options: options.map(opt => ({ id: Math.random().toString(36).substring(7), text: opt, votes: [] })),
+                      options: options.map((opt) => ({
+                        id: Math.random().toString(36).substring(7),
+                        text: opt,
+                        votes: [],
+                      })),
                       createdBy: myPeerId,
-                      active: true
-                    }
+                      active: true,
+                    },
                   });
                 }}
                 onVote={(pollId, optionId) => {
-                  broadcastData('poll_vote', {
+                  broadcastData("poll_vote", {
                     pollId,
                     optionId,
-                    voterId: myPeerId
+                    voterId: myPeerId,
                   });
                 }}
               />

@@ -1,25 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createClient } from "@supabase/supabase-js";
+import { requireAuth, serviceClient, handleError, validateBody } from "@/lib/api-utils";
 import { sanitizeText, isValidUrl } from "@/lib/sanitize";
+import { z } from "zod";
 
-export const Route = createFileRoute("/api/stories")({
+const createStorySchema = z.object({
+  content: z.string().optional(),
+  media_url: z.string().url().optional().or(z.literal("")),
+  story_type: z.enum(["status", "streak", "achievement", "media"]).optional().default("status"),
+});
+
+export const Route = createFileRoute("/api/stories" as any)({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const authHeader = request.headers.get("Authorization");
-        const token = authHeader?.replace("Bearer ", "");
-        if (!token) return new Response("Unauthorized", { status: 401 });
-
-        const serviceClient = createClient(
-          process.env.VITE_SUPABASE_URL!,
-          process.env.SUPABASE_SERVICE_ROLE_KEY!,
-        );
-
-        const {
-          data: { user },
-          error: authError,
-        } = await serviceClient.auth.getUser(token);
-        if (authError || !user) return new Response("Unauthorized", { status: 401 });
+        try {
+          const user = await requireAuth(request);
 
         // Get accepted connections
         const { data: conns } = await serviceClient
@@ -58,46 +53,43 @@ export const Route = createFileRoute("/api/stories")({
           .select(
             `
             id, user_id, content, media_url, story_type, expires_at, created_at,
-            profiles:user_id (id, name, username, avatar_url)
+            profiles (id, name, username, avatar_url)
           `,
           )
           .in("user_id", visibleUserIds)
           .gt("expires_at", new Date().toISOString())
           .order("created_at", { ascending: false });
 
-        if (error) { console.error('API STORIES ERROR:', error); return new Response(JSON.stringify({ error: error.message }), { status: 500 }); }
+        if (error) {
+          console.error("API STORIES ERROR:", error);
+          return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+        }
 
         return new Response(JSON.stringify(data ?? []), {
           headers: { "Content-Type": "application/json" },
         });
+        } catch (error) {
+          return handleError(error);
+        }
       },
 
       POST: async ({ request }) => {
-        const authHeader = request.headers.get("Authorization");
-        const token = authHeader?.replace("Bearer ", "");
-        if (!token) return new Response("Unauthorized", { status: 401 });
-
-        const serviceClient = createClient(
-          process.env.VITE_SUPABASE_URL!,
-          process.env.SUPABASE_SERVICE_ROLE_KEY!,
-        );
-
-        const {
-          data: { user },
-          error: authError,
-        } = await serviceClient.auth.getUser(token);
-        if (authError || !user) return new Response("Unauthorized", { status: 401 });
-
-        const body = (await request.json()) as {
-          content?: string;
-          media_url?: string;
-          story_type?: "status" | "streak" | "achievement" | "media";
-        };
+        try {
+          const user = await requireAuth(request);
+          const body = await validateBody(request, createStorySchema);
 
         const cleanContent = sanitizeText(body.content, 500);
         const isMediaUrlValid = isValidUrl(body.media_url ?? "");
 
-        if (!cleanContent && !isMediaUrlValid) { console.error('API STORIES 400 ERROR. Content:', cleanContent, 'Media:', isMediaUrlValid, 'Raw media_url:', body.media_url);
+        if (!cleanContent && !isMediaUrlValid) {
+          console.error(
+            "API STORIES 400 ERROR. Content:",
+            cleanContent,
+            "Media:",
+            isMediaUrlValid,
+            "Raw media_url:",
+            body.media_url,
+          );
           return new Response("valid content or media_url is required", { status: 400 });
         }
 
@@ -117,6 +109,9 @@ export const Route = createFileRoute("/api/stories")({
           status: 201,
           headers: { "Content-Type": "application/json" },
         });
+        } catch (error) {
+          return handleError(error);
+        }
       },
     },
   },

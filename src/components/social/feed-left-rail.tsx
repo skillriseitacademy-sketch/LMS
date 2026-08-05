@@ -1,4 +1,4 @@
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 import { Star } from "lucide-react";
 
 export function FeedLeftRail() {
@@ -10,35 +10,38 @@ export function FeedLeftRail() {
   return (
     <>
       {/* Mini Profile Card */}
-      <div 
+      <div
         className="rounded-[16px] p-6 flex flex-col items-center text-center transition-all"
-        style={{ 
+        style={{
           backgroundColor: "var(--pp-surface-container-lowest)",
-          boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05)"
+          boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05)",
         }}
       >
-        <div 
+        <div
           className="w-20 h-20 rounded-full mb-4 flex items-center justify-center font-bold text-2xl border-4"
-          style={{ 
-            backgroundColor: "var(--pp-surface-variant)", 
+          style={{
+            backgroundColor: "var(--pp-surface-variant)",
             color: "var(--pp-primary)",
             borderColor: "var(--pp-surface-container-lowest)",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
           }}
         >
           {initials}
         </div>
-        <h2 className="text-xl font-semibold" style={{ color: "var(--pp-on-surface)", fontFamily: "var(--font-display)" }}>
+        <h2
+          className="text-xl font-semibold"
+          style={{ color: "var(--pp-on-surface)", fontFamily: "var(--font-display)" }}
+        >
           {firstName}
         </h2>
         <p className="text-sm mt-1" style={{ color: "var(--pp-on-surface-variant)" }}>
           {roleDisplay}
         </p>
-        <div 
+        <div
           className="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full"
-          style={{ 
+          style={{
             backgroundColor: "color-mix(in srgb, var(--pp-secondary-container) 20%, transparent)",
-            color: "var(--pp-secondary)"
+            color: "var(--pp-secondary)",
           }}
         >
           <Star className="w-[18px] h-[18px]" fill="currentColor" />
@@ -49,21 +52,24 @@ export function FeedLeftRail() {
       </div>
 
       {/* Trending Topics */}
-      <div 
+      <div
         className="rounded-[16px] p-6"
-        style={{ 
+        style={{
           backgroundColor: "var(--pp-surface-container-lowest)",
-          boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05)"
+          boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05)",
         }}
       >
-        <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--pp-on-surface)", fontFamily: "var(--font-display)" }}>
+        <h3
+          className="text-lg font-semibold mb-4"
+          style={{ color: "var(--pp-on-surface)", fontFamily: "var(--font-display)" }}
+        >
           Trending Topics
         </h3>
         <ul className="space-y-3">
           {["#DSAPractice", "#Interviews2024", "#SystemDesign", "#SummerInternships"].map((tag) => (
             <li key={tag}>
-              <a 
-                href="#" 
+              <a
+                href="#"
                 className="text-base hover:underline transition-colors block"
                 style={{ color: "var(--pp-primary)" }}
               >

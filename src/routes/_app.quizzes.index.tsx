@@ -10,18 +10,33 @@ export const Route = createFileRoute("/_app/quizzes/")({
 });
 
 const getTopicIcon = (id: string) => {
-  if (id.includes('dsa') || id.includes('algo') || id.includes('coding')) return Terminal;
-  if (id.includes('system') || id.includes('arch') || id.includes('db')) return Database;
-  if (id.includes('behavioral') || id.includes('leadership')) return Brain;
-  if (id.includes('security')) return Shield;
+  if (id.includes("dsa") || id.includes("algo") || id.includes("coding")) return Terminal;
+  if (id.includes("system") || id.includes("arch") || id.includes("db")) return Database;
+  if (id.includes("behavioral") || id.includes("leadership")) return Brain;
+  if (id.includes("security")) return Shield;
   return ListChecks;
 };
 
 const getTopicTheme = (difficulty: string, index: number) => {
   const themes = [
-    { bg: "var(--pp-primary-container)", fg: "var(--pp-on-primary-container)", border: "var(--pp-primary)", glow: "var(--pp-primary-fixed)" },
-    { bg: "var(--pp-secondary-container)", fg: "var(--pp-on-secondary-container)", border: "var(--pp-secondary)", glow: "var(--pp-secondary-fixed)" },
-    { bg: "var(--pp-tertiary-container)", fg: "var(--pp-on-tertiary-container)", border: "var(--pp-tertiary)", glow: "var(--pp-tertiary-fixed)" },
+    {
+      bg: "var(--pp-primary-container)",
+      fg: "var(--pp-on-primary-container)",
+      border: "var(--pp-primary)",
+      glow: "var(--pp-primary-fixed)",
+    },
+    {
+      bg: "var(--pp-secondary-container)",
+      fg: "var(--pp-on-secondary-container)",
+      border: "var(--pp-secondary)",
+      glow: "var(--pp-secondary-fixed)",
+    },
+    {
+      bg: "var(--pp-tertiary-container)",
+      fg: "var(--pp-on-tertiary-container)",
+      border: "var(--pp-tertiary)",
+      glow: "var(--pp-tertiary-fixed)",
+    },
   ];
   return themes[index % themes.length];
 };
@@ -31,9 +46,7 @@ function QuizzesIndex() {
 
   useEffect(() => {
     async function fetchQuizzes() {
-      const { data } = await supabase
-        .from("quizzes")
-        .select(`
+      const { data } = await supabase.from("quizzes").select(`
           id,
           title,
           topics ( title, description )
@@ -50,7 +63,11 @@ function QuizzesIndex() {
         <header className="mb-8">
           <h1
             className="text-[32px] font-bold leading-tight mb-2"
-            style={{ fontFamily: "var(--font-display)", color: "var(--pp-on-surface)", letterSpacing: "-0.01em" }}
+            style={{
+              fontFamily: "var(--font-display)",
+              color: "var(--pp-on-surface)",
+              letterSpacing: "-0.01em",
+            }}
           >
             Pick a topic to start
           </h1>
@@ -65,7 +82,9 @@ function QuizzesIndex() {
             const difficulty = "Intermediate";
             const theme = getTopicTheme(difficulty, idx);
             const topicTitle = Array.isArray(q.topics) ? q.topics[0]?.title : q.topics?.title;
-            const topicDesc = Array.isArray(q.topics) ? q.topics[0]?.description : q.topics?.description;
+            const topicDesc = Array.isArray(q.topics)
+              ? q.topics[0]?.description
+              : q.topics?.description;
 
             return (
               <Link
@@ -75,18 +94,23 @@ function QuizzesIndex() {
                 className="group relative overflow-hidden rounded-[16px] p-6 transition-all duration-300 flex flex-col"
                 style={{
                   backgroundColor: "var(--pp-surface-container-lowest)",
-                  border: "1px solid color-mix(in srgb, var(--pp-outline-variant) 30%, transparent)",
+                  border:
+                    "1px solid color-mix(in srgb, var(--pp-outline-variant) 30%, transparent)",
                   boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05)",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = `color-mix(in srgb, ${theme.border} 50%, transparent)`;
+                  (e.currentTarget as HTMLElement).style.borderColor =
+                    `color-mix(in srgb, ${theme.border} 50%, transparent)`;
                   (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 16px -4px color-mix(in srgb, ${theme.border} 10%, transparent)`;
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    `0 8px 16px -4px color-mix(in srgb, ${theme.border} 10%, transparent)`;
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "color-mix(in srgb, var(--pp-outline-variant) 30%, transparent)";
+                  (e.currentTarget as HTMLElement).style.borderColor =
+                    "color-mix(in srgb, var(--pp-outline-variant) 30%, transparent)";
                   (e.currentTarget as HTMLElement).style.transform = "";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05)";
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05)";
                 }}
               >
                 {/* Decorative glow orb */}
@@ -122,7 +146,10 @@ function QuizzesIndex() {
                   >
                     {q.title}
                   </h3>
-                  <p className="text-sm line-clamp-2" style={{ color: "var(--pp-on-surface-variant)" }}>
+                  <p
+                    className="text-sm line-clamp-2"
+                    style={{ color: "var(--pp-on-surface-variant)" }}
+                  >
                     {topicDesc || "Test your knowledge on this topic."}
                   </p>
                 </div>
@@ -131,11 +158,20 @@ function QuizzesIndex() {
                   className="mt-6 flex items-center justify-between pt-4 relative z-10"
                   style={{ borderTop: "1px solid var(--pp-surface-variant)" }}
                 >
-                  <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--pp-on-surface-variant)", fontFamily: "var(--font-mono)" }}>
+                  <div
+                    className="flex items-center gap-1.5 text-xs font-medium"
+                    style={{
+                      color: "var(--pp-on-surface-variant)",
+                      fontFamily: "var(--font-mono)",
+                    }}
+                  >
                     <Clock className="w-4 h-4" />
                     <span>~10 mins</span>
                   </div>
-                  <div className="flex items-center gap-1 text-sm font-bold group-hover:translate-x-1 transition-transform" style={{ color: theme.border }}>
+                  <div
+                    className="flex items-center gap-1 text-sm font-bold group-hover:translate-x-1 transition-transform"
+                    style={{ color: theme.border }}
+                  >
                     Start <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -147,4 +183,3 @@ function QuizzesIndex() {
     </>
   );
 }
-

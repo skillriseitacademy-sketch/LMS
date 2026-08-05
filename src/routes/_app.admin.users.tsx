@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { TopBar } from "@/components/top-bar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Search, UserPlus, Loader2, Eye, EyeOff } from "lucide-react";
-import { useProfile } from "@/lib/store";
 import { supabase, createUserAdmin } from "@/lib/supabase";
 import {
   Dialog,
@@ -36,8 +35,7 @@ function Users() {
   const search = useSearch({ from: "/_app/admin/users" });
   const [filter, setFilter] = useState<Filter>(search.filter || "all");
   const [query, setQuery] = useState("");
-  const { profile } = useProfile();
-  
+
   const [profiles, setProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -58,16 +56,16 @@ function Users() {
       .select("id, name, avatar_url, created_at, role, email")
       .eq("role", "student")
       .order("created_at", { ascending: false });
-      
+
     const { data: xpData } = await supabase.from("xp_transactions").select("user_id, amount");
-    
+
     const xpMap = new Map();
     for (const x of xpData || []) {
       xpMap.set(x.user_id, (xpMap.get(x.user_id) || 0) + x.amount);
     }
-      
+
     if (profs) {
-      const enriched = profs.map(p => {
+      const enriched = profs.map((p) => {
         const isNew = new Date(p.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000;
         const xp = xpMap.get(p.id) || 0;
         return {
@@ -79,7 +77,7 @@ function Users() {
           xp: xp,
           level: Math.floor(xp / 200) + 1,
           isOnline: false, // Needs realtime presence to be accurate
-          isNew: isNew
+          isNew: isNew,
         };
       });
       setProfiles(enriched);
@@ -113,9 +111,9 @@ function Users() {
       setInviteName("");
       setInviteEmail("");
       setInvitePassword("");
-      
+
       loadUsers();
-      
+
       setTimeout(() => {
         setInviteOpen(false);
         setInviteSuccess("");
@@ -267,55 +265,56 @@ function Users() {
                   </td>
                 </tr>
               )}
-              {!loading && users.map((u) => (
-                <tr key={u.id} className="border-t border-border">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <Avatar className="h-8 w-8">
-                          {u.avatar_url ? (
-                            <img
-                              src={u.avatar_url}
-                              alt={u.name}
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <AvatarFallback className="bg-brand-light text-brand-dark text-xs font-semibold">
-                              {u.initials}
-                            </AvatarFallback>
+              {!loading &&
+                users.map((u) => (
+                  <tr key={u.id} className="border-t border-border">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <Avatar className="h-8 w-8">
+                            {u.avatar_url ? (
+                              <img
+                                src={u.avatar_url}
+                                alt={u.name}
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <AvatarFallback className="bg-brand-light text-brand-dark text-xs font-semibold">
+                                {u.initials}
+                              </AvatarFallback>
+                            )}
+                          </Avatar>
+                          {u.isOnline && (
+                            <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border border-card bg-success" />
                           )}
-                        </Avatar>
-                        {u.isOnline && (
-                          <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border border-card bg-success" />
-                        )}
+                        </div>
+                        <span className="font-medium">{u.name}</span>
                       </div>
-                      <span className="font-medium">{u.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    {u.isOnline ? (
-                      <span className="rounded-md bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success">
-                        Online
-                      </span>
-                    ) : u.isNew ? (
-                      <span className="rounded-md bg-card-blue px-2 py-0.5 text-[10px] font-semibold text-brand-dark">
-                        New
-                      </span>
-                    ) : (
-                      <span className="text-[11px] text-muted-foreground">Offline</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right text-muted-foreground">{u.level}</td>
-                  <td className="px-4 py-3 text-right font-display font-bold">
-                    {u.xp.toLocaleString()}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <button className="rounded-full border border-border px-3 py-1 text-[11px] hover:bg-muted">
-                      Contact
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-4 py-3">
+                      {u.isOnline ? (
+                        <span className="rounded-md bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success">
+                          Online
+                        </span>
+                      ) : u.isNew ? (
+                        <span className="rounded-md bg-card-blue px-2 py-0.5 text-[10px] font-semibold text-brand-dark">
+                          New
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-muted-foreground">Offline</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-right text-muted-foreground">{u.level}</td>
+                    <td className="px-4 py-3 text-right font-display font-bold">
+                      {u.xp.toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <button className="rounded-full border border-border px-3 py-1 text-[11px] hover:bg-muted">
+                        Contact
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               {!loading && users.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-4 py-10 text-center text-sm text-muted-foreground">

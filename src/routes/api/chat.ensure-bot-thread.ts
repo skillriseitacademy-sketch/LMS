@@ -16,17 +16,17 @@ import { createClient } from "@supabase/supabase-js";
 const BOT_SENTINEL_USER_ID = "00000000-0000-0000-0000-000000000001";
 
 function serviceClient() {
-  return createClient(
-    process.env.VITE_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
+  return createClient(process.env.VITE_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 }
 
 async function getUser(request: Request) {
   const token = request.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
   const sc = serviceClient();
-  const { data: { user }, error } = await sc.auth.getUser(token);
+  const {
+    data: { user },
+    error,
+  } = await sc.auth.getUser(token);
   if (error || !user) return null;
   return user;
 }
@@ -50,10 +50,9 @@ export const Route = createFileRoute("/api/chat/ensure-bot-thread")({
           .single();
 
         if (existing) {
-          return new Response(
-            JSON.stringify({ conversationId: existing.conversation_id }),
-            { headers: { "Content-Type": "application/json" } }
-          );
+          return new Response(JSON.stringify({ conversationId: existing.conversation_id }), {
+            headers: { "Content-Type": "application/json" },
+          });
         }
 
         // Create a new conversation for the bot thread
@@ -66,26 +65,24 @@ export const Route = createFileRoute("/api/chat/ensure-bot-thread")({
         if (convErr || !conv) {
           return new Response(
             JSON.stringify({ error: convErr?.message ?? "Failed to create conversation" }),
-            { status: 500, headers: { "Content-Type": "application/json" } }
+            { status: 500, headers: { "Content-Type": "application/json" } },
           );
         }
 
         // Add the user as a participant, flagged as bot thread
-        const { error: pErr } = await sc
-          .from("conversation_participants")
-          .insert([
-            {
-              conversation_id: conv.id,
-              user_id: user.id,
-              is_bot_thread: true,
-            },
-          ]);
+        const { error: pErr } = await sc.from("conversation_participants").insert([
+          {
+            conversation_id: conv.id,
+            user_id: user.id,
+            is_bot_thread: true,
+          },
+        ]);
 
         if (pErr) {
-          return new Response(
-            JSON.stringify({ error: pErr.message }),
-            { status: 500, headers: { "Content-Type": "application/json" } }
-          );
+          return new Response(JSON.stringify({ error: pErr.message }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          });
         }
 
         // Insert a welcome message from the bot (sender_id = null)
@@ -95,10 +92,10 @@ export const Route = createFileRoute("/api/chat/ensure-bot-thread")({
           body: "👋 Hi! I'm your PlacePro AI Assistant. Ask me anything about your courses, quiz answers, or career roadmap. How can I help you today?",
         });
 
-        return new Response(
-          JSON.stringify({ conversationId: conv.id }),
-          { status: 201, headers: { "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ conversationId: conv.id }), {
+          status: 201,
+          headers: { "Content-Type": "application/json" },
+        });
       },
     },
   },

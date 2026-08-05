@@ -12,17 +12,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
 
 function serviceClient() {
-  return createClient(
-    process.env.VITE_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
+  return createClient(process.env.VITE_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 }
 
 async function getUser(request: Request) {
   const token = request.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
   const sc = serviceClient();
-  const { data: { user }, error } = await sc.auth.getUser(token);
+  const {
+    data: { user },
+    error,
+  } = await sc.auth.getUser(token);
   if (error || !user) return null;
   return user;
 }
@@ -83,13 +83,15 @@ export const Route = createFileRoute("/api/chat/conversations")({
           const lastMsg = lastMsgMap[p.conversation_id];
           // Count messages newer than last_read_at that aren't from the current user
           unreadMap[p.conversation_id] =
-            lastMsg && new Date(lastMsg.created_at).getTime() > lastRead && lastMsg.sender_id !== user.id
-              ? 1  // Simplified: show dot if last message is unread
+            lastMsg &&
+            new Date(lastMsg.created_at).getTime() > lastRead &&
+            lastMsg.sender_id !== user.id
+              ? 1 // Simplified: show dot if last message is unread
               : 0;
         }
 
         const participationMeta = Object.fromEntries(
-          participations.map((p: any) => [p.conversation_id, p])
+          participations.map((p: any) => [p.conversation_id, p]),
         );
 
         const participantsByConv: Record<string, any[]> = {};
@@ -129,7 +131,7 @@ export const Route = createFileRoute("/api/chat/conversations")({
         const user = await getUser(request);
         if (!user) return new Response("Unauthorized", { status: 401 });
 
-        const { other_user_id } = await request.json() as { other_user_id?: string };
+        const { other_user_id } = (await request.json()) as { other_user_id?: string };
         if (!other_user_id) return new Response("other_user_id is required", { status: 400 });
 
         const sc = serviceClient();
@@ -174,7 +176,9 @@ export const Route = createFileRoute("/api/chat/conversations")({
           .single();
 
         if (convErr || !newConv) {
-          return new Response(JSON.stringify({ error: convErr?.message ?? "Failed" }), { status: 500 });
+          return new Response(JSON.stringify({ error: convErr?.message ?? "Failed" }), {
+            status: 500,
+          });
         }
 
         // Add both participants

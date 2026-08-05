@@ -1,11 +1,23 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Sparkles, ArrowRight, Search, CheckCircle2, Shield, Globe, Lock, ArrowLeft, LogOut } from "lucide-react";
+import {
+  Sparkles,
+  ArrowRight,
+  Search,
+  CheckCircle2,
+  Shield,
+  Globe,
+  Lock,
+  ArrowLeft,
+  LogOut,
+} from "lucide-react";
 
 export const Route = createFileRoute("/onboarding")({
   beforeLoad: async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (!session) throw redirect({ to: "/login" });
     const { data } = await supabase
       .from("profiles")
@@ -20,12 +32,54 @@ export const Route = createFileRoute("/onboarding")({
 });
 
 const TOPICS = [
-  { id: "ds", title: "Data Structures", desc: "Master arrays, trees, graphs and algorithmic problem...", icon: "{}", color: "text-[#3424C2]", bg: "bg-[#3424C2]/10" },
-  { id: "web", title: "Web Dev", desc: "Frontend, backend, and full-stack frameworks.", icon: "🌐", color: "text-slate-600", bg: "bg-slate-100" },
-  { id: "cs", title: "Core CS", desc: "OS, DBMS, Computer Networks, and Architecture.", icon: "⚙️", color: "text-slate-600", bg: "bg-slate-100" },
-  { id: "apt", title: "Aptitude", desc: "Quantitative, logical, and verbal reasoning skills.", icon: "🧮", color: "text-slate-600", bg: "bg-slate-100" },
-  { id: "sys", title: "System Design", desc: "Scalable architecture and high-level design principles.", icon: "📐", color: "text-slate-600", bg: "bg-slate-100" },
-  { id: "hr", title: "HR & Soft Skills", desc: "Interview etiquette, communication, and behavior...", icon: "🤝", color: "text-slate-600", bg: "bg-slate-100" },
+  {
+    id: "ds",
+    title: "Data Structures",
+    desc: "Master arrays, trees, graphs and algorithmic problem...",
+    icon: "{}",
+    color: "text-[#3424C2]",
+    bg: "bg-[#3424C2]/10",
+  },
+  {
+    id: "web",
+    title: "Web Dev",
+    desc: "Frontend, backend, and full-stack frameworks.",
+    icon: "🌐",
+    color: "text-slate-600",
+    bg: "bg-slate-100",
+  },
+  {
+    id: "cs",
+    title: "Core CS",
+    desc: "OS, DBMS, Computer Networks, and Architecture.",
+    icon: "⚙️",
+    color: "text-slate-600",
+    bg: "bg-slate-100",
+  },
+  {
+    id: "apt",
+    title: "Aptitude",
+    desc: "Quantitative, logical, and verbal reasoning skills.",
+    icon: "🧮",
+    color: "text-slate-600",
+    bg: "bg-slate-100",
+  },
+  {
+    id: "sys",
+    title: "System Design",
+    desc: "Scalable architecture and high-level design principles.",
+    icon: "📐",
+    color: "text-slate-600",
+    bg: "bg-slate-100",
+  },
+  {
+    id: "hr",
+    title: "HR & Soft Skills",
+    desc: "Interview etiquette, communication, and behavior...",
+    icon: "🤝",
+    color: "text-slate-600",
+    bg: "bg-slate-100",
+  },
 ];
 
 const SUGGESTED_ROLES = [
@@ -34,7 +88,7 @@ const SUGGESTED_ROLES = [
   "Backend Developer",
   "Data Analyst",
   "Product Manager",
-  "UI/UX Designer"
+  "UI/UX Designer",
 ];
 
 function Onboarding() {
@@ -44,7 +98,9 @@ function Onboarding() {
   const [roleSearch, setRoleSearch] = useState("");
   const [selectedRoles, setSelectedRoles] = useState<Set<string>>(new Set(["Frontend Developer"]));
   const [username, setUsername] = useState("alex_dev");
-  const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking" | "available" | "unavailable">("available");
+  const [usernameStatus, setUsernameStatus] = useState<
+    "idle" | "checking" | "available" | "unavailable"
+  >("available");
   const [visibility, setVisibility] = useState<"public" | "private">("public");
   const [loading, setLoading] = useState(false);
 
@@ -80,15 +136,20 @@ function Onboarding() {
 
   const handleComplete = async () => {
     setLoading(true);
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     // We update local DB directly as the backend API was just a placeholder
-    await supabase.from("profiles").update({ 
-      visibility, 
-      username,
-      onboarding_complete: true,
-      skills: Array.from(selectedRoles)
-    }).eq("id", session?.user.id);
+    await supabase
+      .from("profiles")
+      .update({
+        visibility,
+        username,
+        onboarding_complete: true,
+        skills: Array.from(selectedRoles),
+      })
+      .eq("id", session?.user.id);
 
     await supabase.from("user_roadmap_progress").upsert({
       user_id: session?.user.id,
@@ -108,7 +169,6 @@ function Onboarding() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FC] font-sans text-slate-900 selection:bg-[#3424C2]/20 relative">
-      
       {/* Log Out Button (Fixed top-right) */}
       <button
         onClick={handleLogout}
@@ -116,7 +176,7 @@ function Onboarding() {
       >
         <LogOut className="h-4 w-4" /> Log out
       </button>
-      
+
       {/* Top Navigation */}
       {step === 4 && (
         <div className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10">
@@ -131,20 +191,27 @@ function Onboarding() {
       )}
 
       <div className={`max-w-4xl mx-auto px-4 ${step === 4 ? "pt-32" : "pt-16 pb-24"}`}>
-        
         {/* Step 1 & 2 Header */}
         {step < 3 && (
           <div className="text-center mb-10">
             {step === 1 ? (
               <>
                 <h1 className="text-4xl font-extrabold tracking-tight mb-4">Welcome to PlacePro</h1>
-                <p className="text-lg text-slate-600 max-w-2xl mx-auto">Customize your career OS. Select the topics you want to master to start building your personalized roadmap.</p>
+                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                  Customize your career OS. Select the topics you want to master to start building
+                  your personalized roadmap.
+                </p>
               </>
             ) : (
               <>
                 <div className="text-[#3424C2] font-bold text-xl tracking-tight mb-6">PlacePro</div>
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">What roles are you targeting?</h1>
-                <p className="text-lg text-slate-600 max-w-2xl mx-auto">Select or search for the career paths you're preparing for. We'll tailor your roadmap accordingly.</p>
+                <h1 className="text-4xl font-extrabold tracking-tight mb-4">
+                  What roles are you targeting?
+                </h1>
+                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                  Select or search for the career paths you're preparing for. We'll tailor your
+                  roadmap accordingly.
+                </p>
               </>
             )}
           </div>
@@ -155,15 +222,31 @@ function Onboarding() {
           <div className="flex items-center justify-center gap-4 mb-12 max-w-lg mx-auto">
             {[1, 2, 3, 4].map((num, i) => (
               <div key={num} className="flex items-center gap-4">
-                <div className={`flex items-center justify-center h-8 w-8 rounded-full text-sm font-bold transition-colors ${
-                  step === num ? "bg-[#3424C2] text-white" : step > num ? "bg-[#3424C2] text-white" : "bg-slate-200 text-slate-500"
-                }`}>
+                <div
+                  className={`flex items-center justify-center h-8 w-8 rounded-full text-sm font-bold transition-colors ${
+                    step === num
+                      ? "bg-[#3424C2] text-white"
+                      : step > num
+                        ? "bg-[#3424C2] text-white"
+                        : "bg-slate-200 text-slate-500"
+                  }`}
+                >
                   {step > num ? <CheckCircle2 className="h-4 w-4" /> : num}
                 </div>
-                {num === step && step === 1 && <span className="text-[#3424C2] font-semibold text-sm -ml-2 pr-2">Topics</span>}
-                {num === step && step === 2 && <span className="text-[#3424C2] font-semibold text-sm -ml-2 pr-2">Roles</span>}
-                {num === step && step === 3 && <span className="text-[#3424C2] font-semibold text-sm -ml-2 pr-2">Identity</span>}
-                {i < 3 && <div className={`h-[2px] w-12 ${step > num ? "bg-[#3424C2]" : "bg-slate-200"}`}></div>}
+                {num === step && step === 1 && (
+                  <span className="text-[#3424C2] font-semibold text-sm -ml-2 pr-2">Topics</span>
+                )}
+                {num === step && step === 2 && (
+                  <span className="text-[#3424C2] font-semibold text-sm -ml-2 pr-2">Roles</span>
+                )}
+                {num === step && step === 3 && (
+                  <span className="text-[#3424C2] font-semibold text-sm -ml-2 pr-2">Identity</span>
+                )}
+                {i < 3 && (
+                  <div
+                    className={`h-[2px] w-12 ${step > num ? "bg-[#3424C2]" : "bg-slate-200"}`}
+                  ></div>
+                )}
               </div>
             ))}
           </div>
@@ -171,7 +254,6 @@ function Onboarding() {
 
         {/* Content Area */}
         <div className={step === 4 ? "mt-0" : "bg-transparent"}>
-          
           {step === 1 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {TOPICS.map((topic) => (
@@ -179,8 +261,8 @@ function Onboarding() {
                   key={topic.id}
                   onClick={() => toggleTopic(topic.id)}
                   className={`relative p-6 rounded-2xl text-left bg-white border transition-all ${
-                    selectedTopics.has(topic.id) 
-                      ? "border-[#3424C2] shadow-[0_0_0_1px_#3424C2] shadow-sm" 
+                    selectedTopics.has(topic.id)
+                      ? "border-[#3424C2] shadow-[0_0_0_1px_#3424C2] shadow-sm"
                       : "border-slate-200 hover:border-slate-300 hover:shadow-sm"
                   }`}
                 >
@@ -189,7 +271,9 @@ function Onboarding() {
                       <CheckCircle2 className="h-5 w-5 fill-white" />
                     </div>
                   )}
-                  <div className={`h-12 w-12 rounded-xl flex items-center justify-center text-xl mb-4 ${selectedTopics.has(topic.id) ? "bg-[#3424C2] text-white" : topic.bg + " " + topic.color}`}>
+                  <div
+                    className={`h-12 w-12 rounded-xl flex items-center justify-center text-xl mb-4 ${selectedTopics.has(topic.id) ? "bg-[#3424C2] text-white" : topic.bg + " " + topic.color}`}
+                  >
                     {topic.icon}
                   </div>
                   <h3 className="font-bold text-lg mb-2">{topic.title}</h3>
@@ -215,9 +299,13 @@ function Onboarding() {
               </div>
 
               <div>
-                <h3 className="text-xs font-bold tracking-wider text-slate-400 uppercase mb-4">Popular Suggestions</h3>
+                <h3 className="text-xs font-bold tracking-wider text-slate-400 uppercase mb-4">
+                  Popular Suggestions
+                </h3>
                 <div className="flex flex-wrap gap-3">
-                  {SUGGESTED_ROLES.filter(r => r.toLowerCase().includes(roleSearch.toLowerCase())).map((role) => (
+                  {SUGGESTED_ROLES.filter((r) =>
+                    r.toLowerCase().includes(roleSearch.toLowerCase()),
+                  ).map((role) => (
                     <button
                       key={role}
                       onClick={() => toggleRole(role)}
@@ -240,16 +328,22 @@ function Onboarding() {
               <h2 className="text-3xl font-bold tracking-tight mb-2">Claim your unique handle</h2>
               <p className="text-slate-500 mb-8">This will be your public identity on PlacePro.</p>
 
-              <div className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
-                usernameStatus === "available" ? "border-emerald-200 bg-emerald-50/30" :
-                usernameStatus === "unavailable" ? "border-red-200 bg-red-50/30" :
-                "border-slate-200 bg-slate-50"
-              }`}>
+              <div
+                className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
+                  usernameStatus === "available"
+                    ? "border-emerald-200 bg-emerald-50/30"
+                    : usernameStatus === "unavailable"
+                      ? "border-red-200 bg-red-50/30"
+                      : "border-slate-200 bg-slate-50"
+                }`}
+              >
                 <span className="text-slate-400 font-medium text-lg">@</span>
                 <input
                   type="text"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
+                  onChange={(e) =>
+                    setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))
+                  }
                   className="flex-1 bg-transparent border-none outline-none text-lg font-medium text-slate-900 placeholder:text-slate-400"
                   placeholder="username"
                   maxLength={20}
@@ -278,8 +372,13 @@ function Onboarding() {
           {step === 4 && (
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Choose Your Profile Visibility</h1>
-                <p className="text-lg text-slate-600 max-w-2xl mx-auto">Control who can see your achievements, projects, and career progress on PlacePro. You can change this later in settings.</p>
+                <h1 className="text-4xl font-extrabold tracking-tight mb-4">
+                  Choose Your Profile Visibility
+                </h1>
+                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                  Control who can see your achievements, projects, and career progress on PlacePro.
+                  You can change this later in settings.
+                </p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
@@ -287,25 +386,33 @@ function Onboarding() {
                 <button
                   onClick={() => setVisibility("public")}
                   className={`relative flex flex-col items-center text-center p-8 rounded-3xl border-2 transition-all bg-white ${
-                    visibility === "public" ? "border-[#3424C2] shadow-[0_8px_30px_rgba(52,36,194,0.12)]" : "border-slate-100 hover:border-slate-200"
+                    visibility === "public"
+                      ? "border-[#3424C2] shadow-[0_8px_30px_rgba(52,36,194,0.12)]"
+                      : "border-slate-100 hover:border-slate-200"
                   }`}
                 >
-                  <div className={`absolute top-6 right-6 h-6 w-6 rounded-full border-2 flex items-center justify-center ${
-                    visibility === "public" ? "border-[#3424C2]" : "border-slate-300"
-                  }`}>
-                    {visibility === "public" && <div className="h-3 w-3 bg-[#3424C2] rounded-full" />}
+                  <div
+                    className={`absolute top-6 right-6 h-6 w-6 rounded-full border-2 flex items-center justify-center ${
+                      visibility === "public" ? "border-[#3424C2]" : "border-slate-300"
+                    }`}
+                  >
+                    {visibility === "public" && (
+                      <div className="h-3 w-3 bg-[#3424C2] rounded-full" />
+                    )}
                   </div>
 
                   <div className="h-32 w-32 rounded-full bg-blue-50 flex items-center justify-center mb-6">
                     <Globe className="h-12 w-12 text-[#3424C2]" />
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold mb-3">Public Profile</h3>
                   <div className="bg-orange-100 text-orange-800 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4">
                     Recommended
                   </div>
                   <p className="text-slate-500 leading-relaxed px-4">
-                    Allow recruiters, peers, and mentors to discover your profile, view your projects, and see your leaderboard rankings. Best for maximum career opportunities.
+                    Allow recruiters, peers, and mentors to discover your profile, view your
+                    projects, and see your leaderboard rankings. Best for maximum career
+                    opportunities.
                   </p>
                 </button>
 
@@ -313,42 +420,50 @@ function Onboarding() {
                 <button
                   onClick={() => setVisibility("private")}
                   className={`relative flex flex-col items-center text-center p-8 rounded-3xl border-2 transition-all bg-white ${
-                    visibility === "private" ? "border-[#3424C2] shadow-[0_8px_30px_rgba(52,36,194,0.12)]" : "border-slate-100 hover:border-slate-200"
+                    visibility === "private"
+                      ? "border-[#3424C2] shadow-[0_8px_30px_rgba(52,36,194,0.12)]"
+                      : "border-slate-100 hover:border-slate-200"
                   }`}
                 >
-                  <div className={`absolute top-6 right-6 h-6 w-6 rounded-full border-2 flex items-center justify-center ${
-                    visibility === "private" ? "border-[#3424C2]" : "border-slate-300"
-                  }`}>
-                    {visibility === "private" && <div className="h-3 w-3 bg-[#3424C2] rounded-full" />}
+                  <div
+                    className={`absolute top-6 right-6 h-6 w-6 rounded-full border-2 flex items-center justify-center ${
+                      visibility === "private" ? "border-[#3424C2]" : "border-slate-300"
+                    }`}
+                  >
+                    {visibility === "private" && (
+                      <div className="h-3 w-3 bg-[#3424C2] rounded-full" />
+                    )}
                   </div>
 
                   <div className="h-32 w-32 rounded-full bg-slate-100 flex items-center justify-center mb-6">
                     <Lock className="h-12 w-12 text-slate-400" />
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold mb-3">Private Profile</h3>
                   <div className="bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4">
                     Restricted
                   </div>
                   <p className="text-slate-500 leading-relaxed px-4">
-                    Your profile is hidden from public search and leaderboards. Only users you explicitly connect with or share your direct link with can view your details.
+                    Your profile is hidden from public search and leaderboards. Only users you
+                    explicitly connect with or share your direct link with can view your details.
                   </p>
                 </button>
               </div>
             </div>
           )}
-
         </div>
 
         {/* Footer Navigation */}
-        <div className={`mt-12 flex items-center max-w-2xl mx-auto pt-8 border-t border-slate-200 ${step === 4 ? "max-w-3xl justify-between" : "justify-between"}`}>
+        <div
+          className={`mt-12 flex items-center max-w-2xl mx-auto pt-8 border-t border-slate-200 ${step === 4 ? "max-w-3xl justify-between" : "justify-between"}`}
+        >
           {step === 1 ? (
             <button className="text-slate-500 font-medium text-sm hover:text-slate-800 transition-colors">
               Skip for now
             </button>
           ) : (
             <button
-              onClick={() => setStep(s => s - 1)}
+              onClick={() => setStep((s) => s - 1)}
               className="flex items-center gap-2 text-slate-600 font-medium hover:text-slate-900 transition-colors"
             >
               <ArrowLeft className="h-4 w-4" /> Back
@@ -357,9 +472,9 @@ function Onboarding() {
 
           {step < 4 ? (
             <button
-              onClick={() => setStep(s => s + 1)}
+              onClick={() => setStep((s) => s + 1)}
               disabled={
-                (step === 1 && selectedTopics.size === 0) || 
+                (step === 1 && selectedTopics.size === 0) ||
                 (step === 2 && selectedRoles.size === 0) ||
                 (step === 3 && usernameStatus !== "available")
               }

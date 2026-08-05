@@ -35,7 +35,9 @@ export function SuggestionCard({ user }: { user: Suggestion }) {
         <div className="flex flex-col min-w-0">
           <div className="flex items-baseline gap-1 truncate">
             <span className="text-display text-sm font-semibold truncate">{user.name}</span>
-            {user.username && <span className="text-[10px] text-muted-foreground truncate">@{user.username}</span>}
+            {user.username && (
+              <span className="text-[10px] text-muted-foreground truncate">@{user.username}</span>
+            )}
           </div>
           <span className="text-[10px] text-muted-foreground truncate">
             {user.headline || (user.role === "teacher" ? "Teacher" : "Student")}

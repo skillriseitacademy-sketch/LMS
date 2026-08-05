@@ -1,5 +1,5 @@
 import { Flame, Sparkles } from "lucide-react";
-import { useGamification } from "@/lib/use-gamification";
+import { useGamification } from "@/hooks/useGamification";
 
 export function StreakCalendar() {
   const { streak, streakDates, quizzesCompleted, lessonsCompleted } = useGamification();
@@ -15,9 +15,9 @@ export function StreakCalendar() {
   // Extract active days in current month from streakDates
   const activeDays = new Set(
     streakDates
-      .map(d => new Date(d))
-      .filter(d => d.getMonth() === currentMonth && d.getFullYear() === currentYear)
-      .map(d => d.getDate())
+      .map((d) => new Date(d))
+      .filter((d) => d.getMonth() === currentMonth && d.getFullYear() === currentYear)
+      .map((d) => d.getDate()),
   );
 
   return (
@@ -48,7 +48,8 @@ export function StreakCalendar() {
             <Flame className="h-3 w-3 text-streak" fill="currentColor" /> Longest streak
           </div>
           <div className="mt-1 text-display text-lg font-bold">
-            {Math.max(streak, 0)} <span className="text-xs font-medium text-muted-foreground">days</span>
+            {Math.max(streak, 0)}{" "}
+            <span className="text-xs font-medium text-muted-foreground">days</span>
           </div>
         </div>
       </div>
@@ -89,7 +90,9 @@ export function StreakCalendar() {
           ["Minutes", quizzesCompleted * 10 + lessonsCompleted * 15],
         ].map(([k, v]) => (
           <div key={k as string} className="p-2 text-center">
-            <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{k as string}</div>
+            <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+              {k as string}
+            </div>
             <div className="text-display text-sm font-bold">{v as number}</div>
           </div>
         ))}

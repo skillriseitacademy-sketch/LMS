@@ -1,24 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createClient } from "@supabase/supabase-js";
+import { requireAuth, serviceClient, handleError } from "@/lib/api-utils";
 
-export const Route = createFileRoute("/api/feed")({
+export const Route = createFileRoute("/api/feed" as any)({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const authHeader = request.headers.get("Authorization");
-        const token = authHeader?.replace("Bearer ", "");
-        if (!token) return new Response("Unauthorized", { status: 401 });
-
-        const serviceClient = createClient(
-          process.env.VITE_SUPABASE_URL!,
-          process.env.SUPABASE_SERVICE_ROLE_KEY!,
-        );
-
-        const {
-          data: { user },
-          error: authError,
-        } = await serviceClient.auth.getUser(token);
-        if (authError || !user) return new Response("Unauthorized", { status: 401 });
+        try {
+          const user = await requireAuth(request);
 
         const url = new URL(request.url);
         const tab = url.searchParams.get("tab") || "recents";
@@ -103,6 +91,9 @@ export const Route = createFileRoute("/api/feed")({
           }),
           { headers: { "Content-Type": "application/json" } },
         );
+        } catch (error) {
+          return handleError(error);
+        }
       },
     },
   },

@@ -9,10 +9,13 @@ export const Route = createFileRoute("/api/users/check-username")({
         const username = url.searchParams.get("u")?.toLowerCase();
 
         if (!username || !/^[a-z0-9_]{3,20}$/.test(username)) {
-          return new Response(JSON.stringify({ available: false, error: "Invalid username format" }), {
-            status: 400,
-            headers: { "Content-Type": "application/json" },
-          });
+          return new Response(
+            JSON.stringify({ available: false, error: "Invalid username format" }),
+            {
+              status: 400,
+              headers: { "Content-Type": "application/json" },
+            },
+          );
         }
 
         const serviceClient = createClient(

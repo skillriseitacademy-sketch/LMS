@@ -34,7 +34,7 @@ function AdminRecordedSessions() {
   const [classes, setClasses] = useState<LiveClass[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
-  
+
   const [recordingUrl, setRecordingUrl] = useState("");
   const [status, setStatus] = useState("");
 
@@ -105,30 +105,44 @@ function AdminRecordedSessions() {
           ) : (
             <div className="divide-y divide-border">
               {classes.map((c) => (
-                <div key={c.id} className="p-5 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+                <div
+                  key={c.id}
+                  className="p-5 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between"
+                >
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center gap-2">
                       <h3 className="text-display font-bold text-base leading-tight">{c.title}</h3>
-                      <span className={`inline-flex px-2 py-0.5 rounded text-[10px] uppercase font-bold ${c.status === 'completed' ? 'bg-brand/10 text-brand' : 'bg-muted text-muted-foreground'}`}>
+                      <span
+                        className={`inline-flex px-2 py-0.5 rounded text-[10px] uppercase font-bold ${c.status === "completed" ? "bg-brand/10 text-brand" : "bg-muted text-muted-foreground"}`}
+                      >
                         {c.status}
                       </span>
                     </div>
-                    <p className="text-xs font-medium text-muted-foreground">{c.topic?.title} • {c.teacher?.name}</p>
+                    <p className="text-xs font-medium text-muted-foreground">
+                      {c.topic?.title} • {c.teacher?.name}
+                    </p>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground mt-2">
                       <Calendar className="h-3.5 w-3.5" />
                       <span>{new Date(c.start_time || new Date()).toLocaleDateString()}</span>
                     </div>
-                    
+
                     {!editingId || editingId !== c.id ? (
                       c.recording_storage_path ? (
                         <div className="mt-2 flex items-center gap-1 text-xs text-brand truncate max-w-[300px] md:max-w-[400px]">
                           <Video className="h-3.5 w-3.5 shrink-0" />
-                          <a href={c.recording_storage_path} target="_blank" rel="noreferrer" className="hover:underline truncate">
+                          <a
+                            href={c.recording_storage_path}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="hover:underline truncate"
+                          >
                             {c.recording_storage_path}
                           </a>
                         </div>
                       ) : (
-                        <div className="mt-2 text-xs italic text-muted-foreground">No recording added.</div>
+                        <div className="mt-2 text-xs italic text-muted-foreground">
+                          No recording added.
+                        </div>
                       )
                     ) : null}
                   </div>
@@ -136,7 +150,9 @@ function AdminRecordedSessions() {
                   {editingId === c.id ? (
                     <div className="flex-1 w-full md:w-auto bg-muted/50 p-3 rounded-2xl border border-border space-y-3">
                       <div className="space-y-1">
-                        <label className="text-[10px] font-bold uppercase text-muted-foreground">Status</label>
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground">
+                          Status
+                        </label>
                         <select
                           value={status}
                           onChange={(e) => setStatus(e.target.value)}
@@ -149,7 +165,9 @@ function AdminRecordedSessions() {
                         </select>
                       </div>
                       <div className="space-y-1">
-                        <label className="text-[10px] font-bold uppercase text-muted-foreground">Recording URL (YouTube/Drive)</label>
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground">
+                          Recording URL (YouTube/Drive)
+                        </label>
                         <input
                           type="url"
                           value={recordingUrl}

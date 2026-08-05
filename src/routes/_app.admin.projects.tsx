@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FolderGit2, Plus, ExternalLink, Github } from "lucide-react";
 import { useState } from "react";
 import { TopBar } from "@/components/top-bar";
-import { useProjects } from "@/lib/auth-store";
+import { useProjects } from "@/hooks/useProjects";
 
 export const Route = createFileRoute("/_app/admin/projects")({
   head: () => ({ meta: [{ title: "Projects — PlacePro LMS" }] }),

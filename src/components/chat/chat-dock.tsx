@@ -19,14 +19,7 @@
  *  - Typing indicators use Supabase Realtime Broadcast, not DB (debounced 1.5 s).
  */
 
-import {
-  useState,
-  useRef,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  Fragment,
-} from "react";
+import { useState, useRef, useCallback, useEffect, useLayoutEffect, Fragment } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import {
   MessageSquare,
@@ -50,7 +43,7 @@ import {
   useReadReceipt,
   useEnsureBotThread,
 } from "@/hooks/useChat";
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 import type { ConversationSummary, MessageWithSender } from "@/lib/supabase";
 import { supabase } from "@/lib/supabase";
 
@@ -67,7 +60,12 @@ function formatTime(dateStr: string) {
 }
 
 function getInitials(name: string) {
-  return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 }
 
 function getConvName(conv: ConversationSummary, currentUserId: string): string {
@@ -116,7 +114,10 @@ function ConversationListPanel({
     >
       <div className="flex items-center justify-between px-4 py-3 border-b border-border">
         <h3 className="font-display font-bold text-sm text-foreground">Messaging</h3>
-        <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
+        <button
+          onClick={onClose}
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
           <X className="h-4 w-4" />
         </button>
       </div>
@@ -147,13 +148,18 @@ function ConversationListPanel({
           return (
             <button
               key={conv.id}
-              onClick={() => { onOpen(conv.id); onClose(); }}
+              onClick={() => {
+                onOpen(conv.id);
+                onClose();
+              }}
               className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-muted/60 transition-colors text-left"
             >
               <div className="relative shrink-0">
                 <Avatar className="h-9 w-9">
                   {avatar ? <img src={avatar} alt={name} className="object-cover" /> : null}
-                  <AvatarFallback className={`text-xs font-bold ${isBot ? "bg-brand text-white" : "bg-brand/20 text-brand-dark"}`}>
+                  <AvatarFallback
+                    className={`text-xs font-bold ${isBot ? "bg-brand text-white" : "bg-brand/20 text-brand-dark"}`}
+                  >
                     {isBot ? <Bot className="h-4 w-4" /> : getInitials(name)}
                   </AvatarFallback>
                 </Avatar>
@@ -163,7 +169,9 @@ function ConversationListPanel({
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground truncate">{name}</p>
-                <p className="text-xs text-muted-foreground truncate">{lastMsg || "No messages yet"}</p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {lastMsg || "No messages yet"}
+                </p>
               </div>
             </button>
           );
@@ -210,12 +218,12 @@ function MessageBubble({
   if (isOwn) {
     return (
       <div className="flex justify-end">
-        <div className={`max-w-[80%] rounded-2xl rounded-tr-sm px-3 py-2 text-sm leading-relaxed ${msg._optimistic ? "bg-brand/60 text-white/80" : "bg-brand text-white"}`}>
+        <div
+          className={`max-w-[80%] rounded-2xl rounded-tr-sm px-3 py-2 text-sm leading-relaxed ${msg._optimistic ? "bg-brand/60 text-white/80" : "bg-brand text-white"}`}
+        >
           {msg.body}
           {/* Story reply reference badge */}
-          {msg.story_id && (
-            <p className="text-white/60 text-[10px] mt-0.5">↩ Story reply</p>
-          )}
+          {msg.story_id && <p className="text-white/60 text-[10px] mt-0.5">↩ Story reply</p>}
         </div>
       </div>
     );
@@ -224,8 +232,12 @@ function MessageBubble({
   return (
     <div className="flex items-end gap-1.5 max-w-[85%]">
       <Avatar className="h-5 w-5 shrink-0">
-        {msg.sender?.avatar_url ? <img src={msg.sender.avatar_url} alt="" className="object-cover" /> : null}
-        <AvatarFallback className="text-[8px] bg-muted">{getInitials(msg.sender?.name ?? "?")}</AvatarFallback>
+        {msg.sender?.avatar_url ? (
+          <img src={msg.sender.avatar_url} alt="" className="object-cover" />
+        ) : null}
+        <AvatarFallback className="text-[8px] bg-muted">
+          {getInitials(msg.sender?.name ?? "?")}
+        </AvatarFallback>
       </Avatar>
       <div className="rounded-2xl rounded-bl-sm bg-muted px-3 py-2 text-sm text-foreground leading-relaxed">
         {msg.body}
@@ -283,7 +295,9 @@ function ChatWindow({
     api: "/api/chat/bot",
     body: { conversation_id: conversationId },
     headers: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       return { Authorization: `Bearer ${session?.access_token ?? ""}` };
     },
   });
@@ -341,7 +355,7 @@ function ChatWindow({
         handleSend();
       }
     },
-    [handleSend]
+    [handleSend],
   );
 
   const handleInputChange = useCallback(
@@ -352,7 +366,7 @@ function ChatWindow({
         sendTyping(currentUserId, currentUserName);
       }
     },
-    [isBot, setAiInput, sendTyping, currentUserId, currentUserName]
+    [isBot, setAiInput, sendTyping, currentUserId, currentUserName],
   );
 
   return (
@@ -373,7 +387,9 @@ function ChatWindow({
           <div className="relative">
             <Avatar className="h-7 w-7">
               {convAvatar ? <img src={convAvatar} alt={convName} className="object-cover" /> : null}
-              <AvatarFallback className={`text-xs font-bold ${isBot ? "bg-brand text-white" : "bg-brand/20 text-brand-dark"}`}>
+              <AvatarFallback
+                className={`text-xs font-bold ${isBot ? "bg-brand text-white" : "bg-brand/20 text-brand-dark"}`}
+              >
                 {isBot ? <Bot className="h-3.5 w-3.5" /> : getInitials(convName)}
               </AvatarFallback>
             </Avatar>
@@ -392,7 +408,11 @@ function ChatWindow({
             onClick={() => setCollapsed((c) => !c)}
             className="p-1 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
-            {collapsed ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+            {collapsed ? (
+              <ChevronUp className="h-3.5 w-3.5" />
+            ) : (
+              <ChevronDown className="h-3.5 w-3.5" />
+            )}
           </button>
           <button
             onClick={onClose}
@@ -407,15 +427,15 @@ function ChatWindow({
       {!collapsed && (
         <>
           {/* Message list */}
-          <div
-            ref={parentRef}
-            className="flex-1 overflow-y-auto px-3 py-2 space-y-2"
-          >
+          <div ref={parentRef} className="flex-1 overflow-y-auto px-3 py-2 space-y-2">
             {isBot ? (
               // AI SDK messages (streaming)
               <div className="space-y-2">
                 {aiMessages.map((m) => (
-                  <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div
+                    key={m.id}
+                    className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+                  >
                     {m.role === "assistant" ? (
                       <div className="flex items-start gap-2 max-w-[85%]">
                         <div className="h-6 w-6 rounded-full bg-brand flex items-center justify-center shrink-0 mt-0.5">
@@ -423,14 +443,14 @@ function ChatWindow({
                         </div>
                         <div className="rounded-2xl rounded-tl-sm bg-muted px-3 py-2 text-sm text-foreground leading-relaxed whitespace-pre-wrap">
                           {m.parts?.map((p, i) =>
-                            p.type === "text" ? <Fragment key={i}>{p.text}</Fragment> : null
+                            p.type === "text" ? <Fragment key={i}>{p.text}</Fragment> : null,
                           )}
                         </div>
                       </div>
                     ) : (
                       <div className="max-w-[80%] rounded-2xl rounded-tr-sm bg-brand px-3 py-2 text-sm text-white leading-relaxed">
                         {m.parts?.map((p, i) =>
-                          p.type === "text" ? <Fragment key={i}>{p.text}</Fragment> : null
+                          p.type === "text" ? <Fragment key={i}>{p.text}</Fragment> : null,
                         )}
                       </div>
                     )}
@@ -453,9 +473,7 @@ function ChatWindow({
               </div>
             ) : (
               // Virtualized regular messages
-              <div
-                style={{ height: virtualizer.getTotalSize(), position: "relative" }}
-              >
+              <div style={{ height: virtualizer.getTotalSize(), position: "relative" }}>
                 {virtualizer.getVirtualItems().map((virtualRow) => {
                   const msg = flatMessages[virtualRow.index];
                   return (
@@ -471,11 +489,7 @@ function ChatWindow({
                         paddingBottom: 8,
                       }}
                     >
-                      <MessageBubble
-                        msg={msg}
-                        currentUserId={currentUserId}
-                        isBot={isBot}
-                      />
+                      <MessageBubble msg={msg} currentUserId={currentUserId} isBot={isBot} />
                     </div>
                   );
                 })}
@@ -505,7 +519,7 @@ function ChatWindow({
             />
             <button
               onClick={handleSend}
-              disabled={isBot ? (aiLoading || !aiInput.trim()) : !inputText.trim()}
+              disabled={isBot ? aiLoading || !aiInput.trim() : !inputText.trim()}
               className="p-2 rounded-lg bg-brand text-white hover:bg-brand-dark transition-colors disabled:opacity-40 shrink-0"
             >
               <Send className="h-3.5 w-3.5" />
@@ -554,9 +568,7 @@ export function ChatDock() {
   const currentUserName = session.name;
 
   // Dock bubbles: up to 5 most recent non-open conversations
-  const dockBubbles = conversations
-    .filter((c) => !openWindows.includes(c.id))
-    .slice(0, 5);
+  const dockBubbles = conversations.filter((c) => !openWindows.includes(c.id)).slice(0, 5);
 
   return (
     <div className="fixed bottom-0 right-4 z-50 flex flex-col items-end gap-0">
@@ -597,14 +609,19 @@ export function ChatDock() {
           <button
             onClick={() => setListOpen((o) => !o)}
             className={`relative flex items-center justify-center h-9 w-9 rounded-full transition-all ${
-              listOpen ? "bg-brand text-white" : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+              listOpen
+                ? "bg-brand text-white"
+                : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
             }`}
           >
             <MessageSquare className="h-4 w-4" />
             {/* Total unread badge */}
             {conversations.reduce((acc, c) => acc + (c.unread_count ?? 0), 0) > 0 && (
               <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-brand border-2 border-card text-white text-[8px] font-bold flex items-center justify-center">
-                {Math.min(conversations.reduce((a, c) => a + (c.unread_count ?? 0), 0), 9)}
+                {Math.min(
+                  conversations.reduce((a, c) => a + (c.unread_count ?? 0), 0),
+                  9,
+                )}
               </span>
             )}
           </button>
@@ -624,7 +641,9 @@ export function ChatDock() {
               >
                 <Avatar className="h-8 w-8">
                   {avatar ? <img src={avatar} alt={name} className="object-cover" /> : null}
-                  <AvatarFallback className={`text-[10px] font-bold ${isBot ? "bg-brand text-white" : "bg-brand/20 text-brand-dark"}`}>
+                  <AvatarFallback
+                    className={`text-[10px] font-bold ${isBot ? "bg-brand text-white" : "bg-brand/20 text-brand-dark"}`}
+                  >
                     {isBot ? <Bot className="h-3.5 w-3.5" /> : getInitials(name)}
                   </AvatarFallback>
                 </Avatar>

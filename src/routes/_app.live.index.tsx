@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { TopBar } from "@/components/top-bar";
 import { Video, Calendar, Clock, Plus, X } from "lucide-react";
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_app/live/")({
   head: () => ({ meta: [{ title: "Live Classes — PlacePro LMS" }] }),

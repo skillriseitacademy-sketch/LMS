@@ -18,13 +18,12 @@ function AdminInterviews() {
       const [sessionsRes, flagsRes] = await Promise.all([
         supabase
           .from("interview_sessions")
-          .select("id, started_at, user_id, profiles!interview_sessions_user_id_fkey(name, avatar_url), topics(title)")
+          .select(
+            "id, started_at, user_id, profiles!interview_sessions_user_id_fkey(name, avatar_url), topics(title)",
+          )
           .eq("status", "in_progress")
           .order("started_at", { ascending: false }),
-        supabase
-          .from("proctor_flags")
-          .select("*")
-          .order("created_at", { ascending: false }),
+        supabase.from("proctor_flags").select("*").order("created_at", { ascending: false }),
       ]);
 
       if (sessionsRes.data) {
@@ -39,7 +38,7 @@ function AdminInterviews() {
             topic: {
               title: s.topics?.title,
             },
-          }))
+          })),
         );
       }
       if (flagsRes.data) {
@@ -60,7 +59,7 @@ function AdminInterviews() {
           table: "interview_sessions",
           filter: "status=eq.in_progress",
         },
-        () => fetchInitialData() // Simplest way to sync
+        () => fetchInitialData(), // Simplest way to sync
       )
       .on(
         "postgres_changes",
@@ -71,7 +70,7 @@ function AdminInterviews() {
         },
         (payload) => {
           setFlags((prev) => [payload.new, ...prev]);
-        }
+        },
       )
       .subscribe();
 

@@ -73,10 +73,10 @@ function Admins() {
       setInviteName("");
       setInviteEmail("");
       setInvitePassword("");
-      
+
       // Refresh list
       fetchAdmins();
-      
+
       setTimeout(() => {
         setInviteOpen(false);
         setInviteSuccess("");
@@ -88,7 +88,11 @@ function Admins() {
     }
   };
 
-  const filtered = admins.filter((u) => u.name.toLowerCase().includes(query.toLowerCase()) || (u.email && u.email.toLowerCase().includes(query.toLowerCase())));
+  const filtered = admins.filter(
+    (u) =>
+      u.name.toLowerCase().includes(query.toLowerCase()) ||
+      (u.email && u.email.toLowerCase().includes(query.toLowerCase())),
+  );
 
   return (
     <>
@@ -101,7 +105,7 @@ function Admins() {
               Manage users with full administrative access.
             </p>
           </div>
-          
+
           <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
             <DialogTrigger asChild>
               <button className="inline-flex items-center gap-1 rounded-full bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground hover:opacity-90">
@@ -207,34 +211,33 @@ function Admins() {
                   </td>
                 </tr>
               )}
-              {!loading && filtered.map((u) => (
-                <tr key={u.id} className="border-t border-border">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
-                        {u.avatar_url ? (
-                          <img
-                            src={u.avatar_url}
-                            alt={u.name}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <AvatarFallback className="bg-brand-light text-brand-dark text-xs font-semibold">
-                            {u.name.substring(0, 2).toUpperCase()}
-                          </AvatarFallback>
-                        )}
-                      </Avatar>
-                      <span className="font-medium">{u.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    {u.email || "—"}
-                  </td>
-                  <td className="px-4 py-3 text-right text-muted-foreground">
-                    {new Date(u.created_at).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
+              {!loading &&
+                filtered.map((u) => (
+                  <tr key={u.id} className="border-t border-border">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          {u.avatar_url ? (
+                            <img
+                              src={u.avatar_url}
+                              alt={u.name}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <AvatarFallback className="bg-brand-light text-brand-dark text-xs font-semibold">
+                              {u.name.substring(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          )}
+                        </Avatar>
+                        <span className="font-medium">{u.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">{u.email || "—"}</td>
+                    <td className="px-4 py-3 text-right text-muted-foreground">
+                      {new Date(u.created_at).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
               {!loading && filtered.length === 0 && (
                 <tr>
                   <td colSpan={3} className="px-4 py-10 text-center text-sm text-muted-foreground">

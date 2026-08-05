@@ -34,14 +34,21 @@ export function ChatPanel({ messages, onSendMessage, myPeerId }: ChatPanelProps)
           messages.map((msg) => {
             const isMe = msg.senderId === myPeerId;
             return (
-              <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+              <div key={msg.id} className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
                 <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-xs font-medium text-white/70">{isMe ? 'You' : msg.senderName}</span>
+                  <span className="text-xs font-medium text-white/70">
+                    {isMe ? "You" : msg.senderName}
+                  </span>
                   <span className="text-[10px] text-white/40">
-                    {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(msg.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </span>
                 </div>
-                <div className={`px-4 py-2 rounded-2xl text-sm max-w-[85%] ${isMe ? 'bg-brand text-brand-foreground rounded-tr-sm' : 'bg-white/10 text-white rounded-tl-sm'}`}>
+                <div
+                  className={`px-4 py-2 rounded-2xl text-sm max-w-[85%] ${isMe ? "bg-brand text-brand-foreground rounded-tr-sm" : "bg-white/10 text-white rounded-tl-sm"}`}
+                >
                   {msg.text}
                 </div>
               </div>

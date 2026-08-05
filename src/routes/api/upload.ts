@@ -35,11 +35,16 @@ function buildKey(context: UploadContext, userId: string, filename: string): str
   const id = nanoid(12);
 
   switch (context) {
-    case "post":      return `posts/${userId}/${id}.${ext}`;
-    case "story":     return `stories/${userId}/${id}.${ext}`;
-    case "avatar":    return `avatars/${userId}/${id}.${ext}`;
-    case "interview": return `interviews/${userId}/${id}.${ext}`;
-    case "course":    return `courses/${userId}/${id}.${ext}`;
+    case "post":
+      return `posts/${userId}/${id}.${ext}`;
+    case "story":
+      return `stories/${userId}/${id}.${ext}`;
+    case "avatar":
+      return `avatars/${userId}/${id}.${ext}`;
+    case "interview":
+      return `interviews/${userId}/${id}.${ext}`;
+    case "course":
+      return `courses/${userId}/${id}.${ext}`;
   }
 }
 
@@ -84,7 +89,7 @@ export const Route = createFileRoute("/api/upload")({
         if (!allowedTypes.includes(body.content_type)) {
           return new Response(
             `content_type "${body.content_type}" is not allowed for context "${context}". ` +
-            `Allowed: ${allowedTypes.join(", ")}`,
+              `Allowed: ${allowedTypes.join(", ")}`,
             { status: 400 },
           );
         }

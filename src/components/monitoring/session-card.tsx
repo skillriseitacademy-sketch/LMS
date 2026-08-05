@@ -64,13 +64,16 @@ export function SessionCard({ session, flags }: SessionCardProps) {
             </div>
           </div>
         </div>
-        
+
         {flags.length > 0 ? (
           <Badge variant="destructive" className="animate-pulse">
             {flags.length} Flags
           </Badge>
         ) : (
-          <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
+          <Badge
+            variant="outline"
+            className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+          >
             Clear
           </Badge>
         )}
@@ -85,16 +88,24 @@ export function SessionCard({ session, flags }: SessionCardProps) {
             </div>
             <CollapsibleTrigger asChild>
               <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive/20">
-                <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                />
               </Button>
             </CollapsibleTrigger>
           </div>
-          
+
           <CollapsibleContent className="mt-2 space-y-2">
             {flags.map((flag) => (
-              <div key={flag.id} className="text-xs flex items-start gap-2 p-2 rounded-md bg-muted/50">
+              <div
+                key={flag.id}
+                className="text-xs flex items-start gap-2 p-2 rounded-md bg-muted/50"
+              >
                 <span className="text-muted-foreground whitespace-nowrap">
-                  {new Date(flag.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  {new Date(flag.created_at).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </span>
                 <span>{flag.description}</span>
               </div>

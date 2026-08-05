@@ -1,0 +1,60 @@
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+
+export interface ProjectShowcase {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  githubUrl?: string;
+  liveUrl?: string;
+  authorName: string;
+}
+
+export function useProjects() {
+  const [projects, setProjects] = useState<ProjectShowcase[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchProjects = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) {
+      setProjects(
+        data.map((p: any) => ({
+          id: p.id,
+          title: p.title,
+          description: p.description,
+          imageUrl: p.image_url,
+          githubUrl: p.github_url || undefined,
+          liveUrl: p.live_url || undefined,
+          authorName: p.author_name,
+        })),
+      );
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchProjects();
+    const handleUpdate = () => fetchProjects();
+    window.addEventListener("projects-changed", handleUpdate);
+    return () => window.removeEventListener("projects-changed", handleUpdate);
+  }, []);
+
+  const saveProject = async (project: Omit<ProjectShowcase, "id">) => {
+    await supabase.from("projects").insert({
+      title: project.title,
+      description: project.description,
+      image_url: project.imageUrl,
+      github_url: project.githubUrl || null,
+      live_url: project.liveUrl || null,
+      author_name: project.authorName,
+    });
+    window.dispatchEvent(new Event("projects-changed"));
+  };
+
+  return { projects, loading, saveProject };
+}

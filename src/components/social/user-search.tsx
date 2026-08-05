@@ -45,7 +45,9 @@ export function UserSearch() {
 
     const timeout = setTimeout(async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         const res = await fetch(`/api/users/search?q=${encodeURIComponent(query)}`, {
           headers: {
             Authorization: `Bearer ${session?.access_token}`,
@@ -88,12 +90,13 @@ export function UserSearch() {
         <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-2xl shadow-xl overflow-hidden z-50">
           <div className="max-h-80 overflow-y-auto">
             {results.length === 0 && !loading ? (
-              <div className="p-4 text-center text-sm text-muted-foreground">
-                No users found.
-              </div>
+              <div className="p-4 text-center text-sm text-muted-foreground">No users found.</div>
             ) : (
               results.map((user) => (
-                <div key={user.id} className="flex items-center justify-between gap-3 p-3 hover:bg-muted/50 border-b border-border last:border-0 transition-colors">
+                <div
+                  key={user.id}
+                  className="flex items-center justify-between gap-3 p-3 hover:bg-muted/50 border-b border-border last:border-0 transition-colors"
+                >
                   <Link
                     to="/profile/$username"
                     params={{ username: user.username || "unknown" }}
@@ -102,13 +105,22 @@ export function UserSearch() {
                   >
                     <Avatar className="h-9 w-9 shrink-0 border border-border">
                       <AvatarFallback className="bg-brand/10 text-brand-dark text-xs font-bold">
-                        {user.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)}
+                        {user.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase()
+                          .slice(0, 2)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col min-w-0">
                       <div className="flex items-baseline gap-1 truncate">
                         <span className="text-sm font-semibold truncate">{user.name}</span>
-                        {user.username && <span className="text-[10px] text-muted-foreground truncate">@{user.username}</span>}
+                        {user.username && (
+                          <span className="text-[10px] text-muted-foreground truncate">
+                            @{user.username}
+                          </span>
+                        )}
                       </div>
                       <span className="text-[10px] text-muted-foreground truncate">
                         {user.headline || (user.role === "teacher" ? "Teacher" : "Student")}
@@ -117,7 +129,9 @@ export function UserSearch() {
                   </Link>
                   <ConnectionButton
                     targetId={user.id}
-                    initialStatus={user.connectionStatus === "none" ? null : user.connectionStatus as any}
+                    initialStatus={
+                      user.connectionStatus === "none" ? null : (user.connectionStatus as any)
+                    }
                     targetVisibility={user.visibility}
                     size="sm"
                   />

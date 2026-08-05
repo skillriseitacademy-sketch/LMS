@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 import { UserPlus, UserCheck, Clock } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 

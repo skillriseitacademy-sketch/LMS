@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_app/dashboard")({
   component: DashboardPage,
@@ -15,15 +15,24 @@ function DashboardPage() {
   useEffect(() => {
     if (!session?.id) return;
     const load = async () => {
-      const { data: p } = await supabase.from('profiles').select('*, xp_transactions(amount)').eq('id', session.id).single();
+      const { data: p } = await supabase
+        .from("profiles")
+        .select("*, xp_transactions(amount)")
+        .eq("id", session.id)
+        .single();
       if (p) {
-        p.xp = p.xp_transactions ? p.xp_transactions.reduce((acc: number, t: any) => acc + t.amount, 0) : 0;
+        p.xp = p.xp_transactions
+          ? p.xp_transactions.reduce((acc: number, t: any) => acc + t.amount, 0)
+          : 0;
         setProfile(p);
       }
-      
-      const { data: topics } = await supabase.from('student_topics').select('topics(*)').eq('user_id', session.id);
+
+      const { data: topics } = await supabase
+        .from("student_topics")
+        .select("topics(*)")
+        .eq("user_id", session.id);
       if (topics) {
-        setEnrolledTopics(topics.map(t => t.topics).filter(Boolean));
+        setEnrolledTopics(topics.map((t) => t.topics).filter(Boolean));
       }
     };
     load();
@@ -33,7 +42,7 @@ function DashboardPage() {
   const level = Math.floor(currentXp / 1000) + 1;
   const nextLevelXp = level * 1000;
   const progressPercent = ((currentXp % 1000) / 1000) * 100;
-  const firstName = profile?.name ? profile.name.split(' ')[0] : 'Student';
+  const firstName = profile?.name ? profile.name.split(" ")[0] : "Student";
 
   return (
     <>
@@ -41,30 +50,65 @@ function DashboardPage() {
         {/* Top Section: Greeting & Gamification */}
         <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-8">
           <div className="flex-1">
-            <h1 className="text-[32px] font-bold leading-[1.2] tracking-[-0.01em] text-on-surface mb-2" style={{ fontFamily: "Manrope" }}>Welcome back, {firstName}! 👋</h1>
-            <p className="text-lg leading-[1.6] text-on-surface-variant" style={{ fontFamily: "Inter" }}>Let's get you ready for your next big interview.</p>
+            <h1
+              className="text-[32px] font-bold leading-[1.2] tracking-[-0.01em] text-on-surface mb-2"
+              style={{ fontFamily: "Manrope" }}
+            >
+              Welcome back, {firstName}! 👋
+            </h1>
+            <p
+              className="text-lg leading-[1.6] text-on-surface-variant"
+              style={{ fontFamily: "Inter" }}
+            >
+              Let's get you ready for your next big interview.
+            </p>
           </div>
           {/* Gamification Widget */}
           <div className="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant flex items-center gap-8 w-full lg:w-auto shrink-0">
             {/* XP */}
             <div className="flex-1 min-w-[200px]">
               <div className="flex justify-between items-end mb-1">
-                <span className="text-xs tracking-[0.05em] font-medium text-secondary font-bold uppercase" style={{ fontFamily: "JetBrains Mono" }}>Level {level}</span>
-                <span className="text-xs tracking-[0.05em] font-medium text-on-surface-variant" style={{ fontFamily: "JetBrains Mono" }}>{currentXp} / {nextLevelXp} XP</span>
+                <span
+                  className="text-xs tracking-[0.05em] font-medium text-secondary font-bold uppercase"
+                  style={{ fontFamily: "JetBrains Mono" }}
+                >
+                  Level {level}
+                </span>
+                <span
+                  className="text-xs tracking-[0.05em] font-medium text-on-surface-variant"
+                  style={{ fontFamily: "JetBrains Mono" }}
+                >
+                  {currentXp} / {nextLevelXp} XP
+                </span>
               </div>
               <div className="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
-                <div className="h-full bg-secondary-container rounded-full" style={{ width: `${progressPercent}%` }}></div>
+                <div
+                  className="h-full bg-secondary-container rounded-full"
+                  style={{ width: `${progressPercent}%` }}
+                ></div>
               </div>
             </div>
             <div className="w-px h-10 bg-outline-variant mx-2"></div>
             {/* Streak */}
             <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
-                <span className="material-symbols-outlined" data-weight="fill">local_fire_department</span>
+                <span className="material-symbols-outlined" data-weight="fill">
+                  local_fire_department
+                </span>
               </div>
               <div>
-                <div className="text-[24px] font-semibold leading-[1.3] text-tertiary" style={{ fontFamily: "Manrope" }}>0</div>
-                <div className="text-xs tracking-[0.05em] font-medium text-on-surface-variant uppercase" style={{ fontFamily: "JetBrains Mono" }}>Day Streak</div>
+                <div
+                  className="text-[24px] font-semibold leading-[1.3] text-tertiary"
+                  style={{ fontFamily: "Manrope" }}
+                >
+                  0
+                </div>
+                <div
+                  className="text-xs tracking-[0.05em] font-medium text-on-surface-variant uppercase"
+                  style={{ fontFamily: "JetBrains Mono" }}
+                >
+                  Day Streak
+                </div>
               </div>
             </div>
           </div>
@@ -304,13 +348,15 @@ function DashboardPage() {
 
             <div className="grid grid-cols-2 gap-4 flex-1 items-center justify-center py-2">
               {enrolledTopics.length === 0 ? (
-                <div className="col-span-2 text-center text-sm text-on-surface-variant">No enrolled topics yet.</div>
+                <div className="col-span-2 text-center text-sm text-on-surface-variant">
+                  No enrolled topics yet.
+                </div>
               ) : (
                 enrolledTopics.slice(0, 2).map((topic, i) => (
                   <div key={topic.id} className="flex flex-col items-center text-center">
                     <div className="relative w-24 h-24 mb-2">
                       <svg
-                        className={`circular-chart ${i % 2 === 0 ? 'text-primary-container' : 'text-secondary-container'} w-full h-full drop-shadow-sm`}
+                        className={`circular-chart ${i % 2 === 0 ? "text-primary-container" : "text-secondary-container"} w-full h-full drop-shadow-sm`}
                         viewBox="0 0 36 36"
                       >
                         <path
@@ -341,7 +387,7 @@ function DashboardPage() {
                       {topic.title}
                     </h3>
                     <span
-                      className={`text-xs tracking-[0.05em] font-medium mt-1 px-2 py-0.5 rounded ${i % 2 === 0 ? 'bg-primary-fixed/30 text-primary' : 'bg-surface-container-highest text-on-surface-variant'}`}
+                      className={`text-xs tracking-[0.05em] font-medium mt-1 px-2 py-0.5 rounded ${i % 2 === 0 ? "bg-primary-fixed/30 text-primary" : "bg-surface-container-highest text-on-surface-variant"}`}
                       style={{ fontFamily: "JetBrains Mono" }}
                     >
                       Enrolled

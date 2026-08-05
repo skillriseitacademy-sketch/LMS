@@ -17,22 +17,25 @@ PlacePro LMS is a full-stack AI-powered Learning Management System targeting col
 - **Frontend:** React 19, TailwindCSS v4, shadcn/ui, Framer Motion
 - **Full-Stack Framework:** TanStack Start (SSR), TanStack Router
 - **Backend/API:** Nitro (Cloudflare Workers target), Supabase (PostgreSQL + RLS)
-- **AI Integration:** Vercel AI SDK (Gemini 1.5 Flash), OpenAI Realtime API (WebRTC)
+- **AI Integration:** Vercel AI SDK (OpenRouter), OpenAI Realtime API (WebRTC)
 - **Build Tool:** Vite 8, Bun
 
 ## Getting Started
 
 1. Clone the repository and install dependencies:
+
    ```bash
    npm install
    ```
 
 2. Set up environment variables in `.env`. Ensure your Supabase URL and keys are correct. For AI features, you will need:
    - `OPENAI_API_KEY`
+   - `OPENROUTER_API_KEY`
    - `DAILY_API_KEY`
    - `PlacePro_API_KEY`
 
 3. Start the development server:
+
    ```bash
    npm run dev
    ```

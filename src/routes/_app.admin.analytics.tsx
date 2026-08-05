@@ -29,21 +29,25 @@ const periods: { id: Period; label: string }[] = [
 
 function Analytics() {
   const [period, setPeriod] = useState<Period>("30d");
-  
-  const [kpis, setKpis] = useState<{label: string, value: string}[]>([]);
+
+  const [kpis, setKpis] = useState<{ label: string; value: string }[]>([]);
   const [series, setSeries] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadData() {
-      const { count: usersCount } = await supabase.from("profiles").select("*", { count: "exact", head: true });
-      const { count: enrollmentsCount } = await supabase.from("student_topics").select("*", { count: "exact", head: true });
-      
+      const { count: usersCount } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true });
+      const { count: enrollmentsCount } = await supabase
+        .from("student_topics")
+        .select("*", { count: "exact", head: true });
+
       setKpis([
         { label: "Total Users", value: (usersCount || 0).toString() },
         { label: "Total Enrollments", value: (enrollmentsCount || 0).toString() },
         { label: "Completion Rate", value: "85%" },
       ]);
-      
+
       setSeries([
         { day: "Mon", value: 2, enrollments: 1, learners: 5 },
         { day: "Tue", value: 4, enrollments: 3, learners: 8 },
@@ -52,7 +56,7 @@ function Analytics() {
         { day: "Fri", value: 3, enrollments: 1, learners: 9 },
       ]);
     }
-    
+
     loadData();
   }, [period]);
 

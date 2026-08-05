@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "./supabase";
-import { useAuth } from "./auth-store";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "./useAuth";
 
 export function useGamification() {
   const { session } = useAuth();
@@ -53,7 +53,6 @@ export function useGamification() {
           .eq("user_id", session.id);
 
         setLessonsCompleted(topicCount || 0);
-
       } catch (err) {
         console.error("Error loading gamification stats", err);
       } finally {

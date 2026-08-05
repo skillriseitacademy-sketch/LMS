@@ -1,9 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
 import { TopBar } from "@/components/top-bar";
-import { Bookmark, MessageCircle, ThumbsUp, MoreHorizontal, Calendar, BadgeCheck } from "lucide-react";
+import {
+  Bookmark,
+  MessageCircle,
+  ThumbsUp,
+  MoreHorizontal,
+  Calendar,
+  BadgeCheck,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { PostComposer } from "@/components/social/post-composer";
@@ -24,25 +31,27 @@ function ProfileViewPage() {
     followers: "0",
     posts: "0",
     collections: "0",
-    likes: "0"
+    likes: "0",
   });
 
   const fetchPosts = async () => {
     if (!session?.id) return;
     const { data: userPosts } = await supabase
       .from("posts")
-      .select(`
+      .select(
+        `
         id, content, created_at, user_id, media_urls,
         profiles(id, name, username, avatar_url, role),
         post_reactions(reaction_type, user_id),
         post_comments(id)
-      `)
+      `,
+      )
       .eq("user_id", session.id)
       .order("created_at", { ascending: false });
 
     if (userPosts) {
       setPosts(userPosts);
-      setStats(s => ({ ...s, posts: userPosts.length.toString() }));
+      setStats((s) => ({ ...s, posts: userPosts.length.toString() }));
     }
   };
 
@@ -78,13 +87,16 @@ function ProfileViewPage() {
       {/* Cover Image */}
       <div className="w-full h-48 md:h-64 lg:h-80 bg-gradient-to-r from-primary/20 via-primary/10 to-background relative overflow-hidden">
         {profile.cover_url && (
-          <img src={profile.cover_url} alt="Cover" className="w-full h-full object-cover absolute inset-0" />
+          <img
+            src={profile.cover_url}
+            alt="Cover"
+            className="w-full h-full object-cover absolute inset-0"
+          />
         )}
       </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 w-full -mt-16 sm:-mt-24 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          
           {/* Left Column (Profile Info) */}
           <div className="lg:col-span-1 space-y-6">
             {/* Avatar */}
@@ -99,15 +111,23 @@ function ProfileViewPage() {
 
             {/* Name & Handle */}
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground flex items-center gap-2" style={{ fontFamily: "Manrope" }}>
+              <h1
+                className="text-2xl sm:text-3xl font-bold text-foreground flex items-center gap-2"
+                style={{ fontFamily: "Manrope" }}
+              >
                 {profile.name}
                 <BadgeCheck className="w-6 h-6 text-primary" fill="currentColor" stroke="white" />
               </h1>
-              <p className="text-muted-foreground font-medium mt-1">@{profile.username || profile.name?.toLowerCase().replace(/\s/g, "")}</p>
+              <p className="text-muted-foreground font-medium mt-1">
+                @{profile.username || profile.name?.toLowerCase().replace(/\s/g, "")}
+              </p>
             </div>
 
             {/* Bio */}
-            <p className="text-foreground/90 text-sm leading-relaxed" style={{ fontFamily: "Inter" }}>
+            <p
+              className="text-foreground/90 text-sm leading-relaxed"
+              style={{ fontFamily: "Inter" }}
+            >
               {profile.bio || "No bio provided."}
             </p>
 
@@ -132,16 +152,12 @@ function ProfileViewPage() {
                 </div>
               </div>
             </div>
-
-
           </div>
 
           {/* Right Column (Content) */}
           <div className="lg:col-span-3 pt-6 sm:pt-24 lg:pt-28">
-            
             {/* Header Actions & Tabs */}
             <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-4 mb-8">
-              
               {/* Tabs */}
               <div className="flex items-center gap-2 sm:gap-6 overflow-x-auto hide-scrollbar border-b border-border w-full sm:w-auto">
                 {["Posts", "Photos", "Videos", "Likes"].map((tab) => (
@@ -155,17 +171,31 @@ function ProfileViewPage() {
                     }`}
                   >
                     {tab}
-                    {tab === "Posts" && <span className="bg-muted px-2 py-0.5 rounded text-[10px]">{stats.posts}</span>}
-                    {tab === "Photos" && <span className="bg-muted px-2 py-0.5 rounded text-[10px]">0</span>}
-                    {tab === "Videos" && <span className="bg-muted px-2 py-0.5 rounded text-[10px]">0</span>}
-                    {tab === "Likes" && <span className="bg-muted px-2 py-0.5 rounded text-[10px]">0</span>}
+                    {tab === "Posts" && (
+                      <span className="bg-muted px-2 py-0.5 rounded text-[10px]">
+                        {stats.posts}
+                      </span>
+                    )}
+                    {tab === "Photos" && (
+                      <span className="bg-muted px-2 py-0.5 rounded text-[10px]">0</span>
+                    )}
+                    {tab === "Videos" && (
+                      <span className="bg-muted px-2 py-0.5 rounded text-[10px]">0</span>
+                    )}
+                    {tab === "Likes" && (
+                      <span className="bg-muted px-2 py-0.5 rounded text-[10px]">0</span>
+                    )}
                   </button>
                 ))}
               </div>
 
               {/* Actions */}
               <div className="flex items-center gap-3 self-end sm:self-auto shrink-0">
-                <Button variant="outline" size="icon" className="rounded-xl border-border w-10 h-10">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="rounded-xl border-border w-10 h-10"
+                >
                   <Bookmark className="w-4 h-4 text-foreground" />
                 </Button>
                 <Link to="/settings/profile">
@@ -182,26 +212,25 @@ function ProfileViewPage() {
                 <PostComposer onPostSuccess={fetchPosts} />
                 <div className="flex flex-col gap-0">
                   {posts.length > 0 ? (
-                  posts.map((post) => (
-                    <PostCard key={post.id} post={post} />
-                  ))
-                ) : (
-                  <div className="py-12 text-center text-muted-foreground border-2 border-dashed border-border rounded-3xl">
-                    <p className="font-medium">No posts yet</p>
-                    <p className="text-sm mt-1">When you share posts or photos, they will appear here.</p>
-                  </div>
-                )}
-              </div>
+                    posts.map((post) => <PostCard key={post.id} post={post} />)
+                  ) : (
+                    <div className="py-12 text-center text-muted-foreground border-2 border-dashed border-border rounded-3xl">
+                      <p className="font-medium">No posts yet</p>
+                      <p className="text-sm mt-1">
+                        When you share posts or photos, they will appear here.
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
-            
+
             {activeTab !== "Posts" && (
               <div className="py-12 text-center text-muted-foreground border-2 border-dashed border-border rounded-3xl">
                 <p className="font-medium">No {activeTab.toLowerCase()} yet</p>
                 <p className="text-sm mt-1">This section is currently empty.</p>
               </div>
             )}
-
           </div>
         </div>
       </div>

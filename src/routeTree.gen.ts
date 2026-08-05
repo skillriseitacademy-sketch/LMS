@@ -21,19 +21,54 @@ import { Route as SettingsNotificationsRouteImport } from './routes/settings.not
 import { Route as SettingsBillingRouteImport } from './routes/settings.billing'
 import { Route as RoomsRoomCodeRouteImport } from './routes/rooms.$roomCode'
 import { Route as OauthConsentRouteImport } from './routes/oauth.consent'
-import { Route as ApiUploadRouteImport } from './routes/api/upload'
-import { Route as ApiTurnRouteImport } from './routes/api/turn'
-import { Route as ApiSuggestionsRouteImport } from './routes/api/suggestions'
-import { Route as ApiStoriesRouteImport } from './routes/api/stories'
-import { Route as ApiRoadmapRouteImport } from './routes/api/roadmap'
-import { Route as ApiReportsRouteImport } from './routes/api/reports'
-import { Route as ApiPostsRouteImport } from './routes/api/posts'
-import { Route as ApiNotificationsRouteImport } from './routes/api/notifications'
-import { Route as ApiLeaderboardRouteImport } from './routes/api/leaderboard'
-import { Route as ApiJobsRouteImport } from './routes/api/jobs'
-import { Route as ApiFeedRouteImport } from './routes/api/feed'
-import { Route as ApiConnectionsRouteImport } from './routes/api/connections'
-import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as MockupWelcome_to_pro_success_splashRouteImport } from './routes/mockup.welcome_to_pro_success_splash'
+import { Route as MockupWelcome_to_pro_animated_success_splashRouteImport } from './routes/mockup.welcome_to_pro_animated_success_splash'
+import { Route as MockupStudent_dashboardRouteImport } from './routes/mockup.student_dashboard'
+import { Route as MockupSocial_feedRouteImport } from './routes/mockup.social_feed'
+import { Route as MockupSignupRouteImport } from './routes/mockup.signup'
+import { Route as MockupSettings_security_privacyRouteImport } from './routes/mockup.settings_security_privacy'
+import { Route as MockupSettings_public_profileRouteImport } from './routes/mockup.settings_public_profile'
+import { Route as MockupSettings_plan_billingRouteImport } from './routes/mockup.settings_plan_billing'
+import { Route as MockupSettings_notificationsRouteImport } from './routes/mockup.settings_notifications'
+import { Route as MockupResume_builder_templatesRouteImport } from './routes/mockup.resume_builder_templates'
+import { Route as MockupResume_builder_editorRouteImport } from './routes/mockup.resume_builder_editor'
+import { Route as MockupResume_builder_ai_optimization_hubRouteImport } from './routes/mockup.resume_builder_ai_optimization_hub'
+import { Route as MockupRecruiter_credit_dashboardRouteImport } from './routes/mockup.recruiter_credit_dashboard'
+import { Route as MockupPro_checkout_secure_paymentRouteImport } from './routes/mockup.pro_checkout_secure_payment'
+import { Route as MockupPlacepro_pro_premium_features_hubRouteImport } from './routes/mockup.placepro_pro_premium_features_hub'
+import { Route as MockupOnboarding_step_4_finalizeRouteImport } from './routes/mockup.onboarding_step_4_finalize'
+import { Route as MockupOnboarding_step_3_usernameRouteImport } from './routes/mockup.onboarding_step_3_username'
+import { Route as MockupOnboarding_step_2_rolesRouteImport } from './routes/mockup.onboarding_step_2_roles'
+import { Route as MockupOnboarding_step_1_topicsRouteImport } from './routes/mockup.onboarding_step_1_topics'
+import { Route as MockupLoginRouteImport } from './routes/mockup.login'
+import { Route as MockupLeaderboard_global_rankings_animatedRouteImport } from './routes/mockup.leaderboard_global_rankings_animated'
+import { Route as MockupLeaderboard_global_rankingsRouteImport } from './routes/mockup.leaderboard_global_rankings'
+import { Route as MockupLanding_pageRouteImport } from './routes/mockup.landing_page'
+import { Route as MockupJobs_board_role_details_match_analysisRouteImport } from './routes/mockup.jobs_board_role_details_match_analysis'
+import { Route as MockupJobs_board_role_details_applied_stateRouteImport } from './routes/mockup.jobs_board_role_details_applied_state'
+import { Route as MockupJobs_board_role_details_animated_successRouteImport } from './routes/mockup.jobs_board_role_details_animated_success'
+import { Route as MockupJobs_board_find_recruiters_discoveryRouteImport } from './routes/mockup.jobs_board_find_recruiters_discovery'
+import { Route as MockupJobs_board_discovery_explorerRouteImport } from './routes/mockup.jobs_board_discovery_explorer'
+import { Route as MockupJobs_board_application_trackerRouteImport } from './routes/mockup.jobs_board_application_tracker'
+import { Route as MockupInterview_hub_live_simulationRouteImport } from './routes/mockup.interview_hub_live_simulation'
+import { Route as MockupInterview_hub_feedback_reportRouteImport } from './routes/mockup.interview_hub_feedback_report'
+import { Route as MockupInterview_hub_dashboardRouteImport } from './routes/mockup.interview_hub_dashboard'
+import { Route as MockupCoding_arena_topicsRouteImport } from './routes/mockup.coding_arena_topics'
+import { Route as MockupCoding_arena_pro_leaderboard_refinementRouteImport } from './routes/mockup.coding_arena_pro_leaderboard_refinement'
+import { Route as MockupCoding_arena_pro_exclusive_challengesRouteImport } from './routes/mockup.coding_arena_pro_exclusive_challenges'
+import { Route as MockupCoding_arena_pro_challenges_with_live_activityRouteImport } from './routes/mockup.coding_arena_pro_challenges_with_live_activity'
+import { Route as MockupCoding_arena_challenge_listRouteImport } from './routes/mockup.coding_arena_challenge_list'
+import { Route as MockupCoding_arena_challenge_editorRouteImport } from './routes/mockup.coding_arena_challenge_editor'
+import { Route as MockupCareer_roadmapRouteImport } from './routes/mockup.career_roadmap'
+import { Route as MockupAdmin_dashboard_user_profile_detailRouteImport } from './routes/mockup.admin_dashboard_user_profile_detail'
+import { Route as MockupAdmin_dashboard_user_management_directoryRouteImport } from './routes/mockup.admin_dashboard_user_management_directory'
+import { Route as MockupAdmin_dashboard_topic_detail_managementRouteImport } from './routes/mockup.admin_dashboard_topic_detail_management'
+import { Route as MockupAdmin_dashboard_teacher_analyticsRouteImport } from './routes/mockup.admin_dashboard_teacher_analytics'
+import { Route as MockupAdmin_dashboard_quiz_editorRouteImport } from './routes/mockup.admin_dashboard_quiz_editor'
+import { Route as MockupAdmin_dashboard_job_placement_analyticsRouteImport } from './routes/mockup.admin_dashboard_job_placement_analytics'
+import { Route as MockupAdmin_dashboard_content_managementRouteImport } from './routes/mockup.admin_dashboard_content_management'
+import { Route as MockupAdmin_dashboardRouteImport } from './routes/mockup.admin_dashboard'
+import { Route as MockupAchievements_rewards_hubRouteImport } from './routes/mockup.achievements_rewards_hub'
 import { Route as AppRoadmapRouteImport } from './routes/_app.roadmap'
 import { Route as AppResumeRouteImport } from './routes/_app.resume'
 import { Route as AppQuizzesRouteImport } from './routes/_app.quizzes'
@@ -54,20 +89,6 @@ import { Route as AppLiveIndexRouteImport } from './routes/_app.live.index'
 import { Route as AppInterviewIndexRouteImport } from './routes/_app.interview.index'
 import { Route as AppFeedIndexRouteImport } from './routes/_app.feed.index'
 import { Route as AppAdminIndexRouteImport } from './routes/_app.admin.index'
-import { Route as ApiUsersSearchRouteImport } from './routes/api/users.search'
-import { Route as ApiUsersCheckUsernameRouteImport } from './routes/api/users.check-username'
-import { Route as ApiStoriesViewsRouteImport } from './routes/api/stories.views'
-import { Route as ApiRoomsInstantRouteImport } from './routes/api/rooms.instant'
-import { Route as ApiPostsPostIdRouteImport } from './routes/api/posts.$postId'
-import { Route as ApiOnboardingCompleteRouteImport } from './routes/api/onboarding.complete'
-import { Route as ApiInterviewStartRouteImport } from './routes/api/interview.start'
-import { Route as ApiCoursesEnrolledRouteImport } from './routes/api/courses.enrolled'
-import { Route as ApiCoursesEnrollRouteImport } from './routes/api/courses.enroll'
-import { Route as ApiClassesCreateRouteImport } from './routes/api/classes.create'
-import { Route as ApiChatMessagesRouteImport } from './routes/api/chat.messages'
-import { Route as ApiChatEnsureBotThreadRouteImport } from './routes/api/chat.ensure-bot-thread'
-import { Route as ApiChatConversationsRouteImport } from './routes/api/chat.conversations'
-import { Route as ApiChatBotRouteImport } from './routes/api/chat.bot'
 import { Route as AppResumeTemplatesRouteImport } from './routes/_app.resume.templates'
 import { Route as AppResumeCreateRouteImport } from './routes/_app.resume.create'
 import { Route as AppQuizzesQuizIdRouteImport } from './routes/_app.quizzes.$quizId'
@@ -85,16 +106,12 @@ import { Route as AppAdminLiveClassesRouteImport } from './routes/_app.admin.liv
 import { Route as AppAdminInterviewsRouteImport } from './routes/_app.admin.interviews'
 import { Route as AppAdminAnalyticsRouteImport } from './routes/_app.admin.analytics'
 import { Route as AppAdminAdminsRouteImport } from './routes/_app.admin.admins'
-import { Route as ApiRoomsJoinCodeRouteImport } from './routes/api/rooms.join.$code'
-import { Route as ApiPostsPostIdReactRouteImport } from './routes/api/posts.$postId.react'
-import { Route as ApiPostsPostIdCommentsRouteImport } from './routes/api/posts.$postId.comments'
 import { Route as AppQuizzesQuizIdResultsRouteImport } from './routes/_app.quizzes.$quizId.results'
 import { Route as AppProfileUsernameConnectionsRouteImport } from './routes/_app.profile.$username.connections'
 import { Route as AppInterviewManualSessionIdRouteImport } from './routes/_app.interview.manual.$sessionId'
 import { Route as AppInterviewAiSessionIdRouteImport } from './routes/_app.interview.ai.$sessionId'
 import { Route as AppInterviewSessionIdFeedbackRouteImport } from './routes/_app.interview.$sessionId.feedback'
 import { Route as AppArenaTopicIdChallengeIdRouteImport } from './routes/_app.arena.$topicId.$challengeId'
-import { Route as ApiChatConversationsConversationIdReadRouteImport } from './routes/api/chat.conversations.$conversationId.read'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -155,71 +172,287 @@ const OauthConsentRoute = OauthConsentRouteImport.update({
   path: '/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiUploadRoute = ApiUploadRouteImport.update({
-  id: '/api/upload',
-  path: '/api/upload',
+const MockupWelcome_to_pro_success_splashRoute =
+  MockupWelcome_to_pro_success_splashRouteImport.update({
+    id: '/mockup/welcome_to_pro_success_splash',
+    path: '/mockup/welcome_to_pro_success_splash',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupWelcome_to_pro_animated_success_splashRoute =
+  MockupWelcome_to_pro_animated_success_splashRouteImport.update({
+    id: '/mockup/welcome_to_pro_animated_success_splash',
+    path: '/mockup/welcome_to_pro_animated_success_splash',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupStudent_dashboardRoute = MockupStudent_dashboardRouteImport.update({
+  id: '/mockup/student_dashboard',
+  path: '/mockup/student_dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiTurnRoute = ApiTurnRouteImport.update({
-  id: '/api/turn',
-  path: '/api/turn',
+const MockupSocial_feedRoute = MockupSocial_feedRouteImport.update({
+  id: '/mockup/social_feed',
+  path: '/mockup/social_feed',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiSuggestionsRoute = ApiSuggestionsRouteImport.update({
-  id: '/api/suggestions',
-  path: '/api/suggestions',
+const MockupSignupRoute = MockupSignupRouteImport.update({
+  id: '/mockup/signup',
+  path: '/mockup/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiStoriesRoute = ApiStoriesRouteImport.update({
-  id: '/api/stories',
-  path: '/api/stories',
+const MockupSettings_security_privacyRoute =
+  MockupSettings_security_privacyRouteImport.update({
+    id: '/mockup/settings_security_privacy',
+    path: '/mockup/settings_security_privacy',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupSettings_public_profileRoute =
+  MockupSettings_public_profileRouteImport.update({
+    id: '/mockup/settings_public_profile',
+    path: '/mockup/settings_public_profile',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupSettings_plan_billingRoute =
+  MockupSettings_plan_billingRouteImport.update({
+    id: '/mockup/settings_plan_billing',
+    path: '/mockup/settings_plan_billing',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupSettings_notificationsRoute =
+  MockupSettings_notificationsRouteImport.update({
+    id: '/mockup/settings_notifications',
+    path: '/mockup/settings_notifications',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupResume_builder_templatesRoute =
+  MockupResume_builder_templatesRouteImport.update({
+    id: '/mockup/resume_builder_templates',
+    path: '/mockup/resume_builder_templates',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupResume_builder_editorRoute =
+  MockupResume_builder_editorRouteImport.update({
+    id: '/mockup/resume_builder_editor',
+    path: '/mockup/resume_builder_editor',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupResume_builder_ai_optimization_hubRoute =
+  MockupResume_builder_ai_optimization_hubRouteImport.update({
+    id: '/mockup/resume_builder_ai_optimization_hub',
+    path: '/mockup/resume_builder_ai_optimization_hub',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupRecruiter_credit_dashboardRoute =
+  MockupRecruiter_credit_dashboardRouteImport.update({
+    id: '/mockup/recruiter_credit_dashboard',
+    path: '/mockup/recruiter_credit_dashboard',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupPro_checkout_secure_paymentRoute =
+  MockupPro_checkout_secure_paymentRouteImport.update({
+    id: '/mockup/pro_checkout_secure_payment',
+    path: '/mockup/pro_checkout_secure_payment',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupPlacepro_pro_premium_features_hubRoute =
+  MockupPlacepro_pro_premium_features_hubRouteImport.update({
+    id: '/mockup/placepro_pro_premium_features_hub',
+    path: '/mockup/placepro_pro_premium_features_hub',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupOnboarding_step_4_finalizeRoute =
+  MockupOnboarding_step_4_finalizeRouteImport.update({
+    id: '/mockup/onboarding_step_4_finalize',
+    path: '/mockup/onboarding_step_4_finalize',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupOnboarding_step_3_usernameRoute =
+  MockupOnboarding_step_3_usernameRouteImport.update({
+    id: '/mockup/onboarding_step_3_username',
+    path: '/mockup/onboarding_step_3_username',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupOnboarding_step_2_rolesRoute =
+  MockupOnboarding_step_2_rolesRouteImport.update({
+    id: '/mockup/onboarding_step_2_roles',
+    path: '/mockup/onboarding_step_2_roles',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupOnboarding_step_1_topicsRoute =
+  MockupOnboarding_step_1_topicsRouteImport.update({
+    id: '/mockup/onboarding_step_1_topics',
+    path: '/mockup/onboarding_step_1_topics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupLoginRoute = MockupLoginRouteImport.update({
+  id: '/mockup/login',
+  path: '/mockup/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiRoadmapRoute = ApiRoadmapRouteImport.update({
-  id: '/api/roadmap',
-  path: '/api/roadmap',
+const MockupLeaderboard_global_rankings_animatedRoute =
+  MockupLeaderboard_global_rankings_animatedRouteImport.update({
+    id: '/mockup/leaderboard_global_rankings_animated',
+    path: '/mockup/leaderboard_global_rankings_animated',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupLeaderboard_global_rankingsRoute =
+  MockupLeaderboard_global_rankingsRouteImport.update({
+    id: '/mockup/leaderboard_global_rankings',
+    path: '/mockup/leaderboard_global_rankings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupLanding_pageRoute = MockupLanding_pageRouteImport.update({
+  id: '/mockup/landing_page',
+  path: '/mockup/landing_page',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiReportsRoute = ApiReportsRouteImport.update({
-  id: '/api/reports',
-  path: '/api/reports',
+const MockupJobs_board_role_details_match_analysisRoute =
+  MockupJobs_board_role_details_match_analysisRouteImport.update({
+    id: '/mockup/jobs_board_role_details_match_analysis',
+    path: '/mockup/jobs_board_role_details_match_analysis',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupJobs_board_role_details_applied_stateRoute =
+  MockupJobs_board_role_details_applied_stateRouteImport.update({
+    id: '/mockup/jobs_board_role_details_applied_state',
+    path: '/mockup/jobs_board_role_details_applied_state',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupJobs_board_role_details_animated_successRoute =
+  MockupJobs_board_role_details_animated_successRouteImport.update({
+    id: '/mockup/jobs_board_role_details_animated_success',
+    path: '/mockup/jobs_board_role_details_animated_success',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupJobs_board_find_recruiters_discoveryRoute =
+  MockupJobs_board_find_recruiters_discoveryRouteImport.update({
+    id: '/mockup/jobs_board_find_recruiters_discovery',
+    path: '/mockup/jobs_board_find_recruiters_discovery',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupJobs_board_discovery_explorerRoute =
+  MockupJobs_board_discovery_explorerRouteImport.update({
+    id: '/mockup/jobs_board_discovery_explorer',
+    path: '/mockup/jobs_board_discovery_explorer',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupJobs_board_application_trackerRoute =
+  MockupJobs_board_application_trackerRouteImport.update({
+    id: '/mockup/jobs_board_application_tracker',
+    path: '/mockup/jobs_board_application_tracker',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupInterview_hub_live_simulationRoute =
+  MockupInterview_hub_live_simulationRouteImport.update({
+    id: '/mockup/interview_hub_live_simulation',
+    path: '/mockup/interview_hub_live_simulation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupInterview_hub_feedback_reportRoute =
+  MockupInterview_hub_feedback_reportRouteImport.update({
+    id: '/mockup/interview_hub_feedback_report',
+    path: '/mockup/interview_hub_feedback_report',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupInterview_hub_dashboardRoute =
+  MockupInterview_hub_dashboardRouteImport.update({
+    id: '/mockup/interview_hub_dashboard',
+    path: '/mockup/interview_hub_dashboard',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupCoding_arena_topicsRoute =
+  MockupCoding_arena_topicsRouteImport.update({
+    id: '/mockup/coding_arena_topics',
+    path: '/mockup/coding_arena_topics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupCoding_arena_pro_leaderboard_refinementRoute =
+  MockupCoding_arena_pro_leaderboard_refinementRouteImport.update({
+    id: '/mockup/coding_arena_pro_leaderboard_refinement',
+    path: '/mockup/coding_arena_pro_leaderboard_refinement',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupCoding_arena_pro_exclusive_challengesRoute =
+  MockupCoding_arena_pro_exclusive_challengesRouteImport.update({
+    id: '/mockup/coding_arena_pro_exclusive_challenges',
+    path: '/mockup/coding_arena_pro_exclusive_challenges',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupCoding_arena_pro_challenges_with_live_activityRoute =
+  MockupCoding_arena_pro_challenges_with_live_activityRouteImport.update({
+    id: '/mockup/coding_arena_pro_challenges_with_live_activity',
+    path: '/mockup/coding_arena_pro_challenges_with_live_activity',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupCoding_arena_challenge_listRoute =
+  MockupCoding_arena_challenge_listRouteImport.update({
+    id: '/mockup/coding_arena_challenge_list',
+    path: '/mockup/coding_arena_challenge_list',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupCoding_arena_challenge_editorRoute =
+  MockupCoding_arena_challenge_editorRouteImport.update({
+    id: '/mockup/coding_arena_challenge_editor',
+    path: '/mockup/coding_arena_challenge_editor',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupCareer_roadmapRoute = MockupCareer_roadmapRouteImport.update({
+  id: '/mockup/career_roadmap',
+  path: '/mockup/career_roadmap',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPostsRoute = ApiPostsRouteImport.update({
-  id: '/api/posts',
-  path: '/api/posts',
+const MockupAdmin_dashboard_user_profile_detailRoute =
+  MockupAdmin_dashboard_user_profile_detailRouteImport.update({
+    id: '/mockup/admin_dashboard_user_profile_detail',
+    path: '/mockup/admin_dashboard_user_profile_detail',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupAdmin_dashboard_user_management_directoryRoute =
+  MockupAdmin_dashboard_user_management_directoryRouteImport.update({
+    id: '/mockup/admin_dashboard_user_management_directory',
+    path: '/mockup/admin_dashboard_user_management_directory',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupAdmin_dashboard_topic_detail_managementRoute =
+  MockupAdmin_dashboard_topic_detail_managementRouteImport.update({
+    id: '/mockup/admin_dashboard_topic_detail_management',
+    path: '/mockup/admin_dashboard_topic_detail_management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupAdmin_dashboard_teacher_analyticsRoute =
+  MockupAdmin_dashboard_teacher_analyticsRouteImport.update({
+    id: '/mockup/admin_dashboard_teacher_analytics',
+    path: '/mockup/admin_dashboard_teacher_analytics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupAdmin_dashboard_quiz_editorRoute =
+  MockupAdmin_dashboard_quiz_editorRouteImport.update({
+    id: '/mockup/admin_dashboard_quiz_editor',
+    path: '/mockup/admin_dashboard_quiz_editor',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupAdmin_dashboard_job_placement_analyticsRoute =
+  MockupAdmin_dashboard_job_placement_analyticsRouteImport.update({
+    id: '/mockup/admin_dashboard_job_placement_analytics',
+    path: '/mockup/admin_dashboard_job_placement_analytics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupAdmin_dashboard_content_managementRoute =
+  MockupAdmin_dashboard_content_managementRouteImport.update({
+    id: '/mockup/admin_dashboard_content_management',
+    path: '/mockup/admin_dashboard_content_management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MockupAdmin_dashboardRoute = MockupAdmin_dashboardRouteImport.update({
+  id: '/mockup/admin_dashboard',
+  path: '/mockup/admin_dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiNotificationsRoute = ApiNotificationsRouteImport.update({
-  id: '/api/notifications',
-  path: '/api/notifications',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiLeaderboardRoute = ApiLeaderboardRouteImport.update({
-  id: '/api/leaderboard',
-  path: '/api/leaderboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiJobsRoute = ApiJobsRouteImport.update({
-  id: '/api/jobs',
-  path: '/api/jobs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiFeedRoute = ApiFeedRouteImport.update({
-  id: '/api/feed',
-  path: '/api/feed',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiConnectionsRoute = ApiConnectionsRouteImport.update({
-  id: '/api/connections',
-  path: '/api/connections',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatRoute = ApiChatRouteImport.update({
-  id: '/api/chat',
-  path: '/api/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const MockupAchievements_rewards_hubRoute =
+  MockupAchievements_rewards_hubRouteImport.update({
+    id: '/mockup/achievements_rewards_hub',
+    path: '/mockup/achievements_rewards_hub',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AppRoadmapRoute = AppRoadmapRouteImport.update({
   id: '/roadmap',
   path: '/roadmap',
@@ -320,76 +553,6 @@ const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppAdminRoute,
 } as any)
-const ApiUsersSearchRoute = ApiUsersSearchRouteImport.update({
-  id: '/api/users/search',
-  path: '/api/users/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiUsersCheckUsernameRoute = ApiUsersCheckUsernameRouteImport.update({
-  id: '/api/users/check-username',
-  path: '/api/users/check-username',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiStoriesViewsRoute = ApiStoriesViewsRouteImport.update({
-  id: '/views',
-  path: '/views',
-  getParentRoute: () => ApiStoriesRoute,
-} as any)
-const ApiRoomsInstantRoute = ApiRoomsInstantRouteImport.update({
-  id: '/api/rooms/instant',
-  path: '/api/rooms/instant',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPostsPostIdRoute = ApiPostsPostIdRouteImport.update({
-  id: '/$postId',
-  path: '/$postId',
-  getParentRoute: () => ApiPostsRoute,
-} as any)
-const ApiOnboardingCompleteRoute = ApiOnboardingCompleteRouteImport.update({
-  id: '/api/onboarding/complete',
-  path: '/api/onboarding/complete',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiInterviewStartRoute = ApiInterviewStartRouteImport.update({
-  id: '/api/interview/start',
-  path: '/api/interview/start',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiCoursesEnrolledRoute = ApiCoursesEnrolledRouteImport.update({
-  id: '/api/courses/enrolled',
-  path: '/api/courses/enrolled',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiCoursesEnrollRoute = ApiCoursesEnrollRouteImport.update({
-  id: '/api/courses/enroll',
-  path: '/api/courses/enroll',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiClassesCreateRoute = ApiClassesCreateRouteImport.update({
-  id: '/api/classes/create',
-  path: '/api/classes/create',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatMessagesRoute = ApiChatMessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
-  getParentRoute: () => ApiChatRoute,
-} as any)
-const ApiChatEnsureBotThreadRoute = ApiChatEnsureBotThreadRouteImport.update({
-  id: '/ensure-bot-thread',
-  path: '/ensure-bot-thread',
-  getParentRoute: () => ApiChatRoute,
-} as any)
-const ApiChatConversationsRoute = ApiChatConversationsRouteImport.update({
-  id: '/conversations',
-  path: '/conversations',
-  getParentRoute: () => ApiChatRoute,
-} as any)
-const ApiChatBotRoute = ApiChatBotRouteImport.update({
-  id: '/bot',
-  path: '/bot',
-  getParentRoute: () => ApiChatRoute,
-} as any)
 const AppResumeTemplatesRoute = AppResumeTemplatesRouteImport.update({
   id: '/templates',
   path: '/templates',
@@ -476,21 +639,6 @@ const AppAdminAdminsRoute = AppAdminAdminsRouteImport.update({
   path: '/admins',
   getParentRoute: () => AppAdminRoute,
 } as any)
-const ApiRoomsJoinCodeRoute = ApiRoomsJoinCodeRouteImport.update({
-  id: '/api/rooms/join/$code',
-  path: '/api/rooms/join/$code',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPostsPostIdReactRoute = ApiPostsPostIdReactRouteImport.update({
-  id: '/react',
-  path: '/react',
-  getParentRoute: () => ApiPostsPostIdRoute,
-} as any)
-const ApiPostsPostIdCommentsRoute = ApiPostsPostIdCommentsRouteImport.update({
-  id: '/comments',
-  path: '/comments',
-  getParentRoute: () => ApiPostsPostIdRoute,
-} as any)
 const AppQuizzesQuizIdResultsRoute = AppQuizzesQuizIdResultsRouteImport.update({
   id: '/results',
   path: '/results',
@@ -525,12 +673,6 @@ const AppArenaTopicIdChallengeIdRoute =
     path: '/$challengeId',
     getParentRoute: () => AppArenaTopicIdRoute,
   } as any)
-const ApiChatConversationsConversationIdReadRoute =
-  ApiChatConversationsConversationIdReadRouteImport.update({
-    id: '/$conversationId/read',
-    path: '/$conversationId/read',
-    getParentRoute: () => ApiChatConversationsRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -551,19 +693,54 @@ export interface FileRoutesByFullPath {
   '/quizzes': typeof AppQuizzesRouteWithChildren
   '/resume': typeof AppResumeRouteWithChildren
   '/roadmap': typeof AppRoadmapRoute
-  '/api/chat': typeof ApiChatRouteWithChildren
-  '/api/connections': typeof ApiConnectionsRoute
-  '/api/feed': typeof ApiFeedRoute
-  '/api/jobs': typeof ApiJobsRoute
-  '/api/leaderboard': typeof ApiLeaderboardRoute
-  '/api/notifications': typeof ApiNotificationsRoute
-  '/api/posts': typeof ApiPostsRouteWithChildren
-  '/api/reports': typeof ApiReportsRoute
-  '/api/roadmap': typeof ApiRoadmapRoute
-  '/api/stories': typeof ApiStoriesRouteWithChildren
-  '/api/suggestions': typeof ApiSuggestionsRoute
-  '/api/turn': typeof ApiTurnRoute
-  '/api/upload': typeof ApiUploadRoute
+  '/mockup/achievements_rewards_hub': typeof MockupAchievements_rewards_hubRoute
+  '/mockup/admin_dashboard': typeof MockupAdmin_dashboardRoute
+  '/mockup/admin_dashboard_content_management': typeof MockupAdmin_dashboard_content_managementRoute
+  '/mockup/admin_dashboard_job_placement_analytics': typeof MockupAdmin_dashboard_job_placement_analyticsRoute
+  '/mockup/admin_dashboard_quiz_editor': typeof MockupAdmin_dashboard_quiz_editorRoute
+  '/mockup/admin_dashboard_teacher_analytics': typeof MockupAdmin_dashboard_teacher_analyticsRoute
+  '/mockup/admin_dashboard_topic_detail_management': typeof MockupAdmin_dashboard_topic_detail_managementRoute
+  '/mockup/admin_dashboard_user_management_directory': typeof MockupAdmin_dashboard_user_management_directoryRoute
+  '/mockup/admin_dashboard_user_profile_detail': typeof MockupAdmin_dashboard_user_profile_detailRoute
+  '/mockup/career_roadmap': typeof MockupCareer_roadmapRoute
+  '/mockup/coding_arena_challenge_editor': typeof MockupCoding_arena_challenge_editorRoute
+  '/mockup/coding_arena_challenge_list': typeof MockupCoding_arena_challenge_listRoute
+  '/mockup/coding_arena_pro_challenges_with_live_activity': typeof MockupCoding_arena_pro_challenges_with_live_activityRoute
+  '/mockup/coding_arena_pro_exclusive_challenges': typeof MockupCoding_arena_pro_exclusive_challengesRoute
+  '/mockup/coding_arena_pro_leaderboard_refinement': typeof MockupCoding_arena_pro_leaderboard_refinementRoute
+  '/mockup/coding_arena_topics': typeof MockupCoding_arena_topicsRoute
+  '/mockup/interview_hub_dashboard': typeof MockupInterview_hub_dashboardRoute
+  '/mockup/interview_hub_feedback_report': typeof MockupInterview_hub_feedback_reportRoute
+  '/mockup/interview_hub_live_simulation': typeof MockupInterview_hub_live_simulationRoute
+  '/mockup/jobs_board_application_tracker': typeof MockupJobs_board_application_trackerRoute
+  '/mockup/jobs_board_discovery_explorer': typeof MockupJobs_board_discovery_explorerRoute
+  '/mockup/jobs_board_find_recruiters_discovery': typeof MockupJobs_board_find_recruiters_discoveryRoute
+  '/mockup/jobs_board_role_details_animated_success': typeof MockupJobs_board_role_details_animated_successRoute
+  '/mockup/jobs_board_role_details_applied_state': typeof MockupJobs_board_role_details_applied_stateRoute
+  '/mockup/jobs_board_role_details_match_analysis': typeof MockupJobs_board_role_details_match_analysisRoute
+  '/mockup/landing_page': typeof MockupLanding_pageRoute
+  '/mockup/leaderboard_global_rankings': typeof MockupLeaderboard_global_rankingsRoute
+  '/mockup/leaderboard_global_rankings_animated': typeof MockupLeaderboard_global_rankings_animatedRoute
+  '/mockup/login': typeof MockupLoginRoute
+  '/mockup/onboarding_step_1_topics': typeof MockupOnboarding_step_1_topicsRoute
+  '/mockup/onboarding_step_2_roles': typeof MockupOnboarding_step_2_rolesRoute
+  '/mockup/onboarding_step_3_username': typeof MockupOnboarding_step_3_usernameRoute
+  '/mockup/onboarding_step_4_finalize': typeof MockupOnboarding_step_4_finalizeRoute
+  '/mockup/placepro_pro_premium_features_hub': typeof MockupPlacepro_pro_premium_features_hubRoute
+  '/mockup/pro_checkout_secure_payment': typeof MockupPro_checkout_secure_paymentRoute
+  '/mockup/recruiter_credit_dashboard': typeof MockupRecruiter_credit_dashboardRoute
+  '/mockup/resume_builder_ai_optimization_hub': typeof MockupResume_builder_ai_optimization_hubRoute
+  '/mockup/resume_builder_editor': typeof MockupResume_builder_editorRoute
+  '/mockup/resume_builder_templates': typeof MockupResume_builder_templatesRoute
+  '/mockup/settings_notifications': typeof MockupSettings_notificationsRoute
+  '/mockup/settings_plan_billing': typeof MockupSettings_plan_billingRoute
+  '/mockup/settings_public_profile': typeof MockupSettings_public_profileRoute
+  '/mockup/settings_security_privacy': typeof MockupSettings_security_privacyRoute
+  '/mockup/signup': typeof MockupSignupRoute
+  '/mockup/social_feed': typeof MockupSocial_feedRoute
+  '/mockup/student_dashboard': typeof MockupStudent_dashboardRoute
+  '/mockup/welcome_to_pro_animated_success_splash': typeof MockupWelcome_to_pro_animated_success_splashRoute
+  '/mockup/welcome_to_pro_success_splash': typeof MockupWelcome_to_pro_success_splashRoute
   '/oauth/consent': typeof OauthConsentRoute
   '/rooms/$roomCode': typeof RoomsRoomCodeRoute
   '/settings/billing': typeof SettingsBillingRoute
@@ -587,20 +764,6 @@ export interface FileRoutesByFullPath {
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
-  '/api/chat/bot': typeof ApiChatBotRoute
-  '/api/chat/conversations': typeof ApiChatConversationsRouteWithChildren
-  '/api/chat/ensure-bot-thread': typeof ApiChatEnsureBotThreadRoute
-  '/api/chat/messages': typeof ApiChatMessagesRoute
-  '/api/classes/create': typeof ApiClassesCreateRoute
-  '/api/courses/enroll': typeof ApiCoursesEnrollRoute
-  '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
-  '/api/interview/start': typeof ApiInterviewStartRoute
-  '/api/onboarding/complete': typeof ApiOnboardingCompleteRoute
-  '/api/posts/$postId': typeof ApiPostsPostIdRouteWithChildren
-  '/api/rooms/instant': typeof ApiRoomsInstantRoute
-  '/api/stories/views': typeof ApiStoriesViewsRoute
-  '/api/users/check-username': typeof ApiUsersCheckUsernameRoute
-  '/api/users/search': typeof ApiUsersSearchRoute
   '/admin/': typeof AppAdminIndexRoute
   '/feed/': typeof AppFeedIndexRoute
   '/interview/': typeof AppInterviewIndexRoute
@@ -614,10 +777,6 @@ export interface FileRoutesByFullPath {
   '/interview/manual/$sessionId': typeof AppInterviewManualSessionIdRoute
   '/profile/$username/connections': typeof AppProfileUsernameConnectionsRoute
   '/quizzes/$quizId/results': typeof AppQuizzesQuizIdResultsRoute
-  '/api/posts/$postId/comments': typeof ApiPostsPostIdCommentsRoute
-  '/api/posts/$postId/react': typeof ApiPostsPostIdReactRoute
-  '/api/rooms/join/$code': typeof ApiRoomsJoinCodeRoute
-  '/api/chat/conversations/$conversationId/read': typeof ApiChatConversationsConversationIdReadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -633,19 +792,54 @@ export interface FileRoutesByTo {
   '/messages': typeof AppMessagesRoute
   '/profile': typeof AppProfileRouteWithChildren
   '/roadmap': typeof AppRoadmapRoute
-  '/api/chat': typeof ApiChatRouteWithChildren
-  '/api/connections': typeof ApiConnectionsRoute
-  '/api/feed': typeof ApiFeedRoute
-  '/api/jobs': typeof ApiJobsRoute
-  '/api/leaderboard': typeof ApiLeaderboardRoute
-  '/api/notifications': typeof ApiNotificationsRoute
-  '/api/posts': typeof ApiPostsRouteWithChildren
-  '/api/reports': typeof ApiReportsRoute
-  '/api/roadmap': typeof ApiRoadmapRoute
-  '/api/stories': typeof ApiStoriesRouteWithChildren
-  '/api/suggestions': typeof ApiSuggestionsRoute
-  '/api/turn': typeof ApiTurnRoute
-  '/api/upload': typeof ApiUploadRoute
+  '/mockup/achievements_rewards_hub': typeof MockupAchievements_rewards_hubRoute
+  '/mockup/admin_dashboard': typeof MockupAdmin_dashboardRoute
+  '/mockup/admin_dashboard_content_management': typeof MockupAdmin_dashboard_content_managementRoute
+  '/mockup/admin_dashboard_job_placement_analytics': typeof MockupAdmin_dashboard_job_placement_analyticsRoute
+  '/mockup/admin_dashboard_quiz_editor': typeof MockupAdmin_dashboard_quiz_editorRoute
+  '/mockup/admin_dashboard_teacher_analytics': typeof MockupAdmin_dashboard_teacher_analyticsRoute
+  '/mockup/admin_dashboard_topic_detail_management': typeof MockupAdmin_dashboard_topic_detail_managementRoute
+  '/mockup/admin_dashboard_user_management_directory': typeof MockupAdmin_dashboard_user_management_directoryRoute
+  '/mockup/admin_dashboard_user_profile_detail': typeof MockupAdmin_dashboard_user_profile_detailRoute
+  '/mockup/career_roadmap': typeof MockupCareer_roadmapRoute
+  '/mockup/coding_arena_challenge_editor': typeof MockupCoding_arena_challenge_editorRoute
+  '/mockup/coding_arena_challenge_list': typeof MockupCoding_arena_challenge_listRoute
+  '/mockup/coding_arena_pro_challenges_with_live_activity': typeof MockupCoding_arena_pro_challenges_with_live_activityRoute
+  '/mockup/coding_arena_pro_exclusive_challenges': typeof MockupCoding_arena_pro_exclusive_challengesRoute
+  '/mockup/coding_arena_pro_leaderboard_refinement': typeof MockupCoding_arena_pro_leaderboard_refinementRoute
+  '/mockup/coding_arena_topics': typeof MockupCoding_arena_topicsRoute
+  '/mockup/interview_hub_dashboard': typeof MockupInterview_hub_dashboardRoute
+  '/mockup/interview_hub_feedback_report': typeof MockupInterview_hub_feedback_reportRoute
+  '/mockup/interview_hub_live_simulation': typeof MockupInterview_hub_live_simulationRoute
+  '/mockup/jobs_board_application_tracker': typeof MockupJobs_board_application_trackerRoute
+  '/mockup/jobs_board_discovery_explorer': typeof MockupJobs_board_discovery_explorerRoute
+  '/mockup/jobs_board_find_recruiters_discovery': typeof MockupJobs_board_find_recruiters_discoveryRoute
+  '/mockup/jobs_board_role_details_animated_success': typeof MockupJobs_board_role_details_animated_successRoute
+  '/mockup/jobs_board_role_details_applied_state': typeof MockupJobs_board_role_details_applied_stateRoute
+  '/mockup/jobs_board_role_details_match_analysis': typeof MockupJobs_board_role_details_match_analysisRoute
+  '/mockup/landing_page': typeof MockupLanding_pageRoute
+  '/mockup/leaderboard_global_rankings': typeof MockupLeaderboard_global_rankingsRoute
+  '/mockup/leaderboard_global_rankings_animated': typeof MockupLeaderboard_global_rankings_animatedRoute
+  '/mockup/login': typeof MockupLoginRoute
+  '/mockup/onboarding_step_1_topics': typeof MockupOnboarding_step_1_topicsRoute
+  '/mockup/onboarding_step_2_roles': typeof MockupOnboarding_step_2_rolesRoute
+  '/mockup/onboarding_step_3_username': typeof MockupOnboarding_step_3_usernameRoute
+  '/mockup/onboarding_step_4_finalize': typeof MockupOnboarding_step_4_finalizeRoute
+  '/mockup/placepro_pro_premium_features_hub': typeof MockupPlacepro_pro_premium_features_hubRoute
+  '/mockup/pro_checkout_secure_payment': typeof MockupPro_checkout_secure_paymentRoute
+  '/mockup/recruiter_credit_dashboard': typeof MockupRecruiter_credit_dashboardRoute
+  '/mockup/resume_builder_ai_optimization_hub': typeof MockupResume_builder_ai_optimization_hubRoute
+  '/mockup/resume_builder_editor': typeof MockupResume_builder_editorRoute
+  '/mockup/resume_builder_templates': typeof MockupResume_builder_templatesRoute
+  '/mockup/settings_notifications': typeof MockupSettings_notificationsRoute
+  '/mockup/settings_plan_billing': typeof MockupSettings_plan_billingRoute
+  '/mockup/settings_public_profile': typeof MockupSettings_public_profileRoute
+  '/mockup/settings_security_privacy': typeof MockupSettings_security_privacyRoute
+  '/mockup/signup': typeof MockupSignupRoute
+  '/mockup/social_feed': typeof MockupSocial_feedRoute
+  '/mockup/student_dashboard': typeof MockupStudent_dashboardRoute
+  '/mockup/welcome_to_pro_animated_success_splash': typeof MockupWelcome_to_pro_animated_success_splashRoute
+  '/mockup/welcome_to_pro_success_splash': typeof MockupWelcome_to_pro_success_splashRoute
   '/oauth/consent': typeof OauthConsentRoute
   '/rooms/$roomCode': typeof RoomsRoomCodeRoute
   '/settings/billing': typeof SettingsBillingRoute
@@ -669,20 +863,6 @@ export interface FileRoutesByTo {
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
-  '/api/chat/bot': typeof ApiChatBotRoute
-  '/api/chat/conversations': typeof ApiChatConversationsRouteWithChildren
-  '/api/chat/ensure-bot-thread': typeof ApiChatEnsureBotThreadRoute
-  '/api/chat/messages': typeof ApiChatMessagesRoute
-  '/api/classes/create': typeof ApiClassesCreateRoute
-  '/api/courses/enroll': typeof ApiCoursesEnrollRoute
-  '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
-  '/api/interview/start': typeof ApiInterviewStartRoute
-  '/api/onboarding/complete': typeof ApiOnboardingCompleteRoute
-  '/api/posts/$postId': typeof ApiPostsPostIdRouteWithChildren
-  '/api/rooms/instant': typeof ApiRoomsInstantRoute
-  '/api/stories/views': typeof ApiStoriesViewsRoute
-  '/api/users/check-username': typeof ApiUsersCheckUsernameRoute
-  '/api/users/search': typeof ApiUsersSearchRoute
   '/admin': typeof AppAdminIndexRoute
   '/feed': typeof AppFeedIndexRoute
   '/interview': typeof AppInterviewIndexRoute
@@ -696,10 +876,6 @@ export interface FileRoutesByTo {
   '/interview/manual/$sessionId': typeof AppInterviewManualSessionIdRoute
   '/profile/$username/connections': typeof AppProfileUsernameConnectionsRoute
   '/quizzes/$quizId/results': typeof AppQuizzesQuizIdResultsRoute
-  '/api/posts/$postId/comments': typeof ApiPostsPostIdCommentsRoute
-  '/api/posts/$postId/react': typeof ApiPostsPostIdReactRoute
-  '/api/rooms/join/$code': typeof ApiRoomsJoinCodeRoute
-  '/api/chat/conversations/$conversationId/read': typeof ApiChatConversationsConversationIdReadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -722,19 +898,54 @@ export interface FileRoutesById {
   '/_app/quizzes': typeof AppQuizzesRouteWithChildren
   '/_app/resume': typeof AppResumeRouteWithChildren
   '/_app/roadmap': typeof AppRoadmapRoute
-  '/api/chat': typeof ApiChatRouteWithChildren
-  '/api/connections': typeof ApiConnectionsRoute
-  '/api/feed': typeof ApiFeedRoute
-  '/api/jobs': typeof ApiJobsRoute
-  '/api/leaderboard': typeof ApiLeaderboardRoute
-  '/api/notifications': typeof ApiNotificationsRoute
-  '/api/posts': typeof ApiPostsRouteWithChildren
-  '/api/reports': typeof ApiReportsRoute
-  '/api/roadmap': typeof ApiRoadmapRoute
-  '/api/stories': typeof ApiStoriesRouteWithChildren
-  '/api/suggestions': typeof ApiSuggestionsRoute
-  '/api/turn': typeof ApiTurnRoute
-  '/api/upload': typeof ApiUploadRoute
+  '/mockup/achievements_rewards_hub': typeof MockupAchievements_rewards_hubRoute
+  '/mockup/admin_dashboard': typeof MockupAdmin_dashboardRoute
+  '/mockup/admin_dashboard_content_management': typeof MockupAdmin_dashboard_content_managementRoute
+  '/mockup/admin_dashboard_job_placement_analytics': typeof MockupAdmin_dashboard_job_placement_analyticsRoute
+  '/mockup/admin_dashboard_quiz_editor': typeof MockupAdmin_dashboard_quiz_editorRoute
+  '/mockup/admin_dashboard_teacher_analytics': typeof MockupAdmin_dashboard_teacher_analyticsRoute
+  '/mockup/admin_dashboard_topic_detail_management': typeof MockupAdmin_dashboard_topic_detail_managementRoute
+  '/mockup/admin_dashboard_user_management_directory': typeof MockupAdmin_dashboard_user_management_directoryRoute
+  '/mockup/admin_dashboard_user_profile_detail': typeof MockupAdmin_dashboard_user_profile_detailRoute
+  '/mockup/career_roadmap': typeof MockupCareer_roadmapRoute
+  '/mockup/coding_arena_challenge_editor': typeof MockupCoding_arena_challenge_editorRoute
+  '/mockup/coding_arena_challenge_list': typeof MockupCoding_arena_challenge_listRoute
+  '/mockup/coding_arena_pro_challenges_with_live_activity': typeof MockupCoding_arena_pro_challenges_with_live_activityRoute
+  '/mockup/coding_arena_pro_exclusive_challenges': typeof MockupCoding_arena_pro_exclusive_challengesRoute
+  '/mockup/coding_arena_pro_leaderboard_refinement': typeof MockupCoding_arena_pro_leaderboard_refinementRoute
+  '/mockup/coding_arena_topics': typeof MockupCoding_arena_topicsRoute
+  '/mockup/interview_hub_dashboard': typeof MockupInterview_hub_dashboardRoute
+  '/mockup/interview_hub_feedback_report': typeof MockupInterview_hub_feedback_reportRoute
+  '/mockup/interview_hub_live_simulation': typeof MockupInterview_hub_live_simulationRoute
+  '/mockup/jobs_board_application_tracker': typeof MockupJobs_board_application_trackerRoute
+  '/mockup/jobs_board_discovery_explorer': typeof MockupJobs_board_discovery_explorerRoute
+  '/mockup/jobs_board_find_recruiters_discovery': typeof MockupJobs_board_find_recruiters_discoveryRoute
+  '/mockup/jobs_board_role_details_animated_success': typeof MockupJobs_board_role_details_animated_successRoute
+  '/mockup/jobs_board_role_details_applied_state': typeof MockupJobs_board_role_details_applied_stateRoute
+  '/mockup/jobs_board_role_details_match_analysis': typeof MockupJobs_board_role_details_match_analysisRoute
+  '/mockup/landing_page': typeof MockupLanding_pageRoute
+  '/mockup/leaderboard_global_rankings': typeof MockupLeaderboard_global_rankingsRoute
+  '/mockup/leaderboard_global_rankings_animated': typeof MockupLeaderboard_global_rankings_animatedRoute
+  '/mockup/login': typeof MockupLoginRoute
+  '/mockup/onboarding_step_1_topics': typeof MockupOnboarding_step_1_topicsRoute
+  '/mockup/onboarding_step_2_roles': typeof MockupOnboarding_step_2_rolesRoute
+  '/mockup/onboarding_step_3_username': typeof MockupOnboarding_step_3_usernameRoute
+  '/mockup/onboarding_step_4_finalize': typeof MockupOnboarding_step_4_finalizeRoute
+  '/mockup/placepro_pro_premium_features_hub': typeof MockupPlacepro_pro_premium_features_hubRoute
+  '/mockup/pro_checkout_secure_payment': typeof MockupPro_checkout_secure_paymentRoute
+  '/mockup/recruiter_credit_dashboard': typeof MockupRecruiter_credit_dashboardRoute
+  '/mockup/resume_builder_ai_optimization_hub': typeof MockupResume_builder_ai_optimization_hubRoute
+  '/mockup/resume_builder_editor': typeof MockupResume_builder_editorRoute
+  '/mockup/resume_builder_templates': typeof MockupResume_builder_templatesRoute
+  '/mockup/settings_notifications': typeof MockupSettings_notificationsRoute
+  '/mockup/settings_plan_billing': typeof MockupSettings_plan_billingRoute
+  '/mockup/settings_public_profile': typeof MockupSettings_public_profileRoute
+  '/mockup/settings_security_privacy': typeof MockupSettings_security_privacyRoute
+  '/mockup/signup': typeof MockupSignupRoute
+  '/mockup/social_feed': typeof MockupSocial_feedRoute
+  '/mockup/student_dashboard': typeof MockupStudent_dashboardRoute
+  '/mockup/welcome_to_pro_animated_success_splash': typeof MockupWelcome_to_pro_animated_success_splashRoute
+  '/mockup/welcome_to_pro_success_splash': typeof MockupWelcome_to_pro_success_splashRoute
   '/oauth/consent': typeof OauthConsentRoute
   '/rooms/$roomCode': typeof RoomsRoomCodeRoute
   '/settings/billing': typeof SettingsBillingRoute
@@ -758,20 +969,6 @@ export interface FileRoutesById {
   '/_app/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/_app/resume/create': typeof AppResumeCreateRoute
   '/_app/resume/templates': typeof AppResumeTemplatesRoute
-  '/api/chat/bot': typeof ApiChatBotRoute
-  '/api/chat/conversations': typeof ApiChatConversationsRouteWithChildren
-  '/api/chat/ensure-bot-thread': typeof ApiChatEnsureBotThreadRoute
-  '/api/chat/messages': typeof ApiChatMessagesRoute
-  '/api/classes/create': typeof ApiClassesCreateRoute
-  '/api/courses/enroll': typeof ApiCoursesEnrollRoute
-  '/api/courses/enrolled': typeof ApiCoursesEnrolledRoute
-  '/api/interview/start': typeof ApiInterviewStartRoute
-  '/api/onboarding/complete': typeof ApiOnboardingCompleteRoute
-  '/api/posts/$postId': typeof ApiPostsPostIdRouteWithChildren
-  '/api/rooms/instant': typeof ApiRoomsInstantRoute
-  '/api/stories/views': typeof ApiStoriesViewsRoute
-  '/api/users/check-username': typeof ApiUsersCheckUsernameRoute
-  '/api/users/search': typeof ApiUsersSearchRoute
   '/_app/admin/': typeof AppAdminIndexRoute
   '/_app/feed/': typeof AppFeedIndexRoute
   '/_app/interview/': typeof AppInterviewIndexRoute
@@ -785,10 +982,6 @@ export interface FileRoutesById {
   '/_app/interview/manual/$sessionId': typeof AppInterviewManualSessionIdRoute
   '/_app/profile/$username/connections': typeof AppProfileUsernameConnectionsRoute
   '/_app/quizzes/$quizId/results': typeof AppQuizzesQuizIdResultsRoute
-  '/api/posts/$postId/comments': typeof ApiPostsPostIdCommentsRoute
-  '/api/posts/$postId/react': typeof ApiPostsPostIdReactRoute
-  '/api/rooms/join/$code': typeof ApiRoomsJoinCodeRoute
-  '/api/chat/conversations/$conversationId/read': typeof ApiChatConversationsConversationIdReadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -811,19 +1004,54 @@ export interface FileRouteTypes {
     | '/quizzes'
     | '/resume'
     | '/roadmap'
-    | '/api/chat'
-    | '/api/connections'
-    | '/api/feed'
-    | '/api/jobs'
-    | '/api/leaderboard'
-    | '/api/notifications'
-    | '/api/posts'
-    | '/api/reports'
-    | '/api/roadmap'
-    | '/api/stories'
-    | '/api/suggestions'
-    | '/api/turn'
-    | '/api/upload'
+    | '/mockup/achievements_rewards_hub'
+    | '/mockup/admin_dashboard'
+    | '/mockup/admin_dashboard_content_management'
+    | '/mockup/admin_dashboard_job_placement_analytics'
+    | '/mockup/admin_dashboard_quiz_editor'
+    | '/mockup/admin_dashboard_teacher_analytics'
+    | '/mockup/admin_dashboard_topic_detail_management'
+    | '/mockup/admin_dashboard_user_management_directory'
+    | '/mockup/admin_dashboard_user_profile_detail'
+    | '/mockup/career_roadmap'
+    | '/mockup/coding_arena_challenge_editor'
+    | '/mockup/coding_arena_challenge_list'
+    | '/mockup/coding_arena_pro_challenges_with_live_activity'
+    | '/mockup/coding_arena_pro_exclusive_challenges'
+    | '/mockup/coding_arena_pro_leaderboard_refinement'
+    | '/mockup/coding_arena_topics'
+    | '/mockup/interview_hub_dashboard'
+    | '/mockup/interview_hub_feedback_report'
+    | '/mockup/interview_hub_live_simulation'
+    | '/mockup/jobs_board_application_tracker'
+    | '/mockup/jobs_board_discovery_explorer'
+    | '/mockup/jobs_board_find_recruiters_discovery'
+    | '/mockup/jobs_board_role_details_animated_success'
+    | '/mockup/jobs_board_role_details_applied_state'
+    | '/mockup/jobs_board_role_details_match_analysis'
+    | '/mockup/landing_page'
+    | '/mockup/leaderboard_global_rankings'
+    | '/mockup/leaderboard_global_rankings_animated'
+    | '/mockup/login'
+    | '/mockup/onboarding_step_1_topics'
+    | '/mockup/onboarding_step_2_roles'
+    | '/mockup/onboarding_step_3_username'
+    | '/mockup/onboarding_step_4_finalize'
+    | '/mockup/placepro_pro_premium_features_hub'
+    | '/mockup/pro_checkout_secure_payment'
+    | '/mockup/recruiter_credit_dashboard'
+    | '/mockup/resume_builder_ai_optimization_hub'
+    | '/mockup/resume_builder_editor'
+    | '/mockup/resume_builder_templates'
+    | '/mockup/settings_notifications'
+    | '/mockup/settings_plan_billing'
+    | '/mockup/settings_public_profile'
+    | '/mockup/settings_security_privacy'
+    | '/mockup/signup'
+    | '/mockup/social_feed'
+    | '/mockup/student_dashboard'
+    | '/mockup/welcome_to_pro_animated_success_splash'
+    | '/mockup/welcome_to_pro_success_splash'
     | '/oauth/consent'
     | '/rooms/$roomCode'
     | '/settings/billing'
@@ -847,20 +1075,6 @@ export interface FileRouteTypes {
     | '/quizzes/$quizId'
     | '/resume/create'
     | '/resume/templates'
-    | '/api/chat/bot'
-    | '/api/chat/conversations'
-    | '/api/chat/ensure-bot-thread'
-    | '/api/chat/messages'
-    | '/api/classes/create'
-    | '/api/courses/enroll'
-    | '/api/courses/enrolled'
-    | '/api/interview/start'
-    | '/api/onboarding/complete'
-    | '/api/posts/$postId'
-    | '/api/rooms/instant'
-    | '/api/stories/views'
-    | '/api/users/check-username'
-    | '/api/users/search'
     | '/admin/'
     | '/feed/'
     | '/interview/'
@@ -874,10 +1088,6 @@ export interface FileRouteTypes {
     | '/interview/manual/$sessionId'
     | '/profile/$username/connections'
     | '/quizzes/$quizId/results'
-    | '/api/posts/$postId/comments'
-    | '/api/posts/$postId/react'
-    | '/api/rooms/join/$code'
-    | '/api/chat/conversations/$conversationId/read'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -893,19 +1103,54 @@ export interface FileRouteTypes {
     | '/messages'
     | '/profile'
     | '/roadmap'
-    | '/api/chat'
-    | '/api/connections'
-    | '/api/feed'
-    | '/api/jobs'
-    | '/api/leaderboard'
-    | '/api/notifications'
-    | '/api/posts'
-    | '/api/reports'
-    | '/api/roadmap'
-    | '/api/stories'
-    | '/api/suggestions'
-    | '/api/turn'
-    | '/api/upload'
+    | '/mockup/achievements_rewards_hub'
+    | '/mockup/admin_dashboard'
+    | '/mockup/admin_dashboard_content_management'
+    | '/mockup/admin_dashboard_job_placement_analytics'
+    | '/mockup/admin_dashboard_quiz_editor'
+    | '/mockup/admin_dashboard_teacher_analytics'
+    | '/mockup/admin_dashboard_topic_detail_management'
+    | '/mockup/admin_dashboard_user_management_directory'
+    | '/mockup/admin_dashboard_user_profile_detail'
+    | '/mockup/career_roadmap'
+    | '/mockup/coding_arena_challenge_editor'
+    | '/mockup/coding_arena_challenge_list'
+    | '/mockup/coding_arena_pro_challenges_with_live_activity'
+    | '/mockup/coding_arena_pro_exclusive_challenges'
+    | '/mockup/coding_arena_pro_leaderboard_refinement'
+    | '/mockup/coding_arena_topics'
+    | '/mockup/interview_hub_dashboard'
+    | '/mockup/interview_hub_feedback_report'
+    | '/mockup/interview_hub_live_simulation'
+    | '/mockup/jobs_board_application_tracker'
+    | '/mockup/jobs_board_discovery_explorer'
+    | '/mockup/jobs_board_find_recruiters_discovery'
+    | '/mockup/jobs_board_role_details_animated_success'
+    | '/mockup/jobs_board_role_details_applied_state'
+    | '/mockup/jobs_board_role_details_match_analysis'
+    | '/mockup/landing_page'
+    | '/mockup/leaderboard_global_rankings'
+    | '/mockup/leaderboard_global_rankings_animated'
+    | '/mockup/login'
+    | '/mockup/onboarding_step_1_topics'
+    | '/mockup/onboarding_step_2_roles'
+    | '/mockup/onboarding_step_3_username'
+    | '/mockup/onboarding_step_4_finalize'
+    | '/mockup/placepro_pro_premium_features_hub'
+    | '/mockup/pro_checkout_secure_payment'
+    | '/mockup/recruiter_credit_dashboard'
+    | '/mockup/resume_builder_ai_optimization_hub'
+    | '/mockup/resume_builder_editor'
+    | '/mockup/resume_builder_templates'
+    | '/mockup/settings_notifications'
+    | '/mockup/settings_plan_billing'
+    | '/mockup/settings_public_profile'
+    | '/mockup/settings_security_privacy'
+    | '/mockup/signup'
+    | '/mockup/social_feed'
+    | '/mockup/student_dashboard'
+    | '/mockup/welcome_to_pro_animated_success_splash'
+    | '/mockup/welcome_to_pro_success_splash'
     | '/oauth/consent'
     | '/rooms/$roomCode'
     | '/settings/billing'
@@ -929,20 +1174,6 @@ export interface FileRouteTypes {
     | '/quizzes/$quizId'
     | '/resume/create'
     | '/resume/templates'
-    | '/api/chat/bot'
-    | '/api/chat/conversations'
-    | '/api/chat/ensure-bot-thread'
-    | '/api/chat/messages'
-    | '/api/classes/create'
-    | '/api/courses/enroll'
-    | '/api/courses/enrolled'
-    | '/api/interview/start'
-    | '/api/onboarding/complete'
-    | '/api/posts/$postId'
-    | '/api/rooms/instant'
-    | '/api/stories/views'
-    | '/api/users/check-username'
-    | '/api/users/search'
     | '/admin'
     | '/feed'
     | '/interview'
@@ -956,10 +1187,6 @@ export interface FileRouteTypes {
     | '/interview/manual/$sessionId'
     | '/profile/$username/connections'
     | '/quizzes/$quizId/results'
-    | '/api/posts/$postId/comments'
-    | '/api/posts/$postId/react'
-    | '/api/rooms/join/$code'
-    | '/api/chat/conversations/$conversationId/read'
   id:
     | '__root__'
     | '/'
@@ -981,19 +1208,54 @@ export interface FileRouteTypes {
     | '/_app/quizzes'
     | '/_app/resume'
     | '/_app/roadmap'
-    | '/api/chat'
-    | '/api/connections'
-    | '/api/feed'
-    | '/api/jobs'
-    | '/api/leaderboard'
-    | '/api/notifications'
-    | '/api/posts'
-    | '/api/reports'
-    | '/api/roadmap'
-    | '/api/stories'
-    | '/api/suggestions'
-    | '/api/turn'
-    | '/api/upload'
+    | '/mockup/achievements_rewards_hub'
+    | '/mockup/admin_dashboard'
+    | '/mockup/admin_dashboard_content_management'
+    | '/mockup/admin_dashboard_job_placement_analytics'
+    | '/mockup/admin_dashboard_quiz_editor'
+    | '/mockup/admin_dashboard_teacher_analytics'
+    | '/mockup/admin_dashboard_topic_detail_management'
+    | '/mockup/admin_dashboard_user_management_directory'
+    | '/mockup/admin_dashboard_user_profile_detail'
+    | '/mockup/career_roadmap'
+    | '/mockup/coding_arena_challenge_editor'
+    | '/mockup/coding_arena_challenge_list'
+    | '/mockup/coding_arena_pro_challenges_with_live_activity'
+    | '/mockup/coding_arena_pro_exclusive_challenges'
+    | '/mockup/coding_arena_pro_leaderboard_refinement'
+    | '/mockup/coding_arena_topics'
+    | '/mockup/interview_hub_dashboard'
+    | '/mockup/interview_hub_feedback_report'
+    | '/mockup/interview_hub_live_simulation'
+    | '/mockup/jobs_board_application_tracker'
+    | '/mockup/jobs_board_discovery_explorer'
+    | '/mockup/jobs_board_find_recruiters_discovery'
+    | '/mockup/jobs_board_role_details_animated_success'
+    | '/mockup/jobs_board_role_details_applied_state'
+    | '/mockup/jobs_board_role_details_match_analysis'
+    | '/mockup/landing_page'
+    | '/mockup/leaderboard_global_rankings'
+    | '/mockup/leaderboard_global_rankings_animated'
+    | '/mockup/login'
+    | '/mockup/onboarding_step_1_topics'
+    | '/mockup/onboarding_step_2_roles'
+    | '/mockup/onboarding_step_3_username'
+    | '/mockup/onboarding_step_4_finalize'
+    | '/mockup/placepro_pro_premium_features_hub'
+    | '/mockup/pro_checkout_secure_payment'
+    | '/mockup/recruiter_credit_dashboard'
+    | '/mockup/resume_builder_ai_optimization_hub'
+    | '/mockup/resume_builder_editor'
+    | '/mockup/resume_builder_templates'
+    | '/mockup/settings_notifications'
+    | '/mockup/settings_plan_billing'
+    | '/mockup/settings_public_profile'
+    | '/mockup/settings_security_privacy'
+    | '/mockup/signup'
+    | '/mockup/social_feed'
+    | '/mockup/student_dashboard'
+    | '/mockup/welcome_to_pro_animated_success_splash'
+    | '/mockup/welcome_to_pro_success_splash'
     | '/oauth/consent'
     | '/rooms/$roomCode'
     | '/settings/billing'
@@ -1017,20 +1279,6 @@ export interface FileRouteTypes {
     | '/_app/quizzes/$quizId'
     | '/_app/resume/create'
     | '/_app/resume/templates'
-    | '/api/chat/bot'
-    | '/api/chat/conversations'
-    | '/api/chat/ensure-bot-thread'
-    | '/api/chat/messages'
-    | '/api/classes/create'
-    | '/api/courses/enroll'
-    | '/api/courses/enrolled'
-    | '/api/interview/start'
-    | '/api/onboarding/complete'
-    | '/api/posts/$postId'
-    | '/api/rooms/instant'
-    | '/api/stories/views'
-    | '/api/users/check-username'
-    | '/api/users/search'
     | '/_app/admin/'
     | '/_app/feed/'
     | '/_app/interview/'
@@ -1044,10 +1292,6 @@ export interface FileRouteTypes {
     | '/_app/interview/manual/$sessionId'
     | '/_app/profile/$username/connections'
     | '/_app/quizzes/$quizId/results'
-    | '/api/posts/$postId/comments'
-    | '/api/posts/$postId/react'
-    | '/api/rooms/join/$code'
-    | '/api/chat/conversations/$conversationId/read'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1057,30 +1301,56 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   SettingsRoute: typeof SettingsRouteWithChildren
   SignupRoute: typeof SignupRoute
-  ApiChatRoute: typeof ApiChatRouteWithChildren
-  ApiConnectionsRoute: typeof ApiConnectionsRoute
-  ApiFeedRoute: typeof ApiFeedRoute
-  ApiJobsRoute: typeof ApiJobsRoute
-  ApiLeaderboardRoute: typeof ApiLeaderboardRoute
-  ApiNotificationsRoute: typeof ApiNotificationsRoute
-  ApiPostsRoute: typeof ApiPostsRouteWithChildren
-  ApiReportsRoute: typeof ApiReportsRoute
-  ApiRoadmapRoute: typeof ApiRoadmapRoute
-  ApiStoriesRoute: typeof ApiStoriesRouteWithChildren
-  ApiSuggestionsRoute: typeof ApiSuggestionsRoute
-  ApiTurnRoute: typeof ApiTurnRoute
-  ApiUploadRoute: typeof ApiUploadRoute
+  MockupAchievements_rewards_hubRoute: typeof MockupAchievements_rewards_hubRoute
+  MockupAdmin_dashboardRoute: typeof MockupAdmin_dashboardRoute
+  MockupAdmin_dashboard_content_managementRoute: typeof MockupAdmin_dashboard_content_managementRoute
+  MockupAdmin_dashboard_job_placement_analyticsRoute: typeof MockupAdmin_dashboard_job_placement_analyticsRoute
+  MockupAdmin_dashboard_quiz_editorRoute: typeof MockupAdmin_dashboard_quiz_editorRoute
+  MockupAdmin_dashboard_teacher_analyticsRoute: typeof MockupAdmin_dashboard_teacher_analyticsRoute
+  MockupAdmin_dashboard_topic_detail_managementRoute: typeof MockupAdmin_dashboard_topic_detail_managementRoute
+  MockupAdmin_dashboard_user_management_directoryRoute: typeof MockupAdmin_dashboard_user_management_directoryRoute
+  MockupAdmin_dashboard_user_profile_detailRoute: typeof MockupAdmin_dashboard_user_profile_detailRoute
+  MockupCareer_roadmapRoute: typeof MockupCareer_roadmapRoute
+  MockupCoding_arena_challenge_editorRoute: typeof MockupCoding_arena_challenge_editorRoute
+  MockupCoding_arena_challenge_listRoute: typeof MockupCoding_arena_challenge_listRoute
+  MockupCoding_arena_pro_challenges_with_live_activityRoute: typeof MockupCoding_arena_pro_challenges_with_live_activityRoute
+  MockupCoding_arena_pro_exclusive_challengesRoute: typeof MockupCoding_arena_pro_exclusive_challengesRoute
+  MockupCoding_arena_pro_leaderboard_refinementRoute: typeof MockupCoding_arena_pro_leaderboard_refinementRoute
+  MockupCoding_arena_topicsRoute: typeof MockupCoding_arena_topicsRoute
+  MockupInterview_hub_dashboardRoute: typeof MockupInterview_hub_dashboardRoute
+  MockupInterview_hub_feedback_reportRoute: typeof MockupInterview_hub_feedback_reportRoute
+  MockupInterview_hub_live_simulationRoute: typeof MockupInterview_hub_live_simulationRoute
+  MockupJobs_board_application_trackerRoute: typeof MockupJobs_board_application_trackerRoute
+  MockupJobs_board_discovery_explorerRoute: typeof MockupJobs_board_discovery_explorerRoute
+  MockupJobs_board_find_recruiters_discoveryRoute: typeof MockupJobs_board_find_recruiters_discoveryRoute
+  MockupJobs_board_role_details_animated_successRoute: typeof MockupJobs_board_role_details_animated_successRoute
+  MockupJobs_board_role_details_applied_stateRoute: typeof MockupJobs_board_role_details_applied_stateRoute
+  MockupJobs_board_role_details_match_analysisRoute: typeof MockupJobs_board_role_details_match_analysisRoute
+  MockupLanding_pageRoute: typeof MockupLanding_pageRoute
+  MockupLeaderboard_global_rankingsRoute: typeof MockupLeaderboard_global_rankingsRoute
+  MockupLeaderboard_global_rankings_animatedRoute: typeof MockupLeaderboard_global_rankings_animatedRoute
+  MockupLoginRoute: typeof MockupLoginRoute
+  MockupOnboarding_step_1_topicsRoute: typeof MockupOnboarding_step_1_topicsRoute
+  MockupOnboarding_step_2_rolesRoute: typeof MockupOnboarding_step_2_rolesRoute
+  MockupOnboarding_step_3_usernameRoute: typeof MockupOnboarding_step_3_usernameRoute
+  MockupOnboarding_step_4_finalizeRoute: typeof MockupOnboarding_step_4_finalizeRoute
+  MockupPlacepro_pro_premium_features_hubRoute: typeof MockupPlacepro_pro_premium_features_hubRoute
+  MockupPro_checkout_secure_paymentRoute: typeof MockupPro_checkout_secure_paymentRoute
+  MockupRecruiter_credit_dashboardRoute: typeof MockupRecruiter_credit_dashboardRoute
+  MockupResume_builder_ai_optimization_hubRoute: typeof MockupResume_builder_ai_optimization_hubRoute
+  MockupResume_builder_editorRoute: typeof MockupResume_builder_editorRoute
+  MockupResume_builder_templatesRoute: typeof MockupResume_builder_templatesRoute
+  MockupSettings_notificationsRoute: typeof MockupSettings_notificationsRoute
+  MockupSettings_plan_billingRoute: typeof MockupSettings_plan_billingRoute
+  MockupSettings_public_profileRoute: typeof MockupSettings_public_profileRoute
+  MockupSettings_security_privacyRoute: typeof MockupSettings_security_privacyRoute
+  MockupSignupRoute: typeof MockupSignupRoute
+  MockupSocial_feedRoute: typeof MockupSocial_feedRoute
+  MockupStudent_dashboardRoute: typeof MockupStudent_dashboardRoute
+  MockupWelcome_to_pro_animated_success_splashRoute: typeof MockupWelcome_to_pro_animated_success_splashRoute
+  MockupWelcome_to_pro_success_splashRoute: typeof MockupWelcome_to_pro_success_splashRoute
   OauthConsentRoute: typeof OauthConsentRoute
   RoomsRoomCodeRoute: typeof RoomsRoomCodeRoute
-  ApiClassesCreateRoute: typeof ApiClassesCreateRoute
-  ApiCoursesEnrollRoute: typeof ApiCoursesEnrollRoute
-  ApiCoursesEnrolledRoute: typeof ApiCoursesEnrolledRoute
-  ApiInterviewStartRoute: typeof ApiInterviewStartRoute
-  ApiOnboardingCompleteRoute: typeof ApiOnboardingCompleteRoute
-  ApiRoomsInstantRoute: typeof ApiRoomsInstantRoute
-  ApiUsersCheckUsernameRoute: typeof ApiUsersCheckUsernameRoute
-  ApiUsersSearchRoute: typeof ApiUsersSearchRoute
-  ApiRoomsJoinCodeRoute: typeof ApiRoomsJoinCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1169,95 +1439,340 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/upload': {
-      id: '/api/upload'
-      path: '/api/upload'
-      fullPath: '/api/upload'
-      preLoaderRoute: typeof ApiUploadRouteImport
+    '/mockup/welcome_to_pro_success_splash': {
+      id: '/mockup/welcome_to_pro_success_splash'
+      path: '/mockup/welcome_to_pro_success_splash'
+      fullPath: '/mockup/welcome_to_pro_success_splash'
+      preLoaderRoute: typeof MockupWelcome_to_pro_success_splashRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/turn': {
-      id: '/api/turn'
-      path: '/api/turn'
-      fullPath: '/api/turn'
-      preLoaderRoute: typeof ApiTurnRouteImport
+    '/mockup/welcome_to_pro_animated_success_splash': {
+      id: '/mockup/welcome_to_pro_animated_success_splash'
+      path: '/mockup/welcome_to_pro_animated_success_splash'
+      fullPath: '/mockup/welcome_to_pro_animated_success_splash'
+      preLoaderRoute: typeof MockupWelcome_to_pro_animated_success_splashRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/suggestions': {
-      id: '/api/suggestions'
-      path: '/api/suggestions'
-      fullPath: '/api/suggestions'
-      preLoaderRoute: typeof ApiSuggestionsRouteImport
+    '/mockup/student_dashboard': {
+      id: '/mockup/student_dashboard'
+      path: '/mockup/student_dashboard'
+      fullPath: '/mockup/student_dashboard'
+      preLoaderRoute: typeof MockupStudent_dashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/stories': {
-      id: '/api/stories'
-      path: '/api/stories'
-      fullPath: '/api/stories'
-      preLoaderRoute: typeof ApiStoriesRouteImport
+    '/mockup/social_feed': {
+      id: '/mockup/social_feed'
+      path: '/mockup/social_feed'
+      fullPath: '/mockup/social_feed'
+      preLoaderRoute: typeof MockupSocial_feedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/roadmap': {
-      id: '/api/roadmap'
-      path: '/api/roadmap'
-      fullPath: '/api/roadmap'
-      preLoaderRoute: typeof ApiRoadmapRouteImport
+    '/mockup/signup': {
+      id: '/mockup/signup'
+      path: '/mockup/signup'
+      fullPath: '/mockup/signup'
+      preLoaderRoute: typeof MockupSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/reports': {
-      id: '/api/reports'
-      path: '/api/reports'
-      fullPath: '/api/reports'
-      preLoaderRoute: typeof ApiReportsRouteImport
+    '/mockup/settings_security_privacy': {
+      id: '/mockup/settings_security_privacy'
+      path: '/mockup/settings_security_privacy'
+      fullPath: '/mockup/settings_security_privacy'
+      preLoaderRoute: typeof MockupSettings_security_privacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/posts': {
-      id: '/api/posts'
-      path: '/api/posts'
-      fullPath: '/api/posts'
-      preLoaderRoute: typeof ApiPostsRouteImport
+    '/mockup/settings_public_profile': {
+      id: '/mockup/settings_public_profile'
+      path: '/mockup/settings_public_profile'
+      fullPath: '/mockup/settings_public_profile'
+      preLoaderRoute: typeof MockupSettings_public_profileRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/notifications': {
-      id: '/api/notifications'
-      path: '/api/notifications'
-      fullPath: '/api/notifications'
-      preLoaderRoute: typeof ApiNotificationsRouteImport
+    '/mockup/settings_plan_billing': {
+      id: '/mockup/settings_plan_billing'
+      path: '/mockup/settings_plan_billing'
+      fullPath: '/mockup/settings_plan_billing'
+      preLoaderRoute: typeof MockupSettings_plan_billingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/leaderboard': {
-      id: '/api/leaderboard'
-      path: '/api/leaderboard'
-      fullPath: '/api/leaderboard'
-      preLoaderRoute: typeof ApiLeaderboardRouteImport
+    '/mockup/settings_notifications': {
+      id: '/mockup/settings_notifications'
+      path: '/mockup/settings_notifications'
+      fullPath: '/mockup/settings_notifications'
+      preLoaderRoute: typeof MockupSettings_notificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/jobs': {
-      id: '/api/jobs'
-      path: '/api/jobs'
-      fullPath: '/api/jobs'
-      preLoaderRoute: typeof ApiJobsRouteImport
+    '/mockup/resume_builder_templates': {
+      id: '/mockup/resume_builder_templates'
+      path: '/mockup/resume_builder_templates'
+      fullPath: '/mockup/resume_builder_templates'
+      preLoaderRoute: typeof MockupResume_builder_templatesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/feed': {
-      id: '/api/feed'
-      path: '/api/feed'
-      fullPath: '/api/feed'
-      preLoaderRoute: typeof ApiFeedRouteImport
+    '/mockup/resume_builder_editor': {
+      id: '/mockup/resume_builder_editor'
+      path: '/mockup/resume_builder_editor'
+      fullPath: '/mockup/resume_builder_editor'
+      preLoaderRoute: typeof MockupResume_builder_editorRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/connections': {
-      id: '/api/connections'
-      path: '/api/connections'
-      fullPath: '/api/connections'
-      preLoaderRoute: typeof ApiConnectionsRouteImport
+    '/mockup/resume_builder_ai_optimization_hub': {
+      id: '/mockup/resume_builder_ai_optimization_hub'
+      path: '/mockup/resume_builder_ai_optimization_hub'
+      fullPath: '/mockup/resume_builder_ai_optimization_hub'
+      preLoaderRoute: typeof MockupResume_builder_ai_optimization_hubRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/chat': {
-      id: '/api/chat'
-      path: '/api/chat'
-      fullPath: '/api/chat'
-      preLoaderRoute: typeof ApiChatRouteImport
+    '/mockup/recruiter_credit_dashboard': {
+      id: '/mockup/recruiter_credit_dashboard'
+      path: '/mockup/recruiter_credit_dashboard'
+      fullPath: '/mockup/recruiter_credit_dashboard'
+      preLoaderRoute: typeof MockupRecruiter_credit_dashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/pro_checkout_secure_payment': {
+      id: '/mockup/pro_checkout_secure_payment'
+      path: '/mockup/pro_checkout_secure_payment'
+      fullPath: '/mockup/pro_checkout_secure_payment'
+      preLoaderRoute: typeof MockupPro_checkout_secure_paymentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/placepro_pro_premium_features_hub': {
+      id: '/mockup/placepro_pro_premium_features_hub'
+      path: '/mockup/placepro_pro_premium_features_hub'
+      fullPath: '/mockup/placepro_pro_premium_features_hub'
+      preLoaderRoute: typeof MockupPlacepro_pro_premium_features_hubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/onboarding_step_4_finalize': {
+      id: '/mockup/onboarding_step_4_finalize'
+      path: '/mockup/onboarding_step_4_finalize'
+      fullPath: '/mockup/onboarding_step_4_finalize'
+      preLoaderRoute: typeof MockupOnboarding_step_4_finalizeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/onboarding_step_3_username': {
+      id: '/mockup/onboarding_step_3_username'
+      path: '/mockup/onboarding_step_3_username'
+      fullPath: '/mockup/onboarding_step_3_username'
+      preLoaderRoute: typeof MockupOnboarding_step_3_usernameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/onboarding_step_2_roles': {
+      id: '/mockup/onboarding_step_2_roles'
+      path: '/mockup/onboarding_step_2_roles'
+      fullPath: '/mockup/onboarding_step_2_roles'
+      preLoaderRoute: typeof MockupOnboarding_step_2_rolesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/onboarding_step_1_topics': {
+      id: '/mockup/onboarding_step_1_topics'
+      path: '/mockup/onboarding_step_1_topics'
+      fullPath: '/mockup/onboarding_step_1_topics'
+      preLoaderRoute: typeof MockupOnboarding_step_1_topicsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/login': {
+      id: '/mockup/login'
+      path: '/mockup/login'
+      fullPath: '/mockup/login'
+      preLoaderRoute: typeof MockupLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/leaderboard_global_rankings_animated': {
+      id: '/mockup/leaderboard_global_rankings_animated'
+      path: '/mockup/leaderboard_global_rankings_animated'
+      fullPath: '/mockup/leaderboard_global_rankings_animated'
+      preLoaderRoute: typeof MockupLeaderboard_global_rankings_animatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/leaderboard_global_rankings': {
+      id: '/mockup/leaderboard_global_rankings'
+      path: '/mockup/leaderboard_global_rankings'
+      fullPath: '/mockup/leaderboard_global_rankings'
+      preLoaderRoute: typeof MockupLeaderboard_global_rankingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/landing_page': {
+      id: '/mockup/landing_page'
+      path: '/mockup/landing_page'
+      fullPath: '/mockup/landing_page'
+      preLoaderRoute: typeof MockupLanding_pageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/jobs_board_role_details_match_analysis': {
+      id: '/mockup/jobs_board_role_details_match_analysis'
+      path: '/mockup/jobs_board_role_details_match_analysis'
+      fullPath: '/mockup/jobs_board_role_details_match_analysis'
+      preLoaderRoute: typeof MockupJobs_board_role_details_match_analysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/jobs_board_role_details_applied_state': {
+      id: '/mockup/jobs_board_role_details_applied_state'
+      path: '/mockup/jobs_board_role_details_applied_state'
+      fullPath: '/mockup/jobs_board_role_details_applied_state'
+      preLoaderRoute: typeof MockupJobs_board_role_details_applied_stateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/jobs_board_role_details_animated_success': {
+      id: '/mockup/jobs_board_role_details_animated_success'
+      path: '/mockup/jobs_board_role_details_animated_success'
+      fullPath: '/mockup/jobs_board_role_details_animated_success'
+      preLoaderRoute: typeof MockupJobs_board_role_details_animated_successRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/jobs_board_find_recruiters_discovery': {
+      id: '/mockup/jobs_board_find_recruiters_discovery'
+      path: '/mockup/jobs_board_find_recruiters_discovery'
+      fullPath: '/mockup/jobs_board_find_recruiters_discovery'
+      preLoaderRoute: typeof MockupJobs_board_find_recruiters_discoveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/jobs_board_discovery_explorer': {
+      id: '/mockup/jobs_board_discovery_explorer'
+      path: '/mockup/jobs_board_discovery_explorer'
+      fullPath: '/mockup/jobs_board_discovery_explorer'
+      preLoaderRoute: typeof MockupJobs_board_discovery_explorerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/jobs_board_application_tracker': {
+      id: '/mockup/jobs_board_application_tracker'
+      path: '/mockup/jobs_board_application_tracker'
+      fullPath: '/mockup/jobs_board_application_tracker'
+      preLoaderRoute: typeof MockupJobs_board_application_trackerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/interview_hub_live_simulation': {
+      id: '/mockup/interview_hub_live_simulation'
+      path: '/mockup/interview_hub_live_simulation'
+      fullPath: '/mockup/interview_hub_live_simulation'
+      preLoaderRoute: typeof MockupInterview_hub_live_simulationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/interview_hub_feedback_report': {
+      id: '/mockup/interview_hub_feedback_report'
+      path: '/mockup/interview_hub_feedback_report'
+      fullPath: '/mockup/interview_hub_feedback_report'
+      preLoaderRoute: typeof MockupInterview_hub_feedback_reportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/interview_hub_dashboard': {
+      id: '/mockup/interview_hub_dashboard'
+      path: '/mockup/interview_hub_dashboard'
+      fullPath: '/mockup/interview_hub_dashboard'
+      preLoaderRoute: typeof MockupInterview_hub_dashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/coding_arena_topics': {
+      id: '/mockup/coding_arena_topics'
+      path: '/mockup/coding_arena_topics'
+      fullPath: '/mockup/coding_arena_topics'
+      preLoaderRoute: typeof MockupCoding_arena_topicsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/coding_arena_pro_leaderboard_refinement': {
+      id: '/mockup/coding_arena_pro_leaderboard_refinement'
+      path: '/mockup/coding_arena_pro_leaderboard_refinement'
+      fullPath: '/mockup/coding_arena_pro_leaderboard_refinement'
+      preLoaderRoute: typeof MockupCoding_arena_pro_leaderboard_refinementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/coding_arena_pro_exclusive_challenges': {
+      id: '/mockup/coding_arena_pro_exclusive_challenges'
+      path: '/mockup/coding_arena_pro_exclusive_challenges'
+      fullPath: '/mockup/coding_arena_pro_exclusive_challenges'
+      preLoaderRoute: typeof MockupCoding_arena_pro_exclusive_challengesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/coding_arena_pro_challenges_with_live_activity': {
+      id: '/mockup/coding_arena_pro_challenges_with_live_activity'
+      path: '/mockup/coding_arena_pro_challenges_with_live_activity'
+      fullPath: '/mockup/coding_arena_pro_challenges_with_live_activity'
+      preLoaderRoute: typeof MockupCoding_arena_pro_challenges_with_live_activityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/coding_arena_challenge_list': {
+      id: '/mockup/coding_arena_challenge_list'
+      path: '/mockup/coding_arena_challenge_list'
+      fullPath: '/mockup/coding_arena_challenge_list'
+      preLoaderRoute: typeof MockupCoding_arena_challenge_listRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/coding_arena_challenge_editor': {
+      id: '/mockup/coding_arena_challenge_editor'
+      path: '/mockup/coding_arena_challenge_editor'
+      fullPath: '/mockup/coding_arena_challenge_editor'
+      preLoaderRoute: typeof MockupCoding_arena_challenge_editorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/career_roadmap': {
+      id: '/mockup/career_roadmap'
+      path: '/mockup/career_roadmap'
+      fullPath: '/mockup/career_roadmap'
+      preLoaderRoute: typeof MockupCareer_roadmapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/admin_dashboard_user_profile_detail': {
+      id: '/mockup/admin_dashboard_user_profile_detail'
+      path: '/mockup/admin_dashboard_user_profile_detail'
+      fullPath: '/mockup/admin_dashboard_user_profile_detail'
+      preLoaderRoute: typeof MockupAdmin_dashboard_user_profile_detailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/admin_dashboard_user_management_directory': {
+      id: '/mockup/admin_dashboard_user_management_directory'
+      path: '/mockup/admin_dashboard_user_management_directory'
+      fullPath: '/mockup/admin_dashboard_user_management_directory'
+      preLoaderRoute: typeof MockupAdmin_dashboard_user_management_directoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/admin_dashboard_topic_detail_management': {
+      id: '/mockup/admin_dashboard_topic_detail_management'
+      path: '/mockup/admin_dashboard_topic_detail_management'
+      fullPath: '/mockup/admin_dashboard_topic_detail_management'
+      preLoaderRoute: typeof MockupAdmin_dashboard_topic_detail_managementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/admin_dashboard_teacher_analytics': {
+      id: '/mockup/admin_dashboard_teacher_analytics'
+      path: '/mockup/admin_dashboard_teacher_analytics'
+      fullPath: '/mockup/admin_dashboard_teacher_analytics'
+      preLoaderRoute: typeof MockupAdmin_dashboard_teacher_analyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/admin_dashboard_quiz_editor': {
+      id: '/mockup/admin_dashboard_quiz_editor'
+      path: '/mockup/admin_dashboard_quiz_editor'
+      fullPath: '/mockup/admin_dashboard_quiz_editor'
+      preLoaderRoute: typeof MockupAdmin_dashboard_quiz_editorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/admin_dashboard_job_placement_analytics': {
+      id: '/mockup/admin_dashboard_job_placement_analytics'
+      path: '/mockup/admin_dashboard_job_placement_analytics'
+      fullPath: '/mockup/admin_dashboard_job_placement_analytics'
+      preLoaderRoute: typeof MockupAdmin_dashboard_job_placement_analyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/admin_dashboard_content_management': {
+      id: '/mockup/admin_dashboard_content_management'
+      path: '/mockup/admin_dashboard_content_management'
+      fullPath: '/mockup/admin_dashboard_content_management'
+      preLoaderRoute: typeof MockupAdmin_dashboard_content_managementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/admin_dashboard': {
+      id: '/mockup/admin_dashboard'
+      path: '/mockup/admin_dashboard'
+      fullPath: '/mockup/admin_dashboard'
+      preLoaderRoute: typeof MockupAdmin_dashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup/achievements_rewards_hub': {
+      id: '/mockup/achievements_rewards_hub'
+      path: '/mockup/achievements_rewards_hub'
+      fullPath: '/mockup/achievements_rewards_hub'
+      preLoaderRoute: typeof MockupAchievements_rewards_hubRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/roadmap': {
@@ -1400,104 +1915,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminIndexRouteImport
       parentRoute: typeof AppAdminRoute
     }
-    '/api/users/search': {
-      id: '/api/users/search'
-      path: '/api/users/search'
-      fullPath: '/api/users/search'
-      preLoaderRoute: typeof ApiUsersSearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/users/check-username': {
-      id: '/api/users/check-username'
-      path: '/api/users/check-username'
-      fullPath: '/api/users/check-username'
-      preLoaderRoute: typeof ApiUsersCheckUsernameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/stories/views': {
-      id: '/api/stories/views'
-      path: '/views'
-      fullPath: '/api/stories/views'
-      preLoaderRoute: typeof ApiStoriesViewsRouteImport
-      parentRoute: typeof ApiStoriesRoute
-    }
-    '/api/rooms/instant': {
-      id: '/api/rooms/instant'
-      path: '/api/rooms/instant'
-      fullPath: '/api/rooms/instant'
-      preLoaderRoute: typeof ApiRoomsInstantRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/posts/$postId': {
-      id: '/api/posts/$postId'
-      path: '/$postId'
-      fullPath: '/api/posts/$postId'
-      preLoaderRoute: typeof ApiPostsPostIdRouteImport
-      parentRoute: typeof ApiPostsRoute
-    }
-    '/api/onboarding/complete': {
-      id: '/api/onboarding/complete'
-      path: '/api/onboarding/complete'
-      fullPath: '/api/onboarding/complete'
-      preLoaderRoute: typeof ApiOnboardingCompleteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/interview/start': {
-      id: '/api/interview/start'
-      path: '/api/interview/start'
-      fullPath: '/api/interview/start'
-      preLoaderRoute: typeof ApiInterviewStartRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/courses/enrolled': {
-      id: '/api/courses/enrolled'
-      path: '/api/courses/enrolled'
-      fullPath: '/api/courses/enrolled'
-      preLoaderRoute: typeof ApiCoursesEnrolledRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/courses/enroll': {
-      id: '/api/courses/enroll'
-      path: '/api/courses/enroll'
-      fullPath: '/api/courses/enroll'
-      preLoaderRoute: typeof ApiCoursesEnrollRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/classes/create': {
-      id: '/api/classes/create'
-      path: '/api/classes/create'
-      fullPath: '/api/classes/create'
-      preLoaderRoute: typeof ApiClassesCreateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/messages': {
-      id: '/api/chat/messages'
-      path: '/messages'
-      fullPath: '/api/chat/messages'
-      preLoaderRoute: typeof ApiChatMessagesRouteImport
-      parentRoute: typeof ApiChatRoute
-    }
-    '/api/chat/ensure-bot-thread': {
-      id: '/api/chat/ensure-bot-thread'
-      path: '/ensure-bot-thread'
-      fullPath: '/api/chat/ensure-bot-thread'
-      preLoaderRoute: typeof ApiChatEnsureBotThreadRouteImport
-      parentRoute: typeof ApiChatRoute
-    }
-    '/api/chat/conversations': {
-      id: '/api/chat/conversations'
-      path: '/conversations'
-      fullPath: '/api/chat/conversations'
-      preLoaderRoute: typeof ApiChatConversationsRouteImport
-      parentRoute: typeof ApiChatRoute
-    }
-    '/api/chat/bot': {
-      id: '/api/chat/bot'
-      path: '/bot'
-      fullPath: '/api/chat/bot'
-      preLoaderRoute: typeof ApiChatBotRouteImport
-      parentRoute: typeof ApiChatRoute
-    }
     '/_app/resume/templates': {
       id: '/_app/resume/templates'
       path: '/templates'
@@ -1617,27 +2034,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminAdminsRouteImport
       parentRoute: typeof AppAdminRoute
     }
-    '/api/rooms/join/$code': {
-      id: '/api/rooms/join/$code'
-      path: '/api/rooms/join/$code'
-      fullPath: '/api/rooms/join/$code'
-      preLoaderRoute: typeof ApiRoomsJoinCodeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/posts/$postId/react': {
-      id: '/api/posts/$postId/react'
-      path: '/react'
-      fullPath: '/api/posts/$postId/react'
-      preLoaderRoute: typeof ApiPostsPostIdReactRouteImport
-      parentRoute: typeof ApiPostsPostIdRoute
-    }
-    '/api/posts/$postId/comments': {
-      id: '/api/posts/$postId/comments'
-      path: '/comments'
-      fullPath: '/api/posts/$postId/comments'
-      preLoaderRoute: typeof ApiPostsPostIdCommentsRouteImport
-      parentRoute: typeof ApiPostsPostIdRoute
-    }
     '/_app/quizzes/$quizId/results': {
       id: '/_app/quizzes/$quizId/results'
       path: '/results'
@@ -1679,13 +2075,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/arena/$topicId/$challengeId'
       preLoaderRoute: typeof AppArenaTopicIdChallengeIdRouteImport
       parentRoute: typeof AppArenaTopicIdRoute
-    }
-    '/api/chat/conversations/$conversationId/read': {
-      id: '/api/chat/conversations/$conversationId/read'
-      path: '/$conversationId/read'
-      fullPath: '/api/chat/conversations/$conversationId/read'
-      preLoaderRoute: typeof ApiChatConversationsConversationIdReadRouteImport
-      parentRoute: typeof ApiChatConversationsRoute
     }
   }
 }
@@ -1908,73 +2297,6 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
   SettingsRouteChildren,
 )
 
-interface ApiChatConversationsRouteChildren {
-  ApiChatConversationsConversationIdReadRoute: typeof ApiChatConversationsConversationIdReadRoute
-}
-
-const ApiChatConversationsRouteChildren: ApiChatConversationsRouteChildren = {
-  ApiChatConversationsConversationIdReadRoute:
-    ApiChatConversationsConversationIdReadRoute,
-}
-
-const ApiChatConversationsRouteWithChildren =
-  ApiChatConversationsRoute._addFileChildren(ApiChatConversationsRouteChildren)
-
-interface ApiChatRouteChildren {
-  ApiChatBotRoute: typeof ApiChatBotRoute
-  ApiChatConversationsRoute: typeof ApiChatConversationsRouteWithChildren
-  ApiChatEnsureBotThreadRoute: typeof ApiChatEnsureBotThreadRoute
-  ApiChatMessagesRoute: typeof ApiChatMessagesRoute
-}
-
-const ApiChatRouteChildren: ApiChatRouteChildren = {
-  ApiChatBotRoute: ApiChatBotRoute,
-  ApiChatConversationsRoute: ApiChatConversationsRouteWithChildren,
-  ApiChatEnsureBotThreadRoute: ApiChatEnsureBotThreadRoute,
-  ApiChatMessagesRoute: ApiChatMessagesRoute,
-}
-
-const ApiChatRouteWithChildren =
-  ApiChatRoute._addFileChildren(ApiChatRouteChildren)
-
-interface ApiPostsPostIdRouteChildren {
-  ApiPostsPostIdCommentsRoute: typeof ApiPostsPostIdCommentsRoute
-  ApiPostsPostIdReactRoute: typeof ApiPostsPostIdReactRoute
-}
-
-const ApiPostsPostIdRouteChildren: ApiPostsPostIdRouteChildren = {
-  ApiPostsPostIdCommentsRoute: ApiPostsPostIdCommentsRoute,
-  ApiPostsPostIdReactRoute: ApiPostsPostIdReactRoute,
-}
-
-const ApiPostsPostIdRouteWithChildren = ApiPostsPostIdRoute._addFileChildren(
-  ApiPostsPostIdRouteChildren,
-)
-
-interface ApiPostsRouteChildren {
-  ApiPostsPostIdRoute: typeof ApiPostsPostIdRouteWithChildren
-}
-
-const ApiPostsRouteChildren: ApiPostsRouteChildren = {
-  ApiPostsPostIdRoute: ApiPostsPostIdRouteWithChildren,
-}
-
-const ApiPostsRouteWithChildren = ApiPostsRoute._addFileChildren(
-  ApiPostsRouteChildren,
-)
-
-interface ApiStoriesRouteChildren {
-  ApiStoriesViewsRoute: typeof ApiStoriesViewsRoute
-}
-
-const ApiStoriesRouteChildren: ApiStoriesRouteChildren = {
-  ApiStoriesViewsRoute: ApiStoriesViewsRoute,
-}
-
-const ApiStoriesRouteWithChildren = ApiStoriesRoute._addFileChildren(
-  ApiStoriesRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
@@ -1982,30 +2304,83 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   SettingsRoute: SettingsRouteWithChildren,
   SignupRoute: SignupRoute,
-  ApiChatRoute: ApiChatRouteWithChildren,
-  ApiConnectionsRoute: ApiConnectionsRoute,
-  ApiFeedRoute: ApiFeedRoute,
-  ApiJobsRoute: ApiJobsRoute,
-  ApiLeaderboardRoute: ApiLeaderboardRoute,
-  ApiNotificationsRoute: ApiNotificationsRoute,
-  ApiPostsRoute: ApiPostsRouteWithChildren,
-  ApiReportsRoute: ApiReportsRoute,
-  ApiRoadmapRoute: ApiRoadmapRoute,
-  ApiStoriesRoute: ApiStoriesRouteWithChildren,
-  ApiSuggestionsRoute: ApiSuggestionsRoute,
-  ApiTurnRoute: ApiTurnRoute,
-  ApiUploadRoute: ApiUploadRoute,
+  MockupAchievements_rewards_hubRoute: MockupAchievements_rewards_hubRoute,
+  MockupAdmin_dashboardRoute: MockupAdmin_dashboardRoute,
+  MockupAdmin_dashboard_content_managementRoute:
+    MockupAdmin_dashboard_content_managementRoute,
+  MockupAdmin_dashboard_job_placement_analyticsRoute:
+    MockupAdmin_dashboard_job_placement_analyticsRoute,
+  MockupAdmin_dashboard_quiz_editorRoute:
+    MockupAdmin_dashboard_quiz_editorRoute,
+  MockupAdmin_dashboard_teacher_analyticsRoute:
+    MockupAdmin_dashboard_teacher_analyticsRoute,
+  MockupAdmin_dashboard_topic_detail_managementRoute:
+    MockupAdmin_dashboard_topic_detail_managementRoute,
+  MockupAdmin_dashboard_user_management_directoryRoute:
+    MockupAdmin_dashboard_user_management_directoryRoute,
+  MockupAdmin_dashboard_user_profile_detailRoute:
+    MockupAdmin_dashboard_user_profile_detailRoute,
+  MockupCareer_roadmapRoute: MockupCareer_roadmapRoute,
+  MockupCoding_arena_challenge_editorRoute:
+    MockupCoding_arena_challenge_editorRoute,
+  MockupCoding_arena_challenge_listRoute:
+    MockupCoding_arena_challenge_listRoute,
+  MockupCoding_arena_pro_challenges_with_live_activityRoute:
+    MockupCoding_arena_pro_challenges_with_live_activityRoute,
+  MockupCoding_arena_pro_exclusive_challengesRoute:
+    MockupCoding_arena_pro_exclusive_challengesRoute,
+  MockupCoding_arena_pro_leaderboard_refinementRoute:
+    MockupCoding_arena_pro_leaderboard_refinementRoute,
+  MockupCoding_arena_topicsRoute: MockupCoding_arena_topicsRoute,
+  MockupInterview_hub_dashboardRoute: MockupInterview_hub_dashboardRoute,
+  MockupInterview_hub_feedback_reportRoute:
+    MockupInterview_hub_feedback_reportRoute,
+  MockupInterview_hub_live_simulationRoute:
+    MockupInterview_hub_live_simulationRoute,
+  MockupJobs_board_application_trackerRoute:
+    MockupJobs_board_application_trackerRoute,
+  MockupJobs_board_discovery_explorerRoute:
+    MockupJobs_board_discovery_explorerRoute,
+  MockupJobs_board_find_recruiters_discoveryRoute:
+    MockupJobs_board_find_recruiters_discoveryRoute,
+  MockupJobs_board_role_details_animated_successRoute:
+    MockupJobs_board_role_details_animated_successRoute,
+  MockupJobs_board_role_details_applied_stateRoute:
+    MockupJobs_board_role_details_applied_stateRoute,
+  MockupJobs_board_role_details_match_analysisRoute:
+    MockupJobs_board_role_details_match_analysisRoute,
+  MockupLanding_pageRoute: MockupLanding_pageRoute,
+  MockupLeaderboard_global_rankingsRoute:
+    MockupLeaderboard_global_rankingsRoute,
+  MockupLeaderboard_global_rankings_animatedRoute:
+    MockupLeaderboard_global_rankings_animatedRoute,
+  MockupLoginRoute: MockupLoginRoute,
+  MockupOnboarding_step_1_topicsRoute: MockupOnboarding_step_1_topicsRoute,
+  MockupOnboarding_step_2_rolesRoute: MockupOnboarding_step_2_rolesRoute,
+  MockupOnboarding_step_3_usernameRoute: MockupOnboarding_step_3_usernameRoute,
+  MockupOnboarding_step_4_finalizeRoute: MockupOnboarding_step_4_finalizeRoute,
+  MockupPlacepro_pro_premium_features_hubRoute:
+    MockupPlacepro_pro_premium_features_hubRoute,
+  MockupPro_checkout_secure_paymentRoute:
+    MockupPro_checkout_secure_paymentRoute,
+  MockupRecruiter_credit_dashboardRoute: MockupRecruiter_credit_dashboardRoute,
+  MockupResume_builder_ai_optimization_hubRoute:
+    MockupResume_builder_ai_optimization_hubRoute,
+  MockupResume_builder_editorRoute: MockupResume_builder_editorRoute,
+  MockupResume_builder_templatesRoute: MockupResume_builder_templatesRoute,
+  MockupSettings_notificationsRoute: MockupSettings_notificationsRoute,
+  MockupSettings_plan_billingRoute: MockupSettings_plan_billingRoute,
+  MockupSettings_public_profileRoute: MockupSettings_public_profileRoute,
+  MockupSettings_security_privacyRoute: MockupSettings_security_privacyRoute,
+  MockupSignupRoute: MockupSignupRoute,
+  MockupSocial_feedRoute: MockupSocial_feedRoute,
+  MockupStudent_dashboardRoute: MockupStudent_dashboardRoute,
+  MockupWelcome_to_pro_animated_success_splashRoute:
+    MockupWelcome_to_pro_animated_success_splashRoute,
+  MockupWelcome_to_pro_success_splashRoute:
+    MockupWelcome_to_pro_success_splashRoute,
   OauthConsentRoute: OauthConsentRoute,
   RoomsRoomCodeRoute: RoomsRoomCodeRoute,
-  ApiClassesCreateRoute: ApiClassesCreateRoute,
-  ApiCoursesEnrollRoute: ApiCoursesEnrollRoute,
-  ApiCoursesEnrolledRoute: ApiCoursesEnrolledRoute,
-  ApiInterviewStartRoute: ApiInterviewStartRoute,
-  ApiOnboardingCompleteRoute: ApiOnboardingCompleteRoute,
-  ApiRoomsInstantRoute: ApiRoomsInstantRoute,
-  ApiUsersCheckUsernameRoute: ApiUsersCheckUsernameRoute,
-  ApiUsersSearchRoute: ApiUsersSearchRoute,
-  ApiRoomsJoinCodeRoute: ApiRoomsJoinCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -23,25 +23,28 @@ export async function createUserAdmin(opts: {
   name: string;
 }): Promise<{ user: any; error: string | null }> {
   if (!supabaseServiceKey) {
-    return { user: null, error: "Missing VITE_SUPABASE_SERVICE_ROLE_KEY in environment variables." };
+    return {
+      user: null,
+      error: "Missing VITE_SUPABASE_SERVICE_ROLE_KEY in environment variables.",
+    };
   }
 
   try {
     const res = await fetch(`${supabaseUrl}/auth/v1/admin/users`, {
       method: "POST",
       headers: {
-        "apikey": supabaseServiceKey,
-        "Authorization": `Bearer ${supabaseServiceKey}`,
+        apikey: supabaseServiceKey,
+        Authorization: `Bearer ${supabaseServiceKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: opts.email,
         password: opts.password,
         email_confirm: true,
-        user_metadata: { 
-          role: opts.role, 
+        user_metadata: {
+          role: opts.role,
           name: opts.name,
-          username: "u" + Date.now().toString(36) + Math.floor(Math.random() * 1000).toString(36)
+          username: "u" + Date.now().toString(36) + Math.floor(Math.random() * 1000).toString(36),
         },
       }),
     });
@@ -49,7 +52,10 @@ export async function createUserAdmin(opts: {
     const data = await res.json();
 
     if (!res.ok) {
-      return { user: null, error: data.msg || data.message || data.error || "Failed to create user" };
+      return {
+        user: null,
+        error: data.msg || data.message || data.error || "Failed to create user",
+      };
     }
 
     return { user: data, error: null };

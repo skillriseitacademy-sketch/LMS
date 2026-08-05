@@ -1,42 +1,45 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { supabase } from "@/lib/supabase";
+import { requireAuth, serviceClient, handleError, validateBody, ApiError } from "@/lib/api-utils";
 import { sanitizeText } from "@/lib/sanitize";
+import { z } from "zod";
 
-export const Route = createFileRoute("/api/classes/create")({
+const createClassSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  topic_id: z.string().uuid("Invalid topic ID"),
+  start_time: z.string().datetime(),
+  end_time: z.string().datetime(),
+});
+
+export const Route = createFileRoute("/api/classes/create" as any)({
   server: {
     handlers: {
       POST: async ({ request }) => {
         try {
-          const authHeader = request.headers.get("Authorization");
-          const token = authHeader?.replace("Bearer ", "");
-          if (!token) return new Response("Unauthorized", { status: 401 });
-
-          const {
-            data: { user },
-            error: authError,
-          } = await supabase.auth.getUser(token);
-          if (authError || !user) return new Response("Unauthorized", { status: 401 });
+          const user = await requireAuth(request);
 
           // Verify user is teacher
-          const { data: profile } = await supabase
+          const { data: profile } = await serviceClient
             .from("profiles")
             .select("role")
             .eq("id", user.id)
             .single();
-          if (profile?.role !== "teacher") return new Response("Forbidden", { status: 403 });
+            
+          if (profile?.role !== "teacher") {
+            throw new ApiError(403, "Forbidden: Only teachers can create classes");
+          }
 
-          const { title, topic_id, start_time, end_time } = await request.json();
-          const cleanTitle = sanitizeText(title, 200);
-          
-          if (!cleanTitle || !topic_id || !start_time || !end_time) {
-            return new Response("Missing required fields", { status: 400 });
+          const body = await validateBody(request, createClassSchema);
+          const cleanTitle = sanitizeText(body.title, 200);
+
+          if (!cleanTitle) {
+            throw new ApiError(400, "Invalid or empty title after sanitization");
           }
 
           // Create Daily.co room
           const dailyKey = process.env.DAILY_API_KEY;
-          if (!dailyKey) return new Response("Missing DAILY_API_KEY", { status: 500 });
+          if (!dailyKey) throw new ApiError(500, "Missing DAILY_API_KEY configuration");
 
-          const exp = Math.floor(new Date(end_time).getTime() / 1000) + 3600; // Room expires 1hr after end
+          const exp = Math.floor(new Date(body.end_time).getTime() / 1000) + 3600; // Room expires 1hr after end
 
           const dailyRes = await fetch("https://api.daily.co/v1/rooms", {
             method: "POST",
@@ -55,36 +58,37 @@ export const Route = createFileRoute("/api/classes/create")({
           if (!dailyRes.ok) {
             const errorText = await dailyRes.text();
             console.error("Daily API Error:", errorText);
-            return new Response("Failed to create video room", { status: 500 });
+            throw new ApiError(500, "Failed to create video room");
           }
 
           const room = await dailyRes.json();
 
           // Save to database
-          const { data: inserted, error: dbError } = await supabase
+          const { data: inserted, error: dbError } = await serviceClient
             .from("live_classes")
             .insert({
               teacher_id: user.id,
-              topic_id,
+              topic_id: body.topic_id,
               title: cleanTitle,
-              start_time,
-              end_time,
+              start_time: body.start_time,
+              end_time: body.end_time,
               daily_room_url: room.url,
               daily_room_name: room.name,
             })
-            .select()
+            .select("id, title, start_time, end_time, daily_room_url")
             .single();
 
           if (dbError) {
             console.error("DB Error:", dbError);
-            return new Response("Database error", { status: 500 });
+            throw new ApiError(500, "Database error");
           }
 
           return new Response(JSON.stringify(inserted), {
+            status: 201,
             headers: { "Content-Type": "application/json" },
           });
-        } catch (e: any) {
-          return new Response(e.message, { status: 500 });
+        } catch (error) {
+          return handleError(error);
         }
       },
     },

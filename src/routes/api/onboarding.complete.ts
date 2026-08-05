@@ -16,18 +16,23 @@ export const Route = createFileRoute("/api/onboarding/complete")({
           } = await supabase.auth.getUser(token);
           if (authError || !user) return new Response("Unauthorized", { status: 401 });
 
-          const { education_level, course_ids, visibility, username, target_jobs } = await request.json();
+          const { education_level, course_ids, visibility, username, target_jobs } =
+            await request.json();
 
           if (!Array.isArray(course_ids) || course_ids.length === 0) {
             return new Response("At least one course must be selected", { status: 400 });
           }
 
           // Sanitize user inputs
-          const cleanCourseIds = course_ids.map((id: string) => String(id).trim()).filter((id: string) => id.length > 0);
-          
+          const cleanCourseIds = course_ids
+            .map((id: string) => String(id).trim())
+            .filter((id: string) => id.length > 0);
+
           let cleanUsername = undefined;
           if (username) {
-            cleanUsername = String(username).toLowerCase().replace(/[^a-z0-9_]/g, "");
+            cleanUsername = String(username)
+              .toLowerCase()
+              .replace(/[^a-z0-9_]/g, "");
             if (cleanUsername.length < 3 || cleanUsername.length > 20) {
               return new Response("Invalid username format", { status: 400 });
             }

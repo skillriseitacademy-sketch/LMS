@@ -738,18 +738,44 @@ CREATE TABLE IF NOT EXISTS instant_rooms (
   room_code TEXT NOT NULL UNIQUE,
   room_name TEXT NOT NULL,
   room_url TEXT NOT NULL,
+  room_type TEXT DEFAULT 'study_group' CHECK (room_type IN ('class', 'study_group')),
   status TEXT DEFAULT 'active',
-  created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+  created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+  scheduled_for TIMESTAMPTZ
 );
 ALTER TABLE instant_rooms ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone authenticated can view active instant rooms" ON instant_rooms FOR SELECT
   USING (auth.uid() IS NOT NULL);
 CREATE POLICY "Users can create instant rooms" ON instant_rooms FOR INSERT
-  WITH CHECK (auth.uid() = host_id);
+  WITH CHECK (
+    auth.uid() = host_id AND
+    (room_type = 'study_group' OR get_user_role() IN ('teacher', 'admin'))
+  );
 CREATE POLICY "Hosts can manage their instant rooms" ON instant_rooms FOR UPDATE
   USING (auth.uid() = host_id);
 CREATE POLICY "Hosts can delete their instant rooms" ON instant_rooms FOR DELETE
   USING (auth.uid() = host_id);
+
+CREATE TABLE IF NOT EXISTS class_recordings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  room_id UUID REFERENCES instant_rooms(id) ON DELETE CASCADE,
+  status TEXT CHECK (status IN ('recording','processing','uploading','done','failed')) DEFAULT 'recording',
+  storage_path TEXT,
+  youtube_video_id TEXT,
+  youtube_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+  completed_at TIMESTAMPTZ
+);
+ALTER TABLE class_recordings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Room participants can view recordings" ON class_recordings FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM instant_rooms ir WHERE ir.id = class_recordings.room_id AND ir.host_id = auth.uid()
+    ) OR
+    EXISTS (
+      SELECT 1 FROM room_participants rp WHERE rp.room_id = class_recordings.room_id AND rp.user_id = auth.uid()
+    )
+  );
 
 -- ==============================================================================
 -- NOTIFICATIONS ARCHITECTURE
@@ -944,4 +970,116 @@ BEGIN
 
   RETURN QUERY SELECT solved_count, rank_num;
 END;
+$$;
+
+-- ==============================================================================
+-- PHASE 8 — AI USAGE LOGS & RATE LIMITING
+-- ==============================================================================
+
+CREATE TABLE public.ai_usage_logs (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  provider TEXT NOT NULL,
+  model TEXT NOT NULL,
+  prompt_tokens INT DEFAULT 0,
+  completion_tokens INT DEFAULT 0,
+  estimated_cost NUMERIC DEFAULT 0,
+  action_type TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Index for fast rate limiting checks (summing cost by user today)
+CREATE INDEX idx_ai_usage_user_date ON public.ai_usage_logs(user_id, created_at);
+
+-- RLS: Only admins can read all, users can read their own
+ALTER TABLE public.ai_usage_logs ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own AI usage logs" ON public.ai_usage_logs
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Admins can view all AI usage logs" ON public.ai_usage_logs
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'
+    )
+  );
+
+-- Only backend (service role) can insert
+-- Therefore we do not provide an insert policy for anon/authenticated roles.
+
+-- ==============================================================================
+-- PHASE 9 — AI MEMORY & VECTOR SEARCH (pgvector)
+-- ==============================================================================
+
+-- 1. Enable pgvector extension
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- 2. Add vector column to job listings for Semantic Job Search
+ALTER TABLE public.job_listings
+  ADD COLUMN IF NOT EXISTS embedding vector(1536);
+
+-- 3. Create ai_user_memories table for long-term facts & interview performance
+CREATE TABLE IF NOT EXISTS public.ai_user_memories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  content TEXT NOT NULL,
+  embedding vector(1536) NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+);
+
+-- RLS for user memories
+ALTER TABLE public.ai_user_memories ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users view own memories" ON ai_user_memories FOR SELECT
+  USING (auth.uid() = user_id);
+-- Inserts usually happen via server service_role during AI sessions.
+
+-- 4. Match functions for vector similarity search
+CREATE OR REPLACE FUNCTION match_jobs (
+  query_embedding vector(1536),
+  match_threshold float,
+  match_count int
+)
+RETURNS TABLE (
+  id uuid,
+  title text,
+  company text,
+  url text,
+  similarity float
+)
+LANGUAGE sql STABLE
+AS $$
+  SELECT
+    job_listings.id,
+    job_listings.title,
+    job_listings.company,
+    job_listings.url,
+    1 - (job_listings.embedding <=> query_embedding) AS similarity
+  FROM job_listings
+  WHERE 1 - (job_listings.embedding <=> query_embedding) > match_threshold
+  ORDER BY job_listings.embedding <=> query_embedding
+  LIMIT match_count;
+$$;
+
+CREATE OR REPLACE FUNCTION match_user_memories (
+  query_embedding vector(1536),
+  target_user_id uuid,
+  match_threshold float,
+  match_count int
+)
+RETURNS TABLE (
+  id uuid,
+  content text,
+  similarity float
+)
+LANGUAGE sql STABLE
+AS $$
+  SELECT
+    ai_user_memories.id,
+    ai_user_memories.content,
+    1 - (ai_user_memories.embedding <=> query_embedding) AS similarity
+  FROM ai_user_memories
+  WHERE ai_user_memories.user_id = target_user_id
+    AND 1 - (ai_user_memories.embedding <=> query_embedding) > match_threshold
+  ORDER BY ai_user_memories.embedding <=> query_embedding
+  LIMIT match_count;
 $$;

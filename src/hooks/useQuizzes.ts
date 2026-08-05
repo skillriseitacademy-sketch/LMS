@@ -1,47 +1,10 @@
-import { useEffect, useState } from "react";
-import { supabase, type QuizAttemptRow } from "./supabase";
-
-export interface ProfileData {
-  name: string;
-  initials: string;
-  headline: string;
-  avatar_url?: string;
-}
+import { useState, useEffect } from "react";
+import { supabase, type QuizAttemptRow } from "@/lib/supabase";
 
 export interface QuizAttempt {
   quizId: string;
   score: number;
   timestamp: number;
-}
-
-const defaultProfile: ProfileData = {
-  name: "Sam Adams",
-  initials: "SA",
-  headline: "Frontend track · joined Aug 2025",
-};
-
-export function getProfile(): ProfileData {
-  if (typeof window === "undefined") return defaultProfile;
-  const stored = localStorage.getItem("placepro-profile");
-  return stored ? JSON.parse(stored) : defaultProfile;
-}
-
-export function saveProfile(profile: ProfileData) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem("placepro-profile", JSON.stringify(profile));
-  window.dispatchEvent(new Event("profile-updated"));
-}
-
-export function useProfile() {
-  const [profile, setProfile] = useState<ProfileData>(getProfile);
-
-  useEffect(() => {
-    const handleUpdate = () => setProfile(getProfile());
-    window.addEventListener("profile-updated", handleUpdate);
-    return () => window.removeEventListener("profile-updated", handleUpdate);
-  }, []);
-
-  return { profile, saveProfile };
 }
 
 export function getQuizHistory(): QuizAttempt[] {

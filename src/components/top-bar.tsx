@@ -1,5 +1,5 @@
 import { Bell, Search, Flame, Sparkles } from "lucide-react";
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { StreakCalendar } from "./streak-calendar";
 import { useEffect, useState } from "react";
@@ -16,43 +16,54 @@ interface TopBarProps {
 export function TopBar({ title }: TopBarProps) {
   const { session } = useAuth();
   const initials = session?.email?.slice(0, 2).toUpperCase() ?? "U";
-  
+
   const [notifications, setNotifications] = useState<any[]>([]);
-  const unreadCount = notifications.filter(n => !n.is_read).length;
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
 
   useEffect(() => {
     if (!session) return;
-    
+
     // Fetch initial notifications
-    fetch("/api/notifications").then(res => res.json()).then(data => {
-      if (Array.isArray(data)) setNotifications(data);
-    });
+    fetch("/api/notifications")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setNotifications(data);
+      });
 
     // Real-time subscription
-    const channel = supabase.channel("realtime:notifications")
-      .on("postgres_changes", {
-        event: "INSERT",
-        schema: "public",
-        table: "notifications",
-        filter: `user_id=eq.${session.id}`
-      }, (payload) => {
-        // Fetch full notification data with actor info when a new one comes in
-        fetch("/api/notifications").then(res => res.json()).then(data => {
-          if (Array.isArray(data)) setNotifications(data);
-        });
-      })
+    const channel = supabase
+      .channel("realtime:notifications")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${session.id}`,
+        },
+        (payload) => {
+          // Fetch full notification data with actor info when a new one comes in
+          fetch("/api/notifications")
+            .then((res) => res.json())
+            .then((data) => {
+              if (Array.isArray(data)) setNotifications(data);
+            });
+        },
+      )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [session]);
 
   const markAllRead = async () => {
     await fetch("/api/notifications", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mark_all: true })
+      body: JSON.stringify({ mark_all: true }),
     });
-    setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+    setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
   };
 
   return (
@@ -119,25 +130,33 @@ export function TopBar({ title }: TopBarProps) {
               )}
             </button>
           </PopoverTrigger>
-          <PopoverContent align="end" className="w-[380px] p-0 overflow-hidden rounded-2xl shadow-xl border border-border bg-card">
+          <PopoverContent
+            align="end"
+            className="w-[380px] p-0 overflow-hidden rounded-2xl shadow-xl border border-border bg-card"
+          >
             <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
               <h3 className="font-semibold text-foreground">Notifications</h3>
               {unreadCount > 0 && (
-                <button onClick={markAllRead} className="text-xs font-medium text-primary hover:underline">
+                <button
+                  onClick={markAllRead}
+                  className="text-xs font-medium text-primary hover:underline"
+                >
                   Mark all as read
                 </button>
               )}
             </div>
             <div className="max-h-[400px] overflow-y-auto">
               {notifications.length === 0 ? (
-                <div className="p-8 text-center text-muted-foreground text-sm">No notifications yet</div>
+                <div className="p-8 text-center text-muted-foreground text-sm">
+                  No notifications yet
+                </div>
               ) : (
                 <div className="flex flex-col">
-                  {notifications.map(n => (
+                  {notifications.map((n) => (
                     <Link
                       key={n.id}
                       to={n.type === "follow" ? "/profile" : "/"} // Simple link for now
-                      className={`flex gap-3 p-4 border-b border-border transition-colors hover:bg-muted/50 ${!n.is_read ? 'bg-primary/5' : ''}`}
+                      className={`flex gap-3 p-4 border-b border-border transition-colors hover:bg-muted/50 ${!n.is_read ? "bg-primary/5" : ""}`}
                     >
                       <Avatar className="w-10 h-10 shrink-0">
                         <AvatarImage src={n.actor?.avatar_url} />
@@ -146,9 +165,13 @@ export function TopBar({ title }: TopBarProps) {
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-foreground">
                           <span className="font-semibold">{n.actor?.name}</span>{" "}
-                          {n.type === "like" ? "liked your post." : 
-                           n.type === "comment" ? "commented on your post." :
-                           n.type === "follow" ? "started following you." : "interacted with you."}
+                          {n.type === "like"
+                            ? "liked your post."
+                            : n.type === "comment"
+                              ? "commented on your post."
+                              : n.type === "follow"
+                                ? "started following you."
+                                : "interacted with you."}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
                           {new Date(n.created_at).toLocaleDateString()}
@@ -169,9 +192,7 @@ export function TopBar({ title }: TopBarProps) {
         <button
           className="p-2 rounded-full transition-colors"
           style={{ color: "var(--pp-on-surface-variant)" }}
-          onMouseEnter={(e) =>
-            ((e.currentTarget as HTMLElement).style.color = "var(--pp-primary)")
-          }
+          onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--pp-primary)")}
           onMouseLeave={(e) =>
             ((e.currentTarget as HTMLElement).style.color = "var(--pp-on-surface-variant)")
           }

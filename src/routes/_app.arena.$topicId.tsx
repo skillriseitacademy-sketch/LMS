@@ -37,7 +37,9 @@ function TopicArena() {
       // Fetch topic leaderboard
       const { data: lbData } = await supabase
         .from("topic_leaderboards")
-        .select("user_id, total_points, challenges_solved, profiles!topic_leaderboards_user_id_fkey(name, avatar_url)")
+        .select(
+          "user_id, total_points, challenges_solved, profiles!topic_leaderboards_user_id_fkey(name, avatar_url)",
+        )
         .eq("topic_id", topicId)
         .order("total_points", { ascending: false })
         .limit(10);
@@ -54,25 +56,29 @@ function TopicArena() {
     <div className="max-w-6xl mx-auto space-y-8 mt-4 pb-12">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>
-          <Link to="/arena"><ArrowLeft className="w-5 h-5" /></Link>
+          <Link to="/arena">
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
         </Button>
-        <div className={`p-3 rounded-xl ${isCTF ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary'}`}>
+        <div
+          className={`p-3 rounded-xl ${isCTF ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}
+        >
           {isCTF ? <Shield className="w-6 h-6" /> : <Code2 className="w-6 h-6" />}
         </div>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{topic.title} Arena</h1>
           <p className="text-muted-foreground mt-1">
-            {isCTF ? "Capture the flags and climb the ranks." : "Solve challenges to increase your Code Rank."}
+            {isCTF
+              ? "Capture the flags and climb the ranks."
+              : "Solve challenges to increase your Code Rank."}
           </p>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            Challenges
-          </h2>
-          
+          <h2 className="text-xl font-bold flex items-center gap-2">Challenges</h2>
+
           <div className="space-y-3">
             {challenges.length === 0 ? (
               <Card className="p-8 text-center border-dashed">
@@ -80,18 +86,26 @@ function TopicArena() {
               </Card>
             ) : (
               challenges.map((challenge) => (
-                <Card key={challenge.id} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
+                <Card
+                  key={challenge.id}
+                  className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
+                >
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold">{challenge.title}</h3>
                       <Badge variant="secondary" className="uppercase text-[10px] tracking-wider">
                         {challenge.category || "CODE"}
                       </Badge>
-                      <Badge variant="outline" className="text-yellow-600 border-yellow-600/30 bg-yellow-600/10">
+                      <Badge
+                        variant="outline"
+                        className="text-yellow-600 border-yellow-600/30 bg-yellow-600/10"
+                      >
                         {challenge.points || 100} pts
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-1">{challenge.description}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-1">
+                      {challenge.description}
+                    </p>
                   </div>
                   <Button asChild variant="secondary" className="shrink-0 gap-2">
                     <Link to={`/arena/${topicId}/${challenge.id}`}>
@@ -127,7 +141,9 @@ function TopicArena() {
                     </div>
                     <div className="text-right">
                       <div className="font-bold text-brand">{row.total_points}</div>
-                      <div className="text-[10px] text-muted-foreground uppercase">{row.challenges_solved} solved</div>
+                      <div className="text-[10px] text-muted-foreground uppercase">
+                        {row.challenges_solved} solved
+                      </div>
                     </div>
                   </div>
                 ))}

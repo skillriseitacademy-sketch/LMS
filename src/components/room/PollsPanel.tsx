@@ -17,7 +17,7 @@ export function PollsPanel({ polls, isHost, myPeerId, onCreatePoll, onVote }: Po
   const [newOptions, setNewOptions] = useState(["", ""]);
 
   const handleCreate = () => {
-    if (!newQuestion.trim() || newOptions.some(opt => !opt.trim())) return;
+    if (!newQuestion.trim() || newOptions.some((opt) => !opt.trim())) return;
     onCreatePoll(newQuestion, newOptions);
     setIsCreating(false);
     setNewQuestion("");
@@ -52,24 +52,39 @@ export function PollsPanel({ polls, isHost, myPeerId, onCreatePoll, onVote }: Po
               />
             ))}
           </div>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => setNewOptions([...newOptions, ""])}
             className="text-brand hover:text-brand hover:bg-brand/10 w-full"
           >
             <Plus className="w-4 h-4 mr-2" /> Add Option
           </Button>
           <div className="flex gap-2 pt-2">
-            <Button variant="ghost" size="sm" onClick={() => setIsCreating(false)} className="flex-1">Cancel</Button>
-            <Button size="sm" onClick={handleCreate} disabled={!newQuestion.trim() || newOptions.some(opt => !opt.trim())} className="flex-1 bg-brand hover:bg-brand/90 text-brand-foreground">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsCreating(false)}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleCreate}
+              disabled={!newQuestion.trim() || newOptions.some((opt) => !opt.trim())}
+              className="flex-1 bg-brand hover:bg-brand/90 text-brand-foreground"
+            >
               Launch Poll
             </Button>
           </div>
         </div>
       ) : (
         isHost && (
-          <Button onClick={() => setIsCreating(true)} className="w-full bg-white/5 hover:bg-white/10 text-brand border border-brand/30">
+          <Button
+            onClick={() => setIsCreating(true)}
+            className="w-full bg-white/5 hover:bg-white/10 text-brand border border-brand/30"
+          >
             <Plus className="w-4 h-4 mr-2" /> Create New Poll
           </Button>
         )
@@ -84,37 +99,44 @@ export function PollsPanel({ polls, isHost, myPeerId, onCreatePoll, onVote }: Po
         ) : (
           polls.map((poll) => {
             const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes.length, 0);
-            const myVote = poll.options.find(opt => opt.votes.includes(myPeerId));
+            const myVote = poll.options.find((opt) => opt.votes.includes(myPeerId));
 
             return (
               <div key={poll.id} className="bg-white/5 border border-white/10 rounded-2xl p-4">
                 <h4 className="font-semibold text-white mb-4 leading-tight">{poll.question}</h4>
                 <div className="space-y-2">
                   {poll.options.map((opt) => {
-                    const percentage = totalVotes > 0 ? Math.round((opt.votes.length / totalVotes) * 100) : 0;
+                    const percentage =
+                      totalVotes > 0 ? Math.round((opt.votes.length / totalVotes) * 100) : 0;
                     const isMyChoice = myVote?.id === opt.id;
-                    
+
                     return (
                       <button
                         key={opt.id}
                         onClick={() => !myVote && onVote(poll.id, opt.id)}
                         disabled={!!myVote}
                         className={`w-full relative overflow-hidden rounded-xl border text-left p-3 transition-all ${
-                          isMyChoice ? 'border-brand bg-brand/10' : 
-                          myVote ? 'border-white/10 bg-black/20 opacity-70' : 
-                          'border-white/10 bg-black/40 hover:border-white/30'
+                          isMyChoice
+                            ? "border-brand bg-brand/10"
+                            : myVote
+                              ? "border-white/10 bg-black/20 opacity-70"
+                              : "border-white/10 bg-black/40 hover:border-white/30"
                         }`}
                       >
-                        <div 
-                          className="absolute inset-y-0 left-0 bg-brand/20 transition-all duration-500" 
+                        <div
+                          className="absolute inset-y-0 left-0 bg-brand/20 transition-all duration-500"
                           style={{ width: `${myVote || isHost ? percentage : 0}%` }}
                         />
                         <div className="relative flex items-center justify-between z-10">
-                          <span className={`text-sm font-medium ${isMyChoice ? 'text-brand' : 'text-white/90'}`}>
+                          <span
+                            className={`text-sm font-medium ${isMyChoice ? "text-brand" : "text-white/90"}`}
+                          >
                             {opt.text}
                           </span>
                           <div className="flex items-center gap-2">
-                            {(myVote || isHost) && <span className="text-xs text-white/50">{percentage}%</span>}
+                            {(myVote || isHost) && (
+                              <span className="text-xs text-white/50">{percentage}%</span>
+                            )}
                             {isMyChoice && <Check className="w-4 h-4 text-brand" />}
                           </div>
                         </div>
@@ -123,7 +145,7 @@ export function PollsPanel({ polls, isHost, myPeerId, onCreatePoll, onVote }: Po
                   })}
                 </div>
                 <div className="text-xs text-white/40 mt-3 text-right">
-                  {totalVotes} vote{totalVotes !== 1 && 's'}
+                  {totalVotes} vote{totalVotes !== 1 && "s"}
                 </div>
               </div>
             );

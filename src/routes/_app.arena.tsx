@@ -1,8 +1,7 @@
-
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/lib/auth-store";
+import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/arena")({
@@ -28,39 +27,45 @@ function ArenaPage() {
     async function loadData() {
       // Fetch topics
       const { data: topicsData } = await supabase.from("topics").select("*").order("created_at");
-      
+
       // Fetch challenges to calculate stats
-      const { data: challengesData } = await supabase.from("code_challenges").select("topic_id, difficulty");
-      
+      const { data: challengesData } = await supabase
+        .from("code_challenges")
+        .select("topic_id, difficulty");
+
       // Fetch global arena stats
       if (session?.id) {
-        const { data: userStats } = await supabase.rpc("get_user_arena_stats", { user_id_param: session.id });
+        const { data: userStats } = await supabase.rpc("get_user_arena_stats", {
+          user_id_param: session.id,
+        });
         if (userStats && userStats.length > 0) {
           setGlobalStats({
             solved: Number(userStats[0].total_solved),
-            rank: Number(userStats[0].global_rank)
+            rank: Number(userStats[0].global_rank),
           });
         }
       }
-      
+
       if (topicsData) {
         setTopics(topicsData);
-        
+
         // Calculate stats per topic
         const newStats: Record<string, TopicStats> = {};
         for (const topic of topicsData) {
-          const topicChallenges = (challengesData || []).filter(c => c.topic_id === topic.id);
+          const topicChallenges = (challengesData || []).filter((c) => c.topic_id === topic.id);
           newStats[topic.id] = {
-            easy: topicChallenges.filter(c => c.difficulty === 'easy').length || 15, // fallback numbers if 0
-            med: topicChallenges.filter(c => c.difficulty === 'medium' || c.difficulty === 'med').length || 22,
-            hard: topicChallenges.filter(c => c.difficulty === 'hard').length || 8,
+            easy: topicChallenges.filter((c) => c.difficulty === "easy").length || 15, // fallback numbers if 0
+            med:
+              topicChallenges.filter((c) => c.difficulty === "medium" || c.difficulty === "med")
+                .length || 22,
+            hard: topicChallenges.filter((c) => c.difficulty === "hard").length || 8,
             total: topicChallenges.length || 45,
             completed: Math.floor((topicChallenges.length || 45) * 0.6), // Mock completion percentage
           };
         }
         setStats(newStats);
       }
-      
+
       setLoading(false);
     }
     loadData();
@@ -72,29 +77,63 @@ function ArenaPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="material-symbols-outlined text-secondary-container" data-weight="fill">local_fire_department</span>
-            <span className="text-xs tracking-[0.05em] font-medium text-secondary-container uppercase" style={{ fontFamily: "JetBrains Mono" }}>Active Challenge Season</span>
+            <span className="material-symbols-outlined text-secondary-container" data-weight="fill">
+              local_fire_department
+            </span>
+            <span
+              className="text-xs tracking-[0.05em] font-medium text-secondary-container uppercase"
+              style={{ fontFamily: "JetBrains Mono" }}
+            >
+              Active Challenge Season
+            </span>
           </div>
-          <h2 className="text-[40px] md:text-[56px] font-bold leading-[1.1] tracking-[-0.02em] text-on-surface mb-2" style={{ fontFamily: "Manrope" }}>Arena Topics</h2>
-          <p className="text-lg leading-[1.6] text-outline max-w-2xl" style={{ fontFamily: "Inter" }}>Master individual concepts to increase your global rank. Choose your battleground and start solving curated challenge sets.</p>
+          <h2
+            className="text-[40px] md:text-[56px] font-bold leading-[1.1] tracking-[-0.02em] text-on-surface mb-2"
+            style={{ fontFamily: "Manrope" }}
+          >
+            Arena Topics
+          </h2>
+          <p
+            className="text-lg leading-[1.6] text-outline max-w-2xl"
+            style={{ fontFamily: "Inter" }}
+          >
+            Master individual concepts to increase your global rank. Choose your battleground and
+            start solving curated challenge sets.
+          </p>
         </div>
         {/* Global Gamification Stats */}
         <div className="flex gap-4 bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm">
           <div className="text-center px-4 border-r border-outline-variant">
-            <p className="text-xs tracking-[0.05em] font-medium text-outline mb-1" style={{ fontFamily: "JetBrains Mono" }}>Global Rank</p>
-            <p className="text-[24px] md:text-[32px] font-semibold leading-[1.3] text-primary" style={{ fontFamily: "Manrope" }}>
+            <p
+              className="text-xs tracking-[0.05em] font-medium text-outline mb-1"
+              style={{ fontFamily: "JetBrains Mono" }}
+            >
+              Global Rank
+            </p>
+            <p
+              className="text-[24px] md:text-[32px] font-semibold leading-[1.3] text-primary"
+              style={{ fontFamily: "Manrope" }}
+            >
               #{globalStats.rank > 0 ? globalStats.rank : "--"}
             </p>
           </div>
           <div className="text-center px-4">
-            <p className="text-xs tracking-[0.05em] font-medium text-outline mb-1" style={{ fontFamily: "JetBrains Mono" }}>Total Solved</p>
-            <p className="text-[24px] md:text-[32px] font-semibold leading-[1.3] text-on-surface" style={{ fontFamily: "Manrope" }}>
+            <p
+              className="text-xs tracking-[0.05em] font-medium text-outline mb-1"
+              style={{ fontFamily: "JetBrains Mono" }}
+            >
+              Total Solved
+            </p>
+            <p
+              className="text-[24px] md:text-[32px] font-semibold leading-[1.3] text-on-surface"
+              style={{ fontFamily: "Manrope" }}
+            >
               {globalStats.solved}
             </p>
           </div>
         </div>
       </header>
-      
+
       {loading ? (
         <div className="w-full flex items-center justify-center py-20">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -106,56 +145,133 @@ function ArenaPage() {
             const percentage = tStats.total > 0 ? (tStats.completed / tStats.total) * 100 : 0;
             const isFirst = i === 0;
             const isSecond = i === 1;
-            
+
             // Cycle through styles for the demo
-            const themeClass = isFirst ? 'text-primary bg-primary' : (isSecond ? 'text-secondary bg-secondary' : 'text-error bg-error');
-            const strokeClass = isFirst ? 'stroke-primary' : (isSecond ? 'stroke-secondary' : 'stroke-error');
-            const icon = isFirst ? 'text_format' : (isSecond ? 'data_array' : 'memory');
+            const themeClass = isFirst
+              ? "text-primary bg-primary"
+              : isSecond
+                ? "text-secondary bg-secondary"
+                : "text-error bg-error";
+            const strokeClass = isFirst
+              ? "stroke-primary"
+              : isSecond
+                ? "stroke-secondary"
+                : "stroke-error";
+            const icon = isFirst ? "text_format" : isSecond ? "data_array" : "memory";
 
             return (
-              <article key={topic.id} className="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),_0_2px_4px_-2px_rgb(0_0_0_/_0.05)] flex flex-col relative overflow-hidden group hover:border-primary-fixed-dim transition-colors duration-300">
-                <div className={`absolute left-0 top-0 bottom-0 w-1 ${themeClass.split(' ')[1]}`}></div>
+              <article
+                key={topic.id}
+                className="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),_0_2px_4px_-2px_rgb(0_0_0_/_0.05)] flex flex-col relative overflow-hidden group hover:border-primary-fixed-dim transition-colors duration-300"
+              >
+                <div
+                  className={`absolute left-0 top-0 bottom-0 w-1 ${themeClass.split(" ")[1]}`}
+                ></div>
                 <header className="flex justify-between items-start mb-6 pl-2">
                   <div className="flex items-center gap-3">
-                    <div className={`w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center group-hover:scale-110 transition-transform ${themeClass.split(' ')[0]}`}>
-                      <span className="material-symbols-outlined text-[28px]">{topic.icon || icon}</span>
+                    <div
+                      className={`w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center group-hover:scale-110 transition-transform ${themeClass.split(" ")[0]}`}
+                    >
+                      <span className="material-symbols-outlined text-[28px]">
+                        {topic.icon || icon}
+                      </span>
                     </div>
-                    <h3 className="text-[24px] font-semibold leading-[1.3] text-on-surface" style={{ fontFamily: "Manrope" }}>{topic.title}</h3>
+                    <h3
+                      className="text-[24px] font-semibold leading-[1.3] text-on-surface"
+                      style={{ fontFamily: "Manrope" }}
+                    >
+                      {topic.title}
+                    </h3>
                   </div>
                 </header>
                 <div className="flex items-center justify-between mb-8 pl-2">
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-outline-variant"></span>
-                      <span className="text-xs tracking-[0.05em] font-medium text-outline w-12" style={{ fontFamily: "JetBrains Mono" }}>Easy</span>
-                      <span className="text-base leading-[1.5] text-on-surface font-medium" style={{ fontFamily: "Inter" }}>{tStats.easy}</span>
+                      <span
+                        className="text-xs tracking-[0.05em] font-medium text-outline w-12"
+                        style={{ fontFamily: "JetBrains Mono" }}
+                      >
+                        Easy
+                      </span>
+                      <span
+                        className="text-base leading-[1.5] text-on-surface font-medium"
+                        style={{ fontFamily: "Inter" }}
+                      >
+                        {tStats.easy}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-secondary-container"></span>
-                      <span className="text-xs tracking-[0.05em] font-medium text-outline w-12" style={{ fontFamily: "JetBrains Mono" }}>Med</span>
-                      <span className="text-base leading-[1.5] text-on-surface font-medium" style={{ fontFamily: "Inter" }}>{tStats.med}</span>
+                      <span
+                        className="text-xs tracking-[0.05em] font-medium text-outline w-12"
+                        style={{ fontFamily: "JetBrains Mono" }}
+                      >
+                        Med
+                      </span>
+                      <span
+                        className="text-base leading-[1.5] text-on-surface font-medium"
+                        style={{ fontFamily: "Inter" }}
+                      >
+                        {tStats.med}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-error"></span>
-                      <span className="text-xs tracking-[0.05em] font-medium text-outline w-12" style={{ fontFamily: "JetBrains Mono" }}>Hard</span>
-                      <span className="text-base leading-[1.5] text-on-surface font-medium" style={{ fontFamily: "Inter" }}>{tStats.hard}</span>
+                      <span
+                        className="text-xs tracking-[0.05em] font-medium text-outline w-12"
+                        style={{ fontFamily: "JetBrains Mono" }}
+                      >
+                        Hard
+                      </span>
+                      <span
+                        className="text-base leading-[1.5] text-on-surface font-medium"
+                        style={{ fontFamily: "Inter" }}
+                      >
+                        {tStats.hard}
+                      </span>
                     </div>
                   </div>
                   {/* Progress Ring with absolute centered text to fix overlap */}
                   <div className="w-24 h-24 relative flex items-center justify-center">
-                    <svg className="circular-chart w-full h-full absolute inset-0" viewBox="0 0 36 36">
-                      <path className="circle-bg" fill="none" strokeWidth="2.5" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-                      <path className={`circle ${strokeClass}`} fill="none" strokeWidth="2.5" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" strokeDasharray={`${percentage}, 100`}></path>
+                    <svg
+                      className="circular-chart w-full h-full absolute inset-0"
+                      viewBox="0 0 36 36"
+                    >
+                      <path
+                        className="circle-bg"
+                        fill="none"
+                        strokeWidth="2.5"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      ></path>
+                      <path
+                        className={`circle ${strokeClass}`}
+                        fill="none"
+                        strokeWidth="2.5"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        strokeDasharray={`${percentage}, 100`}
+                      ></path>
                     </svg>
-                    <div className="text-[17px] font-bold z-10 flex items-center justify-center text-on-surface" style={{ fontFamily: "Manrope" }}>
-                      {tStats.completed}<span className="text-xs text-outline font-medium">/{tStats.total}</span>
+                    <div
+                      className="text-[17px] font-bold z-10 flex items-center justify-center text-on-surface"
+                      style={{ fontFamily: "Manrope" }}
+                    >
+                      {tStats.completed}
+                      <span className="text-xs text-outline font-medium">/{tStats.total}</span>
                     </div>
                   </div>
                 </div>
                 <div className="mt-auto pl-2">
-                  <Link to="/arena/$topicId" params={{ topicId: topic.id }} className="w-full bg-surface-container hover:bg-primary text-primary hover:text-on-primary text-base leading-[1.5] font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-md" style={{ fontFamily: "Inter" }}>
+                  <Link
+                    to="/arena/$topicId"
+                    params={{ topicId: topic.id }}
+                    className="w-full bg-surface-container hover:bg-primary text-primary hover:text-on-primary text-base leading-[1.5] font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group-hover:shadow-md"
+                    style={{ fontFamily: "Inter" }}
+                  >
                     <span>Enter Arena</span>
-                    <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">
+                      arrow_forward
+                    </span>
                   </Link>
                 </div>
               </article>

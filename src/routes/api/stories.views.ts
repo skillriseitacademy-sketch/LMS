@@ -16,16 +16,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
 
 function serviceClient() {
-  return createClient(
-    process.env.VITE_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
+  return createClient(process.env.VITE_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 }
 
 async function getUser(request: Request) {
   const token = request.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
-  const { data: { user }, error } = await serviceClient().auth.getUser(token);
+  const {
+    data: { user },
+    error,
+  } = await serviceClient().auth.getUser(token);
   if (error || !user) return null;
   return user;
 }
@@ -44,7 +44,8 @@ export const Route = createFileRoute("/api/stories/views")({
         const ids = url.searchParams.get("ids");
         if (ids) {
           const storyIds = ids.split(",").filter(Boolean);
-          if (storyIds.length === 0) return new Response("[]", { headers: { "Content-Type": "application/json" } });
+          if (storyIds.length === 0)
+            return new Response("[]", { headers: { "Content-Type": "application/json" } });
 
           const { data, error } = await sc
             .from("story_views")
@@ -54,7 +55,9 @@ export const Route = createFileRoute("/api/stories/views")({
 
           if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
           const seenIds = (data ?? []).map((r: any) => r.story_id);
-          return new Response(JSON.stringify(seenIds), { headers: { "Content-Type": "application/json" } });
+          return new Response(JSON.stringify(seenIds), {
+            headers: { "Content-Type": "application/json" },
+          });
         }
 
         // ── Mode 2: story owner fetches viewers for a specific story ─────────
@@ -90,7 +93,7 @@ export const Route = createFileRoute("/api/stories/views")({
         const user = await getUser(request);
         if (!user) return new Response("Unauthorized", { status: 401 });
 
-        const { story_ids } = await request.json() as { story_ids?: string[] };
+        const { story_ids } = (await request.json()) as { story_ids?: string[] };
         if (!Array.isArray(story_ids) || story_ids.length === 0) {
           return new Response("story_ids array is required", { status: 400 });
         }

@@ -16,9 +16,9 @@ export const Route = createFileRoute("/api/rooms/join/$code")({
         if (!data) {
           return new Response("Room not found or inactive", { status: 404 });
         }
-        
-        return new Response(JSON.stringify(data), { 
-          headers: { "Content-Type": "application/json" } 
+
+        return new Response(JSON.stringify(data), {
+          headers: { "Content-Type": "application/json" },
         });
       },
     },

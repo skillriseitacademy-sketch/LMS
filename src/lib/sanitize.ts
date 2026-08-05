@@ -1,17 +1,21 @@
 /**
  * Sanitizes user input text by removing potentially problematic characters,
  * zero-width spaces, and trimming whitespace.
- * 
- * We do not aggressively escape `<` or `>` because the frontend uses 
+ *
+ * We do not aggressively escape `<` or `>` because the frontend uses
  * `react-markdown` which handles HTML escaping safely.
- * 
+ *
  * @param text The input string to sanitize
  * @param maxLength Optional max length to truncate to
  * @param stripHtml Whether to aggressively strip all HTML tags
  */
-export function sanitizeText(text: string | undefined | null, maxLength?: number, stripHtml: boolean = false): string {
+export function sanitizeText(
+  text: string | undefined | null,
+  maxLength?: number,
+  stripHtml: boolean = false,
+): string {
   if (!text) return "";
-  
+
   // Convert to string in case it's a number or something else
   let sanitized = String(text);
 

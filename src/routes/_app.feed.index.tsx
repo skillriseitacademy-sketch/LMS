@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useEffect, useRef } from "react";
-import { useAuth } from "@/lib/auth-store";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
 import { useR2Upload } from "@/hooks/use-r2-upload";
 import { StoryRow } from "@/components/social/story-row";
@@ -14,7 +14,11 @@ export const Route = createFileRoute("/_app/feed/")({
 
 type ReactionType = "like" | "fire" | "clap" | "brain" | "rocket";
 const REACTION_EMOJIS: Record<ReactionType, string> = {
-  like: "👍", fire: "🔥", clap: "👏", brain: "🧠", rocket: "🚀",
+  like: "👍",
+  fire: "🔥",
+  clap: "👏",
+  brain: "🧠",
+  rocket: "🚀",
 };
 
 type Post = {
@@ -43,6 +47,8 @@ type TopStudent = {
   xp: number;
 };
 
+import React from "react";
+
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
@@ -52,6 +58,198 @@ function timeAgo(dateStr: string) {
   if (hrs < 24) return `${hrs} hour${hrs > 1 ? "s" : ""} ago`;
   return `${Math.floor(hrs / 24)} day${Math.floor(hrs / 24) > 1 ? "s" : ""} ago`;
 }
+
+const PostItem = React.memo(({ post, session, showPostMenu, setShowPostMenu, editingPostId, setEditingPostId, editingPostContent, setEditingPostContent, handleSaveEdit, handleDeletePost, showReactions, setShowReactions, handleReaction, totalReactions }: any) => {
+  return (
+    <div
+      className="bg-surface-container-lowest rounded-2xl shadow-sm p-5 border-l-4 border-primary"
+    >
+      {/* Post Header */}
+      <div className="flex items-start justify-between mb-3 relative">
+        <div className="flex gap-3 items-center">
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-surface-variant flex-shrink-0">
+            {post.profiles?.avatar_url ? (
+              <img
+                src={post.profiles.avatar_url}
+                className="w-full h-full object-cover"
+                alt={post.profiles.name}
+              />
+            ) : (
+              <div className="w-full h-full bg-primary-container flex items-center justify-center">
+                <span className="material-symbols-outlined text-primary">person</span>
+              </div>
+            )}
+          </div>
+          <div>
+            <h4
+              className="font-semibold text-on-surface leading-tight"
+              style={{ fontFamily: "Inter" }}
+            >
+              {post.profiles?.name || "User"}
+            </h4>
+            <p
+              className="text-xs text-on-surface-variant"
+              style={{ fontFamily: "JetBrains Mono" }}
+            >
+              {timeAgo(post.created_at)} · {post.profiles?.role || "student"}
+            </p>
+          </div>
+        </div>
+
+        {/* Post Options Menu */}
+        {post.user_id === session?.id && (
+          <div className="relative">
+            <button
+              onClick={() => setShowPostMenu(showPostMenu === post.id ? null : post.id)}
+              className="p-1 rounded-full text-on-surface-variant hover:bg-surface-container"
+            >
+              <span className="material-symbols-outlined text-[20px]">more_horiz</span>
+            </button>
+            {showPostMenu === post.id && (
+              <div className="absolute right-0 top-full mt-1 w-32 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg z-20 py-1 overflow-hidden">
+                <button
+                  onClick={() => {
+                    setEditingPostId(post.id);
+                    setEditingPostContent(post.content);
+                    setShowPostMenu(null);
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-surface-container flex items-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-[16px]">edit</span> Edit
+                </button>
+                <button
+                  onClick={() => {
+                    handleDeletePost(post.id);
+                    setShowPostMenu(null);
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm text-error hover:bg-error/10 flex items-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-[16px]">delete</span>{" "}
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Post Body */}
+      {editingPostId === post.id ? (
+        <div className="mb-3">
+          <textarea
+            value={editingPostContent}
+            onChange={(e) => setEditingPostContent(e.target.value)}
+            className="w-full bg-surface-container-low border border-outline-variant rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
+            rows={3}
+          />
+          <div className="flex justify-end gap-2 mt-2">
+            <button
+              onClick={() => setEditingPostId(null)}
+              className="text-xs px-3 py-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSaveEdit}
+              className="text-xs px-3 py-1.5 bg-primary text-on-primary rounded-lg hover:bg-primary/90 font-medium"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      ) : (
+        post.content.trim() && (
+          <p
+            className="text-sm text-on-surface leading-relaxed mb-3 whitespace-pre-wrap"
+            style={{ fontFamily: "Inter" }}
+          >
+            {post.content}
+          </p>
+        )
+      )}
+
+      {/* Media */}
+      {post.media_urls?.length > 0 && (
+        <div className="mb-3 rounded-xl overflow-hidden">
+          <img
+            src={post.media_urls[0]}
+            className="w-full max-h-80 object-cover"
+            alt="Post media"
+          />
+        </div>
+      )}
+
+      {/* Reactions Row */}
+      <div className="flex items-center justify-between border-t border-outline-variant/30 pt-3 mt-2">
+        <div className="flex items-center gap-1 flex-wrap">
+          {/* Reaction summary */}
+          {totalReactions(post) > 0 && (
+            <div
+              className="flex items-center gap-1 mr-2 text-xs text-on-surface-variant"
+              style={{ fontFamily: "Inter" }}
+            >
+              {(Object.entries(post.reactionCounts) as [ReactionType, number][])
+                .filter(([, count]) => count > 0)
+                .slice(0, 3)
+                .map(([type]) => (
+                  <span key={type}>{REACTION_EMOJIS[type]}</span>
+                ))}
+              <span className="ml-0.5">{totalReactions(post)}</span>
+            </div>
+          )}
+
+          {/* React button */}
+          <div className="relative">
+            <button
+              onClick={() => setShowReactions(showReactions === post.id ? null : post.id)}
+              className={`flex items-center gap-1.5 text-sm px-2.5 py-1.5 rounded-lg transition-all ${
+                post.myReaction
+                  ? "text-primary bg-primary/10"
+                  : "text-on-surface-variant hover:text-primary hover:bg-primary/5"
+              }`}
+              style={{ fontFamily: "Inter" }}
+            >
+              <span>{post.myReaction ? REACTION_EMOJIS[post.myReaction] : "👍"}</span>
+              <span className="text-xs font-medium">
+                {post.myReaction ? "Reacted" : "React"}
+              </span>
+            </button>
+
+            {/* Reaction picker */}
+            {showReactions === post.id && (
+              <div className="absolute bottom-full left-0 mb-2 flex items-center gap-1 bg-surface-container-lowest rounded-full shadow-xl border border-outline-variant/30 px-3 py-2 z-10">
+                {(Object.entries(REACTION_EMOJIS) as [ReactionType, string][]).map(
+                  ([type, emoji]) => (
+                    <button
+                      key={type}
+                      onClick={() => handleReaction(post.id, type)}
+                      className={`text-xl hover:scale-125 transition-transform p-1 rounded-full ${
+                        post.myReaction === type ? "bg-primary/10" : ""
+                      }`}
+                      title={type}
+                    >
+                      {emoji}
+                    </button>
+                  ),
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <button
+          className="flex items-center gap-1.5 text-xs text-on-surface-variant hover:text-primary transition-colors"
+          style={{ fontFamily: "JetBrains Mono" }}
+        >
+          <span className="material-symbols-outlined text-[16px]">
+            chat_bubble_outline
+          </span>
+          {post.commentCount > 0 ? `${post.commentCount} Comments` : "Comment"}
+        </button>
+      </div>
+    </div>
+  );
+});
 
 function FeedPage() {
   const { session } = useAuth();
@@ -100,21 +298,29 @@ function FeedPage() {
         .select("post_id")
         .in("post_id", postIds);
 
-      setPosts(data.map((p: any) => {
-        const postReactions = (reactions || []).filter((r: any) => r.post_id === p.id);
-        const counts = { like: 0, fire: 0, clap: 0, brain: 0, rocket: 0 } as Record<ReactionType, number>;
-        postReactions.forEach((r: any) => { counts[r.reaction_type as ReactionType]++; });
-        const myReaction = postReactions.find((r: any) => r.user_id === session.id)?.reaction_type ?? null;
-        const commentCount = (comments || []).filter((c: any) => c.post_id === p.id).length;
+      setPosts(
+        data.map((p: any) => {
+          const postReactions = (reactions || []).filter((r: any) => r.post_id === p.id);
+          const counts = { like: 0, fire: 0, clap: 0, brain: 0, rocket: 0 } as Record<
+            ReactionType,
+            number
+          >;
+          postReactions.forEach((r: any) => {
+            counts[r.reaction_type as ReactionType]++;
+          });
+          const myReaction =
+            postReactions.find((r: any) => r.user_id === session.id)?.reaction_type ?? null;
+          const commentCount = (comments || []).filter((c: any) => c.post_id === p.id).length;
 
-        return {
-          ...p,
-          profiles: Array.isArray(p.profiles) ? p.profiles[0] : p.profiles,
-          reactionCounts: counts,
-          myReaction: myReaction as ReactionType | null,
-          commentCount,
-        };
-      }));
+          return {
+            ...p,
+            profiles: Array.isArray(p.profiles) ? p.profiles[0] : p.profiles,
+            reactionCounts: counts,
+            myReaction: myReaction as ReactionType | null,
+            commentCount,
+          };
+        }),
+      );
     }
     setLoading(false);
   };
@@ -144,10 +350,12 @@ function FeedPage() {
       .neq("id", session.id)
       .limit(3);
     if (topRows) {
-      setTopStudents(topRows.map((u: any, i: number) => ({
-        ...u,
-        xp: 3200 - i * 250, // placeholder until leaderboard RPC exists
-      })));
+      setTopStudents(
+        topRows.map((u: any, i: number) => ({
+          ...u,
+          xp: 3200 - i * 250, // placeholder until leaderboard RPC exists
+        })),
+      );
     }
   };
 
@@ -162,12 +370,16 @@ function FeedPage() {
     if ((!newPostContent.trim() && !pendingImageUrl) || !session) return;
     setPosting(true);
     const mediaUrls = pendingImageUrl ? [pendingImageUrl] : [];
-    const { data, error } = await supabase.from("posts").insert({
-      user_id: session.id,
-      content: newPostContent.trim() || " ",
-      media_urls: mediaUrls,
-      visibility: "public",
-    }).select().single();
+    const { data, error } = await supabase
+      .from("posts")
+      .insert({
+        user_id: session.id,
+        content: newPostContent.trim() || " ",
+        media_urls: mediaUrls,
+        visibility: "public",
+      })
+      .select()
+      .single();
 
     if (!error && data) {
       setNewPostContent("");
@@ -183,60 +395,73 @@ function FeedPage() {
     });
   };
 
-  const handleDeletePost = async (postId: string) => {
+  const handleDeletePost = useCallback(async (postId: string) => {
     if (!session) return;
     await supabase.from("posts").delete().eq("id", postId).eq("user_id", session.id);
-    setPosts(prev => prev.filter(p => p.id !== postId));
-  };
+    setPosts((prev) => prev.filter((p) => p.id !== postId));
+  }, [session]);
 
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = useCallback(async () => {
     if (!editingPostId || !session) return;
-    await supabase.from("posts").update({ content: editingPostContent.trim() }).eq("id", editingPostId).eq("user_id", session.id);
-    setPosts(prev => prev.map(p => p.id === editingPostId ? { ...p, content: editingPostContent.trim() } : p));
+    await supabase
+      .from("posts")
+      .update({ content: editingPostContent.trim() })
+      .eq("id", editingPostId)
+      .eq("user_id", session.id);
+    setPosts((prev) =>
+      prev.map((p) => (p.id === editingPostId ? { ...p, content: editingPostContent.trim() } : p)),
+    );
     setEditingPostId(null);
-  };
+  }, [editingPostId, editingPostContent, session]);
 
   // Story creation is now handled by StoryCreator component
 
-  const handleReaction = async (postId: string, type: ReactionType) => {
+  const handleReaction = useCallback(async (postId: string, type: ReactionType) => {
     if (!session) return;
     setShowReactions(null);
 
-    const post = posts.find(p => p.id === postId);
+    const post = posts.find((p) => p.id === postId);
     if (!post) return;
 
     if (post.myReaction === type) {
       // Remove reaction
-      await supabase.from("post_reactions").delete()
-        .eq("post_id", postId).eq("user_id", session.id);
+      await supabase
+        .from("post_reactions")
+        .delete()
+        .eq("post_id", postId)
+        .eq("user_id", session.id);
     } else {
       // Upsert reaction
-      await supabase.from("post_reactions").upsert({
-        post_id: postId,
-        user_id: session.id,
-        reaction_type: type,
-      }, { onConflict: "post_id,user_id" });
+      await supabase.from("post_reactions").upsert(
+        {
+          post_id: postId,
+          user_id: session.id,
+          reaction_type: type,
+        },
+        { onConflict: "post_id,user_id" },
+      );
     }
 
     // Optimistic update
-    setPosts(prev => prev.map(p => {
-      if (p.id !== postId) return p;
-      const counts = { ...p.reactionCounts };
-      if (p.myReaction) counts[p.myReaction] = Math.max(0, counts[p.myReaction] - 1);
-      if (p.myReaction !== type) counts[type]++;
-      return { ...p, reactionCounts: counts, myReaction: p.myReaction === type ? null : type };
-    }));
-  };
+    setPosts((prev) =>
+      prev.map((p) => {
+        if (p.id !== postId) return p;
+        const counts = { ...p.reactionCounts };
+        if (p.myReaction) counts[p.myReaction] = Math.max(0, counts[p.myReaction] - 1);
+        if (p.myReaction !== type) counts[type]++;
+        return { ...p, reactionCounts: counts, myReaction: p.myReaction === type ? null : type };
+      }),
+    );
+  }, [session, posts]);
 
-  const totalReactions = (post: Post) =>
-    Object.values(post.reactionCounts).reduce((a, b) => a + b, 0);
+  const totalReactions = useCallback((post: Post) =>
+    Object.values(post.reactionCounts).reduce((a, b) => a + b, 0), []);
 
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-[1200px] mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-
         {/* ── Left Rail ── */}
         <div className="hidden lg:block lg:col-span-3 space-y-5">
           {/* Mini Profile Card */}
@@ -244,14 +469,22 @@ function FeedPage() {
             <div className="h-16 bg-gradient-to-br from-primary/20 to-primary/5" />
             <div className="px-5 pb-5 -mt-8">
               <div className="w-16 h-16 rounded-full border-4 border-surface-container-lowest overflow-hidden bg-surface-variant mb-3">
-                {session?.avatar_url
-                  ? <img src={session.avatar_url} className="w-full h-full object-cover" alt="Profile" />
-                  : <div className="w-full h-full bg-primary-container flex items-center justify-center">
-                      <span className="material-symbols-outlined text-primary text-2xl">person</span>
-                    </div>
-                }
+                {session?.avatar_url ? (
+                  <img
+                    src={session.avatar_url}
+                    className="w-full h-full object-cover"
+                    alt="Profile"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-primary-container flex items-center justify-center">
+                    <span className="material-symbols-outlined text-primary text-2xl">person</span>
+                  </div>
+                )}
               </div>
-              <h2 className="font-semibold text-on-surface text-lg leading-tight" style={{ fontFamily: "Manrope" }}>
+              <h2
+                className="font-semibold text-on-surface text-lg leading-tight"
+                style={{ fontFamily: "Manrope" }}
+              >
                 {session?.name || "Student"}
               </h2>
               <p className="text-xs text-on-surface-variant mt-0.5" style={{ fontFamily: "Inter" }}>
@@ -268,67 +501,72 @@ function FeedPage() {
 
           {/* Trending Topics */}
           <div className="bg-surface-container-lowest rounded-2xl shadow-sm p-5">
-            <h3 className="font-semibold text-on-surface mb-3" style={{ fontFamily: "Inter" }}>Trending Topics</h3>
+            <h3 className="font-semibold text-on-surface mb-3" style={{ fontFamily: "Inter" }}>
+              Trending Topics
+            </h3>
             <ul className="space-y-2">
-              {["#DSAPractice", "#Interviews2024", "#SystemDesign", "#SummerInternships"].map(tag => (
-                <li key={tag}>
-                  <Link
-                    className="text-primary hover:underline text-sm block py-0.5"
-                    style={{ fontFamily: "Inter" }}
-                    to="/feed"
-                  >
-                    {tag}
-                  </Link>
-                </li>
-              ))}
+              {["#DSAPractice", "#Interviews2024", "#SystemDesign", "#SummerInternships"].map(
+                (tag) => (
+                  <li key={tag}>
+                    <Link
+                      className="text-primary hover:underline text-sm block py-0.5"
+                      style={{ fontFamily: "Inter" }}
+                      to="/feed"
+                    >
+                      {tag}
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
           </div>
         </div>
 
         {/* ── Center Feed ── */}
         <div className="col-span-1 lg:col-span-6 space-y-5">
-
           {/* Stories Bar */}
           <div className="bg-surface-container-lowest rounded-2xl shadow-sm p-4">
-            <StoryRow 
-              stacks={stacks} 
-              currentUserId={session?.id ?? ""} 
-              hasOwnActiveStory={stacks.some(s => s.userId === session?.id)} 
-              onStoryClick={setViewingStoryIdx} 
-              onAddStory={() => setShowStoryCreator(true)} 
+            <StoryRow
+              stacks={stacks}
+              currentUserId={session?.id ?? ""}
+              hasOwnActiveStory={stacks.some((s) => s.userId === session?.id)}
+              onStoryClick={setViewingStoryIdx}
+              onAddStory={() => setShowStoryCreator(true)}
             />
           </div>
 
           {/* Story Modals */}
           {viewingStoryIdx !== null && (
-            <StoryViewer 
-              stacks={stacks} 
-              initialStackIndex={viewingStoryIdx} 
-              currentUserId={session?.id ?? ""} 
-              onClose={() => setViewingStoryIdx(null)} 
+            <StoryViewer
+              stacks={stacks}
+              initialStackIndex={viewingStoryIdx}
+              currentUserId={session?.id ?? ""}
+              onClose={() => setViewingStoryIdx(null)}
             />
           )}
-          
-          <StoryCreator 
-            open={showStoryCreator} 
-            onClose={() => setShowStoryCreator(false)} 
-          />
+
+          <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator(false)} />
 
           {/* Post Composer */}
           <div className="bg-surface-container-lowest rounded-2xl shadow-sm p-5">
             <div className="flex gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border border-outline-variant bg-surface-variant flex-shrink-0">
-                {session?.avatar_url
-                  ? <img src={session.avatar_url} className="w-full h-full object-cover" alt="Avatar" />
-                  : <div className="w-full h-full bg-primary-container flex items-center justify-center">
-                      <span className="material-symbols-outlined text-primary text-base">person</span>
-                    </div>
-                }
+                {session?.avatar_url ? (
+                  <img
+                    src={session.avatar_url}
+                    className="w-full h-full object-cover"
+                    alt="Avatar"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-primary-container flex items-center justify-center">
+                    <span className="material-symbols-outlined text-primary text-base">person</span>
+                  </div>
+                )}
               </div>
               <input
                 value={newPostContent}
-                onChange={e => setNewPostContent(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && !e.shiftKey && handlePost()}
+                onChange={(e) => setNewPostContent(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handlePost()}
                 className="w-full bg-surface-container-low border border-outline-variant rounded-full px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm text-on-surface placeholder:text-on-surface-variant outline-none"
                 style={{ fontFamily: "Inter" }}
                 placeholder={`Share a post, image, or description, ${session?.name?.split(" ")[0] || ""}...`}
@@ -338,7 +576,11 @@ function FeedPage() {
             {/* Pending image preview */}
             {pendingImageUrl && (
               <div className="mt-3 relative">
-                <img src={pendingImageUrl} className="w-full max-h-60 object-cover rounded-xl" alt="Attachment" />
+                <img
+                  src={pendingImageUrl}
+                  className="w-full max-h-60 object-cover rounded-xl"
+                  alt="Attachment"
+                />
                 <button
                   onClick={() => setPendingImageUrl(null)}
                   className="absolute top-2 right-2 bg-black/50 text-white w-7 h-7 rounded-full flex items-center justify-center hover:bg-black/70"
@@ -351,7 +593,12 @@ function FeedPage() {
             <div className="flex justify-between items-center mt-4 pt-4 border-t border-outline-variant/50">
               <div className="flex gap-1">
                 {[
-                  { icon: "image", label: "Photo", action: handlePhotoAttach, loading: photoUploading },
+                  {
+                    icon: "image",
+                    label: "Photo",
+                    action: handlePhotoAttach,
+                    loading: photoUploading,
+                  },
                   { icon: "videocam", label: "Video", action: () => {}, loading: false },
                   { icon: "bar_chart", label: "Poll", action: () => {}, loading: false },
                 ].map(({ icon, label, action, loading: btnLoading }) => (
@@ -361,11 +608,17 @@ function FeedPage() {
                     disabled={btnLoading}
                     className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all px-2.5 py-1.5 rounded-lg disabled:opacity-60"
                   >
-                    {btnLoading
-                      ? <span className="w-4 h-4 border border-primary border-t-transparent rounded-full animate-spin" />
-                      : <span className="material-symbols-outlined text-[18px]">{icon}</span>
-                    }
-                    <span className="text-xs font-medium hidden sm:inline" style={{ fontFamily: "JetBrains Mono" }}>{label}</span>
+                    {btnLoading ? (
+                      <span className="w-4 h-4 border border-primary border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <span className="material-symbols-outlined text-[18px]">{icon}</span>
+                    )}
+                    <span
+                      className="text-xs font-medium hidden sm:inline"
+                      style={{ fontFamily: "JetBrains Mono" }}
+                    >
+                      {label}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -387,185 +640,84 @@ function FeedPage() {
             </div>
           ) : posts.length === 0 ? (
             <div className="text-center p-12 bg-surface-container-lowest rounded-2xl shadow-sm">
-              <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-3 block">feed</span>
-              <p className="text-on-surface-variant" style={{ fontFamily: "Inter" }}>No posts yet. Be the first to share!</p>
+              <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-3 block">
+                feed
+              </span>
+              <p className="text-on-surface-variant" style={{ fontFamily: "Inter" }}>
+                No posts yet. Be the first to share!
+              </p>
             </div>
           ) : (
-            posts.map(post => (
-              <div key={post.id} className="bg-surface-container-lowest rounded-2xl shadow-sm p-5 border-l-4 border-primary">
-                {/* Post Header */}
-                <div className="flex items-start justify-between mb-3 relative">
-                  <div className="flex gap-3 items-center">
-                    <div className="w-10 h-10 rounded-full overflow-hidden bg-surface-variant flex-shrink-0">
-                      {post.profiles?.avatar_url
-                        ? <img src={post.profiles.avatar_url} className="w-full h-full object-cover" alt={post.profiles.name} />
-                        : <div className="w-full h-full bg-primary-container flex items-center justify-center">
-                            <span className="material-symbols-outlined text-primary">person</span>
-                          </div>
-                      }
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-on-surface leading-tight" style={{ fontFamily: "Inter" }}>
-                        {post.profiles?.name || "User"}
-                      </h4>
-                      <p className="text-xs text-on-surface-variant" style={{ fontFamily: "JetBrains Mono" }}>
-                        {timeAgo(post.created_at)} · {post.profiles?.role || "student"}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {/* Post Options Menu */}
-                  {post.user_id === session?.id && (
-                    <div className="relative">
-                      <button onClick={() => setShowPostMenu(showPostMenu === post.id ? null : post.id)} className="p-1 rounded-full text-on-surface-variant hover:bg-surface-container">
-                        <span className="material-symbols-outlined text-[20px]">more_horiz</span>
-                      </button>
-                      {showPostMenu === post.id && (
-                        <div className="absolute right-0 top-full mt-1 w-32 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg z-20 py-1 overflow-hidden">
-                          <button 
-                            onClick={() => {
-                              setEditingPostId(post.id);
-                              setEditingPostContent(post.content);
-                              setShowPostMenu(null);
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-surface-container flex items-center gap-2"
-                          >
-                            <span className="material-symbols-outlined text-[16px]">edit</span> Edit
-                          </button>
-                          <button 
-                            onClick={() => {
-                              handleDeletePost(post.id);
-                              setShowPostMenu(null);
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm text-error hover:bg-error/10 flex items-center gap-2"
-                          >
-                            <span className="material-symbols-outlined text-[16px]">delete</span> Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {/* Post Body */}
-                {editingPostId === post.id ? (
-                  <div className="mb-3">
-                    <textarea 
-                      value={editingPostContent} 
-                      onChange={e => setEditingPostContent(e.target.value)}
-                      className="w-full bg-surface-container-low border border-outline-variant rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
-                      rows={3}
-                    />
-                    <div className="flex justify-end gap-2 mt-2">
-                      <button onClick={() => setEditingPostId(null)} className="text-xs px-3 py-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg font-medium">Cancel</button>
-                      <button onClick={handleSaveEdit} className="text-xs px-3 py-1.5 bg-primary text-on-primary rounded-lg hover:bg-primary/90 font-medium">Save</button>
-                    </div>
-                  </div>
-                ) : (
-                  post.content.trim() && (
-                    <p className="text-sm text-on-surface leading-relaxed mb-3 whitespace-pre-wrap" style={{ fontFamily: "Inter" }}>
-                      {post.content}
-                    </p>
-                  )
-                )}
-
-                {/* Media */}
-                {post.media_urls?.length > 0 && (
-                  <div className="mb-3 rounded-xl overflow-hidden">
-                    <img src={post.media_urls[0]} className="w-full max-h-80 object-cover" alt="Post media" />
-                  </div>
-                )}
-
-                {/* Reactions Row */}
-                <div className="flex items-center justify-between border-t border-outline-variant/30 pt-3 mt-2">
-                  <div className="flex items-center gap-1 flex-wrap">
-                    {/* Reaction summary */}
-                    {totalReactions(post) > 0 && (
-                      <div className="flex items-center gap-1 mr-2 text-xs text-on-surface-variant" style={{ fontFamily: "Inter" }}>
-                        {(Object.entries(post.reactionCounts) as [ReactionType, number][])
-                          .filter(([, count]) => count > 0)
-                          .slice(0, 3)
-                          .map(([type]) => (
-                            <span key={type}>{REACTION_EMOJIS[type]}</span>
-                          ))
-                        }
-                        <span className="ml-0.5">{totalReactions(post)}</span>
-                      </div>
-                    )}
-
-                    {/* React button */}
-                    <div className="relative">
-                      <button
-                        onClick={() => setShowReactions(showReactions === post.id ? null : post.id)}
-                        className={`flex items-center gap-1.5 text-sm px-2.5 py-1.5 rounded-lg transition-all ${
-                          post.myReaction
-                            ? "text-primary bg-primary/10"
-                            : "text-on-surface-variant hover:text-primary hover:bg-primary/5"
-                        }`}
-                        style={{ fontFamily: "Inter" }}
-                      >
-                        <span>{post.myReaction ? REACTION_EMOJIS[post.myReaction] : "👍"}</span>
-                        <span className="text-xs font-medium">{post.myReaction ? "Reacted" : "React"}</span>
-                      </button>
-
-                      {/* Reaction picker */}
-                      {showReactions === post.id && (
-                        <div className="absolute bottom-full left-0 mb-2 flex items-center gap-1 bg-surface-container-lowest rounded-full shadow-xl border border-outline-variant/30 px-3 py-2 z-10">
-                          {(Object.entries(REACTION_EMOJIS) as [ReactionType, string][]).map(([type, emoji]) => (
-                            <button
-                              key={type}
-                              onClick={() => handleReaction(post.id, type)}
-                              className={`text-xl hover:scale-125 transition-transform p-1 rounded-full ${
-                                post.myReaction === type ? "bg-primary/10" : ""
-                              }`}
-                              title={type}
-                            >
-                              {emoji}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <button
-                    className="flex items-center gap-1.5 text-xs text-on-surface-variant hover:text-primary transition-colors"
-                    style={{ fontFamily: "JetBrains Mono" }}
-                  >
-                    <span className="material-symbols-outlined text-[16px]">chat_bubble_outline</span>
-                    {post.commentCount > 0 ? `${post.commentCount} Comments` : "Comment"}
-                  </button>
-                </div>
-              </div>
+            posts.map((post) => (
+              <PostItem
+                key={post.id}
+                post={post}
+                session={session}
+                showPostMenu={showPostMenu}
+                setShowPostMenu={setShowPostMenu}
+                editingPostId={editingPostId}
+                setEditingPostId={setEditingPostId}
+                editingPostContent={editingPostContent}
+                setEditingPostContent={setEditingPostContent}
+                handleSaveEdit={handleSaveEdit}
+                handleDeletePost={handleDeletePost}
+                showReactions={showReactions}
+                setShowReactions={setShowReactions}
+                handleReaction={handleReaction}
+                totalReactions={totalReactions}
+              />
             ))
           )}
         </div>
 
         {/* ── Right Rail ── */}
         <div className="hidden lg:block lg:col-span-3 space-y-5">
-
           {/* People You May Know */}
           <div className="bg-surface-container-lowest rounded-2xl shadow-sm p-5 sticky top-6">
-            <h3 className="font-semibold text-on-surface mb-4" style={{ fontFamily: "Inter" }}>People you may know</h3>
+            <h3 className="font-semibold text-on-surface mb-4" style={{ fontFamily: "Inter" }}>
+              People you may know
+            </h3>
             <div className="space-y-3">
               {suggestedUsers.length === 0 ? (
-                <p className="text-sm text-on-surface-variant" style={{ fontFamily: "Inter" }}>Connect with more peers to see suggestions.</p>
+                <p className="text-sm text-on-surface-variant" style={{ fontFamily: "Inter" }}>
+                  Connect with more peers to see suggestions.
+                </p>
               ) : (
-                suggestedUsers.map(user => (
+                suggestedUsers.map((user) => (
                   <div key={user.id} className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full overflow-hidden bg-surface-variant flex-shrink-0">
-                      {user.avatar_url
-                        ? <img src={user.avatar_url} className="w-full h-full object-cover" alt={user.name} />
-                        : <div className="w-full h-full bg-primary-container flex items-center justify-center">
-                            <span className="material-symbols-outlined text-primary text-sm">person</span>
-                          </div>
-                      }
+                      {user.avatar_url ? (
+                        <img
+                          src={user.avatar_url}
+                          className="w-full h-full object-cover"
+                          alt={user.name}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-primary-container flex items-center justify-center">
+                          <span className="material-symbols-outlined text-primary text-sm">
+                            person
+                          </span>
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-on-surface truncate" style={{ fontFamily: "Inter" }}>{user.name}</p>
-                      <p className="text-xs text-on-surface-variant truncate" style={{ fontFamily: "Inter" }}>{user.headline || "PlacePro Student"}</p>
+                      <p
+                        className="text-sm font-medium text-on-surface truncate"
+                        style={{ fontFamily: "Inter" }}
+                      >
+                        {user.name}
+                      </p>
+                      <p
+                        className="text-xs text-on-surface-variant truncate"
+                        style={{ fontFamily: "Inter" }}
+                      >
+                        {user.headline || "PlacePro Student"}
+                      </p>
                     </div>
-                    <button className="text-xs font-medium text-primary border border-primary/40 px-2.5 py-1 rounded-full hover:bg-primary hover:text-on-primary transition-all flex-shrink-0" style={{ fontFamily: "Inter" }}>
+                    <button
+                      className="text-xs font-medium text-primary border border-primary/40 px-2.5 py-1 rounded-full hover:bg-primary hover:text-on-primary transition-all flex-shrink-0"
+                      style={{ fontFamily: "Inter" }}
+                    >
                       Connect
                     </button>
                   </div>
@@ -577,27 +729,55 @@ function FeedPage() {
             {topStudents.length > 0 && (
               <div className="mt-5 pt-5 border-t border-outline-variant/30">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-on-surface" style={{ fontFamily: "Inter" }}>Top Students</h3>
-                  <span className="text-xs text-on-surface-variant" style={{ fontFamily: "JetBrains Mono" }}>This Week</span>
+                  <h3 className="font-semibold text-on-surface" style={{ fontFamily: "Inter" }}>
+                    Top Students
+                  </h3>
+                  <span
+                    className="text-xs text-on-surface-variant"
+                    style={{ fontFamily: "JetBrains Mono" }}
+                  >
+                    This Week
+                  </span>
                 </div>
                 <div className="space-y-2">
                   {topStudents.map((student, idx) => (
-                    <div key={student.id} className={`flex items-center gap-3 p-2 rounded-xl ${idx === 0 ? "bg-[#f59e0b]/5 border border-[#f59e0b]/20" : ""}`}>
-                      <span className={`text-sm font-bold w-5 text-center ${idx === 0 ? "text-[#f59e0b]" : "text-on-surface-variant"}`} style={{ fontFamily: "JetBrains Mono" }}>
+                    <div
+                      key={student.id}
+                      className={`flex items-center gap-3 p-2 rounded-xl ${idx === 0 ? "bg-[#f59e0b]/5 border border-[#f59e0b]/20" : ""}`}
+                    >
+                      <span
+                        className={`text-sm font-bold w-5 text-center ${idx === 0 ? "text-[#f59e0b]" : "text-on-surface-variant"}`}
+                        style={{ fontFamily: "JetBrains Mono" }}
+                      >
                         {idx + 1}
                       </span>
                       <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-variant flex-shrink-0">
-                        {student.avatar_url
-                          ? <img src={student.avatar_url} className="w-full h-full object-cover" alt={student.name} />
-                          : <div className="w-full h-full bg-primary-container flex items-center justify-center">
-                              <span className="material-symbols-outlined text-primary text-xs">person</span>
-                            </div>
-                        }
+                        {student.avatar_url ? (
+                          <img
+                            src={student.avatar_url}
+                            className="w-full h-full object-cover"
+                            alt={student.name}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-primary-container flex items-center justify-center">
+                            <span className="material-symbols-outlined text-primary text-xs">
+                              person
+                            </span>
+                          </div>
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-on-surface truncate" style={{ fontFamily: "Inter" }}>{student.name}</p>
+                        <p
+                          className="text-sm font-medium text-on-surface truncate"
+                          style={{ fontFamily: "Inter" }}
+                        >
+                          {student.name}
+                        </p>
                       </div>
-                      <span className="text-xs font-bold text-primary" style={{ fontFamily: "JetBrains Mono" }}>
+                      <span
+                        className="text-xs font-bold text-primary"
+                        style={{ fontFamily: "JetBrains Mono" }}
+                      >
                         {student.xp.toLocaleString()} XP
                       </span>
                     </div>

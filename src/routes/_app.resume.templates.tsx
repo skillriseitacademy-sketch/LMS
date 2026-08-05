@@ -7,12 +7,42 @@ export const Route = createFileRoute("/_app/resume/templates")({
 });
 
 const templates = [
-  { id: "modern", name: "Modern Professional", img: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400&q=80", tag: "Recommended" },
-  { id: "classic", name: "Classic Corporate", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80", tag: "" },
-  { id: "creative", name: "Creative Designer", img: "https://images.unsplash.com/photo-1626197031507-c17099753214?w=400&q=80", tag: "" },
-  { id: "minimal", name: "Minimalist Clean", img: "https://images.unsplash.com/photo-1586282391129-76a6df230234?w=400&q=80", tag: "" },
-  { id: "executive", name: "Executive Leadership", img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&q=80", tag: "" },
-  { id: "tech", name: "Tech Startup", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&q=80", tag: "" },
+  {
+    id: "modern",
+    name: "Modern Professional",
+    img: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400&q=80",
+    tag: "Recommended",
+  },
+  {
+    id: "classic",
+    name: "Classic Corporate",
+    img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80",
+    tag: "",
+  },
+  {
+    id: "creative",
+    name: "Creative Designer",
+    img: "https://images.unsplash.com/photo-1626197031507-c17099753214?w=400&q=80",
+    tag: "",
+  },
+  {
+    id: "minimal",
+    name: "Minimalist Clean",
+    img: "https://images.unsplash.com/photo-1586282391129-76a6df230234?w=400&q=80",
+    tag: "",
+  },
+  {
+    id: "executive",
+    name: "Executive Leadership",
+    img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&q=80",
+    tag: "",
+  },
+  {
+    id: "tech",
+    name: "Tech Startup",
+    img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&q=80",
+    tag: "",
+  },
 ];
 
 function ResumeTemplates() {
@@ -25,7 +55,7 @@ function ResumeTemplates() {
         <h1 className="text-display text-3xl font-bold md:text-4xl mb-6">
           Templates we recommend for you
         </h1>
-        
+
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-3">
           <button className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-muted transition">
@@ -42,7 +72,7 @@ function ResumeTemplates() {
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12">
         {templates.map((tpl) => (
-          <div 
+          <div
             key={tpl.id}
             className="group relative rounded-2xl border border-border bg-card overflow-hidden shadow-sm hover:shadow-md transition"
             onMouseEnter={() => setActiveTemplate(tpl.id)}
@@ -55,14 +85,12 @@ function ResumeTemplates() {
                 </div>
               )}
               {/* Using Unsplash placeholder images styled to look like documents */}
-              <img 
-                src={tpl.img} 
-                alt={tpl.name}
-                className="h-full w-full object-cover opacity-80"
-              />
-              
+              <img src={tpl.img} alt={tpl.name} className="h-full w-full object-cover opacity-80" />
+
               {/* Hover Overlay */}
-              <div className={`absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 transition-opacity duration-300 ${activeTemplate === tpl.id ? 'opacity-100' : 'opacity-0'}`}>
+              <div
+                className={`absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 transition-opacity duration-300 ${activeTemplate === tpl.id ? "opacity-100" : "opacity-0"}`}
+              >
                 <h3 className="text-xl font-bold mb-4 text-center">{tpl.name}</h3>
                 <button className="rounded-full bg-brand px-6 py-3 text-sm font-bold text-brand-foreground hover:opacity-90 transition w-full max-w-[200px]">
                   Choose template

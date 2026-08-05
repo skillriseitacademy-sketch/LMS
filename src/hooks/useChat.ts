@@ -30,7 +30,9 @@ export const BOT_THREAD_KEY = ["bot-thread"] as const;
 // ─── Fetch helpers ────────────────────────────────────────────────────────────
 
 async function getToken(): Promise<string> {
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
   if (!session) throw new Error("Not authenticated");
   return session.access_token;
 }
@@ -121,7 +123,7 @@ export function useSendMessage() {
       await queryClient.cancelQueries({ queryKey: MESSAGES_KEY(conversationId) });
 
       const previousMessages = queryClient.getQueryData<InfiniteData<MessageWithSender[]>>(
-        MESSAGES_KEY(conversationId)
+        MESSAGES_KEY(conversationId),
       );
 
       // Optimistic message (shown immediately, replaced by real data on success)
@@ -143,7 +145,7 @@ export function useSendMessage() {
           const newPages = [...old.pages];
           newPages[0] = [optimistic, ...newPages[0]];
           return { ...old, pages: newPages };
-        }
+        },
       );
 
       return { previousMessages };
@@ -173,10 +175,7 @@ interface TypingState {
  * Handles: new_message, typing.
  * Returns: `typingPeers` — list of names currently typing.
  */
-export function useConversationRealtime(
-  conversationId: string | null,
-  currentUserId: string
-) {
+export function useConversationRealtime(conversationId: string | null, currentUserId: string) {
   const queryClient = useQueryClient();
   const [typingState, setTypingState] = useState<TypingState>({});
   const typingTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
@@ -199,7 +198,7 @@ export function useConversationRealtime(
             const newPages = [...old.pages];
             newPages[0] = [msg, ...newPages[0]];
             return { ...old, pages: newPages };
-          }
+          },
         );
         // Bump conversations list so unread count updates
         queryClient.invalidateQueries({ queryKey: CONVERSATIONS_KEY });
@@ -254,7 +253,7 @@ export function useSendTyping(conversationId: string | null) {
         payload: { userId, name },
       });
     },
-    [conversationId]
+    [conversationId],
   );
 }
 

@@ -115,9 +115,9 @@ function Teachers() {
       setInviteName("");
       setInviteEmail("");
       setInvitePassword("");
-      
+
       fetchTeachers();
-      
+
       setTimeout(() => {
         setInviteOpen(false);
         setInviteSuccess("");

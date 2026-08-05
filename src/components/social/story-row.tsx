@@ -17,10 +17,10 @@ import type { StoryStack } from "@/hooks/useStories";
 // ─── Ring colour map ─────────────────────────────────────────────────────────
 
 const storyTypeRing: Record<string, string> = {
-  streak:      "ring-streak",
+  streak: "ring-streak",
   achievement: "ring-xp-gold",
-  media:       "ring-brand",
-  status:      "ring-success",
+  media: "ring-brand",
+  status: "ring-success",
 };
 
 // ─── Props ────────────────────────────────────────────────────────────────────
@@ -106,13 +106,18 @@ export function StoryRow({
 function StoryAvatar({ stack, isOwn = false }: { stack: StoryStack; isOwn?: boolean }) {
   const { profile, stories, allSeen } = stack;
   const name = profile.name ?? "User";
-  const initials = name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   // Dominant story type drives ring colour (first story in stack)
   const dominantType = stories[0]?.story_type ?? "status";
   const ringColor = allSeen
-    ? "ring-muted-foreground/30"          // Gray ring = fully seen
-    : storyTypeRing[dominantType] ?? "ring-border";
+    ? "ring-muted-foreground/30" // Gray ring = fully seen
+    : (storyTypeRing[dominantType] ?? "ring-border");
 
   return (
     <div
@@ -133,10 +138,10 @@ function StoryAvatar({ stack, isOwn = false }: { stack: StoryStack; isOwn?: bool
           {dominantType === "streak"
             ? "🔥"
             : dominantType === "achievement"
-            ? "⭐"
-            : dominantType === "media"
-            ? "📷"
-            : "💬"}
+              ? "⭐"
+              : dominantType === "media"
+                ? "📷"
+                : "💬"}
         </span>
       </span>
 

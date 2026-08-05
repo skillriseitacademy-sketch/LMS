@@ -37,7 +37,11 @@ interface StoryViewerProps {
 }
 
 interface SeenByData {
-  viewers: Array<{ viewer_id: string; viewed_at: string; profiles: { name: string; avatar_url: string | null } }>;
+  viewers: Array<{
+    viewer_id: string;
+    viewed_at: string;
+    profiles: { name: string; avatar_url: string | null };
+  }>;
   count: number;
 }
 
@@ -69,7 +73,12 @@ function SegmentedProgressBar({
 
 // ─── StoryViewer ──────────────────────────────────────────────────────────────
 
-export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose }: StoryViewerProps) {
+export function StoryViewer({
+  stacks,
+  initialStackIndex,
+  currentUserId,
+  onClose,
+}: StoryViewerProps) {
   const [stackIdx, setStackIdx] = useState(initialStackIndex);
   const [storyIdx, setStoryIdx] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -92,9 +101,9 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
   const currentStack = stacks[stackIdx];
   const currentStory = currentStack?.stories[storyIdx];
   const isOwn = currentStory?.user_id === currentUserId;
-  const isVideo = !!currentStory?.media_url && (
-    currentStory.media_url.includes(".mp4") || currentStory.media_url.includes(".webm")
-  );
+  const isVideo =
+    !!currentStory?.media_url &&
+    (currentStory.media_url.includes(".mp4") || currentStory.media_url.includes(".webm"));
   const duration = isVideo ? VIDEO_DURATION_MS : IMAGE_DURATION_MS;
 
   // ── Navigation helpers ────────────────────────────────────────────────────
@@ -174,32 +183,40 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
     swipeStartRef.current = { x: e.clientX, y: e.clientY };
   }, []);
 
-  const handlePointerUp = useCallback((e: React.PointerEvent) => {
-    setPaused(false);
-    const start = swipeStartRef.current;
-    if (!start) return;
-    swipeStartRef.current = null;
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent) => {
+      setPaused(false);
+      const start = swipeStartRef.current;
+      if (!start) return;
+      swipeStartRef.current = null;
 
-    const dx = e.clientX - start.x;
-    const dy = e.clientY - start.y;
+      const dx = e.clientX - start.x;
+      const dy = e.clientY - start.y;
 
-    // Swipe down to close
-    if (dy > 80 && Math.abs(dx) < 60) { onClose(); return; }
+      // Swipe down to close
+      if (dy > 80 && Math.abs(dx) < 60) {
+        onClose();
+        return;
+      }
 
-    // Short tap — navigate
-    if (Math.abs(dx) < 20 && Math.abs(dy) < 20) {
-      const { left, width } = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      const tapX = e.clientX - left;
-      if (tapX < width * 0.35) goToPrev();
-      else goToNext();
-    }
-  }, [goToNext, goToPrev, onClose]);
+      // Short tap — navigate
+      if (Math.abs(dx) < 20 && Math.abs(dy) < 20) {
+        const { left, width } = (e.currentTarget as HTMLElement).getBoundingClientRect();
+        const tapX = e.clientX - left;
+        if (tapX < width * 0.35) goToPrev();
+        else goToNext();
+      }
+    },
+    [goToNext, goToPrev, onClose],
+  );
 
   // ── Seen by ────────────────────────────────────────────────────────────────
 
   const fetchSeenBy = useCallback(async () => {
     if (!currentStory) return;
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (!session) return;
     const res = await fetch(`/api/stories/views?story_id=${currentStory.id}`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
@@ -218,7 +235,9 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
     if (!replyText.trim() || !currentStory) return;
     setReplySending(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) return;
       const token = session.access_token;
 
@@ -252,7 +271,13 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
   if (!currentStack || !currentStory) return null;
 
   const { profile } = currentStack;
-  const initials = profile.name?.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) ?? "?";
+  const initials =
+    profile.name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2) ?? "?";
 
   return (
     <AnimatePresence>
@@ -299,8 +324,8 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
                   currentStory.story_type === "streak"
                     ? "linear-gradient(135deg, #f97316 0%, #ea580c 100%)"
                     : currentStory.story_type === "achievement"
-                    ? "linear-gradient(135deg, #eab308 0%, #ca8a04 100%)"
-                    : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      ? "linear-gradient(135deg, #eab308 0%, #ca8a04 100%)"
+                      : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
               }}
             >
               <p className="text-white text-2xl font-bold text-center leading-snug drop-shadow">
@@ -327,12 +352,17 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
                   {profile.avatar_url ? (
                     <img src={profile.avatar_url} alt={profile.name} className="object-cover" />
                   ) : null}
-                  <AvatarFallback className="bg-brand text-white text-xs font-bold">{initials}</AvatarFallback>
+                  <AvatarFallback className="bg-brand text-white text-xs font-bold">
+                    {initials}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
                   <p className="text-white text-sm font-semibold leading-none">{profile.name}</p>
                   <p className="text-white/60 text-[10px]">
-                    {new Date(currentStory.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    {new Date(currentStory.created_at).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </p>
                 </div>
               </div>
@@ -341,7 +371,10 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
                 {isVideo && (
                   <button
                     onPointerDown={(e) => e.stopPropagation()}
-                    onPointerUp={(e) => { e.stopPropagation(); setMuted((m) => !m); }}
+                    onPointerUp={(e) => {
+                      e.stopPropagation();
+                      setMuted((m) => !m);
+                    }}
                     className="p-2 rounded-full bg-black/30 text-white"
                   >
                     {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
@@ -349,7 +382,10 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
                 )}
                 <button
                   onPointerDown={(e) => e.stopPropagation()}
-                  onPointerUp={(e) => { e.stopPropagation(); onClose(); }}
+                  onPointerUp={(e) => {
+                    e.stopPropagation();
+                    onClose();
+                  }}
                   className="p-2 rounded-full bg-black/30 text-white"
                 >
                   <X className="h-4 w-4" />
@@ -370,7 +406,10 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
             {isOwn && (
               <button
                 onPointerDown={(e) => e.stopPropagation()}
-                onPointerUp={(e) => { e.stopPropagation(); openSeenBy(); }}
+                onPointerUp={(e) => {
+                  e.stopPropagation();
+                  openSeenBy();
+                }}
                 className="flex items-center gap-1.5 text-white/80 text-xs hover:text-white transition-colors"
               >
                 <Eye className="h-4 w-4" />
@@ -389,9 +428,20 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
                   type="text"
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  onFocus={() => { setReplyInputFocused(true); setPaused(true); }}
-                  onBlur={() => { setReplyInputFocused(false); setPaused(false); }}
-                  onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendReply(); } }}
+                  onFocus={() => {
+                    setReplyInputFocused(true);
+                    setPaused(true);
+                  }}
+                  onBlur={() => {
+                    setReplyInputFocused(false);
+                    setPaused(false);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      sendReply();
+                    }
+                  }}
                   placeholder={`Reply to ${profile.name}…`}
                   className="flex-1 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white placeholder:text-white/50 px-4 py-2 text-sm outline-none focus:border-white/50 transition-colors"
                 />
@@ -410,14 +460,20 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
           <button
             className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 text-white opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity z-20"
             onPointerDown={(e) => e.stopPropagation()}
-            onPointerUp={(e) => { e.stopPropagation(); goToPrev(); }}
+            onPointerUp={(e) => {
+              e.stopPropagation();
+              goToPrev();
+            }}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
           <button
             className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 text-white opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity z-20"
             onPointerDown={(e) => e.stopPropagation()}
-            onPointerUp={(e) => { e.stopPropagation(); goToNext(); }}
+            onPointerUp={(e) => {
+              e.stopPropagation();
+              goToNext();
+            }}
           >
             <ChevronRight className="h-5 w-5" />
           </button>
@@ -427,26 +483,34 @@ export function StoryViewer({ stacks, initialStackIndex, currentUserId, onClose 
         <Drawer open={seenByOpen} onOpenChange={setSeenByOpen}>
           <DrawerContent className="max-h-[60vh]">
             <DrawerHeader>
-              <DrawerTitle className="text-base">
-                Seen by {seenByData?.count ?? 0}
-              </DrawerTitle>
+              <DrawerTitle className="text-base">Seen by {seenByData?.count ?? 0}</DrawerTitle>
             </DrawerHeader>
             <div className="overflow-y-auto p-4 space-y-3">
               {seenByData?.viewers.map((v) => {
                 const name = v.profiles?.name ?? "User";
-                const init = name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
+                const init = name
+                  .split(" ")
+                  .map((n: string) => n[0])
+                  .join("")
+                  .toUpperCase()
+                  .slice(0, 2);
                 return (
                   <div key={v.viewer_id} className="flex items-center gap-3">
                     <Avatar className="h-9 w-9">
                       {v.profiles?.avatar_url ? (
                         <img src={v.profiles.avatar_url} alt={name} className="object-cover" />
                       ) : null}
-                      <AvatarFallback className="bg-brand/20 text-brand-dark text-xs font-bold">{init}</AvatarFallback>
+                      <AvatarFallback className="bg-brand/20 text-brand-dark text-xs font-bold">
+                        {init}
+                      </AvatarFallback>
                     </Avatar>
                     <div>
                       <p className="text-sm font-medium text-foreground">{name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {new Date(v.viewed_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                        {new Date(v.viewed_at).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </p>
                     </div>
                   </div>

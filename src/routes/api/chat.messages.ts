@@ -17,17 +17,17 @@ import { createClient } from "@supabase/supabase-js";
 import { sanitizeText } from "@/lib/sanitize";
 
 function serviceClient() {
-  return createClient(
-    process.env.VITE_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
+  return createClient(process.env.VITE_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 }
 
 async function getUser(request: Request) {
   const token = request.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
   const sc = serviceClient();
-  const { data: { user }, error } = await sc.auth.getUser(token);
+  const {
+    data: { user },
+    error,
+  } = await sc.auth.getUser(token);
   if (error || !user) return null;
   return user;
 }
@@ -65,10 +65,12 @@ export const Route = createFileRoute("/api/chat/messages")({
 
         let query = sc
           .from("messages")
-          .select(`
+          .select(
+            `
             id, conversation_id, sender_id, body, story_id, created_at,
             sender:sender_id (name, avatar_url)
-          `)
+          `,
+          )
           .eq("conversation_id", conversationId)
           .order("created_at", { ascending: false })
           .limit(limit);
@@ -89,7 +91,7 @@ export const Route = createFileRoute("/api/chat/messages")({
         const user = await getUser(request);
         if (!user) return new Response("Unauthorized", { status: 401 });
 
-        const body = await request.json() as {
+        const body = (await request.json()) as {
           conversation_id?: string;
           body?: string;
           story_id?: string;
@@ -100,7 +102,8 @@ export const Route = createFileRoute("/api/chat/messages")({
         }
 
         const cleanBody = sanitizeText(body.body, 4000);
-        if (!cleanBody) return new Response("Message body is empty after sanitization", { status: 400 });
+        if (!cleanBody)
+          return new Response("Message body is empty after sanitization", { status: 400 });
 
         const sc = serviceClient();
 
@@ -129,7 +132,9 @@ export const Route = createFileRoute("/api/chat/messages")({
           .single();
 
         if (insertErr || !msg) {
-          return new Response(JSON.stringify({ error: insertErr?.message ?? "Insert failed" }), { status: 500 });
+          return new Response(JSON.stringify({ error: insertErr?.message ?? "Insert failed" }), {
+            status: 500,
+          });
         }
 
         // Broadcast to Realtime channel so other participants receive it instantly

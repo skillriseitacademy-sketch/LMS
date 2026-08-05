@@ -27,15 +27,18 @@ function AdminQuizzes() {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
-  
+
   const [title, setTitle] = useState("");
   const [topicId, setTopicId] = useState("");
 
   const fetchData = async () => {
     setLoading(true);
     const [quizzesRes, topicsRes] = await Promise.all([
-      supabase.from("quizzes").select("*, topic:topics(id, title)").order("created_at", { ascending: false }),
-      supabase.from("topics").select("id, title").order("title")
+      supabase
+        .from("quizzes")
+        .select("*, topic:topics(id, title)")
+        .order("created_at", { ascending: false }),
+      supabase.from("topics").select("id, title").order("title"),
     ]);
 
     if (quizzesRes.error) toast.error("Failed to fetch quizzes: " + quizzesRes.error.message);
@@ -61,9 +64,7 @@ function AdminQuizzes() {
       toast.error("Please select a topic");
       return;
     }
-    const { error } = await supabase.from("quizzes").insert([
-      { title, topic_id: topicId }
-    ]);
+    const { error } = await supabase.from("quizzes").insert([{ title, topic_id: topicId }]);
     if (error) {
       toast.error("Failed to add quiz: " + error.message);
     } else {
@@ -75,7 +76,12 @@ function AdminQuizzes() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this quiz? This will delete all its questions.")) return;
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this quiz? This will delete all its questions.",
+      )
+    )
+      return;
     const { error } = await supabase.from("quizzes").delete().eq("id", id);
     if (error) {
       toast.error("Failed to delete quiz: " + error.message);
@@ -103,12 +109,21 @@ function AdminQuizzes() {
             onClick={() => setIsAdding(!isAdding)}
             className="inline-flex items-center gap-1 rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background hover:opacity-90"
           >
-            {isAdding ? "Cancel" : <><Plus className="h-3.5 w-3.5" /> Add Quiz</>}
+            {isAdding ? (
+              "Cancel"
+            ) : (
+              <>
+                <Plus className="h-3.5 w-3.5" /> Add Quiz
+              </>
+            )}
           </button>
         </header>
 
         {isAdding && (
-          <form onSubmit={handleAdd} className="rounded-3xl border border-border bg-card p-6 space-y-4">
+          <form
+            onSubmit={handleAdd}
+            className="rounded-3xl border border-border bg-card p-6 space-y-4"
+          >
             <h2 className="text-display text-lg font-bold">Add New Quiz</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
@@ -130,13 +145,18 @@ function AdminQuizzes() {
                   className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
                 >
                   {topics.map((t) => (
-                    <option key={t.id} value={t.id}>{t.title}</option>
+                    <option key={t.id} value={t.id}>
+                      {t.title}
+                    </option>
                   ))}
                 </select>
               </div>
             </div>
             <div className="pt-2 flex justify-end">
-              <button type="submit" className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground hover:opacity-90">
+              <button
+                type="submit"
+                className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground hover:opacity-90"
+              >
                 Save Quiz
               </button>
             </div>
@@ -147,10 +167,15 @@ function AdminQuizzes() {
           {loading ? (
             <p className="text-sm text-muted-foreground">Loading quizzes...</p>
           ) : quizzes.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No quizzes found. Create one to get started.</p>
+            <p className="text-sm text-muted-foreground">
+              No quizzes found. Create one to get started.
+            </p>
           ) : (
             quizzes.map((q) => (
-              <div key={q.id} className="rounded-3xl border border-border bg-card p-5 flex flex-col relative group">
+              <div
+                key={q.id}
+                className="rounded-3xl border border-border bg-card p-5 flex flex-col relative group"
+              >
                 <h3 className="text-display font-bold text-lg">{q.title}</h3>
                 <span className="inline-block mt-2 px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-muted text-muted-foreground self-start">
                   {q.topic?.title || "Unknown Topic"}

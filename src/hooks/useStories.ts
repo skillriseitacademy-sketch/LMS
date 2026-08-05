@@ -82,7 +82,9 @@ export function useStories(currentUserId: string) {
   const storiesQuery = useQuery({
     queryKey: STORIES_KEY,
     queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) return [];
       return fetchStories(session.access_token);
     },
@@ -95,7 +97,9 @@ export function useStories(currentUserId: string) {
   const viewsQuery = useQuery({
     queryKey: STORY_VIEWS_KEY(currentUserId),
     queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) return new Set<string>();
       return fetchViewedIds(session.access_token, allStoryIds);
     },
@@ -108,13 +112,9 @@ export function useStories(currentUserId: string) {
     if (!currentUserId) return;
     const channel = supabase
       .channel("stories-realtime")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "stories" },
-        () => {
-          queryClient.invalidateQueries({ queryKey: STORIES_KEY });
-        }
-      )
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "stories" }, () => {
+        queryClient.invalidateQueries({ queryKey: STORIES_KEY });
+      })
       .subscribe();
 
     return () => {
@@ -170,7 +170,9 @@ export function useMarkStoryViewed(currentUserId: string) {
 
   const mutation = useMutation({
     mutationFn: async (storyIds: string[]) => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) return;
       await fetch("/api/stories/views", {
         method: "POST",
@@ -198,7 +200,7 @@ export function useMarkStoryViewed(currentUserId: string) {
         mutation.mutate(ids);
       }, 1000);
     },
-    [mutation]
+    [mutation],
   );
 
   return markViewed;
