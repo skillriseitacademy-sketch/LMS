@@ -7,8 +7,8 @@ export const Route = createFileRoute("/mockup/jobs_board_role_details_match_anal
 function JobsBoardRoleDetailsMatchAnalysisPage() {
   return (
     <>
-      <header className="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 dark:bg-background/80 backdrop-blur-md flex justify-between items-center px-xl z-40 hidden md:flex">
-        <div className="flex items-center gap-md">
+      <header className="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 dark:bg-background/80 backdrop-blur-md flex justify-between items-center px-8 z-40 hidden md:flex">
+        <div className="flex items-center gap-4">
           <div className="relative focus-within:ring-2 focus-within:ring-primary/20 rounded-full">
             <span
               className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline"
@@ -23,7 +23,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             />
           </div>
         </div>
-        <div className="flex items-center gap-md">
+        <div className="flex items-center gap-4">
           <button
             aria-label="Notifications"
             className="p-2 rounded-full text-on-surface-variant hover:text-primary transition-all hover:bg-surface-container-high"
@@ -49,16 +49,16 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
         </div>
       </header>
 
-      <nav className="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex flex-col py-lg px-md overflow-y-auto hidden md:flex z-50">
-        <div className="mb-xl px-sm">
+      <nav className="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex flex-col py-6 px-4 overflow-y-auto hidden md:flex z-50">
+        <div className="mb-8 px-2">
           <h1 className="text-headline-md font-display-lg font-extrabold text-primary">PlacePro</h1>
           <p className="font-label-sm text-label-sm text-outline tracking-wider mt-1 uppercase">
             Career OS
           </p>
         </div>
-        <div className="flex-1 flex flex-col gap-sm">
+        <div className="flex-1 flex flex-col gap-2">
           <a
-            className="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
             href="#"
           >
             <span className="material-symbols-outlined" data-icon="dashboard">
@@ -67,7 +67,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             <span className="font-body-md text-body-md font-medium">Dashboard</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
             href="#"
           >
             <span className="material-symbols-outlined" data-icon="rss_feed">
@@ -76,7 +76,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             <span className="font-body-md text-body-md font-medium">Feed</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
             href="#"
           >
             <span className="material-symbols-outlined" data-icon="video_chat">
@@ -85,7 +85,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             <span className="font-body-md text-body-md font-medium">Interview Hub</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
             href="#"
           >
             <span className="material-symbols-outlined" data-icon="quiz">
@@ -94,7 +94,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             <span className="font-body-md text-body-md font-medium">Quizzes</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
             href="#"
           >
             <span className="material-symbols-outlined" data-icon="sports_esports">
@@ -103,7 +103,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             <span className="font-body-md text-body-md font-medium">Arena</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container-low transition-colors duration-200 active:scale-[0.98]"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container-low transition-colors duration-200 active:scale-[0.98]"
             href="#"
           >
             <span
@@ -117,7 +117,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             <span className="font-body-md text-body-md">Jobs</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
             href="#"
           >
             <span className="material-symbols-outlined" data-icon="map">
@@ -126,7 +126,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             <span className="font-body-md text-body-md font-medium">Roadmap</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
             href="#"
           >
             <span className="material-symbols-outlined" data-icon="description">
@@ -135,7 +135,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             <span className="font-body-md text-body-md font-medium">Resume</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
             href="#"
           >
             <span className="material-symbols-outlined" data-icon="leaderboard">
@@ -144,7 +144,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             <span className="font-body-md text-body-md font-medium">Leaderboard</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
             href="#"
           >
             <span className="material-symbols-outlined" data-icon="person">
@@ -153,7 +153,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             <span className="font-body-md text-body-md font-medium">Profile</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200 active:scale-[0.98]"
             href="#"
           >
             <span className="material-symbols-outlined" data-icon="groups">
@@ -162,13 +162,13 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             <span className="font-body-md text-body-md font-medium">Rooms</span>
           </a>
         </div>
-        <div className="mt-auto pt-xl">
-          <button className="w-full bg-primary text-on-primary font-body-md text-body-md font-semibold py-3 rounded-lg hover:bg-primary/90 transition-colors duration-200 active:scale-[0.98] shadow-sm mb-lg">
+        <div className="mt-auto pt-8">
+          <button className="w-full bg-primary text-on-primary font-body-md text-body-md font-semibold py-3 rounded-lg hover:bg-primary/90 transition-colors duration-200 active:scale-[0.98] shadow-sm mb-6">
             Start Practice
           </button>
-          <div className="flex flex-col gap-sm border-t border-surface-container pt-md">
+          <div className="flex flex-col gap-2 border-t border-surface-container pt-4">
             <a
-              className="flex items-center gap-md px-md py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-200"
               href="#"
             >
               <span className="material-symbols-outlined text-[20px]" data-icon="settings">
@@ -177,7 +177,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
               <span className="font-body-md text-[14px] font-medium">Settings</span>
             </a>
             <a
-              className="flex items-center gap-md px-md py-2 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container/50 transition-colors duration-200"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container/50 transition-colors duration-200"
               href="#"
             >
               <span className="material-symbols-outlined text-[20px]" data-icon="logout">
@@ -189,9 +189,9 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
         </div>
       </nav>
 
-      <main className="md:ml-[280px] w-full min-h-screen pt-16 md:pt-24 pb-24 md:pb-xl px-4 md:px-xl max-w-[1560px] mx-auto flex flex-col md:flex-row gap-xl">
-        <div className="flex-1 flex flex-col gap-lg">
-          <div className="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex items-start gap-lg relative overflow-hidden">
+      <main className="md:ml-[280px] w-full min-h-screen pt-16 md:pt-24 pb-24 md:pb-xl px-4 md:px-xl max-w-[1560px] mx-auto flex flex-col md:flex-row gap-8">
+        <div className="flex-1 flex flex-col gap-6">
+          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex items-start gap-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary-container/5 rounded-bl-full -z-0"></div>
             <div className="w-16 h-16 rounded-xl bg-surface-container flex items-center justify-center shrink-0 border border-outline-variant/30 z-10">
               <img
@@ -218,7 +218,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
                   </span>
                 </button>
               </div>
-              <div className="flex flex-wrap gap-sm mt-md">
+              <div className="flex flex-wrap gap-2 mt-4">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">
                   <span className="material-symbols-outlined text-[16px]" data-icon="payments">
                     payments
@@ -241,21 +241,21 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             </div>
           </div>
 
-          <div className="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
-            <h3 className="font-headline-md text-headline-md text-on-surface mb-md">
+          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+            <h3 className="font-headline-md text-headline-md text-on-surface mb-4">
               About the Role
             </h3>
-            <p className="text-on-surface-variant mb-lg leading-relaxed">
+            <p className="text-on-surface-variant mb-6 leading-relaxed">
               We are looking for a passionate Software Engineer to join our core backend team. You
               will be responsible for designing, building, and maintaining high-performance,
               scalable, and reliable services that power millions of food deliveries daily. This
               role requires a deep understanding of distributed systems, database design, and a
               strong problem-solving mindset.
             </p>
-            <h3 className="font-headline-md text-[20px] font-semibold text-on-surface mb-sm mt-xl">
+            <h3 className="font-headline-md text-[20px] font-semibold text-on-surface mb-2 mt-8">
               Responsibilities
             </h3>
-            <ul className="space-y-3 text-on-surface-variant list-none pl-1 mb-lg">
+            <ul className="space-y-3 text-on-surface-variant list-none pl-1 mb-6">
               <li className="flex items-start gap-3">
                 <span
                   className="material-symbols-outlined text-primary text-[20px] mt-0.5 shrink-0"
@@ -297,7 +297,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
                 maintainability.
               </li>
             </ul>
-            <h3 className="font-headline-md text-[20px] font-semibold text-on-surface mb-sm mt-xl">
+            <h3 className="font-headline-md text-[20px] font-semibold text-on-surface mb-2 mt-8">
               Requirements
             </h3>
             <ul className="space-y-3 text-on-surface-variant list-none pl-1">
@@ -342,12 +342,12 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
           </div>
         </div>
 
-        <div className="w-full md:w-[380px] flex flex-col gap-lg shrink-0">
-          <div className="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border-t-4 border-primary">
-            <h3 className="font-headline-md text-[20px] font-semibold text-on-surface mb-sm">
+        <div className="w-full md:w-[380px] flex flex-col gap-6 shrink-0">
+          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border-t-4 border-primary">
+            <h3 className="font-headline-md text-[20px] font-semibold text-on-surface mb-2">
               Ready to apply?
             </h3>
-            <p className="text-on-surface-variant text-sm mb-md">
+            <p className="text-on-surface-variant text-sm mb-4">
               Use your PlacePro Resume for 1-click apply. Profile is 95% complete.
             </p>
             <button className="w-full bg-primary text-on-primary font-body-md text-body-md font-semibold py-3 rounded-lg hover:bg-primary/90 transition-all duration-200 active:scale-[0.98] shadow-sm flex items-center justify-center gap-2 group">
@@ -366,8 +366,8 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             </div>
           </div>
 
-          <div className="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
-            <div className="flex items-center gap-3 mb-md">
+          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+            <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full bg-secondary-fixed/20 flex items-center justify-center">
                 <span className="material-symbols-outlined text-secondary" data-icon="radar">
                   radar
@@ -377,7 +377,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
                 Why You Match
               </h3>
             </div>
-            <p className="text-on-surface-variant text-sm mb-lg">
+            <p className="text-on-surface-variant text-sm mb-6">
               Based on your Arena performance and Roadmap progress.
             </p>
             <div className="space-y-4">
@@ -427,8 +427,8 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
             </div>
           </div>
 
-          <div className="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
-            <h3 className="font-headline-md text-[20px] font-semibold text-on-surface mb-lg">
+          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+            <h3 className="font-headline-md text-[20px] font-semibold text-on-surface mb-6">
               Company at a Glance
             </h3>
             <div className="grid grid-cols-2 gap-4">
@@ -481,7 +481,7 @@ function JobsBoardRoleDetailsMatchAnalysisPage() {
                 <p className="font-medium text-on-surface text-sm">Fast-paced</p>
               </div>
             </div>
-            <div className="mt-md pt-md border-t border-surface-container-highest">
+            <div className="mt-4 pt-4 border-t border-surface-container-highest">
               <a
                 className="text-primary text-sm font-medium hover:underline flex items-center gap-1"
                 href="#"

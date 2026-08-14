@@ -7,16 +7,16 @@ export const Route = createFileRoute("/mockup/leaderboard_global_rankings_animat
 function LeaderboardGlobalRankingsAnimatedPage() {
   return (
     <>
-      <aside className="hidden md:flex flex-col h-full py-lg px-md w-sidebar-width fixed left-0 top-0 bg-surface-container-lowest shadow-sm z-50 border-r border-outline-variant/30">
-        <div className="mb-xl px-sm">
+      <aside className="hidden md:flex flex-col h-full py-6 px-4 w-sidebar-width fixed left-0 top-0 bg-surface-container-lowest shadow-sm z-50 border-r border-outline-variant/30">
+        <div className="mb-8 px-2">
           <h1 className="font-headline-md text-headline-md font-bold text-primary">PlacePro</h1>
           <p className="font-label-sm text-label-sm text-outline tracking-wider uppercase mt-1">
             Career OS
           </p>
         </div>
-        <nav className="flex-1 space-y-sm overflow-y-auto pr-sm custom-scrollbar">
+        <nav className="flex-1 space-y-sm overflow-y-auto pr-2 custom-scrollbar">
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -25,7 +25,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
             <span className="font-body-md text-body-md">Dashboard</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -34,7 +34,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
             <span className="font-body-md text-body-md">Feed</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -43,7 +43,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
             <span className="font-body-md text-body-md">Interview Hub</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -52,7 +52,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
             <span className="font-body-md text-body-md">Quizzes</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -61,7 +61,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
             <span className="font-body-md text-body-md">Arena</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -70,7 +70,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
             <span className="font-body-md text-body-md">Jobs</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -79,7 +79,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
             <span className="font-body-md text-body-md">Roadmap</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -89,7 +89,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg bg-surface-container-low text-primary font-bold border-l-4 border-primary shadow-sm transform scale-[0.98] transition-transform duration-200"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg bg-surface-container-low text-primary font-bold border-l-4 border-primary shadow-sm transform scale-[0.98] transition-transform duration-200"
             href="#"
           >
             <span
@@ -101,7 +101,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
             <span className="font-body-md text-body-md">Leaderboard</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -110,7 +110,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
             <span className="font-body-md text-body-md">Profile</span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -119,13 +119,13 @@ function LeaderboardGlobalRankingsAnimatedPage() {
             <span className="font-body-md text-body-md">Rooms</span>
           </a>
         </nav>
-        <div className="mt-auto pt-lg space-y-md border-t border-outline-variant/30 px-sm">
-          <button className="w-full bg-primary text-on-primary py-sm rounded-lg font-body-md font-semibold shadow-sm hover:bg-primary-container hover:text-on-primary-container transition-colors transform hover:scale-[1.02] active:scale-[0.98]">
+        <div className="mt-auto pt-6 space-y-md border-t border-outline-variant/30 px-2">
+          <button className="w-full bg-primary text-on-primary py-2 rounded-lg font-body-md font-semibold shadow-sm hover:bg-primary-container hover:text-on-primary-container transition-colors transform hover:scale-[1.02] active:scale-[0.98]">
             Start Daily Challenge
           </button>
           <div className="flex flex-col space-y-sm">
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
               href="#"
             >
               <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -134,7 +134,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
               <span className="font-body-md text-body-md">Settings</span>
             </a>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
               href="#"
             >
               <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -147,7 +147,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
       </aside>
 
       <main className="flex-1 md:ml-sidebar-width flex flex-col min-h-screen relative pb-24 md:pb-0 ambient-gradient">
-        <header className="hidden md:flex justify-between items-center w-full h-16 px-xl bg-surface border-b border-outline-variant/30 sticky top-0 z-40">
+        <header className="hidden md:flex justify-between items-center w-full h-16 px-8 bg-surface border-b border-outline-variant/30 sticky top-0 z-40">
           <div className="flex-1 max-w-md">
             <div className="relative group">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">
@@ -160,7 +160,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
               />
             </div>
           </div>
-          <div className="flex items-center gap-lg ml-auto">
+          <div className="flex items-center gap-6 ml-auto">
             <button className="text-primary font-body-md font-semibold hover:text-primary-container transition-colors">
               Upgrade Pro
             </button>
@@ -168,7 +168,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
               <span className="material-symbols-outlined text-sm">stars</span>
               <span className="font-label-sm font-bold tracking-wider">1,250 XP</span>
             </div>
-            <div className="flex items-center gap-sm">
+            <div className="flex items-center gap-2">
               <button className="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors relative">
                 <span className="material-symbols-outlined">notifications</span>
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
@@ -193,8 +193,8 @@ function LeaderboardGlobalRankingsAnimatedPage() {
           </div>
         </header>
 
-        <div className="flex-1 w-full max-w-container-max mx-auto p-md md:p-xl flex flex-col gap-xl relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-md">
+        <div className="flex-1 w-full max-w-container-max mx-auto p-4 md:p-xl flex flex-col gap-8 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h2 className="font-display-lg text-headline-lg-mobile md:text-display-lg text-on-surface">
                 Arena Leaderboard
@@ -216,7 +216,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
             </div>
           </div>
 
-          <div className="pt-xl pb-md">
+          <div className="pt-8 pb-4">
             <div className="flex justify-center items-end gap-2 md:gap-lg h-64">
               <div className="flex flex-col items-center relative z-10 w-24 md:w-32 group opacity-0 animate-[slideUpFade_0.6s_ease-out_0.2s_forwards] hover:z-30">
                 <div className="relative mb-4 transform group-hover:-translate-y-3 transition-all duration-300">
@@ -291,7 +291,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
           </div>
 
           <div className="glass-card rounded-xl overflow-hidden flex flex-col opacity-0 animate-[slideUpFade_0.6s_ease-out_0.8s_forwards]">
-            <div className="border-b border-outline-variant/30 p-md flex flex-wrap gap-4 items-center justify-between bg-surface/50">
+            <div className="border-b border-outline-variant/30 p-4 flex flex-wrap gap-4 items-center justify-between bg-surface/50">
               <div className="flex gap-2">
                 <button className="px-3 py-1.5 rounded-full text-sm font-semibold bg-primary-container/10 text-primary border border-primary/20">
                   Global
@@ -313,18 +313,18 @@ function LeaderboardGlobalRankingsAnimatedPage() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-surface-container-lowest text-on-surface-variant font-label-sm text-xs uppercase tracking-wider border-b border-outline-variant/30">
-                    <th className="p-md font-medium w-16 text-center">Rank</th>
-                    <th className="p-md font-medium">Student</th>
-                    <th className="p-md font-medium hidden sm:table-cell">Recent Activity</th>
-                    <th className="p-md font-medium text-right">Total XP</th>
+                    <th className="p-4 font-medium w-16 text-center">Rank</th>
+                    <th className="p-4 font-medium">Student</th>
+                    <th className="p-4 font-medium hidden sm:table-cell">Recent Activity</th>
+                    <th className="p-4 font-medium text-right">Total XP</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm font-body-md divide-y divide-outline-variant/20">
                   <tr className="hover:bg-surface-container-lowest hover:shadow-md transition-all duration-200 group opacity-0 animate-[slideUpFade_0.5s_ease-out_1.0s_forwards] transform hover:-translate-y-0.5 hover:scale-[1.01] relative z-0 hover:z-10">
-                    <td className="p-md text-center font-bold text-on-surface-variant group-hover:text-primary transition-colors">
+                    <td className="p-4 text-center font-bold text-on-surface-variant group-hover:text-primary transition-colors">
                       4
                     </td>
-                    <td className="p-md">
+                    <td className="p-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-surface-variant text-primary flex items-center justify-center font-bold text-xs group-hover:bg-primary-container/20 transition-colors">
                           EJ
@@ -337,23 +337,23 @@ function LeaderboardGlobalRankingsAnimatedPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="p-md hidden sm:table-cell">
+                    <td className="p-4 hidden sm:table-cell">
                       <div className="flex gap-1">
                         <span className="w-2 h-6 rounded-sm bg-primary/40 group-hover:bg-primary/50 transition-colors"></span>
                         <span className="w-2 h-6 rounded-sm bg-primary/80 group-hover:bg-primary/90 transition-colors"></span>
                         <span className="w-2 h-6 rounded-sm bg-primary group-hover:bg-primary-container transition-colors"></span>
                       </div>
                     </td>
-                    <td className="p-md text-right font-label-sm font-bold text-secondary group-hover:scale-110 transition-transform origin-right">
+                    <td className="p-4 text-right font-label-sm font-bold text-secondary group-hover:scale-110 transition-transform origin-right">
                       15,900
                     </td>
                   </tr>
 
                   <tr className="hover:bg-surface-container-lowest hover:shadow-md transition-all duration-200 group opacity-0 animate-[slideUpFade_0.5s_ease-out_1.1s_forwards] transform hover:-translate-y-0.5 hover:scale-[1.01] relative z-0 hover:z-10">
-                    <td className="p-md text-center font-bold text-on-surface-variant group-hover:text-primary transition-colors">
+                    <td className="p-4 text-center font-bold text-on-surface-variant group-hover:text-primary transition-colors">
                       5
                     </td>
-                    <td className="p-md">
+                    <td className="p-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-surface-variant text-primary flex items-center justify-center font-bold text-xs group-hover:bg-primary-container/20 transition-colors">
                           MP
@@ -366,23 +366,23 @@ function LeaderboardGlobalRankingsAnimatedPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="p-md hidden sm:table-cell">
+                    <td className="p-4 hidden sm:table-cell">
                       <div className="flex gap-1">
                         <span className="w-2 h-6 rounded-sm bg-primary/20 group-hover:bg-primary/30 transition-colors"></span>
                         <span className="w-2 h-6 rounded-sm bg-primary/60 group-hover:bg-primary/70 transition-colors"></span>
                         <span className="w-2 h-6 rounded-sm bg-primary group-hover:bg-primary-container transition-colors"></span>
                       </div>
                     </td>
-                    <td className="p-md text-right font-label-sm font-bold text-secondary group-hover:scale-110 transition-transform origin-right">
+                    <td className="p-4 text-right font-label-sm font-bold text-secondary group-hover:scale-110 transition-transform origin-right">
                       14,250
                     </td>
                   </tr>
 
                   <tr className="hover:bg-surface-container-lowest hover:shadow-md transition-all duration-200 group opacity-0 animate-[slideUpFade_0.5s_ease-out_1.2s_forwards] transform hover:-translate-y-0.5 hover:scale-[1.01] relative z-0 hover:z-10">
-                    <td className="p-md text-center font-bold text-on-surface-variant group-hover:text-primary transition-colors">
+                    <td className="p-4 text-center font-bold text-on-surface-variant group-hover:text-primary transition-colors">
                       6
                     </td>
-                    <td className="p-md">
+                    <td className="p-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-surface-variant text-primary flex items-center justify-center font-bold text-xs group-hover:bg-primary-container/20 transition-colors">
                           SR
@@ -395,14 +395,14 @@ function LeaderboardGlobalRankingsAnimatedPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="p-md hidden sm:table-cell">
+                    <td className="p-4 hidden sm:table-cell">
                       <div className="flex gap-1">
                         <span className="w-2 h-6 rounded-sm bg-primary group-hover:bg-primary-container transition-colors"></span>
                         <span className="w-2 h-6 rounded-sm bg-primary/80 group-hover:bg-primary/90 transition-colors"></span>
                         <span className="w-2 h-6 rounded-sm bg-primary/40 group-hover:bg-primary/50 transition-colors"></span>
                       </div>
                     </td>
-                    <td className="p-md text-right font-label-sm font-bold text-secondary group-hover:scale-110 transition-transform origin-right">
+                    <td className="p-4 text-right font-label-sm font-bold text-secondary group-hover:scale-110 transition-transform origin-right">
                       13,800
                     </td>
                   </tr>
@@ -413,8 +413,8 @@ function LeaderboardGlobalRankingsAnimatedPage() {
         </div>
 
         <div className="hidden md:block sticky bottom-0 w-full bg-primary text-on-primary border-t border-primary-container shadow-[0_-8px_30px_rgb(53,37,205,0.2)] z-30 opacity-0 animate-[slideUpFade_0.8s_ease-out_1.4s_forwards]">
-          <div className="max-w-container-max mx-auto px-xl py-3 flex items-center justify-between">
-            <div className="flex items-center gap-md">
+          <div className="max-w-container-max mx-auto px-8 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-full border-2 border-white/20 bg-white/10 flex items-center justify-center font-bold font-headline-md hover:scale-110 hover:bg-white/20 transition-all cursor-pointer">
                 #42
               </div>
@@ -423,7 +423,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
                 <div className="text-xs text-on-primary/80">Top 5% of Global CS Students</div>
               </div>
             </div>
-            <div className="flex items-center gap-lg">
+            <div className="flex items-center gap-6">
               <div className="text-right">
                 <div className="font-label-sm font-bold text-secondary-fixed">8,450 XP</div>
                 <div className="text-xs text-on-primary/80">450 XP to rank up</div>
@@ -439,7 +439,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
         </div>
       </main>
 
-      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant/30 flex justify-around items-center h-16 z-50 px-sm pb-safe shadow-[0_-4px_6px_-1px_rgb(0,0,0,0.05)]">
+      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant/30 flex justify-around items-center h-16 z-50 px-2 pb-safe shadow-[0_-4px_6px_-1px_rgb(0,0,0,0.05)]">
         <a
           className="flex flex-col items-center justify-center w-16 h-full text-on-surface-variant"
           href="#"
@@ -487,7 +487,7 @@ function LeaderboardGlobalRankingsAnimatedPage() {
         </a>
       </nav>
 
-      <div className="md:hidden fixed bottom-16 left-0 w-full bg-primary text-on-primary py-2 px-md z-40 shadow-[0_-4px_10px_rgb(53,37,205,0.2)] flex items-center justify-between opacity-0 animate-[slideUpFade_0.8s_ease-out_1.4s_forwards]">
+      <div className="md:hidden fixed bottom-16 left-0 w-full bg-primary text-on-primary py-2 px-4 z-40 shadow-[0_-4px_10px_rgb(53,37,205,0.2)] flex items-center justify-between opacity-0 animate-[slideUpFade_0.8s_ease-out_1.4s_forwards]">
         <div className="flex items-center gap-3">
           <div className="font-bold font-headline-md text-lg">#42</div>
           <div className="text-xs leading-tight">

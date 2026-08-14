@@ -7,12 +7,12 @@ export const Route = createFileRoute("/mockup/social_feed")({
 function SocialFeedPage() {
   return (
     <>
-      <aside className="bg-surface-container-low shadow-md fixed left-0 top-0 h-screen w-sidebar-width hidden md:flex flex-col p-md gap-base overflow-y-auto z-40">
-        <div className="mb-lg px-2">
+      <aside className="bg-surface-container-low shadow-md fixed left-0 top-0 h-screen w-sidebar-width hidden md:flex flex-col p-4 gap-base overflow-y-auto z-40">
+        <div className="mb-6 px-2">
           <h1 className="text-headline-md font-headline-md font-bold text-primary">
             PlacePro Career OS
           </h1>
-          <div className="flex items-center gap-sm mt-xs">
+          <div className="flex items-center gap-2 mt-1">
             <img
               className="w-8 h-8 rounded-full object-cover"
               data-alt="A small, professional avatar portrait of a diverse university student in a bright, modern setting. The style is clean, corporate modern with a light-mode aesthetic, suitable for a SaaS career platform profile picture."
@@ -133,7 +133,7 @@ function SocialFeedPage() {
             Rooms
           </a>
         </nav>
-        <div className="mt-auto pt-lg border-t border-outline-variant">
+        <div className="mt-auto pt-6 border-t border-outline-variant">
           <button className="w-full bg-primary text-on-primary py-2 rounded-lg font-body-md font-semibold hover:bg-on-primary-fixed-variant transition-colors">
             Upgrade to Pro
           </button>
@@ -141,7 +141,7 @@ function SocialFeedPage() {
       </aside>
 
       <main className="flex-1 flex flex-col md:ml-[280px] w-full bg-[#F8FAFC]">
-        <header className="bg-surface-container-lowest sticky top-0 z-30 px-lg py-md flex items-center justify-between border-b border-outline-variant shadow-sm">
+        <header className="bg-surface-container-lowest sticky top-0 z-30 px-6 py-4 flex items-center justify-between border-b border-outline-variant shadow-sm">
           <div className="relative w-full max-w-md hidden sm:block">
             <span
               className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
@@ -155,7 +155,7 @@ function SocialFeedPage() {
               type="text"
             />
           </div>
-          <div className="flex items-center gap-md ml-auto">
+          <div className="flex items-center gap-4 ml-auto">
             <button className="p-2 text-on-surface-variant hover:text-primary transition-colors relative">
               <span className="material-symbols-outlined" data-icon="notifications">
                 notifications
@@ -168,7 +168,7 @@ function SocialFeedPage() {
               </span>
             </button>
             <img
-              className="w-10 h-10 rounded-full object-cover sm:hidden ml-sm border border-outline-variant"
+              className="w-10 h-10 rounded-full object-cover sm:hidden ml-2 border border-outline-variant"
               data-alt="A small, professional avatar portrait of a diverse university student in a bright, modern setting. The style is clean, corporate modern with a light-mode aesthetic, suitable for a SaaS career platform profile picture."
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUfV0qJic9JLcpfLiqEA_Plg5yHhG6AdgqZ-xkBjkitdgHOhkovuOBnD87RJlhlUYDONxEeejEPy8kpaNwruMr3E_gV2iYcmoW_4Yx6zHVA-Kt0cR6Q7TyzMQK8IED5kRH5FPWOIY8HCEsS3ybtup6msTsgErNyUp_s91EOhkTo50ruIr0sfGa1QywrPSNhf2yHvxyHpsEvtr3P3PGybGaJ-AKt6tpRV7hkfApgWEq8uWtCAy-RNhQ3w"
             />
@@ -176,20 +176,20 @@ function SocialFeedPage() {
         </header>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-lg">
-          <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-xl">
+          <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="hidden lg:block lg:col-span-3 space-y-lg">
-              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg">
+              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-6">
                 <div className="flex flex-col items-center text-center">
                   <img
-                    className="w-20 h-20 rounded-full object-cover border-4 border-surface-container-lowest shadow-sm mb-md"
+                    className="w-20 h-20 rounded-full object-cover border-4 border-surface-container-lowest shadow-sm mb-4"
                     data-alt="A professional headshot of a young, confident university student, wearing smart casual attire. Bright, light-mode background with subtle, clean studio lighting. Corporate modern aesthetic."
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuAofqHnM_vkw6YthEU2tJHFbOui-CFXEcknXtM0jiCB_THRR4HAWe04lUzQFjGqhjqGT-sBobFHyckfo1P-7c4nfcscF4u5_cnd-A2-r869IUJTPhaPl-IWFQ4DrBZ4oetR1BelABaXxBUMzEHEwArjWiu2huqmAvKHU4xP9kwu7TlMqwtrGbjjicAFIA_aG_RIS_CdISiFwv7GG8bPRnAcBgkDZfBpalNUJ6Y0755utLYOYDswtz4LMQ"
                   />
                   <h2 className="font-headline-md text-headline-md text-on-surface">Alex Mercer</h2>
-                  <p className="font-body-md text-body-md text-on-surface-variant mt-xs">
+                  <p className="font-body-md text-body-md text-on-surface-variant mt-1">
                     Final Year CS @ University
                   </p>
-                  <div className="mt-md inline-flex items-center gap-2 bg-secondary-container/20 text-secondary px-3 py-1 rounded-full">
+                  <div className="mt-4 inline-flex items-center gap-2 bg-secondary-container/20 text-secondary px-3 py-1 rounded-full">
                     <span className="material-symbols-outlined text-[18px]" data-icon="star">
                       star
                     </span>
@@ -198,8 +198,8 @@ function SocialFeedPage() {
                 </div>
               </div>
 
-              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg">
-                <h3 className="font-body-md text-body-lg font-semibold text-on-surface mb-md">
+              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-6">
+                <h3 className="font-body-md text-body-lg font-semibold text-on-surface mb-4">
                   Trending Topics
                 </h3>
                 <ul className="space-y-sm">
@@ -240,8 +240,8 @@ function SocialFeedPage() {
             </div>
 
             <div className="col-span-1 lg:col-span-6 space-y-lg">
-              <div className="flex gap-md overflow-x-auto pb-2 hide-scrollbar">
-                <div className="flex flex-col items-center gap-xs flex-shrink-0 cursor-pointer">
+              <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar">
+                <div className="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer">
                   <div className="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-secondary-container to-primary">
                     <div className="w-full h-full bg-surface-container-lowest rounded-full p-[2px]">
                       <img
@@ -253,7 +253,7 @@ function SocialFeedPage() {
                   </div>
                   <span className="font-label-sm text-label-sm text-on-surface">New Badge</span>
                 </div>
-                <div className="flex flex-col items-center gap-xs flex-shrink-0 cursor-pointer">
+                <div className="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer">
                   <div className="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-secondary-container to-primary">
                     <div className="w-full h-full bg-surface-container-lowest rounded-full p-[2px]">
                       <img
@@ -265,7 +265,7 @@ function SocialFeedPage() {
                   </div>
                   <span className="font-label-sm text-label-sm text-on-surface">7 Day Streak</span>
                 </div>
-                <div className="flex flex-col items-center gap-xs flex-shrink-0 cursor-pointer opacity-50 hover:opacity-100 transition-opacity">
+                <div className="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer opacity-50 hover:opacity-100 transition-opacity">
                   <div className="w-16 h-16 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center bg-surface-container-low text-on-surface-variant hover:bg-surface-variant hover:text-primary transition-colors">
                     <span className="material-symbols-outlined" data-icon="add">
                       add
@@ -277,8 +277,8 @@ function SocialFeedPage() {
                 </div>
               </div>
 
-              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg">
-                <div className="flex gap-sm">
+              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-6">
+                <div className="flex gap-2">
                   <img
                     className="w-10 h-10 rounded-full object-cover flex-shrink-0 border border-outline-variant"
                     data-alt="A small, professional avatar portrait of a diverse university student in a bright, modern setting. The style is clean, corporate modern with a light-mode aesthetic, suitable for a SaaS career platform profile picture."
@@ -290,8 +290,8 @@ function SocialFeedPage() {
                     type="text"
                   />
                 </div>
-                <div className="flex justify-between items-center mt-md pt-md border-t border-outline-variant">
-                  <div className="flex gap-sm">
+                <div className="flex justify-between items-center mt-4 pt-4 border-t border-outline-variant">
+                  <div className="flex gap-2">
                     <button className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors px-2 py-1 rounded-md hover:bg-primary-fixed-dim/20">
                       <span className="material-symbols-outlined text-[20px]" data-icon="image">
                         image
@@ -317,9 +317,9 @@ function SocialFeedPage() {
                 </div>
               </div>
 
-              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg border-l-4 border-primary">
-                <div className="flex items-start justify-between mb-md">
-                  <div className="flex gap-sm items-center">
+              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-6 border-l-4 border-primary">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex gap-2 items-center">
                     <img
                       className="w-12 h-12 rounded-full object-cover"
                       data-alt="A portrait of a joyful university student looking confident, shot in a bright, modern indoor environment. Clean, corporate modern SaaS aesthetic."
@@ -341,12 +341,12 @@ function SocialFeedPage() {
                     Success
                   </span>
                 </div>
-                <p className="font-body-md text-body-md text-on-surface mb-md">
+                <p className="font-body-md text-body-md text-on-surface mb-4">
                   Just crushed my mock interview for a SWE intern role! The system design rounds on
                   PlacePro really helped me structure my thoughts. Big thanks to my peers for the
                   feedback! 🚀 #InterviewPrep
                 </p>
-                <div className="flex items-center justify-between border-t border-outline-variant pt-md mt-md">
+                <div className="flex items-center justify-between border-t border-outline-variant pt-4 mt-4">
                   <div className="flex gap-2 text-on-surface-variant">
                     <button className="hover:text-primary hover:bg-primary-fixed-dim/20 p-1.5 rounded-full transition-all text-sm flex items-center gap-1">
                       👍 <span className="hidden sm:inline">24</span>
@@ -376,9 +376,9 @@ function SocialFeedPage() {
                 </div>
               </div>
 
-              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg overflow-hidden">
-                <div className="flex items-start justify-between mb-md">
-                  <div className="flex gap-sm items-center">
+              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-6 overflow-hidden">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex gap-2 items-center">
                     <div className="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xl">
                       PP
                     </div>
@@ -392,17 +392,17 @@ function SocialFeedPage() {
                     </div>
                   </div>
                 </div>
-                <p className="font-body-md text-body-md text-on-surface mb-md">
+                <p className="font-body-md text-body-md text-on-surface mb-4">
                   Join our Live Class tomorrow at 6 PM EST: "Mastering Dynamic Programming
                   Patterns". Limited seats available!
                 </p>
-                <div className="rounded-xl overflow-hidden mb-md border border-outline-variant relative">
+                <div className="rounded-xl overflow-hidden mb-4 border border-outline-variant relative">
                   <img
                     className="w-full h-48 object-cover"
                     data-alt="A vibrant, modern graphic promoting a live coding class. It features sleek typography 'Dynamic Programming' against a dark, high-tech background with subtle geometric glowing patterns in indigo and purple. Premium SaaS aesthetic."
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk3YkCtkmI3V3iJQMuQ6XfH9HCKESls99tYci6P76dEiISsEVaczojX6I8yfBpEENhqLtCZa_37KdYipyTGmbNlCYv4Cccg0QWXNuN4xDt-vGvEUmssPbDNEjJz5aYZmzFeUsNYOAxstCFhFJQjdEs0bxYLksYzEcw0PV2Di5KKFAnJ3Rglp-dy7U6xNcKQdjf6XPMWVnPHZHbF73Xs6OpFqTlCzzehVLhjKcjrCbM4HJv2MsvV1D6MA"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-md">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
                     <div className="text-white w-full flex justify-between items-center">
                       <div>
                         <p className="font-bold text-lg">Mastering DP Patterns</p>
@@ -418,13 +418,13 @@ function SocialFeedPage() {
             </div>
 
             <div className="hidden lg:block lg:col-span-3 space-y-lg">
-              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg">
-                <h3 className="font-body-md text-body-lg font-semibold text-on-surface mb-md">
+              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-6">
+                <h3 className="font-body-md text-body-lg font-semibold text-on-surface mb-4">
                   People you may know
                 </h3>
                 <div className="space-y-md">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-sm">
+                    <div className="flex items-center gap-2">
                       <img
                         className="w-10 h-10 rounded-full object-cover"
                         data-alt="Small avatar of a smiling female student wearing glasses. Bright, clean background. Corporate modern style."
@@ -442,7 +442,7 @@ function SocialFeedPage() {
                     </button>
                   </div>
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-sm">
+                    <div className="flex items-center gap-2">
                       <img
                         className="w-10 h-10 rounded-full object-cover"
                         data-alt="Small avatar of a focused male student. Bright, clean background. Corporate modern style."
@@ -464,8 +464,8 @@ function SocialFeedPage() {
                 </div>
               </div>
 
-              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-lg">
-                <div className="flex items-center justify-between mb-md">
+              <div className="bg-surface-container-lowest rounded-[16px] soft-shadow p-6">
+                <div className="flex items-center justify-between mb-4">
                   <h3 className="font-body-md text-body-lg font-semibold text-on-surface">
                     Top Students (Week)
                   </h3>
@@ -477,7 +477,7 @@ function SocialFeedPage() {
                   </span>
                 </div>
                 <div className="space-y-sm">
-                  <div className="flex items-center gap-sm p-2 rounded-lg bg-surface-container hover:bg-surface-variant transition-colors cursor-pointer border-l-2 border-secondary-container">
+                  <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-container hover:bg-surface-variant transition-colors cursor-pointer border-l-2 border-secondary-container">
                     <span className="font-bold text-secondary-container w-4">1</span>
                     <img
                       className="w-8 h-8 rounded-full object-cover"
@@ -491,7 +491,7 @@ function SocialFeedPage() {
                     </div>
                     <span className="font-label-sm text-xs font-bold text-secondary">3,200 XP</span>
                   </div>
-                  <div className="flex items-center gap-sm p-2 rounded-lg hover:bg-surface-variant transition-colors cursor-pointer">
+                  <div className="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-variant transition-colors cursor-pointer">
                     <span className="font-bold text-on-surface-variant w-4">2</span>
                     <img
                       className="w-8 h-8 rounded-full object-cover"
@@ -505,7 +505,7 @@ function SocialFeedPage() {
                     </div>
                     <span className="font-label-sm text-xs font-bold text-secondary">2,950 XP</span>
                   </div>
-                  <div className="flex items-center gap-sm p-2 rounded-lg hover:bg-surface-variant transition-colors cursor-pointer">
+                  <div className="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-variant transition-colors cursor-pointer">
                     <span className="font-bold text-on-surface-variant w-4">3</span>
                     <img
                       className="w-8 h-8 rounded-full object-cover"

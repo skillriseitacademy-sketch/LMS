@@ -7,8 +7,8 @@ export const Route = createFileRoute("/mockup/jobs_board_find_recruiters_discove
 function JobsBoardFindRecruitersDiscoveryPage() {
   return (
     <>
-      <nav className="hidden md:flex flex-col h-full p-md gap-base overflow-y-auto bg-surface-container-low shadow-md w-sidebar-width fixed left-0 top-0 z-40">
-        <div className="flex items-center gap-md px-md py-lg mb-lg border-b border-outline-variant/30">
+      <nav className="hidden md:flex flex-col h-full p-4 gap-base overflow-y-auto bg-surface-container-low shadow-md w-sidebar-width fixed left-0 top-0 z-40">
+        <div className="flex items-center gap-4 px-4 py-6 mb-6 border-b border-outline-variant/30">
           <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center text-on-primary font-headline-md text-headline-md shadow-sm">
             P
           </div>
@@ -22,9 +22,9 @@ function JobsBoardFindRecruitersDiscoveryPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-sm flex-1">
+        <div className="flex flex-col gap-2 flex-1">
           <a
-            className="flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined group-hover:text-primary transition-colors">
@@ -33,7 +33,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
             <span className="font-body-md text-body-md font-medium">Dashboard</span>
           </a>
           <a
-            className="flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined group-hover:text-primary transition-colors">
@@ -42,7 +42,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
             <span className="font-body-md text-body-md font-medium">Feed</span>
           </a>
           <a
-            className="flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined group-hover:text-primary transition-colors">
@@ -51,7 +51,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
             <span className="font-body-md text-body-md font-medium">Interview Hub</span>
           </a>
           <a
-            className="flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined group-hover:text-primary transition-colors">
@@ -60,7 +60,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
             <span className="font-body-md text-body-md font-medium">Quizzes</span>
           </a>
           <a
-            className="flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined group-hover:text-primary transition-colors">
@@ -69,7 +69,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
             <span className="font-body-md text-body-md font-medium">Live Classes</span>
           </a>
           <a
-            className="flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined group-hover:text-primary transition-colors">
@@ -79,14 +79,14 @@ function JobsBoardFindRecruitersDiscoveryPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-4 py-3 bg-primary-container text-on-primary-container font-bold rounded-lg translate-x-1 transition-transform shadow-sm"
+            className="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container font-bold rounded-lg translate-x-1 transition-transform shadow-sm"
             href="#"
           >
             <span className="material-symbols-outlined icon-fill">work</span>
             <span className="font-body-md text-body-md">Jobs</span>
           </a>
           <a
-            className="flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined group-hover:text-primary transition-colors">
@@ -95,7 +95,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
             <span className="font-body-md text-body-md font-medium">Roadmap</span>
           </a>
           <a
-            className="flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined group-hover:text-primary transition-colors">
@@ -104,7 +104,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
             <span className="font-body-md text-body-md font-medium">Resume</span>
           </a>
           <a
-            className="flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined group-hover:text-primary transition-colors">
@@ -113,7 +113,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
             <span className="font-body-md text-body-md font-medium">Leaderboard</span>
           </a>
           <a
-            className="flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined group-hover:text-primary transition-colors">
@@ -122,7 +122,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
             <span className="font-body-md text-body-md font-medium">Profile</span>
           </a>
           <a
-            className="flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined group-hover:text-primary transition-colors">
@@ -132,7 +132,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
           </a>
         </div>
 
-        <div className="mt-auto pt-lg border-t border-outline-variant/30">
+        <div className="mt-auto pt-6 border-t border-outline-variant/30">
           <button className="w-full bg-secondary text-on-secondary font-body-md text-body-md font-semibold py-3 rounded-lg shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
             Upgrade to Pro
           </button>
@@ -140,8 +140,8 @@ function JobsBoardFindRecruitersDiscoveryPage() {
       </nav>
 
       <main className="flex-1 md:ml-[280px] h-full overflow-y-auto w-full relative">
-        <div className="w-full max-w-container-max mx-auto px-lg md:px-xl py-xl md:py-[48px]">
-          <div className="flex flex-col gap-2 mb-xl">
+        <div className="w-full max-w-container-max mx-auto px-6 md:px-xl py-8 md:py-[48px]">
+          <div className="flex flex-col gap-2 mb-8">
             <h2 className="font-display-lg text-display-lg text-on-surface">Find Recruiters</h2>
             <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
               Connect directly with top tech recruiters. Skip the line and make an impression that
@@ -149,7 +149,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
             </p>
           </div>
 
-          <div className="bg-surface-container-lowest rounded-xl p-lg card-shadow border border-outline-variant/20 mb-xl flex flex-col gap-lg relative overflow-hidden">
+          <div className="bg-surface-container-lowest rounded-xl p-6 card-shadow border border-outline-variant/20 mb-8 flex flex-col gap-6 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none"></div>
 
             <div className="relative w-full z-10">
@@ -204,8 +204,8 @@ function JobsBoardFindRecruitersDiscoveryPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-lg pb-xl">
-            <div className="bg-surface-container-lowest rounded-[16px] card-shadow border border-outline-variant/10 p-lg flex flex-col gap-md relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-8">
+            <div className="bg-surface-container-lowest rounded-[16px] card-shadow border border-outline-variant/10 p-6 flex flex-col gap-4 relative overflow-hidden group hover:shadow-lg transition-all duration-300">
               <div className="flex items-start justify-between">
                 <div className="flex gap-4 items-center">
                   <div className="relative">
@@ -253,7 +253,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
               </div>
             </div>
 
-            <div className="bg-surface-container-lowest rounded-[16px] card-shadow border border-outline-variant/10 p-lg flex flex-col gap-md relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <div className="bg-surface-container-lowest rounded-[16px] card-shadow border border-outline-variant/10 p-6 flex flex-col gap-4 relative overflow-hidden group hover:shadow-lg transition-all duration-300">
               <div className="flex items-start justify-between">
                 <div className="flex gap-4 items-center">
                   <div className="relative">
@@ -298,7 +298,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
               </div>
             </div>
 
-            <div className="bg-surface-container-lowest rounded-[16px] card-shadow border border-outline-variant/10 p-lg flex flex-col gap-md relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <div className="bg-surface-container-lowest rounded-[16px] card-shadow border border-outline-variant/10 p-6 flex flex-col gap-4 relative overflow-hidden group hover:shadow-lg transition-all duration-300">
               <div className="absolute top-0 left-0 w-1 h-full bg-secondary-container rounded-l-[16px]"></div>
               <div className="flex items-start justify-between">
                 <div className="flex gap-4 items-center">
@@ -347,7 +347,7 @@ function JobsBoardFindRecruitersDiscoveryPage() {
               </div>
             </div>
 
-            <div className="bg-surface-container-low rounded-[16px] border-2 border-dashed border-outline-variant/50 p-lg flex flex-col items-center justify-center gap-md min-h-[250px] cursor-pointer hover:bg-surface-container transition-colors group">
+            <div className="bg-surface-container-low rounded-[16px] border-2 border-dashed border-outline-variant/50 p-6 flex flex-col items-center justify-center gap-4 min-h-[250px] cursor-pointer hover:bg-surface-container transition-colors group">
               <div className="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-[32px]">manage_search</span>
               </div>

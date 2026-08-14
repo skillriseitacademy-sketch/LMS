@@ -7,15 +7,15 @@ export const Route = createFileRoute("/mockup/admin_dashboard_topic_detail_manag
 function AdminDashboardTopicDetailManagementPage() {
   return (
     <>
-      <nav className="sidebar-admin fixed left-0 top-0 h-screen w-20 hover:w-[280px] bg-surface-dim dark:bg-inverse-surface border-r border-outline-variant shadow-lg z-50 flex flex-col items-center hover:items-start py-lg gap-lg overflow-x-hidden">
-        <div className="px-md flex items-center justify-center w-full">
+      <nav className="sidebar-admin fixed left-0 top-0 h-screen w-20 hover:w-[280px] bg-surface-dim dark:bg-inverse-surface border-r border-outline-variant shadow-lg z-50 flex flex-col items-center hover:items-start py-6 gap-6 overflow-x-hidden">
+        <div className="px-4 flex items-center justify-center w-full">
           <span
             className="material-symbols-outlined text-primary text-[32px] shrink-0"
             style={{ fontVariationSettings: "'FILL' 1" }}
           >
             dashboard
           </span>
-          <div className="label ml-md overflow-hidden">
+          <div className="label ml-4 overflow-hidden">
             <h1 className="text-headline-md font-headline-md font-black text-on-surface truncate">
               PlacePro Admin
             </h1>
@@ -24,9 +24,9 @@ function AdminDashboardTopicDetailManagementPage() {
             </p>
           </div>
         </div>
-        <div className="flex flex-col w-full px-sm gap-base mt-lg">
+        <div className="flex flex-col w-full px-2 gap-base mt-6">
           <a
-            className="nav-item-inactive flex items-center p-md gap-md w-full transition-all"
+            className="nav-item-inactive flex items-center p-4 gap-4 w-full transition-all"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-on-surface-variant">
@@ -35,7 +35,7 @@ function AdminDashboardTopicDetailManagementPage() {
             <span className="label font-medium text-on-surface-variant">Admin Dashboard</span>
           </a>
           <a
-            className="nav-item-inactive flex items-center p-md gap-md w-full transition-all"
+            className="nav-item-inactive flex items-center p-4 gap-4 w-full transition-all"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-on-surface-variant">
@@ -44,7 +44,7 @@ function AdminDashboardTopicDetailManagementPage() {
             <span className="label font-medium text-on-surface-variant">Users</span>
           </a>
           <a
-            className="nav-item-inactive flex items-center p-md gap-md w-full transition-all"
+            className="nav-item-inactive flex items-center p-4 gap-4 w-full transition-all"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-on-surface-variant">
@@ -53,7 +53,7 @@ function AdminDashboardTopicDetailManagementPage() {
             <span className="label font-medium text-on-surface-variant">Teachers</span>
           </a>
           <a
-            className="nav-item-inactive flex items-center p-md gap-md w-full transition-all"
+            className="nav-item-inactive flex items-center p-4 gap-4 w-full transition-all"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-on-surface-variant">
@@ -62,7 +62,7 @@ function AdminDashboardTopicDetailManagementPage() {
             <span className="label font-medium text-on-surface-variant">Admins</span>
           </a>
           <a
-            className="nav-item-inactive flex items-center p-md gap-md w-full transition-all"
+            className="nav-item-inactive flex items-center p-4 gap-4 w-full transition-all"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-on-surface-variant">
@@ -71,7 +71,7 @@ function AdminDashboardTopicDetailManagementPage() {
             <span className="label font-medium text-on-surface-variant">Analytics</span>
           </a>
           <a
-            className="nav-item-inactive flex items-center p-md gap-md w-full transition-all"
+            className="nav-item-inactive flex items-center p-4 gap-4 w-full transition-all"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-on-surface-variant">
@@ -80,7 +80,7 @@ function AdminDashboardTopicDetailManagementPage() {
             <span className="label font-medium text-on-surface-variant">Interviews</span>
           </a>
           <a
-            className="nav-item-inactive flex items-center p-md gap-md w-full transition-all"
+            className="nav-item-inactive flex items-center p-4 gap-4 w-full transition-all"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-on-surface-variant">
@@ -89,7 +89,7 @@ function AdminDashboardTopicDetailManagementPage() {
             <span className="label font-medium text-on-surface-variant">Projects</span>
           </a>
           <a
-            className="nav-item-inactive flex items-center p-md gap-md w-full transition-all"
+            className="nav-item-inactive flex items-center p-4 gap-4 w-full transition-all"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-on-surface-variant">
@@ -99,7 +99,7 @@ function AdminDashboardTopicDetailManagementPage() {
           </a>
 
           <a
-            className="nav-item-active flex items-center p-md gap-md w-full transition-all opacity-80"
+            className="nav-item-active flex items-center p-4 gap-4 w-full transition-all opacity-80"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-primary">topic</span>
@@ -109,8 +109,8 @@ function AdminDashboardTopicDetailManagementPage() {
       </nav>
 
       <main className="ml-20 flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300">
-        <header className="bg-surface-container-lowest border-b border-outline-variant shadow-sm py-md px-lg flex items-center justify-between z-40 sticky top-0">
-          <div className="flex items-center gap-sm text-on-surface-variant font-label-sm text-label-sm">
+        <header className="bg-surface-container-lowest border-b border-outline-variant shadow-sm py-4 px-6 flex items-center justify-between z-40 sticky top-0">
+          <div className="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
             <a className="hover:text-primary transition-colors" href="#">
               Content Management
             </a>
@@ -121,7 +121,7 @@ function AdminDashboardTopicDetailManagementPage() {
             <span className="material-symbols-outlined text-[16px]">chevron_right</span>
             <span className="font-bold text-on-surface">Data Structures</span>
           </div>
-          <div className="flex items-center gap-md">
+          <div className="flex items-center gap-4">
             <button className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-surface-variant transition-colors">
               <span className="material-symbols-outlined text-on-surface-variant text-[20px]">
                 notifications
@@ -133,98 +133,98 @@ function AdminDashboardTopicDetailManagementPage() {
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-xl bg-surface">
+        <div className="flex-1 overflow-y-auto p-8 bg-surface">
           <div className="max-w-container-max mx-auto space-y-xl">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <h2 className="font-headline-lg text-headline-lg text-on-surface">
                   Topic: Data Structures
                 </h2>
-                <p className="font-body-md text-body-md text-on-surface-variant mt-xs">
+                <p className="font-body-md text-body-md text-on-surface-variant mt-1">
                   Manage curriculum, assessments, and track performance for this topic.
                 </p>
               </div>
-              <div className="flex items-center gap-md">
-                <button className="px-md py-sm rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-sm text-label-sm flex items-center gap-xs">
+              <div className="flex items-center gap-4">
+                <button className="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-sm text-label-sm flex items-center gap-1">
                   <span className="material-symbols-outlined text-[18px]">visibility</span>
                   View on App
                 </button>
-                <button className="px-md py-sm rounded-lg bg-primary text-on-primary hover:bg-surface-tint transition-colors font-label-sm text-label-sm flex items-center gap-xs shadow-sm hover:scale-105 transform duration-200">
+                <button className="px-4 py-2 rounded-lg bg-primary text-on-primary hover:bg-surface-tint transition-colors font-label-sm text-label-sm flex items-center gap-1 shadow-sm hover:scale-105 transform duration-200">
                   <span className="material-symbols-outlined text-[18px]">edit</span>
                   Edit Topic
                 </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
-              <div className="bg-surface-container-lowest rounded-xl p-lg card-shadow border-l-4 border-primary">
-                <div className="flex items-center justify-between mb-md">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-surface-container-lowest rounded-xl p-6 card-shadow border-l-4 border-primary">
+                <div className="flex items-center justify-between mb-4">
                   <h3 className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
                     Total Enrollment
                   </h3>
-                  <span className="material-symbols-outlined text-primary bg-primary-fixed-dim bg-opacity-20 rounded-full p-xs">
+                  <span className="material-symbols-outlined text-primary bg-primary-fixed-dim bg-opacity-20 rounded-full p-1">
                     group
                   </span>
                 </div>
                 <div className="font-display-lg text-display-lg text-on-surface">12.5k</div>
-                <div className="mt-xs text-body-md font-body-md text-secondary-container flex items-center gap-xs">
+                <div className="mt-1 text-body-md font-body-md text-secondary-container flex items-center gap-1">
                   <span className="material-symbols-outlined text-[16px]">trending_up</span>
                   +15% this month
                 </div>
               </div>
-              <div className="bg-surface-container-lowest rounded-xl p-lg card-shadow border-l-4 border-secondary-container">
-                <div className="flex items-center justify-between mb-md">
+              <div className="bg-surface-container-lowest rounded-xl p-6 card-shadow border-l-4 border-secondary-container">
+                <div className="flex items-center justify-between mb-4">
                   <h3 className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
                     Avg. Quiz Score
                   </h3>
-                  <span className="material-symbols-outlined text-secondary-container bg-secondary-fixed bg-opacity-20 rounded-full p-xs">
+                  <span className="material-symbols-outlined text-secondary-container bg-secondary-fixed bg-opacity-20 rounded-full p-1">
                     analytics
                   </span>
                 </div>
                 <div className="font-display-lg text-display-lg text-on-surface">76%</div>
-                <div className="mt-xs w-full bg-surface-container h-2 rounded-full overflow-hidden">
+                <div className="mt-1 w-full bg-surface-container h-2 rounded-full overflow-hidden">
                   <div
                     className="bg-secondary-container h-full rounded-full"
                     style={{ width: "76%" }}
                   ></div>
                 </div>
               </div>
-              <div className="bg-surface-container-lowest rounded-xl p-lg card-shadow border-l-4 border-outline-variant">
-                <div className="flex items-center justify-between mb-md">
+              <div className="bg-surface-container-lowest rounded-xl p-6 card-shadow border-l-4 border-outline-variant">
+                <div className="flex items-center justify-between mb-4">
                   <h3 className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
                     Total Lessons
                   </h3>
-                  <span className="material-symbols-outlined text-on-surface-variant bg-surface-container-high rounded-full p-xs">
+                  <span className="material-symbols-outlined text-on-surface-variant bg-surface-container-high rounded-full p-1">
                     menu_book
                   </span>
                 </div>
                 <div className="font-display-lg text-display-lg text-on-surface">15</div>
-                <div className="mt-xs flex gap-sm">
-                  <span className="px-xs py-[2px] rounded bg-primary-fixed-dim bg-opacity-20 text-primary font-label-sm text-label-sm">
+                <div className="mt-1 flex gap-2">
+                  <span className="px-1 py-[2px] rounded bg-primary-fixed-dim bg-opacity-20 text-primary font-label-sm text-label-sm">
                     5 Modules
                   </span>
-                  <span className="px-xs py-[2px] rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">
+                  <span className="px-1 py-[2px] rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">
                     3 Quizzes
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-lg">
                 <div className="bg-surface-container-lowest rounded-xl card-shadow overflow-hidden flex flex-col h-full">
-                  <div className="p-lg border-b border-outline-variant flex justify-between items-center bg-surface-bright">
-                    <h3 className="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+                  <div className="p-6 border-b border-outline-variant flex justify-between items-center bg-surface-bright">
+                    <h3 className="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
                       <span className="material-symbols-outlined text-primary">drag_indicator</span>
                       Curriculum Builder
                     </h3>
-                    <button className="text-primary hover:text-surface-tint font-label-sm text-label-sm flex items-center gap-xs">
+                    <button className="text-primary hover:text-surface-tint font-label-sm text-label-sm flex items-center gap-1">
                       <span className="material-symbols-outlined text-[18px]">add</span> Add Module
                     </button>
                   </div>
-                  <div className="p-md space-y-sm bg-surface-container-low flex-1">
-                    <div className="group bg-surface-container-lowest p-md rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
-                      <div className="flex items-center gap-md">
+                  <div className="p-4 space-y-sm bg-surface-container-low flex-1">
+                    <div className="group bg-surface-container-lowest p-4 rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
+                      <div className="flex items-center gap-4">
                         <span className="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors cursor-grab">
                           drag_handle
                         </span>
@@ -232,18 +232,18 @@ function AdminDashboardTopicDetailManagementPage() {
                           <h4 className="font-body-lg text-body-lg text-on-surface font-medium">
                             1. Arrays &amp; Strings
                           </h4>
-                          <p className="font-label-sm text-label-sm text-on-surface-variant mt-xs">
+                          <p className="font-label-sm text-label-sm text-on-surface-variant mt-1">
                             3 Lessons • 1 Quiz
                           </p>
                         </div>
                       </div>
-                      <button className="px-sm py-xs rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
+                      <button className="px-2 py-1 rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
                         Manage
                       </button>
                     </div>
 
-                    <div className="group bg-surface-container-lowest p-md rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
-                      <div className="flex items-center gap-md">
+                    <div className="group bg-surface-container-lowest p-4 rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
+                      <div className="flex items-center gap-4">
                         <span className="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors cursor-grab">
                           drag_handle
                         </span>
@@ -251,18 +251,18 @@ function AdminDashboardTopicDetailManagementPage() {
                           <h4 className="font-body-lg text-body-lg text-on-surface font-medium">
                             2. Linked Lists
                           </h4>
-                          <p className="font-label-sm text-label-sm text-on-surface-variant mt-xs">
+                          <p className="font-label-sm text-label-sm text-on-surface-variant mt-1">
                             4 Lessons • 2 Challenges
                           </p>
                         </div>
                       </div>
-                      <button className="px-sm py-xs rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
+                      <button className="px-2 py-1 rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
                         Manage
                       </button>
                     </div>
 
-                    <div className="group bg-surface-container-lowest p-md rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
-                      <div className="flex items-center gap-md">
+                    <div className="group bg-surface-container-lowest p-4 rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
+                      <div className="flex items-center gap-4">
                         <span className="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors cursor-grab">
                           drag_handle
                         </span>
@@ -270,18 +270,18 @@ function AdminDashboardTopicDetailManagementPage() {
                           <h4 className="font-body-lg text-body-lg text-on-surface font-medium">
                             3. Stacks &amp; Queues
                           </h4>
-                          <p className="font-label-sm text-label-sm text-on-surface-variant mt-xs">
+                          <p className="font-label-sm text-label-sm text-on-surface-variant mt-1">
                             2 Lessons • 1 Quiz
                           </p>
                         </div>
                       </div>
-                      <button className="px-sm py-xs rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
+                      <button className="px-2 py-1 rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
                         Manage
                       </button>
                     </div>
 
-                    <div className="group bg-surface-container-lowest p-md rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
-                      <div className="flex items-center gap-md">
+                    <div className="group bg-surface-container-lowest p-4 rounded-lg border border-outline-variant flex items-center justify-between hover:border-primary transition-colors cursor-move">
+                      <div className="flex items-center gap-4">
                         <span className="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors cursor-grab">
                           drag_handle
                         </span>
@@ -289,12 +289,12 @@ function AdminDashboardTopicDetailManagementPage() {
                           <h4 className="font-body-lg text-body-lg text-on-surface font-medium">
                             4. Trees &amp; Graphs
                           </h4>
-                          <p className="font-label-sm text-label-sm text-on-surface-variant mt-xs">
+                          <p className="font-label-sm text-label-sm text-on-surface-variant mt-1">
                             5 Lessons • 3 Challenges
                           </p>
                         </div>
                       </div>
-                      <button className="px-sm py-xs rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
+                      <button className="px-2 py-1 rounded text-primary hover:bg-primary-fixed-dim hover:bg-opacity-20 font-label-sm text-label-sm transition-colors border border-transparent hover:border-primary-fixed-dim">
                         Manage
                       </button>
                     </div>
@@ -303,15 +303,15 @@ function AdminDashboardTopicDetailManagementPage() {
               </div>
 
               <div className="space-y-lg">
-                <div className="bg-surface-container-lowest rounded-xl p-lg card-shadow">
-                  <h3 className="font-headline-md text-headline-md text-on-surface mb-md flex items-center gap-sm">
+                <div className="bg-surface-container-lowest rounded-xl p-6 card-shadow">
+                  <h3 className="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
                     <span className="material-symbols-outlined text-secondary-container">
                       assignment
                     </span>
                     Linked Assessments
                   </h3>
                   <div className="space-y-md">
-                    <div className="flex items-start gap-sm">
+                    <div className="flex items-start gap-2">
                       <div className="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0">
                         <span className="material-symbols-outlined text-[18px]">quiz</span>
                       </div>
@@ -324,7 +324,7 @@ function AdminDashboardTopicDetailManagementPage() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-sm">
+                    <div className="flex items-start gap-2">
                       <div className="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0">
                         <span className="material-symbols-outlined text-[18px]">code</span>
                       </div>
@@ -338,13 +338,13 @@ function AdminDashboardTopicDetailManagementPage() {
                       </div>
                     </div>
                   </div>
-                  <button className="w-full mt-lg py-sm border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-sm text-label-sm">
+                  <button className="w-full mt-6 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-sm text-label-sm">
                     View All Assessments
                   </button>
                 </div>
 
-                <div className="bg-surface-container-lowest rounded-xl p-lg card-shadow">
-                  <h3 className="font-headline-md text-headline-md text-on-surface mb-md">
+                <div className="bg-surface-container-lowest rounded-xl p-6 card-shadow">
+                  <h3 className="font-headline-md text-headline-md text-on-surface mb-4">
                     30-Day Progress Trend
                   </h3>
                   <div className="h-32 w-full bg-surface-container-low rounded-lg relative overflow-hidden flex items-end">
@@ -356,7 +356,7 @@ function AdminDashboardTopicDetailManagementPage() {
                         backgroundSize: "20px 20px",
                       }}
                     ></div>
-                    <div className="w-full flex justify-between items-end px-xs h-full pb-xs gap-1 relative z-10">
+                    <div className="w-full flex justify-between items-end px-1 h-full pb-1 gap-1 relative z-10">
                       <div
                         className="bg-primary opacity-40 w-full rounded-t-sm"
                         style={{ height: "30%" }}
@@ -387,7 +387,7 @@ function AdminDashboardTopicDetailManagementPage() {
                       ></div>
                     </div>
                   </div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant text-center mt-sm">
+                  <p className="font-label-sm text-label-sm text-on-surface-variant text-center mt-2">
                     Completion Rate
                   </p>
                 </div>

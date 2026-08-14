@@ -7,7 +7,7 @@ export const Route = createFileRoute("/mockup/jobs_board_discovery_explorer")({
 function JobsBoardDiscoveryExplorerPage() {
   return (
     <>
-      <nav className="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex flex-col py-lg px-md overflow-y-auto z-50">
+      <nav className="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex flex-col py-6 px-4 overflow-y-auto z-50">
         <div className="mb-8 px-4 flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center">
             <span className="material-symbols-outlined text-on-primary-container">
@@ -161,7 +161,7 @@ function JobsBoardDiscoveryExplorerPage() {
       </nav>
 
       <div className="ml-[280px] flex-1 flex flex-col min-h-screen">
-        <header className="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 backdrop-blur-md flex justify-between items-center px-xl z-40 border-b border-transparent">
+        <header className="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 backdrop-blur-md flex justify-between items-center px-8 z-40 border-b border-transparent">
           <div className="flex-1 max-w-md relative group">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant group-focus-within:text-primary transition-colors">
               search
@@ -197,9 +197,9 @@ function JobsBoardDiscoveryExplorerPage() {
           </div>
         </header>
 
-        <main className="mt-16 p-xl flex-1 max-w-container-max mx-auto w-full flex gap-xl items-start">
-          <div className="flex-1 flex flex-col gap-lg min-w-0">
-            <section className="flex flex-col gap-md">
+        <main className="mt-16 p-8 flex-1 max-w-container-max mx-auto w-full flex gap-8 items-start">
+          <div className="flex-1 flex flex-col gap-6 min-w-0">
+            <section className="flex flex-col gap-4">
               <div>
                 <h2 className="font-headline-lg text-headline-lg text-on-surface">
                   Discover Opportunities
@@ -269,8 +269,8 @@ function JobsBoardDiscoveryExplorerPage() {
                   View All Matches
                 </a>
               </div>
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-md">
-                <div className="bg-surface-container-lowest rounded-xl p-lg border border-surface-container-highest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow group flex flex-col gap-4">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <div className="bg-surface-container-lowest rounded-xl p-6 border border-surface-container-highest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow group flex flex-col gap-4">
                   <div className="flex justify-between items-start">
                     <div className="flex gap-4">
                       <div className="w-14 h-14 rounded-lg border border-surface-container-highest overflow-hidden p-2 bg-surface-bright flex items-center justify-center">
@@ -326,7 +326,7 @@ function JobsBoardDiscoveryExplorerPage() {
                   </div>
                 </div>
 
-                <div className="bg-surface-container-lowest rounded-xl p-lg border border-surface-container-highest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow group flex flex-col gap-4">
+                <div className="bg-surface-container-lowest rounded-xl p-6 border border-surface-container-highest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow group flex flex-col gap-4">
                   <div className="flex justify-between items-start">
                     <div className="flex gap-4">
                       <div className="w-14 h-14 rounded-lg border border-surface-container-highest overflow-hidden p-2 bg-surface-bright flex items-center justify-center">
@@ -382,8 +382,8 @@ function JobsBoardDiscoveryExplorerPage() {
             </section>
           </div>
 
-          <aside className="w-[320px] shrink-0 flex flex-col gap-md sticky top-24">
-            <div className="bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border border-surface-container-highest">
+          <aside className="w-[320px] shrink-0 flex flex-col gap-4 sticky top-24">
+            <div className="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border border-surface-container-highest">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-headline-md text-[18px] font-semibold text-on-surface">
                   Tracked Applications

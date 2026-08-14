@@ -7,8 +7,8 @@ export const Route = createFileRoute("/mockup/interview_hub_live_simulation")({
 function InterviewHubLiveSimulationPage() {
   return (
     <>
-      <nav className="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex flex-col py-lg px-md z-50">
-        <div className="flex items-center gap-3 mb-xl px-sm">
+      <nav className="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex flex-col py-6 px-4 z-50">
+        <div className="flex items-center gap-3 mb-8 px-2">
           <div className="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center">
             <span className="material-symbols-outlined fill text-[20px]">rocket_launch</span>
           </div>
@@ -101,7 +101,7 @@ function InterviewHubLiveSimulationPage() {
           </a>
         </div>
 
-        <div className="mt-lg mb-lg">
+        <div className="mt-6 mb-6">
           <button className="w-full bg-primary text-on-primary py-2.5 rounded-lg font-label-sm text-label-sm hover:bg-on-primary-fixed-variant transition-colors active:scale-[0.98]">
             Start Practice
           </button>
@@ -126,7 +126,7 @@ function InterviewHubLiveSimulationPage() {
       </nav>
 
       <main className="ml-sidebar-width flex-1 flex flex-col h-full bg-surface-bright relative">
-        <header className="h-16 flex items-center justify-between px-xl bg-surface-container-lowest border-b border-surface-variant z-40 shrink-0">
+        <header className="h-16 flex items-center justify-between px-8 bg-surface-container-lowest border-b border-surface-variant z-40 shrink-0">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <span className="relative flex h-3 w-3">
@@ -180,8 +180,8 @@ function InterviewHubLiveSimulationPage() {
           </div>
         </header>
 
-        <div className="flex-1 flex overflow-hidden p-md gap-md">
-          <div className="w-[35%] flex flex-col gap-md min-w-[320px]">
+        <div className="flex-1 flex overflow-hidden p-4 gap-4">
+          <div className="w-[35%] flex flex-col gap-4 min-w-[320px]">
             <div
               className="relative bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border border-surface-variant flex-shrink-0"
               style={{ aspectRatio: "16/9" }}

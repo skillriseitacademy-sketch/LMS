@@ -7,8 +7,8 @@ export const Route = createFileRoute("/mockup/resume_builder_templates")({
 function ResumeBuilderTemplatesPage() {
   return (
     <>
-      <nav className="w-sidebar-width h-full fixed left-0 top-0 bg-surface-container-lowest shadow-sm flex flex-col h-full py-lg px-md z-50 hidden md:flex">
-        <div className="flex items-center gap-sm mb-xl px-sm">
+      <nav className="w-sidebar-width h-full fixed left-0 top-0 bg-surface-container-lowest shadow-sm flex flex-col h-full py-6 px-4 z-50 hidden md:flex">
+        <div className="flex items-center gap-2 mb-8 px-2">
           <span
             className="material-symbols-outlined text-primary text-3xl"
             style={{ fontVariationSettings: "'FILL' 1" }}
@@ -24,7 +24,7 @@ function ResumeBuilderTemplatesPage() {
         </div>
         <div className="flex-1 overflow-y-auto pr-2 space-y-1">
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -33,7 +33,7 @@ function ResumeBuilderTemplatesPage() {
             <span className="font-body-md text-body-md font-medium">Dashboard</span>
           </a>
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -42,7 +42,7 @@ function ResumeBuilderTemplatesPage() {
             <span className="font-body-md text-body-md font-medium">Feed</span>
           </a>
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -51,7 +51,7 @@ function ResumeBuilderTemplatesPage() {
             <span className="font-body-md text-body-md font-medium">Interview Hub</span>
           </a>
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -60,7 +60,7 @@ function ResumeBuilderTemplatesPage() {
             <span className="font-body-md text-body-md font-medium">Quizzes</span>
           </a>
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -69,7 +69,7 @@ function ResumeBuilderTemplatesPage() {
             <span className="font-body-md text-body-md font-medium">Arena</span>
           </a>
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -78,7 +78,7 @@ function ResumeBuilderTemplatesPage() {
             <span className="font-body-md text-body-md font-medium">Jobs</span>
           </a>
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -88,7 +88,7 @@ function ResumeBuilderTemplatesPage() {
           </a>
 
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg bg-surface-container-low text-primary font-bold border-r-4 border-primary transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg bg-surface-container-low text-primary font-bold border-r-4 border-primary transition-colors group"
             href="#"
           >
             <span
@@ -100,7 +100,7 @@ function ResumeBuilderTemplatesPage() {
             <span className="font-body-md text-body-md">Resume</span>
           </a>
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -109,7 +109,7 @@ function ResumeBuilderTemplatesPage() {
             <span className="font-body-md text-body-md font-medium">Leaderboard</span>
           </a>
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -118,7 +118,7 @@ function ResumeBuilderTemplatesPage() {
             <span className="font-body-md text-body-md font-medium">Profile</span>
           </a>
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -127,7 +127,7 @@ function ResumeBuilderTemplatesPage() {
             <span className="font-body-md text-body-md font-medium">Rooms</span>
           </a>
         </div>
-        <div className="mt-auto pt-lg border-t border-outline-variant/30 space-y-1">
+        <div className="mt-auto pt-6 border-t border-outline-variant/30 space-y-1">
           <button className="w-full bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container font-body-md text-body-md font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 mb-4 group">
             <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">
               rocket_launch
@@ -135,7 +135,7 @@ function ResumeBuilderTemplatesPage() {
             Start Daily Challenge
           </button>
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -144,7 +144,7 @@ function ResumeBuilderTemplatesPage() {
             <span className="font-body-md text-body-md font-medium">Settings</span>
           </a>
           <a
-            className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group"
             href="#"
           >
             <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
@@ -152,7 +152,7 @@ function ResumeBuilderTemplatesPage() {
             </span>
             <span className="font-body-md text-body-md font-medium">Help</span>
           </a>
-          <div className="flex items-center gap-3 px-sm py-2 mt-2">
+          <div className="flex items-center gap-3 px-2 py-2 mt-2">
             <img
               alt="User profile photo"
               className="w-8 h-8 rounded-full object-cover border border-outline-variant"
@@ -170,7 +170,7 @@ function ResumeBuilderTemplatesPage() {
       </nav>
 
       <div className="flex-1 flex flex-col md:ml-[280px] w-full max-w-container-max mx-auto h-screen relative bg-surface-bright pattern-bg">
-        <header className="flex justify-between items-center w-full h-16 px-xl bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 sticky top-0 z-40">
+        <header className="flex justify-between items-center w-full h-16 px-8 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 sticky top-0 z-40">
           <div className="flex items-center gap-4">
             <h1 className="font-headline-md text-headline-md font-bold text-on-background">
               Choose your resume template
@@ -208,7 +208,7 @@ function ResumeBuilderTemplatesPage() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-xl">
+        <main className="flex-1 overflow-y-auto p-8">
           <div className="flex flex-wrap items-center gap-3 mb-8">
             <span className="font-label-sm text-outline mr-2 uppercase tracking-wider">
               Filters:
@@ -231,7 +231,7 @@ function ResumeBuilderTemplatesPage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <div className="group template-card relative flex flex-col bg-surface-container-lowest rounded-xl border-2 border-primary shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)] overflow-hidden transition-all hover:shadow-lg">
               <div className="absolute top-3 left-3 z-10">
                 <span className="px-3 py-1 bg-primary text-on-primary font-label-sm text-label-sm rounded-full shadow-sm flex items-center gap-1">
@@ -392,7 +392,7 @@ function ResumeBuilderTemplatesPage() {
               </div>
             </div>
           </div>
-          <div className="mt-xl pb-xl text-center">
+          <div className="mt-8 pb-8 text-center">
             <p className="text-on-surface-variant font-body-md">
               Don't see what you need?{" "}
               <a className="text-primary font-semibold hover:underline" href="#">

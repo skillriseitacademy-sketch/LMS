@@ -8,14 +8,14 @@ function LandingPagePage() {
   return (
     <>
       <nav className="bg-surface dark:bg-surface-container-lowest text-primary dark:text-inverse-primary docked full-width top-0 sticky z-50 border-b border-outline-variant dark:border-outline shadow-sm font-headline-md text-headline-md. Body: font-body-md text-body-md. Labels: font-label-sm text-label-sm">
-        <div className="flex justify-between items-center px-lg py-md max-w-container-max mx-auto">
+        <div className="flex justify-between items-center px-6 py-4 max-w-container-max mx-auto">
           <div className="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed-dim flex items-center gap-2">
             <span className="material-symbols-outlined text-[28px]" data-icon="rocket_launch">
               rocket_launch
             </span>
             PlacePro
           </div>
-          <div className="hidden md:flex items-center gap-xl">
+          <div className="hidden md:flex items-center gap-8">
             <a
               className="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200"
               href="#features"
@@ -54,7 +54,7 @@ function LandingPagePage() {
       <main className="flex-grow">
         <section className="relative pt-32 pb-24 overflow-hidden">
           <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-surface-container-high via-surface to-background"></div>
-          <div className="max-w-container-max mx-auto px-lg text-center">
+          <div className="max-w-container-max mx-auto px-6 text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm mb-8 border border-surface-variant">
               <span className="material-symbols-outlined text-[16px]" data-icon="stars">
                 stars
@@ -109,7 +109,7 @@ function LandingPagePage() {
         </section>
 
         <section className="py-12 bg-surface-container-lowest border-y border-outline-variant">
-          <div className="max-w-container-max mx-auto px-lg">
+          <div className="max-w-container-max mx-auto px-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-outline-variant">
               <div className="pt-4 md:pt-0">
                 <div className="font-display-lg text-display-lg text-primary mb-2">50k+</div>
@@ -136,7 +136,7 @@ function LandingPagePage() {
         </section>
 
         <section className="py-24 bg-surface relative" id="features">
-          <div className="max-w-container-max mx-auto px-lg">
+          <div className="max-w-container-max mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="font-headline-lg text-headline-lg text-on-surface mb-4">
                 Everything you need to succeed
@@ -253,7 +253,7 @@ function LandingPagePage() {
         </section>
 
         <section className="py-24 bg-surface-container-low" id="how-it-works">
-          <div className="max-w-container-max mx-auto px-lg">
+          <div className="max-w-container-max mx-auto px-6">
             <div className="text-center mb-20">
               <h2 className="font-headline-lg text-headline-lg text-on-surface mb-4">
                 Your Path to Placement
@@ -333,7 +333,7 @@ function LandingPagePage() {
         </section>
 
         <section className="py-24 bg-surface overflow-hidden" id="testimonials">
-          <div className="max-w-container-max mx-auto px-lg">
+          <div className="max-w-container-max mx-auto px-6">
             <h2 className="font-headline-lg text-headline-lg text-on-surface text-center mb-16">
               Wall of Success
             </h2>
@@ -435,7 +435,7 @@ function LandingPagePage() {
         </section>
 
         <section className="py-24 bg-primary text-on-primary text-center">
-          <div className="max-w-3xl mx-auto px-lg">
+          <div className="max-w-3xl mx-auto px-6">
             <h2 className="font-display-lg text-display-lg mb-6">Ready to secure your future?</h2>
             <p className="font-body-lg text-body-lg text-primary-fixed mb-10">
               Join thousands of students who have transformed their careers with PlacePro.
@@ -447,8 +447,8 @@ function LandingPagePage() {
         </section>
       </main>
 
-      <footer className="bg-surface-container-highest dark:bg-inverse-surface w-full py-xl border-t border-outline-variant flat no shadows font-body-md text-body-md. Labels: font-label-sm text-label-sm text-primary dark:text-inverse-primary">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-xl max-w-container-max mx-auto px-lg">
+      <footer className="bg-surface-container-highest dark:bg-inverse-surface w-full py-8 border-t border-outline-variant flat no shadows font-body-md text-body-md. Labels: font-label-sm text-label-sm text-primary dark:text-inverse-primary">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-container-max mx-auto px-6">
           <div className="col-span-2 md:col-span-4 flex justify-between items-center mb-8 border-b border-outline-variant pb-8">
             <div className="text-headline-md font-headline-md font-bold text-on-surface flex items-center gap-2">
               <span className="material-symbols-outlined text-[24px]" data-icon="rocket_launch">

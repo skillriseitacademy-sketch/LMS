@@ -7,8 +7,8 @@ export const Route = createFileRoute("/mockup/settings_public_profile")({
 function SettingsPublicProfilePage() {
   return (
     <>
-      <nav className="hidden md:flex flex-col h-full py-lg px-md w-sidebar-width overflow-y-auto bg-surface-container-lowest dark:bg-inverse-surface shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] fixed left-0 top-0 z-50">
-        <div className="mb-xl flex items-center gap-sm px-sm pt-sm">
+      <nav className="hidden md:flex flex-col h-full py-6 px-4 w-sidebar-width overflow-y-auto bg-surface-container-lowest dark:bg-inverse-surface shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] fixed left-0 top-0 z-50">
+        <div className="mb-8 flex items-center gap-2 px-2 pt-2">
           <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary font-display-lg text-[24px] font-black leading-none">
             P
           </div>
@@ -22,7 +22,7 @@ function SettingsPublicProfilePage() {
           </div>
         </div>
 
-        <button className="w-full bg-primary hover:bg-surface-tint text-on-primary font-body-md font-medium py-3 rounded-lg mb-lg transition-transform duration-150 active:scale-[0.98] shadow-sm flex justify-center items-center gap-sm">
+        <button className="w-full bg-primary hover:bg-surface-tint text-on-primary font-body-md font-medium py-3 rounded-lg mb-6 transition-transform duration-150 active:scale-[0.98] shadow-sm flex justify-center items-center gap-2">
           <span className="material-symbols-outlined text-[20px]">rocket_launch</span>
           Start Practice
         </button>
@@ -113,7 +113,7 @@ function SettingsPublicProfilePage() {
           </a>
         </div>
 
-        <div className="mt-auto pt-lg border-t border-surface-variant space-y-1">
+        <div className="mt-auto pt-6 border-t border-surface-variant space-y-1">
           <a
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
@@ -132,18 +132,18 @@ function SettingsPublicProfilePage() {
       </nav>
 
       <main className="flex-1 md:ml-sidebar-width min-h-screen">
-        <header className="sticky top-0 z-40 bg-surface/80 backdrop-blur-md px-md md:px-xl h-16 flex items-center justify-between">
+        <header className="sticky top-0 z-40 bg-surface/80 backdrop-blur-md px-4 md:px-xl h-16 flex items-center justify-between">
           <h2 className="font-headline-md text-headline-md text-on-surface">Profile Settings</h2>
 
           <button className="md:hidden p-2 text-on-surface-variant">
             <span className="material-symbols-outlined">menu</span>
           </button>
         </header>
-        <div className="p-md md:p-xl max-w-container-max mx-auto space-y-xl">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg lg:gap-xl">
+        <div className="p-4 md:p-xl max-w-container-max mx-auto space-y-xl">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-xl">
             <div className="lg:col-span-1">
-              <div className="sticky top-24 bg-surface-container-lowest rounded-xl p-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border border-surface-variant">
-                <div className="flex items-center gap-4 border-b border-surface-variant pb-md mb-md">
+              <div className="sticky top-24 bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border border-surface-variant">
+                <div className="flex items-center gap-4 border-b border-surface-variant pb-4 mb-4">
                   <div className="relative">
                     <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary-container p-0.5">
                       <img
@@ -211,7 +211,7 @@ function SettingsPublicProfilePage() {
                   </a>
                 </nav>
 
-                <div className="mt-lg pt-md border-t border-surface-variant">
+                <div className="mt-6 pt-4 border-t border-surface-variant">
                   <div className="flex justify-between items-center mb-2">
                     <span className="font-label-sm text-label-sm text-on-surface-variant">
                       Profile Strength
@@ -230,10 +230,10 @@ function SettingsPublicProfilePage() {
 
             <div className="lg:col-span-2 space-y-xl">
               <section
-                className="bg-surface-container-lowest rounded-xl p-lg md:p-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border-l-4 border-l-primary"
+                className="bg-surface-container-lowest rounded-xl p-6 md:p-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border-l-4 border-l-primary"
                 id="public-profile"
               >
-                <div className="mb-lg">
+                <div className="mb-6">
                   <h3 className="font-headline-md text-[20px] text-on-surface mb-1">
                     Public Profile
                   </h3>
@@ -242,7 +242,7 @@ function SettingsPublicProfilePage() {
                   </p>
                 </div>
                 <form className="space-y-lg">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block font-label-sm text-label-sm text-on-surface mb-2">
                         First Name
@@ -342,7 +342,7 @@ function SettingsPublicProfilePage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-end mt-md">
+                  <div className="flex justify-end mt-4">
                     <button
                       className="bg-primary hover:bg-surface-tint text-on-primary font-body-md font-medium px-6 py-2.5 rounded-lg transition-transform duration-150 active:scale-[0.98] shadow-sm"
                       type="button"
@@ -354,10 +354,10 @@ function SettingsPublicProfilePage() {
               </section>
 
               <section
-                className="bg-surface-container-lowest rounded-xl p-lg md:p-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]"
+                className="bg-surface-container-lowest rounded-xl p-6 md:p-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)]"
                 id="education"
               >
-                <div className="mb-lg flex justify-between items-start">
+                <div className="mb-6 flex justify-between items-start">
                   <div>
                     <h3 className="font-headline-md text-[20px] text-on-surface mb-1">Education</h3>
                     <p className="font-body-md text-sm text-on-surface-variant">
@@ -381,7 +381,7 @@ function SettingsPublicProfilePage() {
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block font-label-sm text-label-sm text-on-surface mb-2">
                         Degree
@@ -404,7 +404,7 @@ function SettingsPublicProfilePage() {
                       </select>
                     </div>
                   </div>
-                  <div className="flex justify-end mt-md pt-4">
+                  <div className="flex justify-end mt-4 pt-4">
                     <button
                       className="bg-surface hover:bg-surface-container text-primary font-body-md font-medium px-6 py-2.5 rounded-lg border border-outline-variant transition-colors shadow-sm"
                       type="button"
@@ -416,10 +416,10 @@ function SettingsPublicProfilePage() {
               </section>
 
               <section
-                className="bg-surface-container-lowest rounded-xl p-lg md:p-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border-l-4 border-l-secondary-container"
+                className="bg-surface-container-lowest rounded-xl p-6 md:p-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] border-l-4 border-l-secondary-container"
                 id="preferences"
               >
-                <div className="mb-lg">
+                <div className="mb-6">
                   <h3 className="font-headline-md text-[20px] text-on-surface mb-1 flex items-center gap-2">
                     Job Preferences
                     <span className="bg-secondary-container/20 text-on-secondary-container text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
@@ -508,7 +508,7 @@ function SettingsPublicProfilePage() {
             </div>
           </div>
 
-          <div className="h-xl"></div>
+          <div className="h-8"></div>
         </div>
       </main>
     </>

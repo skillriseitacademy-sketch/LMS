@@ -58,10 +58,10 @@ function Signup() {
         backgroundAttachment: "fixed",
       }}
     >
-      <div className="w-full max-w-md mx-auto p-md md:p-lg">
+      <div className="w-full max-w-md mx-auto p-4 md:p-lg">
         {/* Brand / Header */}
-        <div className="text-center mb-xl">
-          <h1 className="font-display-lg text-display-lg text-primary mb-sm flex items-center justify-center gap-xs">
+        <div className="text-center mb-8">
+          <h1 className="font-display-lg text-display-lg text-primary mb-2 flex items-center justify-center gap-1">
             <span
               className="material-symbols-outlined"
               style={{ fontSize: "40px", fontVariationSettings: '"FILL" 1' }}
@@ -74,16 +74,16 @@ function Signup() {
         </div>
 
         {/* Main Card */}
-        <div className="bg-surface-container-lowest rounded-xl shadow-[0_10px_15px_-3px_rgb(0,0,0,0.1),0_4px_6px_-4px_rgb(0,0,0,0.1)] border border-outline-variant/30 p-lg md:p-xl relative overflow-hidden">
+        <div className="bg-surface-container-lowest rounded-xl shadow-[0_10px_15px_-3px_rgb(0,0,0,0.1),0_4px_6px_-4px_rgb(0,0,0,0.1)] border border-outline-variant/30 p-6 md:p-xl relative overflow-hidden">
           {/* Decorative Top Border */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-fixed"></div>
           
-          <h2 className="font-headline-md text-headline-md text-on-surface mb-lg text-center">
+          <h2 className="font-headline-md text-headline-md text-on-surface mb-6 text-center">
             Create an Account
           </h2>
 
           {error && (
-            <div className="mb-md rounded-lg bg-error-container p-3 text-sm text-on-error-container border border-error/20">
+            <div className="mb-4 rounded-lg bg-error-container p-3 text-sm text-on-error-container border border-error/20">
               {error}
             </div>
           )}
@@ -91,11 +91,11 @@ function Signup() {
           <form onSubmit={handleSubmit} className="space-y-md">
             {/* Full Name Field */}
             <div>
-              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-xs" htmlFor="name">
+              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-1" htmlFor="name">
                 Full Name
               </label>
               <div className="relative group rounded-lg transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_rgba(53,37,205,0.2)]">
-                <div className="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
                   <span className="material-symbols-outlined text-outline group-focus-within:text-primary transition-colors">person</span>
                 </div>
                 <input
@@ -107,18 +107,18 @@ function Signup() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="block w-full pl-xl pr-sm py-sm bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200 outline-none"
+                  className="block w-full pl-8 pr-2 py-2 bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200 outline-none"
                 />
               </div>
             </div>
 
             {/* Email Field */}
             <div>
-              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-xs" htmlFor="email">
+              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-1" htmlFor="email">
                 Email address
               </label>
               <div className="relative group rounded-lg transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_rgba(53,37,205,0.2)]">
-                <div className="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
                   <span className="material-symbols-outlined text-outline group-focus-within:text-primary transition-colors">mail</span>
                 </div>
                 <input
@@ -130,18 +130,18 @@ function Signup() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-xl pr-sm py-sm bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200 outline-none"
+                  className="block w-full pl-8 pr-2 py-2 bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200 outline-none"
                 />
               </div>
             </div>
 
             {/* Password Field */}
             <div>
-              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-xs" htmlFor="password">
+              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-1" htmlFor="password">
                 Password
               </label>
               <div className="relative group rounded-lg transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_rgba(53,37,205,0.2)]">
-                <div className="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
                   <span className="material-symbols-outlined text-outline group-focus-within:text-primary transition-colors">lock</span>
                 </div>
                 <input
@@ -153,13 +153,13 @@ function Signup() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-xl pr-sm py-sm bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200 outline-none"
+                  className="block w-full pl-8 pr-2 py-2 bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200 outline-none"
                 />
               </div>
             </div>
 
             {/* Terms Checkbox */}
-            <div className="flex items-start pt-sm">
+            <div className="flex items-start pt-2">
               <div className="flex items-center h-5">
                 <input
                   id="terms"
@@ -189,14 +189,14 @@ function Signup() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary text-on-primary font-label-sm text-label-sm py-sm rounded-lg hover:bg-on-primary-fixed-variant hover:shadow-md transition-all duration-200 mt-md disabled:opacity-70 disabled:hover:shadow-none"
+              className="w-full bg-primary text-on-primary font-label-sm text-label-sm py-2 rounded-lg hover:bg-on-primary-fixed-variant hover:shadow-md transition-all duration-200 mt-4 disabled:opacity-70 disabled:hover:shadow-none"
             >
               {loading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
           {/* Footer */}
-          <div className="mt-xl text-center">
+          <div className="mt-8 text-center">
             <p className="font-body-md text-body-md text-on-surface-variant">
               Already have an account?{" "}
               <Link to="/login" className="font-label-sm text-label-sm text-primary hover:text-on-primary-fixed-variant transition-colors underline-offset-2 hover:underline">

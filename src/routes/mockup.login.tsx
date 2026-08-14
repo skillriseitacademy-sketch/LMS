@@ -10,16 +10,16 @@ function LoginPage() {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-fixed rounded-full blur-[100px] opacity-40 pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-surface-variant rounded-full blur-[100px] opacity-60 pointer-events-none"></div>
 
-      <main className="w-full max-w-[420px] bg-surface-container-lowest rounded-xl shadow-soft p-xl relative z-10 border border-outline-variant/30">
-        <div className="text-center mb-xl">
-          <h1 className="font-headline-lg text-headline-lg text-primary mb-xs">PlacePro</h1>
+      <main className="w-full max-w-[420px] bg-surface-container-lowest rounded-xl shadow-soft p-8 relative z-10 border border-outline-variant/30">
+        <div className="text-center mb-8">
+          <h1 className="font-headline-lg text-headline-lg text-primary mb-1">PlacePro</h1>
           <p className="font-body-md text-body-md text-on-surface-variant">
             Log in to your Career OS
           </p>
         </div>
 
         <button
-          className="w-full flex items-center justify-center gap-sm py-[10px] px-md border border-outline-variant rounded-lg bg-surface-container-lowest hover:bg-surface-container-low transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 mb-lg"
+          className="w-full flex items-center justify-center gap-2 py-[10px] px-4 border border-outline-variant rounded-lg bg-surface-container-lowest hover:bg-surface-container-low transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 mb-6"
           type="button"
         >
           <svg
@@ -48,7 +48,7 @@ function LoginPage() {
           <span className="font-label-sm text-label-sm text-on-surface">Continue with Google</span>
         </button>
 
-        <div className="relative flex items-center py-md mb-md">
+        <div className="relative flex items-center py-4 mb-4">
           <div className="flex-grow border-t border-outline-variant/50"></div>
           <span className="flex-shrink-0 mx-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
             or
@@ -59,17 +59,17 @@ function LoginPage() {
         <form action="#" className="space-y-md" method="POST">
           <div>
             <label
-              className="block font-label-sm text-label-sm text-on-surface mb-xs"
+              className="block font-label-sm text-label-sm text-on-surface mb-1"
               htmlFor="email"
             >
               Email
             </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-md pointer-events-none text-outline">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-outline">
                 <span className="material-symbols-outlined text-[20px]">mail</span>
               </span>
               <input
-                className="block w-full pl-[40px] pr-md py-[10px] bg-surface-bright border border-outline-variant rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm placeholder-outline"
+                className="block w-full pl-[40px] pr-4 py-[10px] bg-surface-bright border border-outline-variant rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm placeholder-outline"
                 id="email"
                 name="email"
                 placeholder="you@university.edu"
@@ -80,7 +80,7 @@ function LoginPage() {
           </div>
 
           <div>
-            <div className="flex justify-between items-center mb-xs">
+            <div className="flex justify-between items-center mb-1">
               <label
                 className="block font-label-sm text-label-sm text-on-surface"
                 htmlFor="password"
@@ -95,11 +95,11 @@ function LoginPage() {
               </a>
             </div>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-md pointer-events-none text-outline">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-outline">
                 <span className="material-symbols-outlined text-[20px]">lock</span>
               </span>
               <input
-                className="block w-full pl-[40px] pr-md py-[10px] bg-surface-bright border border-outline-variant rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm placeholder-outline"
+                className="block w-full pl-[40px] pr-4 py-[10px] bg-surface-bright border border-outline-variant rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm placeholder-outline"
                 id="password"
                 name="password"
                 placeholder="••••••••"
@@ -110,7 +110,7 @@ function LoginPage() {
           </div>
 
           <button
-            className="w-full mt-xl bg-primary text-on-primary font-label-sm text-label-sm py-[12px] rounded-lg hover:bg-on-primary-fixed-variant hover:scale-[1.01] active:scale-[0.99] transition-all shadow-sm flex items-center justify-center gap-xs"
+            className="w-full mt-8 bg-primary text-on-primary font-label-sm text-label-sm py-[12px] rounded-lg hover:bg-on-primary-fixed-variant hover:scale-[1.01] active:scale-[0.99] transition-all shadow-sm flex items-center justify-center gap-1"
             type="submit"
           >
             Log In
@@ -118,7 +118,7 @@ function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-xl text-center">
+        <div className="mt-8 text-center">
           <p className="font-body-md text-body-md text-on-surface-variant">
             Don't have an account?
             <a

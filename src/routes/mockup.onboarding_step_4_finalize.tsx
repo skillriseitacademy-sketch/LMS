@@ -7,8 +7,8 @@ export const Route = createFileRoute("/mockup/onboarding_step_4_finalize")({
 function OnboardingStep4FinalizePage() {
   return (
     <>
-      <header className="w-full bg-surface-container-lowest sticky top-0 z-50 shadow-sm border-b border-outline-variant flex justify-between items-center px-lg py-md max-w-container-max mx-auto">
-        <div className="flex items-center gap-sm">
+      <header className="w-full bg-surface-container-lowest sticky top-0 z-50 shadow-sm border-b border-outline-variant flex justify-between items-center px-6 py-4 max-w-container-max mx-auto">
+        <div className="flex items-center gap-2">
           <span
             className="material-symbols-outlined text-primary text-3xl"
             style={{ fontVariationSettings: "'FILL' 1" }}
@@ -24,9 +24,9 @@ function OnboardingStep4FinalizePage() {
         </div>
       </header>
 
-      <main className="flex-grow flex flex-col items-center justify-center p-md md:p-xl w-full max-w-4xl mx-auto">
-        <div className="w-full max-w-xl mb-xl">
-          <div className="flex justify-between mb-sm px-2">
+      <main className="flex-grow flex flex-col items-center justify-center p-4 md:p-xl w-full max-w-4xl mx-auto">
+        <div className="w-full max-w-xl mb-8">
+          <div className="flex justify-between mb-2 px-2">
             <span className="font-label-sm text-label-sm text-on-surface-variant">Basic Info</span>
             <span className="font-label-sm text-label-sm text-on-surface-variant">Education</span>
             <span className="font-label-sm text-label-sm text-on-surface-variant">Interests</span>
@@ -37,8 +37,8 @@ function OnboardingStep4FinalizePage() {
           </div>
         </div>
 
-        <div className="text-center mb-xl">
-          <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-sm">
+        <div className="text-center mb-8">
+          <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">
             Choose Your Profile Visibility
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
@@ -47,7 +47,7 @@ function OnboardingStep4FinalizePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-lg w-full mb-xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-8">
           <label className="cursor-pointer group relative">
             <input
               checked=""
@@ -56,7 +56,7 @@ function OnboardingStep4FinalizePage() {
               type="radio"
               value="public"
             />
-            <div className="glass-panel rounded-xl p-lg md:p-xl h-full flex flex-col items-center text-center transition-all duration-300 border-2 border-transparent peer-checked:card-selected hover:shadow-md hover:-translate-y-1">
+            <div className="glass-panel rounded-xl p-6 md:p-xl h-full flex flex-col items-center text-center transition-all duration-300 border-2 border-transparent peer-checked:card-selected hover:shadow-md hover:-translate-y-1">
               <div className="absolute top-md right-md h-6 w-6 rounded-full border-2 border-outline-variant peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-colors">
                 <span
                   className="material-symbols-outlined text-white text-sm opacity-0 peer-checked:opacity-100"
@@ -66,17 +66,17 @@ function OnboardingStep4FinalizePage() {
                 </span>
               </div>
 
-              <div className="w-32 h-32 mb-lg rounded-full bg-surface-container flex items-center justify-center overflow-hidden border border-outline-variant/30">
+              <div className="w-32 h-32 mb-6 rounded-full bg-surface-container flex items-center justify-center overflow-hidden border border-outline-variant/30">
                 <img
                   className="w-full h-full object-cover mix-blend-multiply"
                   data-alt="A stylized, clean vector illustration in an indigo and light blue color palette showing connected nodes and avatars, representing networking and a public profile. The style is modern corporate SaaS, with soft edges and a bright, approachable mood suitable for a student career platform."
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdJc-es98J3oLYYe_GdjI7CQU7jXMJdlyGZZYvu-JUTbpMHxi6-BY5FeuGpXL41f7YEuzJ04qmaqX5Zgi46XzmfF86AZk5G6XGTq1zeBYdDk8a6A-_amcWk99yy4MGXrUU3HxH7kdgLjWojy-ZNhY5JUoUzg7PkXzyWcl9Bwf5yFc3W-XQ5OYKbpSWzpHlPxfIbz4r0fhWXHY9Nednwj_CGzKy_l9ulWLPLVhcKb2EK5eQZigEXI4pQQ"
                 />
               </div>
-              <h2 className="font-headline-md text-headline-md text-on-surface mb-xs group-hover:text-primary transition-colors">
+              <h2 className="font-headline-md text-headline-md text-on-surface mb-1 group-hover:text-primary transition-colors">
                 Public Profile
               </h2>
-              <div className="bg-secondary-container/20 text-secondary px-sm py-xs rounded-full font-label-sm text-label-sm mb-md inline-block">
+              <div className="bg-secondary-container/20 text-secondary px-2 py-1 rounded-full font-label-sm text-label-sm mb-4 inline-block">
                 Recommended
               </div>
               <p className="font-body-md text-body-md text-on-surface-variant">
@@ -88,7 +88,7 @@ function OnboardingStep4FinalizePage() {
 
           <label className="cursor-pointer group relative">
             <input className="peer sr-only" name="visibility" type="radio" value="private" />
-            <div className="glass-panel rounded-xl p-lg md:p-xl h-full flex flex-col items-center text-center transition-all duration-300 border-2 border-transparent peer-checked:card-selected hover:shadow-md hover:-translate-y-1">
+            <div className="glass-panel rounded-xl p-6 md:p-xl h-full flex flex-col items-center text-center transition-all duration-300 border-2 border-transparent peer-checked:card-selected hover:shadow-md hover:-translate-y-1">
               <div className="absolute top-md right-md h-6 w-6 rounded-full border-2 border-outline-variant peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-colors">
                 <span
                   className="material-symbols-outlined text-white text-sm opacity-0 peer-checked:opacity-100"
@@ -98,17 +98,17 @@ function OnboardingStep4FinalizePage() {
                 </span>
               </div>
 
-              <div className="w-32 h-32 mb-lg rounded-full bg-surface-container flex items-center justify-center overflow-hidden border border-outline-variant/30">
+              <div className="w-32 h-32 mb-6 rounded-full bg-surface-container flex items-center justify-center overflow-hidden border border-outline-variant/30">
                 <img
                   className="w-full h-full object-cover mix-blend-multiply"
                   data-alt="A stylized, clean vector illustration in a slate and indigo color palette showing a shield or lock motif, representing privacy and a locked profile. The style is modern corporate SaaS, with soft edges and a secure, trustworthy mood suitable for a student career platform."
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEun3MJ3a80MD6wymrA1eGBly3vw_h4LqEpZBOIb4e1BjYqgDpfx4AaVj1iFJEA84tLqClWfFZ5H6Mex2cgLFibyEOy2lzScgbduMv7L2-HJ36SHXPmjH8W_vRYgycfw8sxH6PsT5H9MQRXBhOSArCeJQHoRaitlQmkooQEFxZE8LUchn7Ag9hPq5xGoRsDEzBNZQ4eLUdXbdwhmBYQugcRWk7dANs894w0QFrXCsirUZLpLEm_aZnqw"
                 />
               </div>
-              <h2 className="font-headline-md text-headline-md text-on-surface mb-xs group-hover:text-primary transition-colors">
+              <h2 className="font-headline-md text-headline-md text-on-surface mb-1 group-hover:text-primary transition-colors">
                 Private Profile
               </h2>
-              <div className="bg-surface-variant text-on-surface-variant px-sm py-xs rounded-full font-label-sm text-label-sm mb-md inline-block">
+              <div className="bg-surface-variant text-on-surface-variant px-2 py-1 rounded-full font-label-sm text-label-sm mb-4 inline-block">
                 Restricted
               </div>
               <p className="font-body-md text-body-md text-on-surface-variant">
@@ -119,12 +119,12 @@ function OnboardingStep4FinalizePage() {
           </label>
         </div>
 
-        <div className="w-full max-w-4xl flex justify-between items-center mt-auto border-t border-outline-variant/50 pt-lg">
-          <button className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors px-md py-sm flex items-center gap-xs">
+        <div className="w-full max-w-4xl flex justify-between items-center mt-auto border-t border-outline-variant/50 pt-6">
+          <button className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors px-4 py-2 flex items-center gap-1">
             <span className="material-symbols-outlined text-sm">arrow_back</span>
             Back
           </button>
-          <button className="bg-primary text-on-primary font-headline-md text-body-lg px-xl py-md rounded-lg shadow-sm hover:bg-surface-tint hover:shadow-md hover:scale-[1.02] transition-all duration-200 flex items-center gap-sm">
+          <button className="bg-primary text-on-primary font-headline-md text-body-lg px-8 py-4 rounded-lg shadow-sm hover:bg-surface-tint hover:shadow-md hover:scale-[1.02] transition-all duration-200 flex items-center gap-2">
             Finish Setup
             <span className="material-symbols-outlined">rocket_launch</span>
           </button>

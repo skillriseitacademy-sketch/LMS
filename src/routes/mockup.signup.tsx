@@ -7,9 +7,9 @@ export const Route = createFileRoute("/mockup/signup")({
 function SignupPage() {
   return (
     <>
-      <div className="w-full max-w-md mx-auto p-md md:p-lg">
-        <div className="text-center mb-xl">
-          <h1 className="font-display-lg text-display-lg text-primary mb-sm flex items-center justify-center gap-xs">
+      <div className="w-full max-w-md mx-auto p-4 md:p-lg">
+        <div className="text-center mb-8">
+          <h1 className="font-display-lg text-display-lg text-primary mb-2 flex items-center justify-center gap-1">
             <span
               className="material-symbols-outlined"
               style={{ fontSize: "40px", fontVariationSettings: "'FILL' 1" }}
@@ -21,26 +21,26 @@ function SignupPage() {
           <p className="font-body-md text-body-md text-on-surface-variant">Your Career OS</p>
         </div>
 
-        <div className="bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant/30 p-lg md:p-xl relative overflow-hidden">
+        <div className="bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant/30 p-6 md:p-xl relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-fixed"></div>
-          <h2 className="font-headline-md text-headline-md text-on-surface mb-lg text-center">
+          <h2 className="font-headline-md text-headline-md text-on-surface mb-6 text-center">
             Create an Account
           </h2>
           <form action="#" className="space-y-md" method="POST">
             <div>
               <label
-                className="block font-label-sm text-label-sm text-on-surface-variant mb-xs"
+                className="block font-label-sm text-label-sm text-on-surface-variant mb-1"
                 htmlFor="name"
               >
                 Full Name
               </label>
               <div className="relative input-glow rounded-lg transition-shadow duration-200">
-                <div className="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
                   <span className="material-symbols-outlined text-outline">person</span>
                 </div>
                 <input
                   autocomplete="name"
-                  className="block w-full pl-xl pr-sm py-sm bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200"
+                  className="block w-full pl-8 pr-2 py-2 bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200"
                   id="name"
                   name="name"
                   placeholder="Jane Doe"
@@ -52,18 +52,18 @@ function SignupPage() {
 
             <div>
               <label
-                className="block font-label-sm text-label-sm text-on-surface-variant mb-xs"
+                className="block font-label-sm text-label-sm text-on-surface-variant mb-1"
                 htmlFor="email"
               >
                 Email address
               </label>
               <div className="relative input-glow rounded-lg transition-shadow duration-200">
-                <div className="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
                   <span className="material-symbols-outlined text-outline">mail</span>
                 </div>
                 <input
                   autocomplete="email"
-                  className="block w-full pl-xl pr-sm py-sm bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200"
+                  className="block w-full pl-8 pr-2 py-2 bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200"
                   id="email"
                   name="email"
                   placeholder="jane@student.edu"
@@ -75,18 +75,18 @@ function SignupPage() {
 
             <div>
               <label
-                className="block font-label-sm text-label-sm text-on-surface-variant mb-xs"
+                className="block font-label-sm text-label-sm text-on-surface-variant mb-1"
                 htmlFor="password"
               >
                 Password
               </label>
               <div className="relative input-glow rounded-lg transition-shadow duration-200">
-                <div className="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
                   <span className="material-symbols-outlined text-outline">lock</span>
                 </div>
                 <input
                   autocomplete="new-password"
-                  className="block w-full pl-xl pr-sm py-sm bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200"
+                  className="block w-full pl-8 pr-2 py-2 bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200"
                   id="password"
                   name="password"
                   placeholder="••••••••"
@@ -96,7 +96,7 @@ function SignupPage() {
               </div>
             </div>
 
-            <div className="flex items-start pt-sm">
+            <div className="flex items-start pt-2">
               <div className="flex items-center h-5">
                 <input
                   className="h-4 w-4 rounded border-outline-variant text-primary focus:ring-primary-container bg-surface-bright"
@@ -126,9 +126,9 @@ function SignupPage() {
               </div>
             </div>
 
-            <div className="pt-sm">
+            <div className="pt-2">
               <button
-                className="w-full flex justify-center items-center py-sm px-md border border-transparent rounded-lg shadow-sm font-headline-md text-body-md text-on-primary bg-primary hover:bg-on-primary-fixed-variant focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-container transition-all duration-200 transform hover:scale-[1.02]"
+                className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-sm font-headline-md text-body-md text-on-primary bg-primary hover:bg-on-primary-fixed-variant focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-container transition-all duration-200 transform hover:scale-[1.02]"
                 type="submit"
               >
                 Create Account
@@ -137,20 +137,20 @@ function SignupPage() {
             </div>
           </form>
 
-          <div className="mt-lg relative">
+          <div className="mt-6 relative">
             <div aria-hidden="true" className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-outline-variant"></div>
             </div>
             <div className="relative flex justify-center">
-              <span className="px-sm bg-surface-container-lowest font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
+              <span className="px-2 bg-surface-container-lowest font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
                 Or continue with
               </span>
             </div>
           </div>
 
-          <div className="mt-lg">
+          <div className="mt-6">
             <button
-              className="w-full flex justify-center items-center py-sm px-md border border-outline-variant rounded-lg shadow-sm bg-surface-container-lowest font-body-md text-body-md text-on-surface hover:bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-container transition-colors duration-200"
+              className="w-full flex justify-center items-center py-2 px-4 border border-outline-variant rounded-lg shadow-sm bg-surface-container-lowest font-body-md text-body-md text-on-surface hover:bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-container transition-colors duration-200"
               type="button"
             >
               <svg
@@ -181,7 +181,7 @@ function SignupPage() {
           </div>
         </div>
 
-        <p className="mt-lg text-center font-body-md text-body-md text-on-surface-variant">
+        <p className="mt-6 text-center font-body-md text-body-md text-on-surface-variant">
           Already have an account?
           <a
             className="font-headline-md text-body-md text-primary hover:text-primary-fixed-variant transition-colors"

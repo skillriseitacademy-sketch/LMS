@@ -7,8 +7,8 @@ export const Route = createFileRoute("/mockup/resume_builder_editor")({
 function ResumeBuilderEditorPage() {
   return (
     <>
-      <nav className="w-sidebar-width h-full fixed left-0 top-0 bg-surface-container-lowest shadow-sm flex flex-col py-lg px-md z-50 md:flex hidden">
-        <div className="flex items-center gap-sm mb-xl px-sm">
+      <nav className="w-sidebar-width h-full fixed left-0 top-0 bg-surface-container-lowest shadow-sm flex flex-col py-6 px-4 z-50 md:flex hidden">
+        <div className="flex items-center gap-2 mb-8 px-2">
           <span className="material-symbols-outlined icon-fill text-primary text-3xl">token</span>
           <div className="flex flex-col">
             <span className="font-headline-md text-headline-md font-bold text-primary leading-none">
@@ -19,15 +19,15 @@ function ResumeBuilderEditorPage() {
             </span>
           </div>
         </div>
-        <button className="bg-primary text-on-primary font-body-md font-semibold py-sm px-md rounded-lg flex items-center justify-center gap-2 mb-xl hover:bg-surface-tint transition-colors w-full">
+        <button className="bg-primary text-on-primary font-body-md font-semibold py-2 px-4 rounded-lg flex items-center justify-center gap-2 mb-8 hover:bg-surface-tint transition-colors w-full">
           <span className="material-symbols-outlined text-[20px]">bolt</span>
           Start Daily Challenge
         </button>
-        <div className="flex-1 overflow-y-auto -mx-md px-md pb-xl">
+        <div className="flex-1 overflow-y-auto -mx-md px-4 pb-8">
           <ul className="space-y-1">
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">dashboard</span> Dashboard
@@ -35,7 +35,7 @@ function ResumeBuilderEditorPage() {
             </li>
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">forum</span> Feed
@@ -43,7 +43,7 @@ function ResumeBuilderEditorPage() {
             </li>
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">record_voice_over</span>{" "}
@@ -52,7 +52,7 @@ function ResumeBuilderEditorPage() {
             </li>
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">quiz</span> Quizzes
@@ -60,7 +60,7 @@ function ResumeBuilderEditorPage() {
             </li>
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">sports_esports</span> Arena
@@ -68,7 +68,7 @@ function ResumeBuilderEditorPage() {
             </li>
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">work</span> Jobs
@@ -76,7 +76,7 @@ function ResumeBuilderEditorPage() {
             </li>
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">map</span> Roadmap
@@ -85,7 +85,7 @@ function ResumeBuilderEditorPage() {
 
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg bg-surface-container-low text-primary font-bold border-r-4 border-primary scale-[0.98] transition-transform duration-200"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg bg-surface-container-low text-primary font-bold border-r-4 border-primary scale-[0.98] transition-transform duration-200"
                 href="#"
               >
                 <span className="material-symbols-outlined icon-fill text-[20px]">description</span>{" "}
@@ -94,7 +94,7 @@ function ResumeBuilderEditorPage() {
             </li>
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">leaderboard</span>{" "}
@@ -103,7 +103,7 @@ function ResumeBuilderEditorPage() {
             </li>
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">person</span> Profile
@@ -111,7 +111,7 @@ function ResumeBuilderEditorPage() {
             </li>
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">groups</span> Rooms
@@ -119,11 +119,11 @@ function ResumeBuilderEditorPage() {
             </li>
           </ul>
         </div>
-        <div className="mt-auto pt-md border-t border-outline-variant/30">
+        <div className="mt-auto pt-4 border-t border-outline-variant/30">
           <ul className="space-y-1">
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">settings</span> Settings
@@ -131,14 +131,14 @@ function ResumeBuilderEditorPage() {
             </li>
             <li>
               <a
-                className="flex items-center gap-3 px-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-2 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
                 href="#"
               >
                 <span className="material-symbols-outlined text-[20px]">help</span> Help
               </a>
             </li>
           </ul>
-          <div className="mt-md px-sm flex items-center gap-3">
+          <div className="mt-4 px-2 flex items-center gap-3">
             <img
               alt="User profile photo"
               className="w-8 h-8 rounded-full object-cover border border-outline-variant/30"
@@ -154,8 +154,8 @@ function ResumeBuilderEditorPage() {
       </nav>
 
       <div className="flex-1 flex flex-col h-full ml-0 md:ml-sidebar-width transition-all duration-300">
-        <header className="bg-surface border-b border-outline-variant/30 flex justify-between items-center w-full h-16 px-md md:px-xl sticky top-0 z-40 shrink-0">
-          <div className="flex items-center gap-md">
+        <header className="bg-surface border-b border-outline-variant/30 flex justify-between items-center w-full h-16 px-4 md:px-xl sticky top-0 z-40 shrink-0">
+          <div className="flex items-center gap-4">
             <button className="md:hidden p-1 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
               <span className="material-symbols-outlined">menu</span>
             </button>
@@ -166,13 +166,13 @@ function ResumeBuilderEditorPage() {
               <span className="material-symbols-outlined text-[14px]">save</span> Auto-saved
             </span>
           </div>
-          <div className="flex items-center gap-sm md:gap-md">
-            <button className="hidden md:flex items-center gap-2 px-md py-2 rounded-lg border border-outline-variant/50 text-on-surface font-body-md font-medium hover:bg-surface-container-lowest transition-colors">
+          <div className="flex items-center gap-2 md:gap-md">
+            <button className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg border border-outline-variant/50 text-on-surface font-body-md font-medium hover:bg-surface-container-lowest transition-colors">
               <span className="material-symbols-outlined text-[20px]">view_quilt</span>
               Change Template
             </button>
 
-            <button className="flex items-center gap-2 bg-primary text-on-primary px-md py-2 rounded-lg font-body-md font-medium hover:bg-surface-tint transition-all active:scale-[0.98]">
+            <button className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg font-body-md font-medium hover:bg-surface-tint transition-all active:scale-[0.98]">
               <span className="material-symbols-outlined text-[20px]">download</span>
               <span className="hidden sm:inline">Download PDF</span>
             </button>
@@ -186,9 +186,9 @@ function ResumeBuilderEditorPage() {
 
         <main className="flex-1 flex flex-col lg:flex-row overflow-hidden bg-surface-container-low">
           <section className="w-full lg:w-1/2 flex flex-col h-full bg-surface-container-lowest border-r border-outline-variant/30 z-10 relative">
-            <div className="flex-1 overflow-y-auto editor-scroll p-md md:p-xl space-y-xl">
+            <div className="flex-1 overflow-y-auto editor-scroll p-4 md:p-xl space-y-xl">
               <div className="bg-surface-bright rounded-xl card-shadow border border-outline-variant/20 overflow-hidden">
-                <div className="px-lg py-md border-b border-outline-variant/20 bg-surface flex justify-between items-center cursor-pointer hover:bg-surface-container-lowest transition-colors">
+                <div className="px-6 py-4 border-b border-outline-variant/20 bg-surface flex justify-between items-center cursor-pointer hover:bg-surface-container-lowest transition-colors">
                   <h2 className="font-headline-md text-lg font-semibold text-on-surface flex items-center gap-2">
                     <span className="material-symbols-outlined text-primary text-[20px]">
                       person
@@ -197,7 +197,7 @@ function ResumeBuilderEditorPage() {
                   </h2>
                   <span className="material-symbols-outlined text-outline">expand_less</span>
                 </div>
-                <div className="p-lg grid grid-cols-1 md:grid-cols-2 gap-md">
+                <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="font-label-sm text-label-sm text-on-surface-variant uppercase">
                       First Name
@@ -252,15 +252,15 @@ function ResumeBuilderEditorPage() {
               </div>
 
               <div className="bg-surface-bright rounded-xl card-shadow border border-outline-variant/20 overflow-hidden border-l-4 border-l-primary">
-                <div className="px-lg py-md border-b border-outline-variant/20 bg-surface flex justify-between items-center cursor-pointer hover:bg-surface-container-lowest transition-colors">
+                <div className="px-6 py-4 border-b border-outline-variant/20 bg-surface flex justify-between items-center cursor-pointer hover:bg-surface-container-lowest transition-colors">
                   <h2 className="font-headline-md text-lg font-semibold text-on-surface flex items-center gap-2">
                     <span className="material-symbols-outlined text-primary text-[20px]">work</span>{" "}
                     Work Experience
                   </h2>
                   <span className="material-symbols-outlined text-outline">expand_less</span>
                 </div>
-                <div className="p-lg space-y-lg">
-                  <div className="border border-outline-variant/30 rounded-lg p-md relative group hover:border-primary/50 transition-colors">
+                <div className="p-6 space-y-lg">
+                  <div className="border border-outline-variant/30 rounded-lg p-4 relative group hover:border-primary/50 transition-colors">
                     <div className="absolute top-md right-md flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button className="p-1 text-on-surface-variant hover:text-primary rounded">
                         <span className="material-symbols-outlined text-[18px]">edit</span>
@@ -269,7 +269,7 @@ function ResumeBuilderEditorPage() {
                         <span className="material-symbols-outlined text-[18px]">delete</span>
                       </button>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-md mb-md">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div className="space-y-1">
                         <label className="font-label-sm text-label-sm text-on-surface-variant uppercase">
                           Job Title
@@ -337,7 +337,7 @@ function ResumeBuilderEditorPage() {
               </div>
 
               <div className="bg-surface-bright rounded-xl card-shadow border border-outline-variant/20 overflow-hidden opacity-70 hover:opacity-100 transition-opacity">
-                <div className="px-lg py-md bg-surface flex justify-between items-center cursor-pointer hover:bg-surface-container-lowest transition-colors">
+                <div className="px-6 py-4 bg-surface flex justify-between items-center cursor-pointer hover:bg-surface-container-lowest transition-colors">
                   <h2 className="font-headline-md text-lg font-semibold text-on-surface flex items-center gap-2">
                     <span className="material-symbols-outlined text-on-surface-variant text-[20px]">
                       school
@@ -351,7 +351,7 @@ function ResumeBuilderEditorPage() {
             </div>
           </section>
 
-          <section className="hidden lg:flex lg:w-1/2 h-full relative flex-col items-center justify-start p-xl overflow-y-auto bg-surface-variant/30">
+          <section className="hidden lg:flex lg:w-1/2 h-full relative flex-col items-center justify-start p-8 overflow-y-auto bg-surface-variant/30">
             <div className="absolute top-md right-xl flex items-center gap-2 bg-surface-container-lowest rounded-lg shadow-sm border border-outline-variant/30 p-1 z-20">
               <button className="p-1 hover:bg-surface-container-low rounded text-on-surface-variant">
                 <span className="material-symbols-outlined text-[20px]">remove</span>
@@ -362,7 +362,7 @@ function ResumeBuilderEditorPage() {
               </button>
             </div>
 
-            <div className="resume-preview bg-white w-full max-w-[800px] mt-xl mb-xl rounded flex-shrink-0 p-12 text-on-background relative overflow-hidden font-body-md transform scale-[0.85] origin-top">
+            <div className="resume-preview bg-white w-full max-w-[800px] mt-8 mb-8 rounded flex-shrink-0 p-12 text-on-background relative overflow-hidden font-body-md transform scale-[0.85] origin-top">
               <div className="border-b-2 border-primary pb-6 mb-6">
                 <h1 className="text-4xl font-headline-lg font-bold text-on-background mb-2">
                   Alex Chen
@@ -423,7 +423,7 @@ function ResumeBuilderEditorPage() {
             </div>
 
             <div className="absolute bottom-xl right-xl w-80 bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant/20 z-30 flex flex-col overflow-hidden transition-transform hover:-translate-y-1 duration-300">
-              <div className="bg-surface p-md border-b border-outline-variant/20 flex items-center justify-between">
+              <div className="bg-surface p-4 border-b border-outline-variant/20 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined icon-fill text-secondary-container">
                     auto_awesome
@@ -457,7 +457,7 @@ function ResumeBuilderEditorPage() {
                   <span className="font-bold text-sm text-secondary">85</span>
                 </div>
               </div>
-              <div className="p-md bg-surface-bright space-y-3">
+              <div className="p-4 bg-surface-bright space-y-3">
                 <p className="font-label-sm text-xs text-on-surface-variant uppercase tracking-wide">
                   Top Suggestions
                 </p>
@@ -490,7 +490,7 @@ function ResumeBuilderEditorPage() {
                   </div>
                 </div>
               </div>
-              <div className="bg-surface-container p-sm flex justify-center border-t border-outline-variant/20">
+              <div className="bg-surface-container p-2 flex justify-center border-t border-outline-variant/20">
                 <button className="text-primary text-sm font-medium hover:underline flex items-center gap-1">
                   Fix All with AI{" "}
                   <span className="material-symbols-outlined text-[16px]">arrow_forward</span>

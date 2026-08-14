@@ -7,8 +7,8 @@ export const Route = createFileRoute("/mockup/achievements_rewards_hub")({
 function AchievementsRewardsHubPage() {
   return (
     <>
-      <aside className="w-sidebar-width h-full fixed left-0 top-0 bg-surface-container-lowest shadow-sm flex flex-col py-lg px-md z-50 hidden md:flex border-r border-outline-variant/30">
-        <div className="mb-xl flex items-center gap-sm px-sm">
+      <aside className="w-sidebar-width h-full fixed left-0 top-0 bg-surface-container-lowest shadow-sm flex flex-col py-6 px-4 z-50 hidden md:flex border-r border-outline-variant/30">
+        <div className="mb-8 flex items-center gap-2 px-2">
           <span className="material-symbols-outlined icon-fill-1 text-primary text-3xl">
             rocket_launch
           </span>
@@ -21,7 +21,7 @@ function AchievementsRewardsHubPage() {
             </p>
           </div>
         </div>
-        <button className="bg-primary hover:bg-primary-container text-on-primary font-body-md font-medium rounded-lg py-3 px-4 mb-xl transition-colors shadow-sm flex items-center justify-center gap-2 group w-full">
+        <button className="bg-primary hover:bg-primary-container text-on-primary font-body-md font-medium rounded-lg py-3 px-4 mb-8 transition-colors shadow-sm flex items-center justify-center gap-2 group w-full">
           <span className="material-symbols-outlined group-hover:scale-110 transition-transform">
             bolt
           </span>
@@ -106,7 +106,7 @@ function AchievementsRewardsHubPage() {
             Rooms
           </a>
         </nav>
-        <div className="mt-auto pt-lg border-t border-outline-variant/30 space-y-1">
+        <div className="mt-auto pt-6 border-t border-outline-variant/30 space-y-1">
           <a
             className="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
             href="#"
@@ -125,7 +125,7 @@ function AchievementsRewardsHubPage() {
       </aside>
 
       <main className="flex-1 w-full md:ml-sidebar-width min-h-screen flex flex-col bg-background">
-        <header className="bg-surface docked full-width top-0 sticky z-40 flex justify-between items-center w-full h-16 px-xl max-w-container-max border-b border-outline-variant/30">
+        <header className="bg-surface docked full-width top-0 sticky z-40 flex justify-between items-center w-full h-16 px-8 max-w-container-max border-b border-outline-variant/30">
           <div className="flex-1 flex items-center gap-4">
             <div className="relative w-64 md:hidden">
               <h1 className="font-headline-md text-headline-md font-bold text-primary tracking-tight">
@@ -166,7 +166,7 @@ function AchievementsRewardsHubPage() {
 
         <div className="flex-1 w-full max-w-container-max mx-auto p-4 md:p-xl space-y-xl overflow-y-auto">
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-surface-container-lowest rounded-xl p-lg card-shadow border border-outline-variant/20 flex flex-col sm:flex-row items-center gap-lg relative overflow-hidden">
+            <div className="lg:col-span-2 bg-surface-container-lowest rounded-xl p-6 card-shadow border border-outline-variant/20 flex flex-col sm:flex-row items-center gap-6 relative overflow-hidden">
               <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
               <div className="relative">
                 <svg className="w-32 h-32 transform -rotate-90">
@@ -216,7 +216,7 @@ function AchievementsRewardsHubPage() {
               </div>
             </div>
 
-            <div className="bg-surface-container-lowest rounded-xl p-lg card-shadow border border-outline-variant/20 flex flex-col items-center justify-center text-center relative overflow-hidden group">
+            <div className="bg-surface-container-lowest rounded-xl p-6 card-shadow border border-outline-variant/20 flex flex-col items-center justify-center text-center relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-b from-secondary-container/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="w-16 h-16 rounded-full bg-secondary-container/20 flex items-center justify-center mb-4 text-secondary-container relative">
                 <span className="material-symbols-outlined text-4xl icon-fill-1">
@@ -240,7 +240,7 @@ function AchievementsRewardsHubPage() {
           </section>
 
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-surface-container-lowest rounded-xl p-lg card-shadow border border-outline-variant/20">
+            <div className="bg-surface-container-lowest rounded-xl p-6 card-shadow border border-outline-variant/20">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary">task_alt</span>
@@ -302,7 +302,7 @@ function AchievementsRewardsHubPage() {
             </div>
 
             <div className="space-y-6">
-              <div className="bg-gradient-to-br from-primary-container to-primary rounded-xl p-lg text-on-primary shadow-md relative overflow-hidden flex flex-col justify-between h-48">
+              <div className="bg-gradient-to-br from-primary-container to-primary rounded-xl p-6 text-on-primary shadow-md relative overflow-hidden flex flex-col justify-between h-48">
                 <div
                   className="absolute inset-0 opacity-10"
                   style={{
@@ -331,7 +331,7 @@ function AchievementsRewardsHubPage() {
                 </div>
               </div>
 
-              <div className="bg-surface-container-lowest rounded-xl p-lg card-shadow border border-outline-variant/20">
+              <div className="bg-surface-container-lowest rounded-xl p-6 card-shadow border border-outline-variant/20">
                 <h4 className="font-label-sm text-label-sm uppercase text-on-surface-variant mb-4">
                   Next Milestone Reward
                 </h4>

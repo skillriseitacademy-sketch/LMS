@@ -8,8 +8,8 @@ function WelcomeToProAnimatedSuccessSplashPage() {
   return (
     <>
       <div className="absolute inset-0 pointer-events-none z-0" id="confetti-container"></div>
-      <main className="relative z-10 w-full max-w-container-max px-md md:px-xl mx-auto flex flex-col items-center text-center py-xl overflow-y-auto max-h-screen">
-        <div className="mb-lg relative">
+      <main className="relative z-10 w-full max-w-container-max px-4 md:px-xl mx-auto flex flex-col items-center text-center py-8 overflow-y-auto max-h-screen">
+        <div className="mb-6 relative">
           <div className="absolute inset-0 bg-secondary-container rounded-full animate-pulse-glow scale-150 blur-xl"></div>
           <img
             alt="Golden Trophy"
@@ -19,20 +19,20 @@ function WelcomeToProAnimatedSuccessSplashPage() {
           />
         </div>
 
-        <h1 className="font-display-lg text-display-lg text-on-surface mb-sm hidden md:block animate-fade-in-up stagger-1">
+        <h1 className="font-display-lg text-display-lg text-on-surface mb-2 hidden md:block animate-fade-in-up stagger-1">
           Welcome to the Pro Tier, Alex!
         </h1>
-        <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-sm md:hidden animate-fade-in-up stagger-1">
+        <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2 md:hidden animate-fade-in-up stagger-1">
           Welcome to Pro, Alex!
         </h1>
-        <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-xl animate-fade-in-up stagger-1">
+        <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-8 animate-fade-in-up stagger-1">
           Your career acceleration starts now. All premium features are now unlocked and ready to
           propel you forward.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-md w-full max-w-3xl mb-xl">
-          <div className="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-2">
-            <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center mr-md flex-shrink-0 group-hover:bg-primary-container transition-colors">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl mb-8">
+          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-2">
+            <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center mr-4 flex-shrink-0 group-hover:bg-primary-container transition-colors">
               <span
                 className="material-symbols-outlined text-primary"
                 style={{ fontVariationSettings: "'FILL' 1" }}
@@ -41,15 +41,15 @@ function WelcomeToProAnimatedSuccessSplashPage() {
               </span>
             </div>
             <div>
-              <h3 className="font-headline-md text-[18px] mb-xs">AI Resume Optimization</h3>
+              <h3 className="font-headline-md text-[18px] mb-1">AI Resume Optimization</h3>
               <p className="font-body-md text-[14px] text-on-surface-variant">
                 Tailor your resume instantly for every application with AI-driven insights.
               </p>
             </div>
           </div>
 
-          <div className="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-2">
-            <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center mr-md flex-shrink-0 group-hover:bg-primary-container transition-colors">
+          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-2">
+            <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center mr-4 flex-shrink-0 group-hover:bg-primary-container transition-colors">
               <span
                 className="material-symbols-outlined text-primary"
                 style={{ fontVariationSettings: "'FILL' 1" }}
@@ -58,15 +58,15 @@ function WelcomeToProAnimatedSuccessSplashPage() {
               </span>
             </div>
             <div>
-              <h3 className="font-headline-md text-[18px] mb-xs">Unlimited Mock Interviews</h3>
+              <h3 className="font-headline-md text-[18px] mb-1">Unlimited Mock Interviews</h3>
               <p className="font-body-md text-[14px] text-on-surface-variant">
                 Practice with industry-specific AI interviewers anytime.
               </p>
             </div>
           </div>
 
-          <div className="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-3">
-            <div className="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center mr-md flex-shrink-0 group-hover:bg-secondary-container/40 transition-colors">
+          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-3">
+            <div className="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center mr-4 flex-shrink-0 group-hover:bg-secondary-container/40 transition-colors">
               <span
                 className="material-symbols-outlined text-secondary"
                 style={{ fontVariationSettings: "'FILL' 1" }}
@@ -75,15 +75,15 @@ function WelcomeToProAnimatedSuccessSplashPage() {
               </span>
             </div>
             <div>
-              <h3 className="font-headline-md text-[18px] mb-xs">Premium Arena Challenges</h3>
+              <h3 className="font-headline-md text-[18px] mb-1">Premium Arena Challenges</h3>
               <p className="font-body-md text-[14px] text-on-surface-variant">
                 Compete in high-stakes coding and logic challenges for extra visibility.
               </p>
             </div>
           </div>
 
-          <div className="bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-3">
-            <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center mr-md flex-shrink-0 group-hover:bg-primary-container transition-colors">
+          <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-surface-variant flex items-start text-left hover:border-primary transition-colors group animate-fade-in-up stagger-3">
+            <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center mr-4 flex-shrink-0 group-hover:bg-primary-container transition-colors">
               <span
                 className="material-symbols-outlined text-primary"
                 style={{ fontVariationSettings: "'FILL' 1" }}
@@ -92,7 +92,7 @@ function WelcomeToProAnimatedSuccessSplashPage() {
               </span>
             </div>
             <div>
-              <h3 className="font-headline-md text-[18px] mb-xs">Direct Recruiter Credits</h3>
+              <h3 className="font-headline-md text-[18px] mb-1">Direct Recruiter Credits</h3>
               <p className="font-body-md text-[14px] text-on-surface-variant">
                 Send direct messages to hiring managers and recruiters every month.
               </p>
@@ -100,11 +100,11 @@ function WelcomeToProAnimatedSuccessSplashPage() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-md items-center w-full md:w-auto animate-fade-in-up stagger-4">
-          <button className="w-full md:w-auto text-on-primary font-body-md font-semibold py-sm px-xl rounded-lg scale-up-hover shadow-sm shimmer-btn animate-shimmer">
+        <div className="flex flex-col md:flex-row gap-4 items-center w-full md:w-auto animate-fade-in-up stagger-4">
+          <button className="w-full md:w-auto text-on-primary font-body-md font-semibold py-2 px-8 rounded-lg scale-up-hover shadow-sm shimmer-btn animate-shimmer">
             Go to Dashboard
           </button>
-          <button className="w-full md:w-auto bg-surface-container-lowest text-on-surface border border-outline-variant font-body-md font-semibold py-sm px-xl rounded-lg hover:bg-surface-container-low transition-colors">
+          <button className="w-full md:w-auto bg-surface-container-lowest text-on-surface border border-outline-variant font-body-md font-semibold py-2 px-8 rounded-lg hover:bg-surface-container-low transition-colors">
             Explore Pro Features
           </button>
         </div>

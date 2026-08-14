@@ -7,8 +7,8 @@ export const Route = createFileRoute("/mockup/coding_arena_topics")({
 function CodingArenaTopicsPage() {
   return (
     <>
-      <aside className="bg-surface-container-low dark:bg-surface-container-lowest fixed left-0 top-0 h-screen w-sidebar-width flex flex-col p-md gap-base overflow-y-auto shadow-md border-r border-outline-variant z-40 hidden md:flex">
-        <div className="flex items-center gap-sm mb-lg px-sm pt-sm">
+      <aside className="bg-surface-container-low dark:bg-surface-container-lowest fixed left-0 top-0 h-screen w-sidebar-width flex flex-col p-4 gap-base overflow-y-auto shadow-md border-r border-outline-variant z-40 hidden md:flex">
+        <div className="flex items-center gap-2 mb-6 px-2 pt-2">
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container shrink-0">
             <img
               alt="User Avatar"
@@ -29,7 +29,7 @@ function CodingArenaTopicsPage() {
 
         <nav className="flex-1 flex flex-col gap-1">
           <a
-            className="flex items-center gap-md px-sm py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-2 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">
@@ -39,7 +39,7 @@ function CodingArenaTopicsPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-sm py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-2 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">
@@ -49,7 +49,7 @@ function CodingArenaTopicsPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-sm py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-2 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">
@@ -59,7 +59,7 @@ function CodingArenaTopicsPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-sm py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-2 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">
@@ -69,7 +69,7 @@ function CodingArenaTopicsPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-sm py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-2 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">
@@ -79,7 +79,7 @@ function CodingArenaTopicsPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-sm py-2 bg-primary-container text-on-primary-container font-bold rounded-lg translate-x-1 transition-transform group"
+            className="flex items-center gap-4 px-2 py-2 bg-primary-container text-on-primary-container font-bold rounded-lg translate-x-1 transition-transform group"
             href="#"
           >
             <span
@@ -92,7 +92,7 @@ function CodingArenaTopicsPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-sm py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-2 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">
@@ -102,7 +102,7 @@ function CodingArenaTopicsPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-sm py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-2 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">
@@ -112,7 +112,7 @@ function CodingArenaTopicsPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-sm py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-2 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">
@@ -122,7 +122,7 @@ function CodingArenaTopicsPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-sm py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-2 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">
@@ -132,7 +132,7 @@ function CodingArenaTopicsPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-sm py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
+            className="flex items-center gap-4 px-2 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group"
             href="#"
           >
             <span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">
@@ -142,7 +142,7 @@ function CodingArenaTopicsPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-sm py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group mb-4"
+            className="flex items-center gap-4 px-2 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all group mb-4"
             href="#"
           >
             <span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">
@@ -152,7 +152,7 @@ function CodingArenaTopicsPage() {
           </a>
         </nav>
 
-        <div className="mt-auto px-sm pb-sm">
+        <div className="mt-auto px-2 pb-2">
           <button className="w-full bg-primary text-on-primary font-body-md text-body-md font-semibold py-2 rounded-lg hover:bg-primary-fixed-dim hover:text-on-primary-fixed transition-colors shadow-sm">
             Upgrade to Pro
           </button>
@@ -160,8 +160,8 @@ function CodingArenaTopicsPage() {
       </aside>
 
       <main className="flex-1 md:ml-sidebar-width min-h-screen relative bg-grid-pattern">
-        <div className="max-w-container-max mx-auto px-md md:px-xl py-xl pb-32">
-          <header className="flex flex-col md:flex-row md:items-end justify-between gap-md mb-xl">
+        <div className="max-w-container-max mx-auto px-4 md:px-xl py-8 pb-32">
+          <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <span
@@ -193,8 +193,8 @@ function CodingArenaTopicsPage() {
             </div>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-lg">
-            <article className="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),_0_2px_4px_-2px_rgb(0_0_0_/_0.05)] flex flex-col relative overflow-hidden group hover:border-primary-fixed-dim transition-colors duration-300">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <article className="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),_0_2px_4px_-2px_rgb(0_0_0_/_0.05)] flex flex-col relative overflow-hidden group hover:border-primary-fixed-dim transition-colors duration-300">
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
               <header className="flex justify-between items-start mb-6 pl-2">
                 <div className="flex items-center gap-3">
@@ -261,7 +261,7 @@ function CodingArenaTopicsPage() {
               </div>
             </article>
 
-            <article className="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),_0_2px_4px_-2px_rgb(0_0_0_/_0.05)] flex flex-col relative overflow-hidden group hover:border-primary-fixed-dim transition-colors duration-300">
+            <article className="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),_0_2px_4px_-2px_rgb(0_0_0_/_0.05)] flex flex-col relative overflow-hidden group hover:border-primary-fixed-dim transition-colors duration-300">
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
               <header className="flex justify-between items-start mb-6 pl-2">
                 <div className="flex items-center gap-3">
@@ -326,7 +326,7 @@ function CodingArenaTopicsPage() {
               </div>
             </article>
 
-            <article className="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),_0_2px_4px_-2px_rgb(0_0_0_/_0.05)] flex flex-col relative overflow-hidden group hover:border-primary-fixed-dim transition-colors duration-300">
+            <article className="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),_0_2px_4px_-2px_rgb(0_0_0_/_0.05)] flex flex-col relative overflow-hidden group hover:border-primary-fixed-dim transition-colors duration-300">
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-secondary-container"></div>
               <header className="flex justify-between items-start mb-6 pl-2">
                 <div className="flex items-center gap-3">

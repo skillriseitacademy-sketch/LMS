@@ -79,7 +79,7 @@ function Login() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center p-md font-body-md text-body-md text-on-surface antialiased relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center p-4 font-body-md text-body-md text-on-surface antialiased relative overflow-hidden"
       style={{
         backgroundColor: "#faf8ff",
         backgroundImage: `radial-gradient(at 0% 0%, hsla(242, 88%, 65%, 0.15) 0, transparent 50%), radial-gradient(at 100% 100%, hsla(242, 88%, 65%, 0.15) 0, transparent 50%)`,
@@ -90,10 +90,10 @@ function Login() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-surface-variant rounded-full blur-[100px] opacity-60 pointer-events-none"></div>
       
       {/* Main Card Container */}
-      <main className="w-full max-w-[420px] bg-surface-container-lowest rounded-xl p-xl relative z-10 border border-outline-variant/30 shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)]">
+      <main className="w-full max-w-[420px] bg-surface-container-lowest rounded-xl p-8 relative z-10 border border-outline-variant/30 shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)]">
         {/* Header */}
-        <div className="text-center mb-xl">
-          <h1 className="font-headline-lg text-headline-lg text-primary mb-xs">
+        <div className="text-center mb-8">
+          <h1 className="font-headline-lg text-headline-lg text-primary mb-1">
             PlacePro
           </h1>
           <p className="font-body-md text-body-md text-on-surface-variant">
@@ -102,7 +102,7 @@ function Login() {
         </div>
 
         {error && (
-          <div className="mb-md rounded-lg bg-error-container p-3 text-sm text-on-error-container border border-error/20">
+          <div className="mb-4 rounded-lg bg-error-container p-3 text-sm text-on-error-container border border-error/20">
             {error}
           </div>
         )}
@@ -111,7 +111,7 @@ function Login() {
         <button
           onClick={handleGoogleLogin}
           type="button"
-          className="w-full flex items-center justify-center gap-sm py-[10px] px-md border border-outline-variant rounded-lg bg-surface-container-lowest hover:bg-surface-container-low transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 mb-lg"
+          className="w-full flex items-center justify-center gap-2 py-[10px] px-4 border border-outline-variant rounded-lg bg-surface-container-lowest hover:bg-surface-container-low transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 mb-6"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
@@ -123,7 +123,7 @@ function Login() {
         </button>
 
         {/* Divider */}
-        <div className="relative flex items-center py-md mb-md">
+        <div className="relative flex items-center py-4 mb-4">
           <div className="flex-grow border-t border-outline-variant/50"></div>
           <span className="flex-shrink-0 mx-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
             or
@@ -135,11 +135,11 @@ function Login() {
         <form onSubmit={handleSubmit} className="space-y-md">
           {/* Email Field */}
           <div>
-            <label className="block font-label-sm text-label-sm text-on-surface mb-xs" htmlFor="email">
+            <label className="block font-label-sm text-label-sm text-on-surface mb-1" htmlFor="email">
               Email
             </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-md pointer-events-none text-outline">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-outline">
                 <span className="material-symbols-outlined text-[20px]">mail</span>
               </span>
               <input
@@ -150,14 +150,14 @@ function Login() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full pl-[40px] pr-md py-[10px] bg-surface-bright border border-outline-variant rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm placeholder:text-outline"
+                className="block w-full pl-[40px] pr-4 py-[10px] bg-surface-bright border border-outline-variant rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm placeholder:text-outline"
               />
             </div>
           </div>
 
           {/* Password Field */}
           <div>
-            <div className="flex justify-between items-center mb-xs">
+            <div className="flex justify-between items-center mb-1">
               <label className="block font-label-sm text-label-sm text-on-surface" htmlFor="password">
                 Password
               </label>
@@ -170,7 +170,7 @@ function Login() {
               </button>
             </div>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-md pointer-events-none text-outline">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-outline">
                 <span className="material-symbols-outlined text-[20px]">lock</span>
               </span>
               <input
@@ -181,7 +181,7 @@ function Login() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full pl-[40px] pr-md py-[10px] bg-surface-bright border border-outline-variant rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm placeholder:text-outline"
+                className="block w-full pl-[40px] pr-4 py-[10px] bg-surface-bright border border-outline-variant rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm placeholder:text-outline"
               />
             </div>
           </div>
@@ -190,7 +190,7 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-xl bg-primary text-on-primary font-label-sm text-label-sm py-[12px] rounded-lg hover:bg-on-primary-fixed-variant hover:scale-[1.01] active:scale-[0.99] transition-all shadow-sm flex items-center justify-center gap-xs disabled:opacity-70 disabled:hover:scale-100"
+            className="w-full mt-8 bg-primary text-on-primary font-label-sm text-label-sm py-[12px] rounded-lg hover:bg-on-primary-fixed-variant hover:scale-[1.01] active:scale-[0.99] transition-all shadow-sm flex items-center justify-center gap-1 disabled:opacity-70 disabled:hover:scale-100"
           >
             {loading ? "Logging in..." : "Log In"}
             {!loading && <span className="material-symbols-outlined text-[18px]">arrow_forward</span>}
@@ -198,7 +198,7 @@ function Login() {
         </form>
 
         {/* Footer */}
-        <div className="mt-xl text-center">
+        <div className="mt-8 text-center">
           <p className="font-body-md text-body-md text-on-surface-variant">
             Don't have an account?{" "}
             <Link

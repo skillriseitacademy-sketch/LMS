@@ -7,7 +7,7 @@ export const Route = createFileRoute("/mockup/interview_hub_dashboard")({
 function InterviewHubDashboardPage() {
   return (
     <>
-      <header className="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 dark:bg-background/80 backdrop-blur-md flex justify-between items-center px-xl z-40 hidden md:flex border-none">
+      <header className="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface/80 dark:bg-background/80 backdrop-blur-md flex justify-between items-center px-8 z-40 hidden md:flex border-none">
         <div className="flex items-center gap-4 flex-1">
           <div className="relative w-64 focus-within:ring-2 focus-within:ring-primary/20 rounded-full transition-all">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant">
@@ -39,7 +39,7 @@ function InterviewHubDashboardPage() {
         </div>
       </header>
 
-      <nav className="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex flex-col py-lg px-md overflow-y-auto z-50 hidden md:flex border-none">
+      <nav className="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] flex flex-col py-6 px-4 overflow-y-auto z-50 hidden md:flex border-none">
         <div className="mb-8 px-4 flex items-center gap-3">
           <div className="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center text-on-primary-container">
             <span className="material-symbols-outlined icon-fill">rocket_launch</span>
@@ -156,8 +156,8 @@ function InterviewHubDashboardPage() {
         </div>
       </nav>
 
-      <main className="md:ml-sidebar-width pt-16 md:pt-24 min-h-screen px-4 md:px-xl pb-xl max-w-container-max mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-xl">
+      <main className="md:ml-sidebar-width pt-16 md:pt-24 min-h-screen px-4 md:px-xl pb-8 max-w-container-max mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
           <div>
             <h2 className="font-headline-lg text-headline-lg text-on-surface mb-2">
               Interview Hub
@@ -178,7 +178,7 @@ function InterviewHubDashboardPage() {
               Practice Modes
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-surface-container-lowest rounded-[16px] p-lg card-shadow border border-outline-variant/30 hover:border-primary/50 transition-all duration-300 group cursor-pointer relative overflow-hidden">
+              <div className="bg-surface-container-lowest rounded-[16px] p-6 card-shadow border border-outline-variant/30 hover:border-primary/50 transition-all duration-300 group cursor-pointer relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary-fixed/20 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-primary-fixed/40 transition-all"></div>
                 <div className="w-12 h-12 rounded-xl bg-primary-container/10 flex items-center justify-center mb-4 text-primary relative z-10">
                   <span className="material-symbols-outlined text-[28px]">psychology</span>
@@ -195,7 +195,7 @@ function InterviewHubDashboardPage() {
                 </div>
               </div>
 
-              <div className="bg-surface-container-lowest rounded-[16px] p-lg card-shadow border border-outline-variant/30 hover:border-primary/50 transition-all duration-300 group cursor-pointer relative overflow-hidden">
+              <div className="bg-surface-container-lowest rounded-[16px] p-6 card-shadow border border-outline-variant/30 hover:border-primary/50 transition-all duration-300 group cursor-pointer relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-secondary-fixed/20 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-secondary-fixed/40 transition-all"></div>
                 <div className="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center mb-4 text-secondary relative z-10">
                   <span className="material-symbols-outlined text-[28px]">terminal</span>
@@ -212,7 +212,7 @@ function InterviewHubDashboardPage() {
                 </div>
               </div>
 
-              <div className="bg-surface-container-lowest rounded-[16px] p-lg card-shadow border border-outline-variant/30 hover:border-primary/50 transition-all duration-300 group cursor-pointer relative overflow-hidden">
+              <div className="bg-surface-container-lowest rounded-[16px] p-6 card-shadow border border-outline-variant/30 hover:border-primary/50 transition-all duration-300 group cursor-pointer relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-tertiary-fixed/20 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-tertiary-fixed/40 transition-all"></div>
                 <div className="w-12 h-12 rounded-xl bg-tertiary-container/10 flex items-center justify-center mb-4 text-tertiary relative z-10">
                   <span className="material-symbols-outlined text-[28px]">architecture</span>
@@ -241,7 +241,7 @@ function InterviewHubDashboardPage() {
               </button>
             </div>
             <div className="bg-surface-container-lowest rounded-[16px] card-shadow border border-outline-variant/30 overflow-hidden flex flex-col">
-              <div className="p-lg border-b border-surface-variant hover:bg-surface-container-low/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-4 border-l-primary">
+              <div className="p-6 border-b border-surface-variant hover:bg-surface-container-low/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-4 border-l-primary">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl bg-primary-fixed text-on-primary-fixed flex flex-col items-center justify-center shrink-0">
                     <span className="font-label-sm text-label-sm font-bold uppercase">Oct</span>
@@ -267,7 +267,7 @@ function InterviewHubDashboardPage() {
                 </button>
               </div>
 
-              <div className="p-lg border-b border-surface-variant hover:bg-surface-container-low/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-4 border-l-secondary-container">
+              <div className="p-6 border-b border-surface-variant hover:bg-surface-container-low/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-4 border-l-secondary-container">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl bg-surface-container text-on-surface-variant flex flex-col items-center justify-center shrink-0">
                     <span className="font-label-sm text-label-sm font-bold uppercase">Oct</span>
@@ -309,7 +309,7 @@ function InterviewHubDashboardPage() {
                 Practice History
               </h3>
             </div>
-            <div className="bg-surface-container-lowest rounded-[16px] card-shadow border border-outline-variant/30 p-lg flex flex-col gap-4">
+            <div className="bg-surface-container-lowest rounded-[16px] card-shadow border border-outline-variant/30 p-6 flex flex-col gap-4">
               <div className="flex items-center justify-between p-3 rounded-xl hover:bg-surface-container-low transition-colors group cursor-pointer border border-transparent hover:border-outline-variant/30">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">

@@ -7,7 +7,7 @@ export const Route = createFileRoute("/mockup/settings_plan_billing")({
 function SettingsPlanBillingPage() {
   return (
     <>
-      <header className="fixed top-0 right-0 w-full md:w-[calc(100%-280px)] h-16 bg-surface/80 dark:bg-background/80 backdrop-blur-md flex justify-between items-center px-xl z-40">
+      <header className="fixed top-0 right-0 w-full md:w-[calc(100%-280px)] h-16 bg-surface/80 dark:bg-background/80 backdrop-blur-md flex justify-between items-center px-8 z-40">
         <div className="flex items-center flex-1 max-w-md">
           <div className="relative w-full focus-within:ring-2 focus-within:ring-primary/20 rounded-full transition-all">
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant">
@@ -21,14 +21,14 @@ function SettingsPlanBillingPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-md">
+        <div className="flex items-center gap-4">
           <button className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary transition-all hover:bg-surface-container">
             <span className="material-symbols-outlined">notifications</span>
           </button>
           <button className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary transition-all hover:bg-surface-container">
             <span className="material-symbols-outlined">workspace_premium</span>
           </button>
-          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-container-highest cursor-pointer ml-sm">
+          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-container-highest cursor-pointer ml-2">
             <img
               alt="Student Avatar"
               className="w-full h-full object-cover"
@@ -39,8 +39,8 @@ function SettingsPlanBillingPage() {
         </div>
       </header>
 
-      <nav className="hidden md:flex flex-col h-full py-lg px-md w-sidebar-width overflow-y-auto bg-surface-container-lowest dark:bg-inverse-surface shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] fixed left-0 top-0 z-50">
-        <div className="mb-xl px-md flex items-center gap-sm">
+      <nav className="hidden md:flex flex-col h-full py-6 px-4 w-sidebar-width overflow-y-auto bg-surface-container-lowest dark:bg-inverse-surface shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-2px_rgba(0,0,0,0.05)] fixed left-0 top-0 z-50">
+        <div className="mb-8 px-4 flex items-center gap-2">
           <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
             <span className="material-symbols-outlined fill">rocket_launch</span>
           </div>
@@ -54,84 +54,84 @@ function SettingsPlanBillingPage() {
           </div>
         </div>
 
-        <button className="mx-md mb-xl bg-primary text-on-primary font-body-md font-medium py-3 rounded-lg hover:bg-primary/90 transition-transform duration-150 active:scale-[0.98] shadow-sm flex items-center justify-center gap-2">
+        <button className="mx-4 mb-8 bg-primary text-on-primary font-body-md font-medium py-3 rounded-lg hover:bg-primary/90 transition-transform duration-150 active:scale-[0.98] shadow-sm flex items-center justify-center gap-2">
           <span className="material-symbols-outlined text-[20px]">play_arrow</span>
           Start Practice
         </button>
 
         <div className="flex-1 space-y-1">
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">dashboard</span>
             <span className="font-body-md text-body-md font-medium">Dashboard</span>
           </a>
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">rss_feed</span>
             <span className="font-body-md text-body-md font-medium">Feed</span>
           </a>
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">video_chat</span>
             <span className="font-body-md text-body-md font-medium">Interview Hub</span>
           </a>
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">quiz</span>
             <span className="font-body-md text-body-md font-medium">Quizzes</span>
           </a>
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">sports_esports</span>
             <span className="font-body-md text-body-md font-medium">Arena</span>
           </a>
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">work</span>
             <span className="font-body-md text-body-md font-medium">Jobs</span>
           </a>
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">map</span>
             <span className="font-body-md text-body-md font-medium">Roadmap</span>
           </a>
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">description</span>
             <span className="font-body-md text-body-md font-medium">Resume</span>
           </a>
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">leaderboard</span>
             <span className="font-body-md text-body-md font-medium">Leaderboard</span>
           </a>
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">person</span>
             <span className="font-body-md text-body-md font-medium">Profile</span>
           </a>
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">groups</span>
@@ -139,16 +139,16 @@ function SettingsPlanBillingPage() {
           </a>
         </div>
 
-        <div className="mt-auto pt-lg border-t border-surface-container-highest space-y-1">
+        <div className="mt-auto pt-6 border-t border-surface-container-highest space-y-1">
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-primary dark:text-inverse-primary font-bold border-r-4 border-primary dark:border-inverse-primary bg-surface-container-low dark:bg-surface-dim transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-inverse-primary font-bold border-r-4 border-primary dark:border-inverse-primary bg-surface-container-low dark:bg-surface-dim transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined fill">settings</span>
             <span className="font-body-md text-body-md">Settings</span>
           </a>
           <a
-            className="flex items-center gap-3 px-md py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200"
             href="#"
           >
             <span className="material-symbols-outlined">logout</span>
@@ -158,8 +158,8 @@ function SettingsPlanBillingPage() {
       </nav>
 
       <main className="md:ml-sidebar-width pt-16 min-h-screen">
-        <div className="max-w-container-max mx-auto px-md md:px-xl py-xl space-y-xl">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-md">
+        <div className="max-w-container-max mx-auto px-4 md:px-xl py-8 space-y-xl">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h2 className="font-headline-lg text-headline-lg text-on-surface">
                 Plan &amp; Billing
@@ -170,11 +170,11 @@ function SettingsPlanBillingPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg">
-            <div className="lg:col-span-2 glass-card rounded-2xl p-lg flex flex-col justify-between relative overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 glass-card rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl pointer-events-none"></div>
               <div>
-                <div className="flex items-center gap-sm mb-sm">
+                <div className="flex items-center gap-2 mb-2">
                   <span className="font-label-sm text-label-sm uppercase text-outline tracking-wider">
                     Current Plan
                   </span>
@@ -190,7 +190,7 @@ function SettingsPlanBillingPage() {
                   preparation tools.
                 </p>
               </div>
-              <div className="mt-xl flex flex-col sm:flex-row gap-md sm:items-center justify-between border-t border-surface-container-high pt-lg">
+              <div className="mt-8 flex flex-col sm:flex-row gap-4 sm:items-center justify-between border-t border-surface-container-high pt-6">
                 <div>
                   <p className="font-body-md text-body-md font-medium text-on-surface">
                     Free forever
@@ -206,12 +206,12 @@ function SettingsPlanBillingPage() {
               </div>
             </div>
 
-            <div className="glass-card rounded-2xl p-lg flex flex-col justify-between">
+            <div className="glass-card rounded-2xl p-6 flex flex-col justify-between">
               <div>
-                <h4 className="font-label-sm text-label-sm uppercase text-outline tracking-wider mb-md">
+                <h4 className="font-label-sm text-label-sm uppercase text-outline tracking-wider mb-4">
                   Payment Method
                 </h4>
-                <div className="flex items-center gap-md bg-surface-container-low p-sm rounded-lg border border-surface-container-high border-dashed">
+                <div className="flex items-center gap-4 bg-surface-container-low p-2 rounded-lg border border-surface-container-high border-dashed">
                   <div className="w-10 h-10 rounded bg-surface-container-lowest border border-outline-variant flex items-center justify-center text-outline-variant">
                     <span className="material-symbols-outlined">credit_card</span>
                   </div>
@@ -222,14 +222,14 @@ function SettingsPlanBillingPage() {
                   </div>
                 </div>
               </div>
-              <button className="mt-lg w-full bg-surface-container-lowest text-primary border border-surface-container-high font-body-md font-medium py-2 rounded-lg hover:bg-surface-container transition-colors duration-200">
+              <button className="mt-6 w-full bg-surface-container-lowest text-primary border border-surface-container-high font-body-md font-medium py-2 rounded-lg hover:bg-surface-container transition-colors duration-200">
                 Add Payment Method
               </button>
             </div>
           </div>
 
-          <div className="mt-xl">
-            <div className="flex items-center gap-sm mb-lg">
+          <div className="mt-8">
+            <div className="flex items-center gap-2 mb-6">
               <span className="material-symbols-outlined text-secondary-container fill text-[28px]">
                 workspace_premium
               </span>
@@ -237,9 +237,9 @@ function SettingsPlanBillingPage() {
                 Why Upgrade to PlacePro Pro?
               </h3>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
-              <div className="glass-card rounded-xl p-md border-l-4 border-l-secondary-container hover:shadow-md transition-shadow">
-                <div className="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary-container mb-md">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="glass-card rounded-xl p-4 border-l-4 border-l-secondary-container hover:shadow-md transition-shadow">
+                <div className="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary-container mb-4">
                   <span className="material-symbols-outlined">auto_awesome</span>
                 </div>
                 <h4 className="font-body-lg text-body-lg font-medium text-on-surface mb-1">
@@ -250,8 +250,8 @@ function SettingsPlanBillingPage() {
                 </p>
               </div>
 
-              <div className="glass-card rounded-xl p-md border-l-4 border-l-secondary-container hover:shadow-md transition-shadow">
-                <div className="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary-container mb-md">
+              <div className="glass-card rounded-xl p-4 border-l-4 border-l-secondary-container hover:shadow-md transition-shadow">
+                <div className="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary-container mb-4">
                   <span className="material-symbols-outlined">video_camera_front</span>
                 </div>
                 <h4 className="font-body-lg text-body-lg font-medium text-on-surface mb-1">
@@ -262,8 +262,8 @@ function SettingsPlanBillingPage() {
                 </p>
               </div>
 
-              <div className="glass-card rounded-xl p-md border-l-4 border-l-secondary-container hover:shadow-md transition-shadow">
-                <div className="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary-container mb-md">
+              <div className="glass-card rounded-xl p-4 border-l-4 border-l-secondary-container hover:shadow-md transition-shadow">
+                <div className="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary-container mb-4">
                   <span className="material-symbols-outlined">military_tech</span>
                 </div>
                 <h4 className="font-body-lg text-body-lg font-medium text-on-surface mb-1">
@@ -276,8 +276,8 @@ function SettingsPlanBillingPage() {
             </div>
           </div>
 
-          <div className="glass-card rounded-2xl p-lg mt-xl">
-            <div className="flex justify-between items-center mb-lg">
+          <div className="glass-card rounded-2xl p-6 mt-8">
+            <div className="flex justify-between items-center mb-6">
               <h4 className="font-headline-md text-[20px] font-semibold text-on-surface">
                 Billing History
               </h4>
@@ -285,8 +285,8 @@ function SettingsPlanBillingPage() {
                 Download All
               </button>
             </div>
-            <div className="text-center py-xl border border-dashed border-surface-container-high rounded-xl bg-surface-container-lowest">
-              <span className="material-symbols-outlined text-[48px] text-surface-container-highest mb-sm">
+            <div className="text-center py-8 border border-dashed border-surface-container-high rounded-xl bg-surface-container-lowest">
+              <span className="material-symbols-outlined text-[48px] text-surface-container-highest mb-2">
                 receipt_long
               </span>
               <p className="font-body-md text-on-surface-variant">

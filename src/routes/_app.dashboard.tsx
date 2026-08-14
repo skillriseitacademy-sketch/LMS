@@ -45,10 +45,10 @@ function DashboardPage() {
   const firstName = profile?.name ? profile.name.split(" ")[0] : "Student";
 
   return (
-    <div className="p-md md:p-xl max-w-container-max mx-auto w-full">
-      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-lg mb-xl">
+    <div className="p-4 md:p-xl max-w-container-max mx-auto w-full">
+      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-8">
         <div className="flex-1">
-          <h1 className="text-headline-lg font-headline-lg text-on-surface mb-sm">
+          <h1 className="text-headline-lg font-headline-lg text-on-surface mb-2">
             Welcome back, {firstName}! 👋
           </h1>
           <p className="text-body-lg font-body-lg text-on-surface-variant">
@@ -56,9 +56,9 @@ function DashboardPage() {
           </p>
         </div>
 
-        <div className="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant flex items-center gap-xl w-full lg:w-auto shrink-0">
+        <div className="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant flex items-center gap-8 w-full lg:w-auto shrink-0">
           <div className="flex-1 min-w-[200px]">
-            <div className="flex justify-between items-end mb-xs">
+            <div className="flex justify-between items-end mb-1">
               <span className="font-label-sm text-label-sm text-secondary font-bold uppercase">
                 Level {level}
               </span>
@@ -75,7 +75,7 @@ function DashboardPage() {
           </div>
           <div className="w-px h-10 bg-outline-variant mx-2"></div>
 
-          <div className="flex items-center gap-sm">
+          <div className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
               <span
                 className="material-symbols-outlined"
@@ -94,11 +94,11 @@ function DashboardPage() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-lg">
-        <section className="md:col-span-12 grid grid-cols-2 lg:grid-cols-4 gap-md md:gap-lg mb-md">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <section className="md:col-span-12 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-lg mb-4">
           <Link
             to="/interview"
-            className="group bg-surface-container-lowest p-lg rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-md relative overflow-hidden"
+            className="group bg-surface-container-lowest p-6 rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-4 relative overflow-hidden"
           >
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-fixed rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
             <div className="w-12 h-12 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 shadow-sm group-hover:-translate-y-1 transition-transform">
@@ -118,7 +118,7 @@ function DashboardPage() {
 
           <Link
             to="/quizzes"
-            className="group bg-surface-container-lowest p-lg rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-md relative overflow-hidden"
+            className="group bg-surface-container-lowest p-6 rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-4 relative overflow-hidden"
           >
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-fixed rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
             <div className="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center shrink-0 shadow-sm group-hover:-translate-y-1 transition-transform">
@@ -138,7 +138,7 @@ function DashboardPage() {
 
           <Link
             to="/live"
-            className="group bg-surface-container-lowest p-lg rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-md relative overflow-hidden"
+            className="group bg-surface-container-lowest p-6 rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-4 relative overflow-hidden"
           >
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-fixed rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
             <div className="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center shrink-0 shadow-sm group-hover:-translate-y-1 transition-transform">
@@ -158,7 +158,7 @@ function DashboardPage() {
 
           <Link
             to="/arena"
-            className="group bg-surface-container-lowest p-lg rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-md relative overflow-hidden"
+            className="group bg-surface-container-lowest p-6 rounded-[16px] shadow-sm hover:shadow-md border border-outline-variant hover:border-primary-container transition-all flex flex-col items-start gap-4 relative overflow-hidden"
           >
             <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-fixed rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
             <div className="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center shrink-0 shadow-sm group-hover:-translate-y-1 transition-transform">
@@ -177,9 +177,9 @@ function DashboardPage() {
           </Link>
         </section>
 
-        <section className="md:col-span-7 bg-surface-container-lowest rounded-[16px] shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)] border border-outline-variant p-lg flex flex-col">
-          <div className="flex justify-between items-center mb-md pb-sm border-b border-surface-container-highest">
-            <div className="flex items-center gap-sm">
+        <section className="md:col-span-7 bg-surface-container-lowest rounded-[16px] shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)] border border-outline-variant p-6 flex flex-col">
+          <div className="flex justify-between items-center mb-4 pb-2 border-b border-surface-container-highest">
+            <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-secondary">
                 checklist
               </span>
@@ -191,8 +191,8 @@ function DashboardPage() {
               1/3 Completed
             </span>
           </div>
-          <div className="flex flex-col gap-sm flex-1">
-            <label className="flex items-start gap-md p-sm rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer group">
+          <div className="flex flex-col gap-2 flex-1">
+            <label className="flex items-start gap-4 p-2 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer group">
               <div className="relative flex items-center justify-center w-6 h-6 shrink-0 mt-[2px]">
                 <input
                   checked
@@ -212,7 +212,7 @@ function DashboardPage() {
               </div>
             </label>
 
-            <label className="flex items-start gap-md p-sm rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer group border-l-[3px] border-secondary-container pl-[9px]">
+            <label className="flex items-start gap-4 p-2 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer group border-l-[3px] border-secondary-container pl-[9px]">
               <div className="relative flex items-center justify-center w-6 h-6 shrink-0 mt-[2px]">
                 <input
                   className="peer appearance-none w-5 h-5 border border-outline-variant rounded bg-surface-container-lowest checked:bg-primary-container checked:border-primary-container transition-colors cursor-pointer hover:border-primary"
@@ -233,7 +233,7 @@ function DashboardPage() {
               </button>
             </label>
 
-            <label className="flex items-start gap-md p-sm rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer group pl-3">
+            <label className="flex items-start gap-4 p-2 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer group pl-3">
               <div className="relative flex items-center justify-center w-6 h-6 shrink-0 mt-[2px]">
                 <input
                   className="peer appearance-none w-5 h-5 border border-outline-variant rounded bg-surface-container-lowest checked:bg-primary-container checked:border-primary-container transition-colors cursor-pointer hover:border-primary"
@@ -255,9 +255,9 @@ function DashboardPage() {
           </div>
         </section>
 
-        <section className="md:col-span-5 bg-surface-container-lowest rounded-[16px] shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)] border border-outline-variant p-lg flex flex-col">
-          <div className="flex justify-between items-center mb-md pb-sm border-b border-surface-container-highest">
-            <div className="flex items-center gap-sm">
+        <section className="md:col-span-5 bg-surface-container-lowest rounded-[16px] shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)] border border-outline-variant p-6 flex flex-col">
+          <div className="flex justify-between items-center mb-4 pb-2 border-b border-surface-container-highest">
+            <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary">
                 school
               </span>
@@ -273,15 +273,15 @@ function DashboardPage() {
           </div>
           
           {enrolledTopics.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-md">
-              <div className="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-md text-on-surface-variant">
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-4">
+              <div className="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-4 text-on-surface-variant">
                 <span className="material-symbols-outlined text-[32px]">menu_book</span>
               </div>
-              <h3 className="font-body-lg text-on-surface mb-xs">No topics yet</h3>
+              <h3 className="font-body-lg text-on-surface mb-1">No topics yet</h3>
               <p className="font-body-md text-on-surface-variant text-sm">You haven't enrolled in any topics.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-md flex-1 items-center justify-center py-sm">
+            <div className="grid grid-cols-2 gap-4 flex-1 items-center justify-center py-2">
               {enrolledTopics.slice(0, 2).map((topic, i) => {
                 const colors = i === 0 
                   ? "text-primary-container" 
@@ -290,7 +290,7 @@ function DashboardPage() {
                 
                 return (
                   <div key={topic.id || i} className="flex flex-col items-center text-center">
-                    <div className="relative w-24 h-24 mb-sm">
+                    <div className="relative w-24 h-24 mb-2">
                       <svg
                         className={`circular-chart ${colors} w-full h-full drop-shadow-sm`}
                         viewBox="0 0 36 36"
@@ -327,7 +327,7 @@ function DashboardPage() {
             </div>
           )}
           
-          <button className="w-full mt-md py-2 border border-outline-variant rounded-lg font-body-md text-body-md text-primary hover:bg-surface-container-low transition-colors font-medium">
+          <button className="w-full mt-4 py-2 border border-outline-variant rounded-lg font-body-md text-body-md text-primary hover:bg-surface-container-low transition-colors font-medium">
             View All Topics
           </button>
         </section>

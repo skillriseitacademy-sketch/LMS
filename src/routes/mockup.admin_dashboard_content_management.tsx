@@ -7,8 +7,8 @@ export const Route = createFileRoute("/mockup/admin_dashboard_content_management
 function AdminDashboardContentManagementPage() {
   return (
     <>
-      <nav className="fixed left-0 top-0 h-screen w-20 hover:w-sidebar-width transition-all duration-300 bg-surface-dim border-r border-outline-variant shadow-lg z-50 flex flex-col items-center hover:items-start py-lg gap-lg group overflow-hidden">
-        <div className="flex items-center gap-md px-md w-full">
+      <nav className="fixed left-0 top-0 h-screen w-20 hover:w-sidebar-width transition-all duration-300 bg-surface-dim border-r border-outline-variant shadow-lg z-50 flex flex-col items-center hover:items-start py-6 gap-6 group overflow-hidden">
+        <div className="flex items-center gap-4 px-4 w-full">
           <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center shrink-0">
             <span className="material-symbols-outlined text-on-primary">admin_panel_settings</span>
           </div>
@@ -21,9 +21,9 @@ function AdminDashboardContentManagementPage() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-sm w-full px-xs">
+        <div className="flex flex-col gap-2 w-full px-1">
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-xl group-hover/item:text-primary transition-colors">
@@ -34,7 +34,7 @@ function AdminDashboardContentManagementPage() {
             </span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-xl group-hover/item:text-primary transition-colors">
@@ -45,7 +45,7 @@ function AdminDashboardContentManagementPage() {
             </span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-xl group-hover/item:text-primary transition-colors">
@@ -56,7 +56,7 @@ function AdminDashboardContentManagementPage() {
             </span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-xl group-hover/item:text-primary transition-colors">
@@ -67,7 +67,7 @@ function AdminDashboardContentManagementPage() {
             </span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-xl group-hover/item:text-primary transition-colors">
@@ -78,7 +78,7 @@ function AdminDashboardContentManagementPage() {
             </span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-xl group-hover/item:text-primary transition-colors">
@@ -89,7 +89,7 @@ function AdminDashboardContentManagementPage() {
             </span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-xl group-hover/item:text-primary transition-colors">
@@ -100,7 +100,7 @@ function AdminDashboardContentManagementPage() {
             </span>
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors w-full group/item relative"
             href="#"
           >
             <span className="material-symbols-outlined shrink-0 text-xl group-hover/item:text-primary transition-colors">
@@ -112,7 +112,7 @@ function AdminDashboardContentManagementPage() {
           </a>
 
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-primary font-bold bg-surface-container-high w-full group/item relative"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-primary font-bold bg-surface-container-high w-full group/item relative"
             href="#"
           >
             <span
@@ -129,32 +129,32 @@ function AdminDashboardContentManagementPage() {
       </nav>
 
       <main className="ml-20 flex-1 flex flex-col h-screen overflow-y-auto">
-        <header className="bg-surface border-b border-outline-variant shadow-sm docked full-width top-0 sticky z-40 flex justify-between items-center px-lg py-md">
-          <div className="flex items-center gap-md">
-            <button className="md:hidden text-on-surface-variant p-sm rounded-full hover:bg-surface-container-highest transition-colors">
+        <header className="bg-surface border-b border-outline-variant shadow-sm docked full-width top-0 sticky z-40 flex justify-between items-center px-6 py-4">
+          <div className="flex items-center gap-4">
+            <button className="md:hidden text-on-surface-variant p-2 rounded-full hover:bg-surface-container-highest transition-colors">
               <span className="material-symbols-outlined">menu</span>
             </button>
             <div className="text-headline-md font-headline-md font-extrabold text-primary hidden md:block">
               PlacePro Admin
             </div>
           </div>
-          <div className="flex flex-1 max-w-xl mx-md hidden md:flex items-center bg-surface-container-low rounded-full px-md py-sm border border-outline-variant focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
-            <span className="material-symbols-outlined text-on-surface-variant mr-sm">search</span>
+          <div className="flex flex-1 max-w-xl mx-4 hidden md:flex items-center bg-surface-container-low rounded-full px-4 py-2 border border-outline-variant focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+            <span className="material-symbols-outlined text-on-surface-variant mr-2">search</span>
             <input
               className="bg-transparent border-none outline-none text-body-md w-full text-on-surface placeholder:text-on-surface-variant/70 focus:ring-0 p-0"
               placeholder="Search content, users, or settings..."
               type="text"
             />
           </div>
-          <div className="flex items-center gap-sm">
-            <button className="p-sm rounded-full text-on-surface-variant hover:bg-surface-container-highest transition-colors relative">
+          <div className="flex items-center gap-2">
+            <button className="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-highest transition-colors relative">
               <span className="material-symbols-outlined">notifications</span>
               <span className="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
             </button>
-            <button className="p-sm rounded-full text-on-surface-variant hover:bg-surface-container-highest transition-colors">
+            <button className="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-highest transition-colors">
               <span className="material-symbols-outlined">settings</span>
             </button>
-            <div className="ml-sm w-10 h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer">
+            <div className="ml-2 w-10 h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer">
               <img
                 alt="Admin Avatar"
                 className="w-full h-full object-cover"
@@ -164,37 +164,37 @@ function AdminDashboardContentManagementPage() {
             </div>
           </div>
         </header>
-        <div className="p-xl max-w-container-max mx-auto w-full flex flex-col gap-xl">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+        <div className="p-8 max-w-container-max mx-auto w-full flex flex-col gap-8">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="font-headline-lg text-headline-lg text-on-surface">
                 Content Management
               </h1>
-              <p className="font-body-md text-body-md text-on-surface-variant mt-sm">
+              <p className="font-body-md text-body-md text-on-surface-variant mt-2">
                 Overview of platform educational assets and domains.
               </p>
             </div>
             <div className="relative group inline-block">
-              <button className="bg-primary text-on-primary px-lg py-sm rounded-lg font-body-md font-medium flex items-center gap-sm hover:bg-surface-tint transition-colors shadow-sm">
+              <button className="bg-primary text-on-primary px-6 py-2 rounded-lg font-body-md font-medium flex items-center gap-2 hover:bg-surface-tint transition-colors shadow-sm">
                 <span className="material-symbols-outlined text-xl">add</span>
                 Create New
-                <span className="material-symbols-outlined text-sm ml-xs">expand_more</span>
+                <span className="material-symbols-outlined text-sm ml-1">expand_more</span>
               </button>
 
-              <div className="absolute right-0 top-full mt-sm w-48 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 flex flex-col py-xs">
-                <button className="text-left px-md py-sm text-body-md hover:bg-surface-container-high transition-colors text-on-surface flex items-center gap-sm">
+              <div className="absolute right-0 top-full mt-2 w-48 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 flex flex-col py-1">
+                <button className="text-left px-4 py-2 text-body-md hover:bg-surface-container-high transition-colors text-on-surface flex items-center gap-2">
                   <span className="material-symbols-outlined text-lg text-on-surface-variant">
                     topic
                   </span>{" "}
                   Topic
                 </button>
-                <button className="text-left px-md py-sm text-body-md hover:bg-surface-container-high transition-colors text-on-surface flex items-center gap-sm">
+                <button className="text-left px-4 py-2 text-body-md hover:bg-surface-container-high transition-colors text-on-surface flex items-center gap-2">
                   <span className="material-symbols-outlined text-lg text-on-surface-variant">
                     quiz
                   </span>{" "}
                   Quiz
                 </button>
-                <button className="text-left px-md py-sm text-body-md hover:bg-surface-container-high transition-colors text-on-surface flex items-center gap-sm">
+                <button className="text-left px-4 py-2 text-body-md hover:bg-surface-container-high transition-colors text-on-surface flex items-center gap-2">
                   <span className="material-symbols-outlined text-lg text-on-surface-variant">
                     code
                   </span>{" "}
@@ -204,10 +204,10 @@ function AdminDashboardContentManagementPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
-            <div className="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),0_2px_4px_-2px_rgb(0_0_0_/_0.05)] border-l-4 border-l-primary flex items-center justify-between">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),0_2px_4px_-2px_rgb(0_0_0_/_0.05)] border-l-4 border-l-primary flex items-center justify-between">
               <div>
-                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-sm">
+                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-2">
                   Total Topics
                 </div>
                 <div className="font-headline-lg text-headline-lg text-on-surface">45</div>
@@ -218,9 +218,9 @@ function AdminDashboardContentManagementPage() {
                 </span>
               </div>
             </div>
-            <div className="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),0_2px_4px_-2px_rgb(0_0_0_/_0.05)] border-l-4 border-l-primary flex items-center justify-between">
+            <div className="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),0_2px_4px_-2px_rgb(0_0_0_/_0.05)] border-l-4 border-l-primary flex items-center justify-between">
               <div>
-                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-sm">
+                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-2">
                   Active Quizzes
                 </div>
                 <div className="font-headline-lg text-headline-lg text-on-surface">120</div>
@@ -229,9 +229,9 @@ function AdminDashboardContentManagementPage() {
                 <span className="material-symbols-outlined text-primary text-2xl">quiz</span>
               </div>
             </div>
-            <div className="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),0_2px_4px_-2px_rgb(0_0_0_/_0.05)] border-l-4 border-l-primary flex items-center justify-between">
+            <div className="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),0_2px_4px_-2px_rgb(0_0_0_/_0.05)] border-l-4 border-l-primary flex items-center justify-between">
               <div>
-                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-sm">
+                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-2">
                   Coding Challenges
                 </div>
                 <div className="font-headline-lg text-headline-lg text-on-surface">350</div>
@@ -240,9 +240,9 @@ function AdminDashboardContentManagementPage() {
                 <span className="material-symbols-outlined text-primary text-2xl">code_blocks</span>
               </div>
             </div>
-            <div className="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),0_2px_4px_-2px_rgb(0_0_0_/_0.05)] border-l-4 border-l-secondary-container flex items-center justify-between">
+            <div className="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),0_2px_4px_-2px_rgb(0_0_0_/_0.05)] border-l-4 border-l-secondary-container flex items-center justify-between">
               <div>
-                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-sm">
+                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-2">
                   Pending Reviews
                 </div>
                 <div className="font-headline-lg text-headline-lg text-on-surface">12</div>
@@ -255,13 +255,13 @@ function AdminDashboardContentManagementPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-xl">
-            <div className="lg:col-span-1 flex flex-col gap-md">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-1 flex flex-col gap-4">
               <h2 className="font-headline-md text-headline-md text-on-surface">Major Domains</h2>
               <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.05),0_2px_4px_-2px_rgb(0_0_0_/_0.05)] overflow-hidden">
-                <div className="p-lg border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer group">
-                  <div className="flex justify-between items-center mb-sm">
-                    <div className="flex items-center gap-sm">
+                <div className="p-6 border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer group">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded bg-primary-container flex items-center justify-center">
                         <span className="material-symbols-outlined text-on-primary-container text-sm">
                           account_tree
@@ -275,10 +275,10 @@ function AdminDashboardContentManagementPage() {
                       24 Modules
                     </span>
                   </div>
-                  <div className="w-full bg-surface-container-high rounded-full h-2 mt-md">
+                  <div className="w-full bg-surface-container-high rounded-full h-2 mt-4">
                     <div className="bg-primary h-2 rounded-full" style={{ width: "85%" }}></div>
                   </div>
-                  <div className="flex justify-between items-center mt-xs">
+                  <div className="flex justify-between items-center mt-1">
                     <span className="font-label-sm text-label-sm text-on-surface-variant">
                       Avg Completion
                     </span>
@@ -286,9 +286,9 @@ function AdminDashboardContentManagementPage() {
                   </div>
                 </div>
 
-                <div className="p-lg border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer group">
-                  <div className="flex justify-between items-center mb-sm">
-                    <div className="flex items-center gap-sm">
+                <div className="p-6 border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer group">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded bg-primary-container flex items-center justify-center">
                         <span className="material-symbols-outlined text-on-primary-container text-sm">
                           architecture
@@ -302,10 +302,10 @@ function AdminDashboardContentManagementPage() {
                       18 Modules
                     </span>
                   </div>
-                  <div className="w-full bg-surface-container-high rounded-full h-2 mt-md">
+                  <div className="w-full bg-surface-container-high rounded-full h-2 mt-4">
                     <div className="bg-primary h-2 rounded-full" style={{ width: "62%" }}></div>
                   </div>
-                  <div className="flex justify-between items-center mt-xs">
+                  <div className="flex justify-between items-center mt-1">
                     <span className="font-label-sm text-label-sm text-on-surface-variant">
                       Avg Completion
                     </span>
@@ -313,9 +313,9 @@ function AdminDashboardContentManagementPage() {
                   </div>
                 </div>
 
-                <div className="p-lg hover:bg-surface-container-low transition-colors cursor-pointer group">
-                  <div className="flex justify-between items-center mb-sm">
-                    <div className="flex items-center gap-sm">
+                <div className="p-6 hover:bg-surface-container-low transition-colors cursor-pointer group">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded bg-primary-container flex items-center justify-center">
                         <span className="material-symbols-outlined text-on-primary-container text-sm">
                           functions
@@ -329,10 +329,10 @@ function AdminDashboardContentManagementPage() {
                       32 Modules
                     </span>
                   </div>
-                  <div className="w-full bg-surface-container-high rounded-full h-2 mt-md">
+                  <div className="w-full bg-surface-container-high rounded-full h-2 mt-4">
                     <div className="bg-primary h-2 rounded-full" style={{ width: "78%" }}></div>
                   </div>
-                  <div className="flex justify-between items-center mt-xs">
+                  <div className="flex justify-between items-center mt-1">
                     <span className="font-label-sm text-label-sm text-on-surface-variant">
                       Avg Completion
                     </span>
@@ -342,12 +342,12 @@ function AdminDashboardContentManagementPage() {
               </div>
             </div>
 
-            <div className="lg:col-span-2 flex flex-col gap-md">
+            <div className="lg:col-span-2 flex flex-col gap-4">
               <div className="flex justify-between items-center">
                 <h2 className="font-headline-md text-headline-md text-on-surface">
                   Recent Content
                 </h2>
-                <button className="text-primary font-label-sm text-label-sm font-bold hover:underline flex items-center gap-xs">
+                <button className="text-primary font-label-sm text-label-sm font-bold hover:underline flex items-center gap-1">
                   View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
                 </button>
               </div>
@@ -355,26 +355,26 @@ function AdminDashboardContentManagementPage() {
                 <table className="w-full text-left border-collapse min-w-[600px]">
                   <thead>
                     <tr className="bg-surface-container-low border-b border-outline-variant">
-                      <th className="p-lg font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
+                      <th className="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
                         Name
                       </th>
-                      <th className="p-lg font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
+                      <th className="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
                         Type
                       </th>
-                      <th className="p-lg font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
+                      <th className="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
                         Author
                       </th>
-                      <th className="p-lg font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
+                      <th className="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
                         Status
                       </th>
-                      <th className="p-lg font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">
+                      <th className="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">
                         Last Updated
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant">
                     <tr className="hover:bg-surface-container-lowest/50 transition-colors">
-                      <td className="p-lg">
+                      <td className="p-6">
                         <div className="font-body-md font-medium text-on-surface">
                           Advanced Trees Mastery
                         </div>
@@ -382,24 +382,24 @@ function AdminDashboardContentManagementPage() {
                           Data Structures
                         </div>
                       </td>
-                      <td className="p-lg">
-                        <span className="inline-flex items-center gap-xs bg-primary-fixed-dim/20 text-primary px-2 py-1 rounded font-label-sm text-label-sm">
+                      <td className="p-6">
+                        <span className="inline-flex items-center gap-1 bg-primary-fixed-dim/20 text-primary px-2 py-1 rounded font-label-sm text-label-sm">
                           <span className="material-symbols-outlined text-[14px]">quiz</span> Quiz
                         </span>
                       </td>
-                      <td className="p-lg font-body-md text-on-surface-variant">Dr. Alan Turing</td>
-                      <td className="p-lg">
-                        <span className="inline-flex items-center gap-xs text-secondary-container font-label-sm text-label-sm">
+                      <td className="p-6 font-body-md text-on-surface-variant">Dr. Alan Turing</td>
+                      <td className="p-6">
+                        <span className="inline-flex items-center gap-1 text-secondary-container font-label-sm text-label-sm">
                           <span className="w-2 h-2 rounded-full bg-secondary-container"></span>{" "}
                           Draft
                         </span>
                       </td>
-                      <td className="p-lg font-body-md text-on-surface-variant text-right">
+                      <td className="p-6 font-body-md text-on-surface-variant text-right">
                         2 hrs ago
                       </td>
                     </tr>
                     <tr className="hover:bg-surface-container-lowest/50 transition-colors">
-                      <td className="p-lg">
+                      <td className="p-6">
                         <div className="font-body-md font-medium text-on-surface">
                           Microservices vs Monoliths
                         </div>
@@ -407,23 +407,23 @@ function AdminDashboardContentManagementPage() {
                           System Design
                         </div>
                       </td>
-                      <td className="p-lg">
-                        <span className="inline-flex items-center gap-xs bg-surface-variant text-on-surface-variant px-2 py-1 rounded font-label-sm text-label-sm">
+                      <td className="p-6">
+                        <span className="inline-flex items-center gap-1 bg-surface-variant text-on-surface-variant px-2 py-1 rounded font-label-sm text-label-sm">
                           <span className="material-symbols-outlined text-[14px]">topic</span> Topic
                         </span>
                       </td>
-                      <td className="p-lg font-body-md text-on-surface-variant">Grace Hopper</td>
-                      <td className="p-lg">
-                        <span className="inline-flex items-center gap-xs text-primary font-label-sm text-label-sm">
+                      <td className="p-6 font-body-md text-on-surface-variant">Grace Hopper</td>
+                      <td className="p-6">
+                        <span className="inline-flex items-center gap-1 text-primary font-label-sm text-label-sm">
                           <span className="w-2 h-2 rounded-full bg-primary"></span> Live
                         </span>
                       </td>
-                      <td className="p-lg font-body-md text-on-surface-variant text-right">
+                      <td className="p-6 font-body-md text-on-surface-variant text-right">
                         5 hrs ago
                       </td>
                     </tr>
                     <tr className="hover:bg-surface-container-lowest/50 transition-colors">
-                      <td className="p-lg">
+                      <td className="p-6">
                         <div className="font-body-md font-medium text-on-surface">
                           Two Pointers Pattern
                         </div>
@@ -431,24 +431,24 @@ function AdminDashboardContentManagementPage() {
                           Algorithms
                         </div>
                       </td>
-                      <td className="p-lg">
-                        <span className="inline-flex items-center gap-xs bg-primary-fixed-dim/20 text-primary px-2 py-1 rounded font-label-sm text-label-sm">
+                      <td className="p-6">
+                        <span className="inline-flex items-center gap-1 bg-primary-fixed-dim/20 text-primary px-2 py-1 rounded font-label-sm text-label-sm">
                           <span className="material-symbols-outlined text-[14px]">code</span>{" "}
                           Challenge
                         </span>
                       </td>
-                      <td className="p-lg font-body-md text-on-surface-variant">Ada Lovelace</td>
-                      <td className="p-lg">
-                        <span className="inline-flex items-center gap-xs text-primary font-label-sm text-label-sm">
+                      <td className="p-6 font-body-md text-on-surface-variant">Ada Lovelace</td>
+                      <td className="p-6">
+                        <span className="inline-flex items-center gap-1 text-primary font-label-sm text-label-sm">
                           <span className="w-2 h-2 rounded-full bg-primary"></span> Live
                         </span>
                       </td>
-                      <td className="p-lg font-body-md text-on-surface-variant text-right">
+                      <td className="p-6 font-body-md text-on-surface-variant text-right">
                         1 day ago
                       </td>
                     </tr>
                     <tr className="hover:bg-surface-container-lowest/50 transition-colors">
-                      <td className="p-lg">
+                      <td className="p-6">
                         <div className="font-body-md font-medium text-on-surface">
                           SQL Indexing Deep Dive
                         </div>
@@ -456,19 +456,19 @@ function AdminDashboardContentManagementPage() {
                           DBMS
                         </div>
                       </td>
-                      <td className="p-lg">
-                        <span className="inline-flex items-center gap-xs bg-surface-variant text-on-surface-variant px-2 py-1 rounded font-label-sm text-label-sm">
+                      <td className="p-6">
+                        <span className="inline-flex items-center gap-1 bg-surface-variant text-on-surface-variant px-2 py-1 rounded font-label-sm text-label-sm">
                           <span className="material-symbols-outlined text-[14px]">topic</span> Topic
                         </span>
                       </td>
-                      <td className="p-lg font-body-md text-on-surface-variant">E.F. Codd</td>
-                      <td className="p-lg">
-                        <span className="inline-flex items-center gap-xs text-tertiary-container font-label-sm text-label-sm">
+                      <td className="p-6 font-body-md text-on-surface-variant">E.F. Codd</td>
+                      <td className="p-6">
+                        <span className="inline-flex items-center gap-1 text-tertiary-container font-label-sm text-label-sm">
                           <span className="w-2 h-2 rounded-full bg-tertiary-container"></span> Needs
                           Review
                         </span>
                       </td>
-                      <td className="p-lg font-body-md text-on-surface-variant text-right">
+                      <td className="p-6 font-body-md text-on-surface-variant text-right">
                         2 days ago
                       </td>
                     </tr>
@@ -477,7 +477,7 @@ function AdminDashboardContentManagementPage() {
               </div>
             </div>
           </div>
-          <div className="py-xl w-full flex justify-center mt-auto">
+          <div className="py-8 w-full flex justify-center mt-auto">
             <p className="font-label-sm text-label-sm text-on-surface-variant">
               © 2024 PlacePro Career OS. Admin Console.
             </p>

@@ -7,8 +7,8 @@ export const Route = createFileRoute("/mockup/resume_builder_ai_optimization_hub
 function ResumeBuilderAiOptimizationHubPage() {
   return (
     <>
-      <nav className="bg-surface-container-lowest shadow-sm w-sidebar-width h-full fixed left-0 top-0 flex flex-col h-full py-lg px-md z-50">
-        <div className="mb-xl flex items-center gap-sm">
+      <nav className="bg-surface-container-lowest shadow-sm w-sidebar-width h-full fixed left-0 top-0 flex flex-col h-full py-6 px-4 z-50">
+        <div className="mb-8 flex items-center gap-2">
           <span
             className="material-symbols-outlined text-primary text-3xl"
             style={{ fontVariationSettings: "'FILL' 1" }}
@@ -20,13 +20,13 @@ function ResumeBuilderAiOptimizationHubPage() {
             <p className="font-label-sm text-label-sm text-outline">Career OS</p>
           </div>
         </div>
-        <button className="w-full bg-primary-container text-on-primary py-sm px-md rounded-lg font-body-md font-medium mb-xl hover:bg-primary transition-colors hover:-translate-y-0.5 duration-200">
+        <button className="w-full bg-primary-container text-on-primary py-2 px-4 rounded-lg font-body-md font-medium mb-8 hover:bg-primary transition-colors hover:-translate-y-0.5 duration-200">
           Start Daily Challenge
         </button>
         <ul className="flex-1 space-y-sm overflow-y-auto">
           <li>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
               href="#"
             >
               <span className="material-symbols-outlined">dashboard</span> Dashboard
@@ -34,7 +34,7 @@ function ResumeBuilderAiOptimizationHubPage() {
           </li>
           <li>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
               href="#"
             >
               <span className="material-symbols-outlined">forum</span> Feed
@@ -42,7 +42,7 @@ function ResumeBuilderAiOptimizationHubPage() {
           </li>
           <li>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
               href="#"
             >
               <span className="material-symbols-outlined">record_voice_over</span> Interview Hub
@@ -50,7 +50,7 @@ function ResumeBuilderAiOptimizationHubPage() {
           </li>
           <li>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
               href="#"
             >
               <span className="material-symbols-outlined">quiz</span> Quizzes
@@ -58,7 +58,7 @@ function ResumeBuilderAiOptimizationHubPage() {
           </li>
           <li>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
               href="#"
             >
               <span className="material-symbols-outlined">sports_esports</span> Arena
@@ -66,7 +66,7 @@ function ResumeBuilderAiOptimizationHubPage() {
           </li>
           <li>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
               href="#"
             >
               <span className="material-symbols-outlined">work</span> Jobs
@@ -74,7 +74,7 @@ function ResumeBuilderAiOptimizationHubPage() {
           </li>
           <li>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
               href="#"
             >
               <span className="material-symbols-outlined">map</span> Roadmap
@@ -82,7 +82,7 @@ function ResumeBuilderAiOptimizationHubPage() {
           </li>
           <li>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container-low"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container-low"
               href="#"
             >
               <span className="material-symbols-outlined">description</span> Resume
@@ -90,7 +90,7 @@ function ResumeBuilderAiOptimizationHubPage() {
           </li>
           <li>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
               href="#"
             >
               <span className="material-symbols-outlined">leaderboard</span> Leaderboard
@@ -98,7 +98,7 @@ function ResumeBuilderAiOptimizationHubPage() {
           </li>
           <li>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
               href="#"
             >
               <span className="material-symbols-outlined">person</span> Profile
@@ -106,22 +106,22 @@ function ResumeBuilderAiOptimizationHubPage() {
           </li>
           <li>
             <a
-              className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+              className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
               href="#"
             >
               <span className="material-symbols-outlined">groups</span> Rooms
             </a>
           </li>
         </ul>
-        <div className="mt-auto pt-md border-t border-outline-variant/30 space-y-sm">
+        <div className="mt-auto pt-4 border-t border-outline-variant/30 space-y-sm">
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
             href="#"
           >
             <span className="material-symbols-outlined">settings</span> Settings
           </a>
           <a
-            className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+            className="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
             href="#"
           >
             <span className="material-symbols-outlined">help</span> Help
@@ -130,7 +130,7 @@ function ResumeBuilderAiOptimizationHubPage() {
       </nav>
 
       <div className="flex-1 ml-sidebar-width flex flex-col min-h-screen relative">
-        <header className="bg-surface border-b border-outline-variant/30 docked full-width top-0 sticky z-40 flex justify-between items-center w-full h-16 px-xl max-w-container-max mx-auto">
+        <header className="bg-surface border-b border-outline-variant/30 docked full-width top-0 sticky z-40 flex justify-between items-center w-full h-16 px-8 max-w-container-max mx-auto">
           <div className="flex-1 max-w-md relative">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
               search
@@ -141,8 +141,8 @@ function ResumeBuilderAiOptimizationHubPage() {
               type="text"
             />
           </div>
-          <div className="flex items-center gap-md">
-            <button className="bg-secondary-container text-on-secondary-container px-sm py-xs rounded-full font-label-sm flex items-center gap-1 hover:opacity-90 transition-opacity">
+          <div className="flex items-center gap-4">
+            <button className="bg-secondary-container text-on-secondary-container px-2 py-1 rounded-full font-label-sm flex items-center gap-1 hover:opacity-90 transition-opacity">
               <span className="material-symbols-outlined text-sm">stars</span> 1,250 XP
             </button>
             <button className="text-primary font-medium hover:text-primary-fixed transition-colors">
@@ -156,28 +156,28 @@ function ResumeBuilderAiOptimizationHubPage() {
             </button>
             <img
               alt="Student avatar"
-              className="w-8 h-8 rounded-full object-cover border border-outline-variant ml-sm"
+              className="w-8 h-8 rounded-full object-cover border border-outline-variant ml-2"
               data-alt="A small, circular avatar portrait of a young professional student with a bright, welcoming expression, set against a clean white background in a well-lit studio environment, maintaining a polished corporate modern aesthetic."
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuBu4bxE6rJoDpXUPt0mQRxhe8AVqTTEiXr35W5MfJKyTcBB23PJU7sILuZuxJjPmL9vuGiGeG_0IChB3oCfIzA1eppzWzxot9CK2QGL3Vfv3aHG7h_66JFO1DtFxlSrJYi26Z16xlvYl9HtOd-lN-O4w0LYOuwNGVZAGMHNb-oL4FxOmv_26HGaC8s9VzmLYZsbF20OLG6rKHgMsfS_Xj8-GhKxBFm6Lkor7Js1pBcENIZ8bw1TE2lCKA"
             />
           </div>
         </header>
 
-        <main className="flex-1 w-full max-w-container-max mx-auto p-xl">
-          <div className="flex justify-between items-end mb-lg">
+        <main className="flex-1 w-full max-w-container-max mx-auto p-8">
+          <div className="flex justify-between items-end mb-6">
             <div>
-              <h2 className="font-headline-lg text-headline-lg font-bold text-on-background mb-xs">
+              <h2 className="font-headline-lg text-headline-lg font-bold text-on-background mb-1">
                 AI Optimization Hub
               </h2>
               <p className="text-on-surface-variant font-body-lg text-body-lg">
                 Supercharge your resume with real-time AI insights.
               </p>
             </div>
-            <div className="flex gap-md">
-              <button className="px-md py-sm rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2">
+            <div className="flex gap-4">
+              <button className="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-2">
                 <span className="material-symbols-outlined">autorenew</span> Re-Scan Resume
               </button>
-              <button className="px-md py-sm rounded-lg bg-primary text-on-primary hover:bg-primary-container hover:-translate-y-0.5 transition-all flex items-center gap-2 shadow-sm font-medium">
+              <button className="px-4 py-2 rounded-lg bg-primary text-on-primary hover:bg-primary-container hover:-translate-y-0.5 transition-all flex items-center gap-2 shadow-sm font-medium">
                 <span
                   className="material-symbols-outlined"
                   style={{ fontVariationSettings: "'FILL' 1" }}
@@ -189,13 +189,13 @@ function ResumeBuilderAiOptimizationHubPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-lg h-[calc(100vh-200px)] min-h-[600px]">
-            <div className="lg:col-span-3 bg-surface-container-lowest rounded-xl card-shadow p-lg flex flex-col border-l-4 border-secondary-fixed-dim">
-              <div className="flex items-center gap-2 mb-md">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-200px)] min-h-[600px]">
+            <div className="lg:col-span-3 bg-surface-container-lowest rounded-xl card-shadow p-6 flex flex-col border-l-4 border-secondary-fixed-dim">
+              <div className="flex items-center gap-2 mb-4">
                 <span className="material-symbols-outlined text-secondary-container">radar</span>
                 <h3 className="font-headline-md text-base font-semibold">Keyword Analysis</h3>
               </div>
-              <p className="font-label-sm text-label-sm text-outline mb-md">
+              <p className="font-label-sm text-label-sm text-outline mb-4">
                 Match vs. Target Role (SDE II)
               </p>
               <div className="flex-1 flex flex-wrap content-start gap-2 overflow-y-auto pr-1 custom-scrollbar">
@@ -231,7 +231,7 @@ function ResumeBuilderAiOptimizationHubPage() {
                   REST APIs
                 </span>
               </div>
-              <div className="mt-md pt-md border-t border-outline-variant/30">
+              <div className="mt-4 pt-4 border-t border-outline-variant/30">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-sm font-medium">Match Score</span>
                   <span className="text-sm font-bold text-secondary-container">68%</span>
@@ -245,13 +245,13 @@ function ResumeBuilderAiOptimizationHubPage() {
               </div>
             </div>
 
-            <div className="lg:col-span-4 bg-surface-container-lowest rounded-xl card-shadow p-lg flex flex-col border-l-4 border-primary">
-              <div className="flex items-center gap-2 mb-md">
+            <div className="lg:col-span-4 bg-surface-container-lowest rounded-xl card-shadow p-6 flex flex-col border-l-4 border-primary">
+              <div className="flex items-center gap-2 mb-4">
                 <span className="material-symbols-outlined text-primary">fact_check</span>
                 <h3 className="font-headline-md text-base font-semibold">Content Quality</h3>
               </div>
               <div className="flex-1 space-y-md overflow-y-auto pr-1 custom-scrollbar">
-                <div className="flex items-start gap-md p-md rounded-lg bg-surface-container-low border border-outline-variant/50">
+                <div className="flex items-start gap-4 p-4 rounded-lg bg-surface-container-low border border-outline-variant/50">
                   <span
                     className="material-symbols-outlined text-green-600 mt-0.5"
                     style={{ fontVariationSettings: "'FILL' 1" }}
@@ -265,7 +265,7 @@ function ResumeBuilderAiOptimizationHubPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start gap-md p-md rounded-lg bg-secondary-fixed/20 border border-secondary-fixed">
+                <div className="flex items-start gap-4 p-4 rounded-lg bg-secondary-fixed/20 border border-secondary-fixed">
                   <span
                     className="material-symbols-outlined text-secondary mt-0.5"
                     style={{ fontVariationSettings: "'FILL' 1" }}
@@ -286,7 +286,7 @@ function ResumeBuilderAiOptimizationHubPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-start gap-md p-md rounded-lg bg-surface-container-low border border-outline-variant/50">
+                <div className="flex items-start gap-4 p-4 rounded-lg bg-surface-container-low border border-outline-variant/50">
                   <span
                     className="material-symbols-outlined text-green-600 mt-0.5"
                     style={{ fontVariationSettings: "'FILL' 1" }}
@@ -300,7 +300,7 @@ function ResumeBuilderAiOptimizationHubPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start gap-md p-md rounded-lg bg-primary/5 border border-primary/20">
+                <div className="flex items-start gap-4 p-4 rounded-lg bg-primary/5 border border-primary/20">
                   <span
                     className="material-symbols-outlined text-primary mt-0.5"
                     style={{ fontVariationSettings: "'FILL' 1" }}
@@ -318,9 +318,9 @@ function ResumeBuilderAiOptimizationHubPage() {
               </div>
             </div>
 
-            <div className="lg:col-span-5 bg-surface-container-lowest rounded-xl card-shadow p-lg flex flex-col relative overflow-hidden">
+            <div className="lg:col-span-5 bg-surface-container-lowest rounded-xl card-shadow p-6 flex flex-col relative overflow-hidden">
               <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
-              <div className="flex justify-between items-center mb-md relative z-10">
+              <div className="flex justify-between items-center mb-4 relative z-10">
                 <div className="flex items-center gap-2">
                   <span
                     className="material-symbols-outlined text-primary"
@@ -335,7 +335,7 @@ function ResumeBuilderAiOptimizationHubPage() {
                 </span>
               </div>
               <div className="flex-1 space-y-md overflow-y-auto pr-1 custom-scrollbar relative z-10">
-                <div className="border border-outline-variant rounded-lg p-md bg-white hover:border-primary/50 transition-colors group">
+                <div className="border border-outline-variant rounded-lg p-4 bg-white hover:border-primary/50 transition-colors group">
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-xs font-label-sm text-outline uppercase tracking-wider">
                       Experience &gt; Role 1
@@ -369,7 +369,7 @@ function ResumeBuilderAiOptimizationHubPage() {
                   </div>
                 </div>
 
-                <div className="border border-outline-variant rounded-lg p-md bg-white hover:border-primary/50 transition-colors group">
+                <div className="border border-outline-variant rounded-lg p-4 bg-white hover:border-primary/50 transition-colors group">
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-xs font-label-sm text-outline uppercase tracking-wider">
                       Projects &gt; Project A

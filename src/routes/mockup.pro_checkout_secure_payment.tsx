@@ -8,7 +8,7 @@ function ProCheckoutSecurePaymentPage() {
   return (
     <>
       <header className="bg-surface dark:bg-on-surface shadow-sm sticky docked full-width top-0 z-50">
-        <div className="flex justify-between items-center w-full px-lg py-sm max-w-container-max mx-auto">
+        <div className="flex justify-between items-center w-full px-6 py-2 max-w-container-max mx-auto">
           <div className="flex items-center gap-2">
             <span
               className="material-symbols-outlined text-primary"
@@ -20,7 +20,7 @@ function ProCheckoutSecurePaymentPage() {
               PlacePro Pro
             </span>
           </div>
-          <div className="flex items-center gap-md">
+          <div className="flex items-center gap-4">
             <button className="p-2 rounded-full hover:bg-surface-variant transition-colors text-on-surface-variant hover:text-primary duration-200">
               <span className="material-symbols-outlined">help</span>
             </button>
@@ -31,24 +31,24 @@ function ProCheckoutSecurePaymentPage() {
         </div>
       </header>
 
-      <main className="flex-grow w-full max-w-container-max mx-auto px-md lg:px-xl py-xl">
-        <div className="mb-xl flex items-center justify-between">
+      <main className="flex-grow w-full max-w-container-max mx-auto px-4 lg:px-xl py-8">
+        <div className="mb-8 flex items-center justify-between">
           <h1 className="font-headline-lg text-headline-lg text-on-surface">Secure Checkout</h1>
           <div className="hidden md:flex items-center gap-2 text-on-surface-variant bg-surface-container-low px-4 py-2 rounded-full">
             <span className="material-symbols-outlined text-sm">lock</span>
             <span className="font-label-sm text-label-sm">256-bit SSL Encrypted</span>
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-xl items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-7 space-y-lg">
-            <section className="bg-surface-container-lowest rounded-xl p-lg custom-shadow border border-surface-container-low relative overflow-hidden">
+            <section className="bg-surface-container-lowest rounded-xl p-6 custom-shadow border border-surface-container-low relative overflow-hidden">
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
-              <h2 className="font-headline-md text-headline-md text-on-surface mb-lg flex items-center gap-2">
+              <h2 className="font-headline-md text-headline-md text-on-surface mb-6 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">credit_card</span>
                 Payment Method
               </h2>
               <div className="space-y-md">
-                <div className="grid grid-cols-2 gap-sm mb-md">
+                <div className="grid grid-cols-2 gap-2 mb-4">
                   <label className="cursor-pointer">
                     <input checked="" className="peer sr-only" name="payment_method" type="radio" />
                     <div className="rounded-lg border-2 border-primary bg-surface-container-low p-4 flex items-center gap-3 peer-checked:bg-surface-container-high transition-colors">
@@ -105,7 +105,7 @@ function ProCheckoutSecurePaymentPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-md">
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label
                         className="block font-label-sm text-label-sm text-on-surface-variant mb-1"
@@ -158,8 +158,8 @@ function ProCheckoutSecurePaymentPage() {
               </div>
             </section>
 
-            <section className="bg-surface-container-lowest rounded-xl p-lg custom-shadow border border-surface-container-low">
-              <h2 className="font-headline-md text-headline-md text-on-surface mb-lg flex items-center gap-2">
+            <section className="bg-surface-container-lowest rounded-xl p-6 custom-shadow border border-surface-container-low">
+              <h2 className="font-headline-md text-headline-md text-on-surface mb-6 flex items-center gap-2">
                 <span className="material-symbols-outlined text-on-surface-variant">
                   location_on
                 </span>
@@ -210,13 +210,13 @@ function ProCheckoutSecurePaymentPage() {
           </div>
 
           <div className="lg:col-span-5 space-y-lg">
-            <section className="bg-surface-container-lowest rounded-xl p-lg custom-shadow border border-surface-container-low relative">
+            <section className="bg-surface-container-lowest rounded-xl p-6 custom-shadow border border-surface-container-low relative">
               <div className="absolute -inset-1 bg-gradient-to-br from-primary/20 to-secondary-container/20 rounded-2xl blur-lg -z-10 opacity-50"></div>
-              <h2 className="font-headline-md text-headline-md text-on-surface mb-md">
+              <h2 className="font-headline-md text-headline-md text-on-surface mb-4">
                 Order Summary
               </h2>
 
-              <div className="bg-surface-container-low rounded-lg p-4 mb-lg border border-surface-variant flex items-start justify-between">
+              <div className="bg-surface-container-low rounded-lg p-4 mb-6 border border-surface-variant flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-bold text-on-surface">PlacePro Pro</span>
@@ -232,7 +232,7 @@ function ProCheckoutSecurePaymentPage() {
                 </div>
               </div>
 
-              <div className="mb-lg flex gap-2">
+              <div className="mb-6 flex gap-2">
                 <input
                   className="flex-grow rounded-lg border border-outline-variant bg-surface-bright px-4 py-2 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-shadow"
                   placeholder="Promo Code"
@@ -243,7 +243,7 @@ function ProCheckoutSecurePaymentPage() {
                 </button>
               </div>
 
-              <div className="space-y-3 mb-xl">
+              <div className="space-y-3 mb-8">
                 <div className="flex justify-between text-on-surface-variant">
                   <span>Subtotal</span>
                   <span>₹2,999</span>
@@ -274,7 +274,7 @@ function ProCheckoutSecurePaymentPage() {
               </p>
             </section>
 
-            <section className="bg-surface-container-lowest rounded-xl p-lg custom-shadow border border-surface-container-low">
+            <section className="bg-surface-container-lowest rounded-xl p-6 custom-shadow border border-surface-container-low">
               <h3 className="font-bold text-on-surface mb-4 flex items-center gap-2">
                 <span
                   className="material-symbols-outlined text-secondary-container"
