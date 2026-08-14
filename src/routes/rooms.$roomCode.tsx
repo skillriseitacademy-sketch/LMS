@@ -126,6 +126,8 @@ function RoomView() {
   const [isChatExpanded, setIsChatExpanded] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recordedChunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -141,6 +143,56 @@ function RoomView() {
     const m = Math.floor(seconds / 60).toString().padStart(2, "0");
     const s = (seconds % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
+  };
+
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: { displaySurface: "browser" } as any,
+        audio: true
+      });
+      
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+      mediaRecorderRef.current = mediaRecorder;
+      recordedChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          recordedChunksRef.current.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `Meeting_Recording_${new Date().getTime()}.webm`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        setIsRecording(false);
+      };
+
+      stream.getVideoTracks()[0].onended = () => {
+        handleStopRecording();
+      };
+
+      mediaRecorder.start(1000);
+      setIsRecording(true);
+    } catch (err) {
+      console.error("Error starting recording:", err);
+      alert("Could not start recording. Please ensure you grant screen share permissions.");
+    }
+  };
+
+  const handleStopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+    }
+    setIsRecording(false);
   };
 
   const isHost = session?.id && roomData?.host_id === session.id;
@@ -620,6 +672,7 @@ function RoomView() {
         <button
           className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-red-500 hover:bg-red-600 flex items-center justify-center transition-all shadow-lg shadow-red-500/20 mt-auto"
           onClick={async () => {
+            handleStopRecording();
             sessionStorage.removeItem(`auto_join_${roomCode}`);
             if (isHost) {
               await supabase
@@ -675,7 +728,7 @@ function RoomView() {
             {isHost && (
               isRecording ? (
                 <button
-                  onClick={() => setIsRecording(false)}
+                  onClick={handleStopRecording}
                   className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-500 rounded-full px-3 py-1.5 text-sm font-medium font-mono shrink-0 hover:bg-red-500/20 transition-colors"
                 >
                   <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
@@ -683,7 +736,7 @@ function RoomView() {
                 </button>
               ) : (
                 <button
-                  onClick={() => setIsRecording(true)}
+                  onClick={handleStartRecording}
                   className="flex items-center gap-2 bg-transparent border border-white/20 hover:border-red-500/50 hover:text-red-400 rounded-full px-3 py-1.5 text-sm font-medium transition-colors shrink-0"
                 >
                   <div className="w-2 h-2 rounded-full bg-red-500" />
