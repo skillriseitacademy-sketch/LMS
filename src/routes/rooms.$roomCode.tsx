@@ -716,7 +716,11 @@ function RoomView() {
 
       {/* Right Sidebar */}
       <aside
-        className={`w-[340px] bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl overflow-hidden flex-col absolute md:relative right-3 top-3 bottom-3 z-30 transition-transform md:translate-x-0 ${showSidebar ? "flex translate-x-0" : "hidden md:hidden lg:flex translate-x-[120%]"}`}
+        className={`w-[340px] shrink-0 bg-[#1A1D24] rounded-[24px] border border-white/5 shadow-2xl flex-col absolute md:relative right-3 top-3 bottom-3 z-30 transition-all duration-300 ease-in-out ${
+          showSidebar 
+            ? "flex translate-x-0 opacity-100 md:mr-0" 
+            : "flex translate-x-[120%] md:translate-x-0 md:-mr-[352px] md:opacity-0 md:border-transparent pointer-events-none"
+        }`}
       >
         {/* Sidebar Header with Tabs */}
         <div className="flex items-center border-b border-white/10 shrink-0">
