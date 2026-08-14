@@ -69,7 +69,6 @@ function RoomsHub() {
         room_url: roomUrl,
         room_name: `room-${newCode}`,
         room_code: newCode,
-        room_type: isTeacher ? "class" : "study_group",
       })
       .select()
       .single();
@@ -109,8 +108,6 @@ function RoomsHub() {
         room_url: roomUrl,
         room_name: `Scheduled-${newCode}`,
         room_code: newCode,
-        room_type: isTeacher ? "class" : "study_group",
-        scheduled_for: scheduledDateIso,
       })
       .select()
       .single();
