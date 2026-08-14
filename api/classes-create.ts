@@ -86,32 +86,41 @@ export default async function handler(req: any, res: any) {
     }
 
     // Create Daily.co room
+    let roomUrl = "";
+    let roomName = "";
     const dailyKey = process.env.DAILY_API_KEY;
-    if (!dailyKey) return res.status(500).json({ error: "Missing DAILY_API_KEY configuration" });
 
-    const exp = Math.floor(endDate.getTime() / 1000) + 3600;
+    if (!dailyKey) {
+      // Mock it
+      roomName = Math.random().toString(36).substring(2, 8).toUpperCase();
+      roomUrl = `https://mock-daily-room.daily.co/${roomName}`;
+    } else {
+      const exp = Math.floor(endDate.getTime() / 1000) + 3600;
 
-    const dailyRes = await fetch("https://api.daily.co/v1/rooms", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${dailyKey}`,
-      },
-      body: JSON.stringify({
-        properties: {
-          exp,
-          enable_chat: true,
+      const dailyRes = await fetch("https://api.daily.co/v1/rooms", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${dailyKey}`,
         },
-      }),
-    });
+        body: JSON.stringify({
+          properties: {
+            exp,
+            enable_chat: true,
+          },
+        }),
+      });
 
-    if (!dailyRes.ok) {
-      const errorText = await dailyRes.text();
-      console.error("Daily API Error:", errorText);
-      return res.status(500).json({ error: "Failed to create video room" });
+      if (!dailyRes.ok) {
+        const errorText = await dailyRes.text();
+        console.error("Daily API Error:", errorText);
+        return res.status(500).json({ error: "Failed to create video room" });
+      }
+
+      const room = await dailyRes.json();
+      roomUrl = room.url;
+      roomName = room.name;
     }
-
-    const room = await dailyRes.json();
 
     // Save to database
     const { data: inserted, error: dbError } = await sc
@@ -122,8 +131,8 @@ export default async function handler(req: any, res: any) {
         title: title,
         start_time: startDate.toISOString(),
         end_time: endDate.toISOString(),
-        daily_room_url: room.url,
-        daily_room_name: room.name,
+        daily_room_url: roomUrl,
+        daily_room_name: roomName,
       })
       .select("id, title, start_time, end_time, daily_room_url")
       .single();
