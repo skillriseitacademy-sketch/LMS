@@ -118,7 +118,8 @@ function RoomView() {
   );
   const [waitingParticipants, setWaitingParticipants] = useState<any[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
-  const [activeTab, setActiveTab] = useState<"participants" | "chat" | "polls">("participants");
+  const [activeTab, setActiveTab] = useState<"participants" | "polls">("participants");
+  const [showChatWindow, setShowChatWindow] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
 
@@ -575,11 +576,8 @@ function RoomView() {
           </button>
 
           <button
-            onClick={() => {
-              setActiveTab("chat");
-              setShowSidebar(true);
-            }}
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${activeTab === "chat" && showSidebar ? "bg-brand text-brand-foreground shadow-lg shadow-brand/20" : "bg-[#2A2E38] hover:bg-[#323642] text-white"}`}
+            onClick={() => setShowChatWindow(!showChatWindow)}
+            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all ${showChatWindow ? "bg-brand text-brand-foreground shadow-lg shadow-brand/20" : "bg-[#2A2E38] hover:bg-[#323642] text-white"}`}
             title="Chat Room"
           >
             <MessageSquare className="w-5 h-5" />
@@ -725,12 +723,6 @@ function RoomView() {
             Participants
           </button>
           <button
-            onClick={() => setActiveTab("chat")}
-            className={`flex-1 py-4 text-sm font-semibold transition-colors border-b-2 ${activeTab === "chat" ? "text-brand border-brand" : "text-white/50 border-transparent hover:text-white"}`}
-          >
-            Chat
-          </button>
-          <button
             onClick={() => setActiveTab("polls")}
             className={`flex-1 py-4 text-sm font-semibold transition-colors border-b-2 ${activeTab === "polls" ? "text-brand border-brand" : "text-white/50 border-transparent hover:text-white"}`}
           >
@@ -829,26 +821,6 @@ function RoomView() {
             </div>
           )}
 
-          {activeTab === "chat" && (
-            <div className="absolute inset-0 animate-in fade-in slide-in-from-right-4 duration-300">
-              <ChatPanel
-                messages={chatMessages}
-                myPeerId={myPeerId}
-                onSendMessage={(text) => {
-                  broadcastData("chat", {
-                    message: {
-                      id: Math.random().toString(36).substring(7),
-                      senderId: myPeerId,
-                      senderName: userName,
-                      text,
-                      timestamp: Date.now(),
-                    },
-                  });
-                }}
-              />
-            </div>
-          )}
-
           {activeTab === "polls" && (
             <div className="absolute inset-0 animate-in fade-in slide-in-from-right-4 duration-300">
               <PollsPanel
@@ -882,6 +854,37 @@ function RoomView() {
           )}
         </div>
       </aside>
+
+      {/* Floating Chat Box (LinkedIn Style) */}
+      {showChatWindow && (
+        <div className="fixed bottom-4 right-4 w-80 h-96 bg-[#1A1D24] rounded-t-xl rounded-b-lg border border-white/10 shadow-2xl z-50 flex flex-col overflow-hidden animate-in slide-in-from-bottom-8 fade-in duration-300">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-black/20">
+            <h3 className="font-semibold text-sm">Meeting Chat</h3>
+            <button onClick={() => setShowChatWindow(false)} className="text-white/50 hover:text-white transition-colors">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-hidden relative">
+            <div className="absolute inset-0">
+              <ChatPanel
+                messages={chatMessages}
+                myPeerId={myPeerId}
+                onSendMessage={(text) => {
+                  broadcastData("chat", {
+                    message: {
+                      id: Math.random().toString(36).substring(7),
+                      senderId: myPeerId,
+                      senderName: userName,
+                      text,
+                      timestamp: Date.now(),
+                    },
+                  });
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
