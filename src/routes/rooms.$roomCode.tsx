@@ -25,6 +25,9 @@ import {
   Menu,
   MonitorUp,
   ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  ChevronDown,
   BarChart2,
   SwitchCamera,
   Hand,
@@ -120,6 +123,7 @@ function RoomView() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeTab, setActiveTab] = useState<"participants" | "polls">("participants");
   const [showChatWindow, setShowChatWindow] = useState(false);
+  const [isChatExpanded, setIsChatExpanded] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
 
@@ -730,9 +734,9 @@ function RoomView() {
           </button>
           <button
             onClick={() => setShowSidebar(false)}
-            className="p-4 lg:hidden text-white/50 hover:text-white transition-colors"
+            className="p-4 text-white/50 hover:text-white transition-colors"
           >
-            <X className="w-5 h-5" />
+            <ChevronRight className="w-5 h-5" />
           </button>
         </div>
 
@@ -857,14 +861,22 @@ function RoomView() {
 
       {/* Floating Chat Box (LinkedIn Style) */}
       {showChatWindow && (
-        <div className="fixed bottom-4 right-4 w-80 h-96 bg-[#1A1D24] rounded-t-xl rounded-b-lg border border-white/10 shadow-2xl z-50 flex flex-col overflow-hidden animate-in slide-in-from-bottom-8 fade-in duration-300">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-black/20">
+        <div className={`fixed bottom-4 right-4 w-80 bg-[#1A1D24] rounded-t-xl rounded-b-lg border border-white/10 shadow-2xl z-50 flex flex-col overflow-hidden transition-all duration-300 animate-in slide-in-from-bottom-8 fade-in ${isChatExpanded ? "h-96" : "h-12"}`}>
+          <div 
+            className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-black/20 cursor-pointer"
+            onClick={() => setIsChatExpanded(!isChatExpanded)}
+          >
             <h3 className="font-semibold text-sm">Meeting Chat</h3>
-            <button onClick={() => setShowChatWindow(false)} className="text-white/50 hover:text-white transition-colors">
-              <X className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button className="text-white/50 hover:text-white transition-colors">
+                {isChatExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+              </button>
+              <button onClick={(e) => { e.stopPropagation(); setShowChatWindow(false); }} className="text-white/50 hover:text-white transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-          <div className="flex-1 overflow-hidden relative">
+          <div className={`flex-1 overflow-hidden relative ${isChatExpanded ? "block" : "hidden"}`}>
             <div className="absolute inset-0">
               <ChatPanel
                 messages={chatMessages}
