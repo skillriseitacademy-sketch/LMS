@@ -86,7 +86,7 @@ function VideoPlayer({
         autoPlay
         playsInline
         muted={muted}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-contain"
       />
       {isAudioMuted && !isLocal && (
         <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md p-2 rounded-xl text-white z-10 flex items-center justify-center">
@@ -119,6 +119,24 @@ function RoomView() {
   const [waitingParticipants, setWaitingParticipants] = useState<any[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeTab, setActiveTab] = useState<"participants" | "chat" | "polls">("participants");
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRecording) {
+      interval = setInterval(() => setRecordingTime((t) => t + 1), 1000);
+    } else {
+      setRecordingTime(0);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording]);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  };
 
   const isHost = session?.id && roomData?.host_id === session.id;
 
@@ -634,20 +652,6 @@ function RoomView() {
             </div>
           </div>
           <div className="flex items-center gap-3 md:gap-6">
-            <div className="hidden md:flex items-center gap-3">
-              <button className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-black">
-                <div className="w-3.5 h-3.5 rounded-sm bg-black" />
-              </button>
-              <button className="w-8 h-8 rounded-lg bg-transparent border-2 border-white/20 flex flex-wrap items-center justify-center gap-0.5 p-1.5">
-                <div className="w-2 h-2 rounded-[2px] border border-white/50" />
-                <div className="w-2 h-2 rounded-[2px] border border-white/50" />
-                <div className="w-2 h-2 rounded-[2px] border border-white/50" />
-                <div className="w-2 h-2 rounded-[2px] border border-white/50" />
-              </button>
-              <button className="w-8 h-8 rounded-lg bg-transparent text-brand flex items-center justify-center">
-                <LayoutGrid className="w-5 h-5" />
-              </button>
-            </div>
             <div className="flex items-center gap-2 md:gap-3">
               <button
                 onClick={() => {
@@ -666,10 +670,25 @@ function RoomView() {
                 {copied ? "Copied" : "Invite"}
               </button>
             </div>
-            <div className="flex items-center gap-2 bg-transparent border border-white/20 rounded-full px-3 py-1.5 text-sm font-medium font-mono shrink-0">
-              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              12:34
-            </div>
+            {isHost && (
+              isRecording ? (
+                <button
+                  onClick={() => setIsRecording(false)}
+                  className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-500 rounded-full px-3 py-1.5 text-sm font-medium font-mono shrink-0 hover:bg-red-500/20 transition-colors"
+                >
+                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  {formatTime(recordingTime)}
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsRecording(true)}
+                  className="flex items-center gap-2 bg-transparent border border-white/20 hover:border-red-500/50 hover:text-red-400 rounded-full px-3 py-1.5 text-sm font-medium transition-colors shrink-0"
+                >
+                  <div className="w-2 h-2 rounded-full bg-red-500" />
+                  Record
+                </button>
+              )
+            )}
           </div>
         </header>
 
