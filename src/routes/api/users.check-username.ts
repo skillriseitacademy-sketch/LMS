@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
 
-export const Route = createFileRoute("/api/users/check-username")({
+export const Route = createFileRoute("/api/users/check-username" as any)({
   server: {
     handlers: {
       GET: async ({ request }) => {

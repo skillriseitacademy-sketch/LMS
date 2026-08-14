@@ -42,7 +42,7 @@ async function isParticipant(sc: ReturnType<typeof serviceClient>, userId: strin
   return !!data;
 }
 
-export const Route = createFileRoute("/api/chat/messages")({
+export const Route = createFileRoute("/api/chat/messages" as any)({
   server: {
     handlers: {
       GET: async ({ request }) => {

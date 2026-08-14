@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/lib/supabase";
 
-export const Route = createFileRoute("/api/rooms/instant")({
+export const Route = createFileRoute("/api/rooms/instant" as any)({
   server: {
     handlers: {
       POST: async ({ request }) => {

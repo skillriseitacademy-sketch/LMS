@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
 
-export const Route = createFileRoute("/api/users/search")({
+export const Route = createFileRoute("/api/users/search" as any)({
   server: {
     handlers: {
       GET: async ({ request }) => {
@@ -58,12 +58,12 @@ export const Route = createFileRoute("/api/users/search")({
           .or(`username.ilike.%${q}%,name.ilike.%${q}%`)
           .limit(20);
 
-        // Filter: Public OR connected
-        if (connectionIds.length > 0) {
-          query = query.or(`visibility.eq.public,id.in.(${connectionIds.join(",")})`);
-        } else {
-          query = query.eq("visibility", "public");
-        }
+        // Filter: Public OR connected (REMOVED to allow searching for all users)
+        // if (connectionIds.length > 0) {
+        //   query = query.or(`visibility.eq.public,id.in.(${connectionIds.join(",")})`);
+        // } else {
+        //   query = query.eq("visibility", "public");
+        // }
 
         // Exclude blocked and self
         if (blockedIds.length > 0) {

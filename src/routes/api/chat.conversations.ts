@@ -27,7 +27,7 @@ async function getUser(request: Request) {
   return user;
 }
 
-export const Route = createFileRoute("/api/chat/conversations")({
+export const Route = createFileRoute("/api/chat/conversations" as any)({
   server: {
     handlers: {
       GET: async ({ request }) => {

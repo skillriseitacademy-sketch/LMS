@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
 
-export const Route = createFileRoute("/api/posts/$postId/react")({
+export const Route = createFileRoute("/api/posts/$postId/react" as any)({
   server: {
     handlers: {
       POST: async ({ request, params }) => {

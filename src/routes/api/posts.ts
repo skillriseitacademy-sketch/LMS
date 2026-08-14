@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
 import { sanitizeText } from "@/lib/sanitize";
 
-export const Route = createFileRoute("/api/posts")({
+export const Route = createFileRoute("/api/posts" as any)({
   server: {
     handlers: {
       POST: async ({ request }) => {

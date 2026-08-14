@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/lib/supabase";
 import { checkRateLimit, logAIUsage } from "@/lib/ai-monitor.server";
 
-export const Route = createFileRoute("/api/interview/start")({
+export const Route = createFileRoute("/api/interview/start" as any)({
   server: {
     handlers: {
       POST: async ({ request }) => {

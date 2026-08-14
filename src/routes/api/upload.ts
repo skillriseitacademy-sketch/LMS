@@ -50,7 +50,7 @@ function buildKey(context: UploadContext, userId: string, filename: string): str
 
 // ─── Route Handler ────────────────────────────────────────────────────────────
 
-export const Route = createFileRoute("/api/upload")({
+export const Route = createFileRoute("/api/upload" as any)({
   server: {
     handlers: {
       POST: async ({ request }) => {

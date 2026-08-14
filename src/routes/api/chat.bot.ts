@@ -54,7 +54,7 @@ async function getUser(request: Request) {
   return user;
 }
 
-export const Route = createFileRoute("/api/chat/bot")({
+export const Route = createFileRoute("/api/chat/bot" as any)({
   server: {
     handlers: {
       POST: async ({ request }) => {

@@ -19,7 +19,7 @@ async function getUser(request: Request) {
 
 type ChatRequestBody = { messages?: unknown; system?: string };
 
-export const Route = createFileRoute("/api/chat")({
+export const Route = createFileRoute("/api/chat" as any)({
   server: {
     handlers: {
       POST: async ({ request }) => {

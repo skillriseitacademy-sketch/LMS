@@ -48,14 +48,9 @@ export const Route = createFileRoute("/api/stories" as any)({
           (id) => !blockedIds.includes(id),
         );
 
-        const { data, error } = await serviceClient
+        const { data: storiesData, error } = await serviceClient
           .from("stories")
-          .select(
-            `
-            id, user_id, content, media_url, story_type, expires_at, created_at,
-            profiles (id, name, username, avatar_url)
-          `,
-          )
+          .select("id, user_id, content, media_url, story_type, expires_at, created_at")
           .in("user_id", visibleUserIds)
           .gt("expires_at", new Date().toISOString())
           .order("created_at", { ascending: false });
@@ -65,7 +60,22 @@ export const Route = createFileRoute("/api/stories" as any)({
           return new Response(JSON.stringify({ error: error.message }), { status: 500 });
         }
 
-        return new Response(JSON.stringify(data ?? []), {
+        const authorIds = [...new Set((storiesData ?? []).map(s => s.user_id))];
+        let profileMap: Record<string, any> = {};
+        if (authorIds.length > 0) {
+          const { data: profilesData } = await serviceClient
+            .from("profiles")
+            .select("id, name, username, avatar_url")
+            .in("id", authorIds);
+          profileMap = Object.fromEntries((profilesData ?? []).map((p: any) => [p.id, p]));
+        }
+
+        const enrichedStories = (storiesData ?? []).map(story => ({
+          ...story,
+          profiles: profileMap[story.user_id] || null
+        }));
+
+        return new Response(JSON.stringify(enrichedStories), {
           headers: { "Content-Type": "application/json" },
         });
         } catch (error) {

@@ -31,7 +31,7 @@ async function getUser(request: Request) {
   return user;
 }
 
-export const Route = createFileRoute("/api/chat/ensure-bot-thread")({
+export const Route = createFileRoute("/api/chat/ensure-bot-thread" as any)({
   server: {
     handlers: {
       POST: async ({ request }) => {

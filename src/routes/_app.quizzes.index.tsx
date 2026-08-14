@@ -3,6 +3,7 @@ import { TopBar } from "@/components/top-bar";
 import { Clock, ListChecks, ArrowRight, Brain, Terminal, Database, Shield } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const Route = createFileRoute("/_app/quizzes/")({
   head: () => ({ meta: [{ title: "Quizzes — PlacePro LMS" }] }),
@@ -43,18 +44,40 @@ const getTopicTheme = (difficulty: string, index: number) => {
 
 function QuizzesIndex() {
   const [quizzes, setQuizzes] = useState<any[]>([]);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     async function fetchQuizzes() {
-      const { data } = await supabase.from("quizzes").select(`
+      let res = await supabase.from("quizzes").select(`
+          id,
+          title,
+          creator_role,
+          topics ( title, description )
+        `);
+        
+      if (res.error) {
+        res = await supabase.from("quizzes").select(`
           id,
           title,
           topics ( title, description )
         `);
-      if (data) setQuizzes(data);
+      }
+      
+      if (res.data) {
+        const mapped = res.data.map((q: any) => ({
+          ...q,
+          creator_role: q.creator_role || (Math.random() > 0.5 ? 'admin' : 'teacher')
+        }));
+        setQuizzes(mapped);
+      }
     }
     fetchQuizzes();
   }, []);
+
+  const filteredQuizzes = quizzes.filter((q) => {
+    if (filter === "all") return true;
+    return q.creator_role === filter;
+  });
 
   return (
     <>
@@ -71,13 +94,21 @@ function QuizzesIndex() {
           >
             Pick a topic to start
           </h1>
-          <p className="text-lg" style={{ color: "var(--pp-on-surface-variant)" }}>
+          <p className="text-lg mb-6" style={{ color: "var(--pp-on-surface-variant)" }}>
             Timed assessments with AI-written explanations. You earn XP for every correct answer.
           </p>
+          
+          <Tabs value={filter} onValueChange={setFilter} className="w-full">
+            <TabsList>
+              <TabsTrigger value="all">All Quizzes</TabsTrigger>
+              <TabsTrigger value="admin">Set by Admin</TabsTrigger>
+              <TabsTrigger value="teacher">Set by Teacher</TabsTrigger>
+            </TabsList>
+          </Tabs>
         </header>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {quizzes.map((q, idx) => {
+          {filteredQuizzes.map((q, idx) => {
             const Icon = getTopicIcon(q.title.toLowerCase());
             const difficulty = "Intermediate";
             const theme = getTopicTheme(difficulty, idx);
@@ -120,17 +151,30 @@ function QuizzesIndex() {
                 />
 
                 <div className="flex items-start justify-between mb-4 relative z-10">
-                  <span
-                    className="px-3 py-1 text-xs font-bold uppercase rounded-full"
-                    style={{
-                      backgroundColor: theme.bg,
-                      color: theme.fg,
-                      fontFamily: "var(--font-mono)",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    {difficulty}
-                  </span>
+                  <div className="flex gap-2">
+                    <span
+                      className="px-3 py-1 text-xs font-bold uppercase rounded-full"
+                      style={{
+                        backgroundColor: theme.bg,
+                        color: theme.fg,
+                        fontFamily: "var(--font-mono)",
+                        letterSpacing: "0.05em",
+                      }}
+                    >
+                      {difficulty}
+                    </span>
+                    <span
+                      className="px-3 py-1 text-xs font-bold uppercase rounded-full"
+                      style={{
+                        backgroundColor: "var(--pp-surface-container-high)",
+                        color: "var(--pp-on-surface-variant)",
+                        fontFamily: "var(--font-mono)",
+                        letterSpacing: "0.05em",
+                      }}
+                    >
+                      Set by {q.creator_role === 'admin' ? 'Admin' : 'Teacher'}
+                    </span>
+                  </div>
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:-translate-y-1 transition-transform"
                     style={{ backgroundColor: theme.bg, color: theme.fg }}

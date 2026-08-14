@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/lib/supabase";
 
-export const Route = createFileRoute("/api/courses/enrolled")({
+export const Route = createFileRoute("/api/courses/enrolled" as any)({
   server: {
     handlers: {
       GET: async ({ request }) => {

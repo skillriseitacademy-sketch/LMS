@@ -7,7 +7,7 @@ import { createClient } from "@supabase/supabase-js";
 
 import { checkRateLimit, logAIUsage } from "@/lib/ai-monitor.server";
 
-export const Route = createFileRoute("/api/roadmap")({
+export const Route = createFileRoute("/api/roadmap" as any)({
   server: {
     handlers: {
       POST: async ({ request }) => {

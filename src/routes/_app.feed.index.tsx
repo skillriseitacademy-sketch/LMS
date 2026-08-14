@@ -7,6 +7,8 @@ import { StoryRow } from "@/components/social/story-row";
 import { StoryViewer } from "@/components/social/story-viewer";
 import { StoryCreator } from "@/components/social/story-creator";
 import { useStories } from "@/hooks/useStories";
+import { ConnectionButton } from "@/components/social/connection-button";
+import { TopBar } from "@/components/top-bar";
 
 export const Route = createFileRoute("/_app/feed/")({
   component: FeedPage,
@@ -67,7 +69,7 @@ const PostItem = React.memo(({ post, session, showPostMenu, setShowPostMenu, edi
       {/* Post Header */}
       <div className="flex items-start justify-between mb-3 relative">
         <div className="flex gap-3 items-center">
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-surface-variant flex-shrink-0">
+          <Link to={`/profile/${post.profiles?.username || post.user_id}`} className="w-10 h-10 rounded-full overflow-hidden bg-surface-variant flex-shrink-0 hover:ring-2 hover:ring-primary/50 transition-all cursor-pointer">
             {post.profiles?.avatar_url ? (
               <img
                 src={post.profiles.avatar_url}
@@ -79,14 +81,28 @@ const PostItem = React.memo(({ post, session, showPostMenu, setShowPostMenu, edi
                 <span className="material-symbols-outlined text-primary">person</span>
               </div>
             )}
-          </div>
+          </Link>
           <div>
-            <h4
-              className="font-semibold text-on-surface leading-tight"
-              style={{ fontFamily: "Inter" }}
-            >
-              {post.profiles?.name || "User"}
-            </h4>
+            <div className="flex items-center gap-2">
+              <Link to={`/profile/${post.profiles?.username || post.user_id}`} className="hover:underline">
+                <h4
+                  className="font-semibold text-on-surface leading-tight"
+                  style={{ fontFamily: "Inter" }}
+                >
+                  {post.profiles?.name || "User"}
+                </h4>
+              </Link>
+              {session?.id !== post.user_id && (
+                <div className="scale-[0.8] origin-left -my-2">
+                  <ConnectionButton 
+                    targetId={post.user_id}
+                    initialStatus={null}
+                    targetVisibility="public"
+                    size="sm"
+                  />
+                </div>
+              )}
+            </div>
             <p
               className="text-xs text-on-surface-variant"
               style={{ fontFamily: "JetBrains Mono" }}
@@ -281,7 +297,7 @@ function FeedPage() {
     if (!session) return;
     const { data } = await supabase
       .from("posts")
-      .select(`id, content, created_at, user_id, media_urls, profiles(name, avatar_url, role)`)
+      .select(`id, content, created_at, user_id, media_urls, profiles(name, avatar_url, role, username)`)
       .order("created_at", { ascending: false })
       .limit(20);
 
@@ -460,8 +476,10 @@ function FeedPage() {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex-1 overflow-y-auto">
-      <div className="max-w-[1200px] mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <>
+      <TopBar />
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-[1200px] mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* ── Left Rail ── */}
         <div className="hidden lg:block lg:col-span-3 space-y-5">
           {/* Mini Profile Card */}
@@ -788,6 +806,7 @@ function FeedPage() {
           </div>
         </div>
       </div>
-    </div>
+        </div>
+      </>
   );
 }

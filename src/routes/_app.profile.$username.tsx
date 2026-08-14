@@ -5,12 +5,14 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Flame, Trophy } from "lucide-react";
 import { ConnectionButton } from "@/components/social/connection-button";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_app/profile/$username")({
   component: ProfileRoute,
 });
 
 function ProfileRoute() {
+  const { session } = useAuth();
   const { username } = Route.useParams();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -90,7 +92,7 @@ function ProfileRoute() {
               </Avatar>
               <div className="flex-1 min-w-[240px]">
                 <h1 className="text-display text-2xl font-bold">{profile.name}</h1>
-                <p className="text-sm font-medium text-brand">@{profile.username}</p>
+                <p className="text-sm font-medium text-primary">@{profile.username}</p>
                 {profile.headline && (
                   <p className="text-sm text-muted-foreground mt-1">{profile.headline}</p>
                 )}
@@ -110,13 +112,15 @@ function ProfileRoute() {
                 initialStatus={null}
                 targetVisibility={profile.visibility}
               />
-              <Link
-                to="/messages"
-                search={{ userId: profile.id }}
-                className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-foreground hover:opacity-90"
-              >
-                Message
-              </Link>
+              {session?.id !== profile.id && (
+                <Link
+                  to="/messages"
+                  search={{ userId: profile.id }}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-on-primary hover:opacity-90"
+                >
+                  Message
+                </Link>
+              )}
             </div>
           </section>
         )}

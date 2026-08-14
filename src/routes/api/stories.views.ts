@@ -30,7 +30,7 @@ async function getUser(request: Request) {
   return user;
 }
 
-export const Route = createFileRoute("/api/stories/views")({
+export const Route = createFileRoute("/api/stories/views" as any)({
   server: {
     handlers: {
       GET: async ({ request }) => {

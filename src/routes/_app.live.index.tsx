@@ -19,12 +19,17 @@ function LiveClasses() {
 
   // Form state
   const [title, setTitle] = useState("");
-  const [topicId, setTopicId] = useState("");
+  const [topicName, setTopicName] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [duration, setDuration] = useState("60");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  // Instant Room state
+  const [roomCode, setRoomCode] = useState("");
+  const [isJoining, setIsJoining] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
+  const navigate = useNavigate();
 
   const fetchClasses = async () => {
     if (!session) return;
@@ -73,27 +78,13 @@ function LiveClasses() {
 
     try {
       const startDateTime = new Date(`${date}T${time}`);
-      const endDateTime = new Date(startDateTime.getTime() + parseInt(duration) * 60000);
 
-      const res = await fetch("/api/classes/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${supabase.auth.getSession().then((s) => s.data.session?.access_token)}`, // Actually this is async, need to await it
-        },
-        body: JSON.stringify({
-          title,
-          topic_id: topicId,
-          start_time: startDateTime.toISOString(),
-          end_time: endDateTime.toISOString(),
-        }),
-      });
-
-      // Properly await token
+      // Wait for proper token
       const {
         data: { session: sbSession },
       } = await supabase.auth.getSession();
-      const actualRes = await fetch("/api/classes/create", {
+
+      const actualRes = await fetch("/api/classes-create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -101,9 +92,8 @@ function LiveClasses() {
         },
         body: JSON.stringify({
           title,
-          topic_id: topicId,
+          topic_name: topicName,
           start_time: startDateTime.toISOString(),
-          end_time: endDateTime.toISOString(),
         }),
       });
 
@@ -125,19 +115,43 @@ function LiveClasses() {
       <div className="p-4 md:p-6">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-display text-2xl font-bold">Live Classes</h1>
+            <h1 className="text-display text-2xl font-bold">Live Classes & Rooms</h1>
             <p className="text-sm text-muted-foreground">
-              Join interactive sessions with your instructors.
+              Join interactive sessions with your instructors or peers.
             </p>
           </div>
-          {session?.role === "teacher" && (
-            <button
-              onClick={() => setShowSchedule(true)}
-              className="flex items-center gap-2 rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-brand-foreground hover:opacity-90"
-            >
-              <Plus className="h-4 w-4" /> Schedule Class
-            </button>
-          )}
+          <div className="flex gap-2">
+            <div className="flex items-center bg-card border border-border rounded-xl px-2 overflow-hidden shadow-sm">
+              <input
+                type="text"
+                value={roomCode}
+                onChange={(e) => setRoomCode(e.target.value)}
+                placeholder="Enter Room Code"
+                className="bg-transparent border-none outline-none text-sm px-2 w-36 uppercase"
+                maxLength={6}
+              />
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (!roomCode.trim()) return;
+                  setIsJoining(true);
+                  navigate({ to: "/rooms/$roomCode", params: { roomCode: roomCode.toUpperCase() } });
+                }}
+                disabled={isJoining || !roomCode}
+                className="bg-brand text-brand-foreground rounded-lg px-3 py-1.5 text-xs font-semibold hover:opacity-90 disabled:opacity-50"
+              >
+                Join
+              </button>
+            </div>
+            {session?.role === "teacher" && (
+              <button
+                onClick={() => setShowSchedule(true)}
+                className="flex items-center gap-2 rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-brand-foreground hover:opacity-90"
+              >
+                <Plus className="h-4 w-4" /> Schedule Class
+              </button>
+            )}
+          </div>
         </div>
 
         {loading ? (
@@ -181,8 +195,7 @@ function LiveClasses() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4 text-muted-foreground" />
-                      {start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} -{" "}
-                      {end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </div>
                   </div>
 
@@ -257,22 +270,14 @@ function LiveClasses() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-medium">Topic</label>
-                <select
+                <label className="mb-1.5 block text-xs font-medium">Topic Name</label>
+                <input
                   required
-                  value={topicId}
-                  onChange={(e) => setTopicId(e.target.value)}
+                  value={topicName}
+                  onChange={(e) => setTopicName(e.target.value)}
                   className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
-                >
-                  <option value="" disabled>
-                    Select a topic...
-                  </option>
-                  {topics.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.title}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="e.g. Frontend Development"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -296,22 +301,6 @@ function LiveClasses() {
                     className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-xs font-medium">Duration (minutes)</label>
-                <select
-                  required
-                  value={duration}
-                  onChange={(e) => setDuration(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
-                >
-                  <option value="30">30 minutes</option>
-                  <option value="45">45 minutes</option>
-                  <option value="60">60 minutes</option>
-                  <option value="90">90 minutes</option>
-                  <option value="120">120 minutes</option>
-                </select>
               </div>
 
               <button

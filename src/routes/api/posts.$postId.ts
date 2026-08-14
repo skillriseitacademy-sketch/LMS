@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
 
-export const Route = createFileRoute("/api/posts/$postId")({
+export const Route = createFileRoute("/api/posts/$postId" as any)({
   server: {
     handlers: {
       DELETE: async ({ request, params }) => {
