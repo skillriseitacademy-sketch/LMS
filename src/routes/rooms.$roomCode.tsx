@@ -38,6 +38,12 @@ import { useWebRTC } from "@/hooks/useWebRTC";
 import { ChatPanel } from "@/components/room/ChatPanel";
 import { PollsPanel } from "@/components/room/PollsPanel";
 import { ClassRoomView } from "@/components/room/ClassRoomView";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Route = createFileRoute("/rooms/$roomCode")({
   component: RoomView,
@@ -89,7 +95,7 @@ function VideoPlayer({
         autoPlay
         playsInline
         muted={muted}
-        className="w-full h-full object-contain"
+        className="w-full h-full object-cover"
       />
       {isAudioMuted && !isLocal && (
         <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md p-2 rounded-xl text-white z-10 flex items-center justify-center">
@@ -227,6 +233,7 @@ function RoomView() {
     toggleCam,
     toggleScreenShare,
     flipCamera,
+    switchCamera,
     endMeeting,
     broadcastData,
   } = useWebRTC(roomCode, userName, () => {
@@ -584,12 +591,12 @@ function RoomView() {
     totalParticipants === 1
       ? "grid-cols-1 grid-rows-1"
       : totalParticipants === 2
-        ? "grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1"
+        ? "grid-cols-1 sm:grid-cols-2 grid-rows-2 sm:grid-rows-1"
         : totalParticipants <= 4
           ? "grid-cols-2 grid-rows-2"
           : totalParticipants <= 6
-            ? "grid-cols-2 md:grid-cols-3 grid-rows-3 md:grid-rows-2"
-            : "grid-cols-3 md:grid-cols-4 grid-rows-[repeat(auto-fit,minmax(200px,1fr))]";
+            ? "grid-cols-2 sm:grid-cols-3 grid-rows-3 sm:grid-rows-2"
+            : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 grid-rows-[repeat(auto-fit,minmax(0,1fr))]";
 
   return (
     <div className="h-screen flex bg-[#0F1115] text-white overflow-hidden p-3 gap-3">
@@ -621,17 +628,34 @@ function RoomView() {
           </button>
 
           {videoDevices.length > 1 && (
-            <button
-              onClick={flipCamera}
-              title="Switch Camera"
-              className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white"
-            >
-              {facingMode === "user" ? (
-                <SwitchCamera className="w-5 h-5" />
-              ) : (
-                <SwitchCamera className="w-5 h-5 opacity-70" />
-              )}
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  title="Switch Camera"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white outline-none"
+                >
+                  {facingMode === "user" ? (
+                    <SwitchCamera className="w-5 h-5" />
+                  ) : (
+                    <SwitchCamera className="w-5 h-5 opacity-70" />
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="right" align="center" className="w-56 ml-4 bg-[#1A1D24] text-white border-white/10">
+                {videoDevices.map((device) => (
+                  <DropdownMenuItem
+                    key={device.deviceId}
+                    onClick={() => switchCamera(device.deviceId)}
+                    className="flex items-center justify-between cursor-pointer focus:bg-white/10 focus:text-white"
+                  >
+                    <span className="truncate pr-2">{device.label || "Camera"}</span>
+                    {currentDeviceId === device.deviceId && (
+                      <Check className="w-4 h-4 text-brand shrink-0" />
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
 
           <button
@@ -751,10 +775,10 @@ function RoomView() {
         </header>
 
         {/* Video Grid */}
-        <div className="flex-1 p-2 pt-0 pb-2">
-          <div className={`w-full h-full grid gap-4 ${gridClass}`}>
+        <div className="flex-1 p-2 pt-0 pb-2 min-h-0 min-w-0 overflow-hidden flex items-center justify-center">
+          <div className={`w-full h-full max-w-full max-h-full grid gap-4 ${gridClass}`}>
             {/* Local User */}
-            <div className="relative w-full h-full min-h-[200px]">
+            <div className="relative w-full h-full min-h-0 min-w-0">
               {localStream && (
                 <VideoPlayer stream={localStream} muted userName="You" isLocal={true} />
               )}
@@ -762,7 +786,7 @@ function RoomView() {
 
             {/* Remote Users */}
             {remoteStreams.map((remote) => (
-              <div key={remote.peerId} className="relative w-full h-full min-h-[200px]">
+              <div key={remote.peerId} className="relative w-full h-full min-h-0 min-w-0">
                 <VideoPlayer stream={remote.stream} userName={remote.userName} />
               </div>
             ))}

@@ -185,6 +185,39 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     }
   }, [facingMode, videoDevices, currentDeviceId]);
 
+  const switchCamera = useCallback(async (deviceId: string) => {
+    if (!localStreamRef.current) return;
+    if (deviceId === currentDeviceId) return;
+
+    try {
+      const newStream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: { exact: deviceId } },
+      });
+
+      const newVideoTrack = newStream.getVideoTracks()[0];
+      const oldVideoTrack = localStreamRef.current.getVideoTracks()[0];
+
+      if (oldVideoTrack) {
+        oldVideoTrack.stop();
+        localStreamRef.current.removeTrack(oldVideoTrack);
+      }
+
+      localStreamRef.current.addTrack(newVideoTrack);
+      setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
+      setCurrentDeviceId(deviceId);
+
+      // Replace track in all peer connections
+      Object.values(peerConnectionsRef.current).forEach((pc) => {
+        const sender = pc.getSenders().find((s) => s.track?.kind === "video");
+        if (sender) {
+          sender.replaceTrack(newVideoTrack);
+        }
+      });
+    } catch (err) {
+      console.error("Error switching camera:", err);
+    }
+  }, [currentDeviceId]);
+
   const toggleScreenShare = useCallback(async () => {
     if (!localStreamRef.current) return;
 
@@ -729,6 +762,8 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     toggleCam,
     toggleScreenShare,
     flipCamera,
+    switchCamera,
+    endMeeting,
     broadcastData,
   };
 }
