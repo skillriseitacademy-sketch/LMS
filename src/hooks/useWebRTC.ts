@@ -45,6 +45,9 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
   const [polls, setPolls] = useState<Poll[]>([]);
   const [handRaised, setHandRaised] = useState<Record<string, boolean>>({});
 
+  const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
+  const [currentDeviceId, setCurrentDeviceId] = useState<string>("");
+
   const localStreamRef = useRef<MediaStream | null>(null);
   const originalVideoTrackRef = useRef<MediaStreamTrack | null>(null);
   const peerConnectionsRef = useRef<Record<string, RTCPeerConnection>>({});
@@ -58,16 +61,49 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
   // Data Channel references for P2P messaging
   const dataChannelsRef = useRef<Record<string, RTCDataChannel>>({});
 
+  useEffect(() => {
+    const getDevices = async () => {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoInputDevices = devices.filter((device) => device.kind === "videoinput");
+        setVideoDevices(videoInputDevices);
+      } catch (err) {
+        console.error("Error enumerating devices:", err);
+      }
+    };
+
+    getDevices();
+
+    const handleDeviceChange = () => {
+      getDevices();
+    };
+
+    navigator.mediaDevices.addEventListener("devicechange", handleDeviceChange);
+    return () => {
+      navigator.mediaDevices.removeEventListener("devicechange", handleDeviceChange);
+    };
+  }, []);
+
   // Initialize local media
   const initLocalStream = useCallback(
     async (forcedFacingMode?: "user" | "environment") => {
       const currentFacingMode = forcedFacingMode || facingMode;
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: currentFacingMode },
+          video: currentDeviceId ? { deviceId: { exact: currentDeviceId } } : { facingMode: currentFacingMode },
           audio: true,
         });
         localStreamRef.current = stream;
+        
+        // Try to get device ID from the newly created stream
+        if (!currentDeviceId && stream.getVideoTracks().length > 0) {
+          const track = stream.getVideoTracks()[0];
+          const settings = track.getSettings();
+          if (settings.deviceId) {
+            setCurrentDeviceId(settings.deviceId);
+          }
+        }
+
         setLocalStream(stream);
         setStreamError("");
         return stream;
@@ -77,7 +113,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
         return null;
       }
     },
-    [facingMode],
+    [facingMode, currentDeviceId],
   );
 
   const toggleMic = useCallback(() => {
@@ -98,11 +134,23 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
 
   const flipCamera = useCallback(async () => {
     if (!localStreamRef.current) return;
-    const newFacingMode = facingMode === "user" ? "environment" : "user";
-
+    
     try {
+      let nextDeviceId = "";
+      if (videoDevices.length > 1) {
+        const currentIndex = videoDevices.findIndex((d) => d.deviceId === currentDeviceId);
+        const nextIndex = (currentIndex + 1) % videoDevices.length;
+        nextDeviceId = videoDevices[nextIndex].deviceId;
+      }
+
+      const newFacingMode = facingMode === "user" ? "environment" : "user";
+      
+      const videoConstraints = nextDeviceId 
+        ? { deviceId: { exact: nextDeviceId } }
+        : { facingMode: { exact: newFacingMode } };
+
       const newStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { exact: newFacingMode } },
+        video: videoConstraints,
       });
 
       const newVideoTrack = newStream.getVideoTracks()[0];
@@ -115,7 +163,12 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
 
       localStreamRef.current.addTrack(newVideoTrack);
       setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
-      setFacingMode(newFacingMode);
+      
+      if (nextDeviceId) {
+        setCurrentDeviceId(nextDeviceId);
+      } else {
+        setFacingMode(newFacingMode);
+      }
 
       // Replace track in all peer connections
       Object.values(peerConnectionsRef.current).forEach((pc) => {
@@ -127,9 +180,10 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     } catch (err) {
       console.error("Error flipping camera:", err);
       // Fallback if 'exact' facingMode fails (e.g. desktop)
-      setFacingMode(newFacingMode);
+      const newFacingModeFallback = facingMode === "user" ? "environment" : "user";
+      setFacingMode(newFacingModeFallback);
     }
-  }, [facingMode]);
+  }, [facingMode, videoDevices, currentDeviceId]);
 
   const toggleScreenShare = useCallback(async () => {
     if (!localStreamRef.current) return;
@@ -665,6 +719,8 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     polls,
     handRaised,
     myPeerId: myPeerId.current,
+    videoDevices,
+    currentDeviceId,
     initLocalStream,
     joinRoom,
     leaveRoom,

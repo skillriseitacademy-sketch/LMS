@@ -82,6 +82,7 @@ import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCodeRouteImport } from './routes/_app.code'
 import { Route as AppArenaRouteImport } from './routes/_app.arena'
 import { Route as AppAdminRouteImport } from './routes/_app.admin'
+import { Route as AppRoomsIndexRouteImport } from './routes/_app.rooms.index'
 import { Route as AppResumeIndexRouteImport } from './routes/_app.resume.index'
 import { Route as AppQuizzesIndexRouteImport } from './routes/_app.quizzes.index'
 import { Route as AppLiveIndexRouteImport } from './routes/_app.live.index'
@@ -517,6 +518,11 @@ const AppAdminRoute = AppAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRoomsIndexRoute = AppRoomsIndexRouteImport.update({
+  id: '/rooms/',
+  path: '/rooms/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppResumeIndexRoute = AppResumeIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -764,6 +770,7 @@ export interface FileRoutesByFullPath {
   '/live/': typeof AppLiveIndexRoute
   '/quizzes/': typeof AppQuizzesIndexRoute
   '/resume/': typeof AppResumeIndexRoute
+  '/rooms/': typeof AppRoomsIndexRoute
   '/arena/$topicId/$challengeId': typeof AppArenaTopicIdChallengeIdRoute
   '/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
   '/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
@@ -862,6 +869,7 @@ export interface FileRoutesByTo {
   '/live': typeof AppLiveIndexRoute
   '/quizzes': typeof AppQuizzesIndexRoute
   '/resume': typeof AppResumeIndexRoute
+  '/rooms': typeof AppRoomsIndexRoute
   '/arena/$topicId/$challengeId': typeof AppArenaTopicIdChallengeIdRoute
   '/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
   '/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
@@ -967,6 +975,7 @@ export interface FileRoutesById {
   '/_app/live/': typeof AppLiveIndexRoute
   '/_app/quizzes/': typeof AppQuizzesIndexRoute
   '/_app/resume/': typeof AppResumeIndexRoute
+  '/_app/rooms/': typeof AppRoomsIndexRoute
   '/_app/arena/$topicId/$challengeId': typeof AppArenaTopicIdChallengeIdRoute
   '/_app/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
   '/_app/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
@@ -1072,6 +1081,7 @@ export interface FileRouteTypes {
     | '/live/'
     | '/quizzes/'
     | '/resume/'
+    | '/rooms/'
     | '/arena/$topicId/$challengeId'
     | '/interview/$sessionId/feedback'
     | '/interview/ai/$sessionId'
@@ -1170,6 +1180,7 @@ export interface FileRouteTypes {
     | '/live'
     | '/quizzes'
     | '/resume'
+    | '/rooms'
     | '/arena/$topicId/$challengeId'
     | '/interview/$sessionId/feedback'
     | '/interview/ai/$sessionId'
@@ -1274,6 +1285,7 @@ export interface FileRouteTypes {
     | '/_app/live/'
     | '/_app/quizzes/'
     | '/_app/resume/'
+    | '/_app/rooms/'
     | '/_app/arena/$topicId/$challengeId'
     | '/_app/interview/$sessionId/feedback'
     | '/_app/interview/ai/$sessionId'
@@ -1854,6 +1866,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/rooms/': {
+      id: '/_app/rooms/'
+      path: '/rooms'
+      fullPath: '/rooms/'
+      preLoaderRoute: typeof AppRoomsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/resume/': {
       id: '/_app/resume/'
       path: '/'
@@ -2236,6 +2255,7 @@ interface AppRouteChildren {
   AppRoadmapRoute: typeof AppRoadmapRoute
   AppLiveClassIdRoute: typeof AppLiveClassIdRoute
   AppLiveIndexRoute: typeof AppLiveIndexRoute
+  AppRoomsIndexRoute: typeof AppRoomsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -2254,6 +2274,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppRoadmapRoute: AppRoadmapRoute,
   AppLiveClassIdRoute: AppLiveClassIdRoute,
   AppLiveIndexRoute: AppLiveIndexRoute,
+  AppRoomsIndexRoute: AppRoomsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

@@ -219,6 +219,7 @@ function RoomView() {
     polls,
     handRaised,
     myPeerId,
+    videoDevices,
     initLocalStream,
     joinRoom,
     leaveRoom,
@@ -619,17 +620,19 @@ function RoomView() {
             {isCamOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
           </button>
 
-          <button
-            onClick={flipCamera}
-            title="Flip Camera"
-            className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white md:hidden"
-          >
-            {facingMode === "user" ? (
-              <SwitchCamera className="w-5 h-5" />
-            ) : (
-              <SwitchCamera className="w-5 h-5 opacity-70" />
-            )}
-          </button>
+          {videoDevices.length > 1 && (
+            <button
+              onClick={flipCamera}
+              title="Switch Camera"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all bg-[#2A2E38] hover:bg-[#323642] text-white"
+            >
+              {facingMode === "user" ? (
+                <SwitchCamera className="w-5 h-5" />
+              ) : (
+                <SwitchCamera className="w-5 h-5 opacity-70" />
+              )}
+            </button>
+          )}
 
           <button
             onClick={() => setShowChatWindow(!showChatWindow)}
