@@ -68,7 +68,7 @@ export function TopBar({ title }: TopBarProps) {
 
   return (
     <header
-      className="sticky top-0 z-30 hidden md:flex h-16 items-center gap-4 px-8"
+      className="sticky top-0 z-50 hidden md:flex h-16 items-center gap-4 px-8"
       style={{
         backgroundColor: "color-mix(in srgb, var(--pp-surface) 85%, transparent)",
         backdropFilter: "blur(12px)",

@@ -87,7 +87,7 @@ export function UserSearch() {
       </div>
 
       {open && query.length >= 2 && (
-        <div className="absolute top-full right-0 w-[400px] sm:w-[500px] mt-2 bg-card border border-border rounded-2xl shadow-xl overflow-hidden z-50">
+        <div className="absolute top-full left-0 w-[400px] sm:w-[500px] mt-2 bg-card border border-border rounded-2xl shadow-xl overflow-hidden z-50">
           <div className="max-h-80 overflow-y-auto">
             {results.length === 0 && !loading ? (
               <div className="p-4 text-center text-sm text-muted-foreground">No users found.</div>
