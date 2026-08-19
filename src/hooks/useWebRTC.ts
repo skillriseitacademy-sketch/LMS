@@ -185,9 +185,9 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
       await channel.subscribe();
       setIsJoined(true);
       
-    } catch (err) {
+    } catch (err: any) {
       console.error("[SFU] Failed to join room", err);
-      setStreamError("Failed to join room via SFU.");
+      setStreamError(`Failed to join room via SFU: ${err?.message || 'Unknown error'}`);
     }
   }, [roomCode, userName, isJoined, initLocalStream]);
 

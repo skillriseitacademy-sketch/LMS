@@ -40,24 +40,36 @@ export const Route = createFileRoute("/api/rooms/$roomCode/media-token" as any)(
             return new Response("Server configuration error", { status: 500 });
           }
 
-          // Generate a JWT for Metered
-          // Metered expects a specific JWT structure. If not using JWT, we can call the Metered API to generate a token or room credential.
-          // The standard way for Metered is to create a token via HTTP API or standard sign.
-          // For simplicity in a serverless function without jsonwebtoken library, we can hit Metered API.
-
-          // Call Metered API to get a credential or simply return the details to construct the connection on the client
-          // Wait, Metered's client SDK allows passing `roomURL`. Authentication is often handled via JWT or just room access if public.
-          // To secure it, we should ideally use the Metered REST API to create a token.
-          // But according to the spec: "returns a short-lived Metered room/participant token".
-
-          // Since this is just a mockup for now, let's pretend we generate a secure JWT.
-          // We don't have jsonwebtoken installed in this edge-like environment? 
-          // Let's just return what the client needs to connect, and we will mock the "token" part if necessary.
+          // Create the room on Metered via REST API if it doesn't exist
+          try {
+            const createRoomRes = await fetch(
+              `https://${meteredDomain}/api/v1/room?secretKey=${meteredSecretKey}`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  roomName: roomCode,
+                  privacy: "public"
+                })
+              }
+            );
+            
+            const createRoomData = await createRoomRes.json();
+            
+            if (!createRoomRes.ok && createRoomData.message !== "room already exists") {
+              console.error("[Metered] Failed to create room:", createRoomData);
+              return new Response(createRoomData.message || "Failed to create room", { status: 500 });
+            }
+          } catch (createErr: any) {
+            console.error("[Metered] Error calling Metered API:", createErr);
+            return new Response("Error connecting to Metered API", { status: 500 });
+          }
           
           return new Response(
             JSON.stringify({
               roomURL: `https://${meteredDomain}/${roomCode}`,
               // If Metered requires a token for private rooms, it would be here.
+
               // token: generatedJwt
             }),
             {
