@@ -724,7 +724,13 @@ function RoomView() {
         {/* Header */}
         <header className="h-20 flex items-center justify-between px-2 md:px-4 shrink-0">
           <div className="flex items-center gap-2 md:gap-4">
-            <button className="text-white hover:text-brand transition-colors">
+            <button 
+              className="text-white hover:text-brand transition-colors"
+              onClick={() => {
+                leaveRoom();
+                navigate({ to: "/rooms" });
+              }}
+            >
               <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
             </button>
             <h2 className="text-lg md:text-xl font-bold tracking-tight truncate max-w-[120px] md:max-w-none">

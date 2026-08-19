@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 
+declare global {
+  interface Window {
+    Metered: any;
+  }
+}
+
 export interface RemoteStream {
   peerId: string;
   userName: string;
@@ -52,8 +58,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
   const originalVideoTrackRef = useRef<MediaStreamTrack | null>(null);
   
   // SFU Connections
-  const publishPcRef = useRef<RTCPeerConnection | null>(null);
-  const subscribePcRef = useRef<RTCPeerConnection | null>(null);
+  const meteredMeetingRef = useRef<any>(null);
   
   const channelRef = useRef<any>(null);
   const myPeerId = useRef(Math.random().toString(36).substring(7));
@@ -104,7 +109,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
   );
 
   const joinRoom = useCallback(async () => {
-    if (isJoined || channelRef.current) return;
+    if (isJoined || meteredMeetingRef.current || channelRef.current) return;
 
     try {
       // 1. Fetch Metered Token from our new endpoint
@@ -117,53 +122,55 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
       if (!tokenRes.ok) throw new Error("Failed to get media token");
       const { roomURL } = await tokenRes.json();
       
-      // In a real implementation we would pass roomURL and token to the Metered SDK here.
-      // e.g., const metered = new Metered.Meeting(); await metered.join({ roomURL, name: userName });
-      
-      console.log(`[SFU] Authenticated for room: ${roomURL}`);
-      
-      const stream = await initLocalStream();
-      if (!stream) return;
+      const meeting = new window.Metered.Meeting();
+      meteredMeetingRef.current = meeting;
 
-      // 2. Setup SFU Connections (1 Publish, 1 Subscribe)
-      const config: RTCConfiguration = {
-        iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
-      };
-
-      // PUBLISH Connection
-      const pubPc = new RTCPeerConnection(config);
-      publishPcRef.current = pubPc;
-      stream.getTracks().forEach(track => pubPc.addTrack(track, stream));
-      
-      // Mock SFU negotiation (would normally exchange SDP with Metered backend)
-      const pubOffer = await pubPc.createOffer();
-      await pubPc.setLocalDescription(pubOffer);
-      console.log("[SFU] Publish connection initialized");
-
-      // SUBSCRIBE Connection
-      const subPc = new RTCPeerConnection(config);
-      subscribePcRef.current = subPc;
-      
-      subPc.ontrack = (event) => {
-        // The SFU multiplexes all remote tracks into this single connection.
-        // We use the stream ID to distinguish users.
-        const streamId = event.streams[0]?.id || "remote-" + Math.random();
+      meeting.on("remoteTrackStarted", (remoteTrackItem: any) => {
+        const streamId = remoteTrackItem.participantSessionId;
         console.log(`[SFU] Received remote track from SFU for stream: ${streamId}`);
-        
         setRemoteStreams((prev) => {
           const existing = prev[streamId]?.stream || new MediaStream();
-          existing.addTrack(event.track);
+          existing.addTrack(remoteTrackItem.track);
           return {
             ...prev,
             [streamId]: {
               peerId: streamId,
-              userName: `Participant ${Object.keys(prev).length + 1}`, // Mapped via signaling in real life
+              userName: remoteTrackItem.name || `Participant`,
               stream: existing,
             }
           };
         });
-      };
-      console.log("[SFU] Subscribe connection initialized");
+      });
+
+      meeting.on("participantLeft", (participantInfo: any) => {
+        setRemoteStreams((prev) => {
+          const next = { ...prev };
+          delete next[participantInfo.sessionId];
+          return next;
+        });
+      });
+
+      await meeting.join({
+        roomURL,
+        name: userName
+      });
+      
+      console.log(`[SFU] Authenticated for room: ${roomURL}`);
+      
+      const stream = await initLocalStream();
+      if (stream) {
+        // Metered API to share local tracks if possible, or startVideo
+        try {
+          if (stream.getVideoTracks().length > 0) {
+            await meeting.startVideo();
+          }
+          if (stream.getAudioTracks().length > 0) {
+            await meeting.startAudio();
+          }
+        } catch (e) {
+          console.warn("[SFU] Metered startVideo/Audio error", e);
+        }
+      }
       
       // 3. Fallback DataChannel over Supabase (since we are mocking SFU data messages)
       const channel = supabase.channel(`room:${roomCode}`);
@@ -190,10 +197,12 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
       channelRef.current = null;
     }
 
-    publishPcRef.current?.close();
-    subscribePcRef.current?.close();
-    publishPcRef.current = null;
-    subscribePcRef.current = null;
+    if (meteredMeetingRef.current) {
+      try {
+        meteredMeetingRef.current.leaveMeeting();
+      } catch (e) {}
+      meteredMeetingRef.current = null;
+    }
 
     setRemoteStreams({});
     setIsJoined(false);

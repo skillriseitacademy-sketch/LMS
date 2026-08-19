@@ -30,7 +30,8 @@ export function ConnectionButton({
   const handleAction = async (action: string) => {
     setIsLoading(true);
     try {
-      const token = session.access_token;
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
       const res = await fetch("/api/connections", {
         method: "POST",
         headers: {
