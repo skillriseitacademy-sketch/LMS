@@ -21,25 +21,44 @@ export function apiRoutesPlugin() {
         try {
           // req.url here is relative to /api (e.g. /chat/bot or /jobs)
           const urlPath = req.url.split("?")[0]; // e.g. /chat/bot
+          const targetParts = urlPath.slice(1).split("/").filter(Boolean);
 
-          // Map URL to file path. We need to handle both dot notation and folder structures.
-          // e.g., /chat/bot -> src/routes/api/chat.bot.ts or src/routes/api/chat/bot.ts
-          let relativeFilePath = urlPath.slice(1).replace(/\//g, ".") + ".ts";
-          let absolutePath = path.resolve(process.cwd(), "src/routes/api", relativeFilePath);
+          let absolutePath: string | null = null;
+          let params: Record<string, string> = {};
 
-          if (!fs.existsSync(absolutePath)) {
-            // Try standard slash structure
-            relativeFilePath = urlPath.slice(1) + ".ts";
-            absolutePath = path.resolve(process.cwd(), "src/routes/api", relativeFilePath);
+          const apiDir = path.resolve(process.cwd(), "src/routes/api");
+          if (fs.existsSync(apiDir)) {
+            const files = fs.readdirSync(apiDir);
+            for (const file of files) {
+              if (!file.endsWith(".ts")) continue;
+              const fileBase = file.replace(/\.ts$/, "");
+              
+              const fileParts = fileBase.split(".");
+              
+              if (fileParts.length === targetParts.length) {
+                let match = true;
+                const extractedParams: Record<string, string> = {};
+                
+                for (let i = 0; i < fileParts.length; i++) {
+                  if (fileParts[i].startsWith("$")) {
+                    const paramName = fileParts[i].slice(1);
+                    extractedParams[paramName] = targetParts[i];
+                  } else if (fileParts[i] !== targetParts[i]) {
+                    match = false;
+                    break;
+                  }
+                }
+                
+                if (match) {
+                  absolutePath = path.resolve(apiDir, file);
+                  params = extractedParams;
+                  break;
+                }
+              }
+            }
           }
 
-          if (!fs.existsSync(absolutePath)) {
-            // Also check for index.ts if it's a directory (e.g. /cron -> /cron/index.ts)
-            relativeFilePath = urlPath.slice(1) + "/index.ts";
-            absolutePath = path.resolve(process.cwd(), "src/routes/api", relativeFilePath);
-          }
-
-          if (!fs.existsSync(absolutePath)) {
+          if (!absolutePath) {
             // No matching API file found
             return next();
           }
@@ -95,7 +114,7 @@ export function apiRoutesPlugin() {
           const webRequest = new Request(fullUrl, requestInit);
 
           // Execute the TanStack Start handler
-          const response: Response = await handler({ request: webRequest });
+          const response: Response = await handler({ request: webRequest, params });
 
           // Convert Web Response back to Node Response
           const responseHeaders: Record<string, string> = {};

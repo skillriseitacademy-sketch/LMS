@@ -40,7 +40,7 @@ function LiveClasses() {
       const { data } = await supabase
         .from("live_classes")
         .select("*, topics(title)")
-        .eq("teacher_id", session.id)
+        .eq("host_id", session.id)
         .order("start_time", { ascending: true });
       setClasses(data || []);
 
@@ -57,7 +57,7 @@ function LiveClasses() {
         const tIds = enrolled.map((e) => e.topic_id);
         const { data } = await supabase
           .from("live_classes")
-          .select("*, topics(title), profiles(name)")
+          .select("*, topics(title), profiles!host_id(name)")
           .in("topic_id", tIds)
           .gte("end_time", new Date().toISOString())
           .order("start_time", { ascending: true });
@@ -78,13 +78,19 @@ function LiveClasses() {
 
     try {
       const startDateTime = new Date(`${date}T${time}`);
+      // assume 1 hr duration
+      const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
 
       // Wait for proper token
       const {
         data: { session: sbSession },
       } = await supabase.auth.getSession();
 
-      const actualRes = await fetch("/api/classes-create", {
+      // Find the topic id
+      const topic = topics.find(t => t.title === topicName);
+      if (!topic) throw new Error("Topic not found. Please choose an existing topic.");
+
+      const actualRes = await fetch("/api/classes/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,8 +98,9 @@ function LiveClasses() {
         },
         body: JSON.stringify({
           title,
-          topic_name: topicName,
+          topic_id: topic.id,
           start_time: startDateTime.toISOString(),
+          end_time: endDateTime.toISOString(),
         }),
       });
 
@@ -135,7 +142,7 @@ function LiveClasses() {
                   e.preventDefault();
                   if (!roomCode.trim()) return;
                   setIsJoining(true);
-                  navigate({ to: "/rooms/$roomCode", params: { roomCode: roomCode.toUpperCase() } });
+                  navigate({ to: "/live/$classId", params: { classId: roomCode.toUpperCase() } });
                 }}
                 disabled={isJoining || !roomCode}
                 className="bg-brand text-brand-foreground rounded-lg px-3 py-1.5 text-xs font-semibold hover:opacity-90 disabled:opacity-50"
@@ -179,7 +186,7 @@ function LiveClasses() {
                     <Video className="h-5 w-5" />
                   </div>
                   <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                    {c.topics?.title}
+                    {c.topics?.title} - Code: {c.room_code}
                   </div>
                   <h3 className="text-lg font-bold">{c.title}</h3>
                   {c.profiles && (
@@ -201,14 +208,13 @@ function LiveClasses() {
 
                   <div className="mt-6 pt-4 border-t border-border">
                     {session?.role === "teacher" ? (
-                      <a
-                        href={c.daily_room_url}
-                        target="_blank"
-                        rel="noreferrer"
+                      <Link
+                        to="/live/$classId"
+                        params={{ classId: c.room_code || c.id }}
                         className="block w-full rounded-xl bg-foreground py-2 text-center text-sm font-semibold text-background hover:opacity-90"
                       >
                         Host Class
-                      </a>
+                      </Link>
                     ) : isPast ? (
                       <button
                         disabled
@@ -219,7 +225,7 @@ function LiveClasses() {
                     ) : (
                       <Link
                         to="/live/$classId"
-                        params={{ classId: c.id }}
+                        params={{ classId: c.room_code || c.id }}
                         className={`block w-full rounded-xl py-2 text-center text-sm font-semibold ${isLiveNow ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : "bg-brand text-brand-foreground hover:opacity-90"}`}
                       >
                         {isLiveNow ? "Join Now" : "Go to Waiting Room"}

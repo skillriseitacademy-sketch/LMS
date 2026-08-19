@@ -151,10 +151,12 @@ The application uses PostgreSQL (via Supabase). The full schema is maintained in
 
 - **Auth & Profiles:** `profiles` (links to `auth.users`), `teachers`, `connections`.
 - **LMS Content:** `topics`, `quizzes`, `quiz_questions`, `code_challenges`.
-- **User Activity:** `student_topics`, `quiz_attempts`, `code_submissions`, `interview_sessions`.
-- **Live Rooms:** `instant_rooms`, `room_participants` (Tracks active rooms and waiting room guests).
-- **Gamification:** `xp_transactions`, `badges`, `topic_leaderboards`.
-- **Social:** `posts`, `post_reactions`, `post_comments`, `stories`.
+- **User Activity:** `student_topics`, `quiz_attempts`, `code_submissions`, `interview_sessions`, `projects`, `resumes`.
+- **Live Classes & Rooms:** `live_classes`, `class_attendance`, `class_recordings`, `instant_rooms`.
+- **Gamification & Rewards:** `xp_transactions`, `badges`, `user_badges`, `streak_history`, `daily_missions`, `topic_leaderboards`, `leaderboard_snapshots`.
+- **Career & Jobs:** `job_listings`, `career_roles`, `user_roadmap_progress`, `roadmap_nodes`, `roadmap_cache`.
+- **Social & Communications:** `posts`, `post_reactions`, `post_comments`, `stories`, `reports`, `notifications`.
+- **Proctoring:** `proctor_flags`.
 
 ### ER Diagram (Mermaid)
 
@@ -164,13 +166,22 @@ erDiagram
     profiles ||--o{ student_topics : "enrolls in"
     topics ||--o{ student_topics : "is enrolled by"
     topics ||--o{ quizzes : "contains"
-    quizzes ||--o{ quiz_questions : "has"
+    topics ||--o{ code_challenges : "has challenges"
+    quizzes ||--o{ quiz_questions : "has questions"
     auth_users ||--o{ quiz_attempts : "attempts"
-    quizzes ||--o{ quiz_attempts : "is attempted in"
+    auth_users ||--o{ code_submissions : "submits"
+    code_challenges ||--o{ code_submissions : "receives submissions"
     auth_users ||--o{ interview_sessions : "conducts"
     auth_users ||--o{ posts : "creates"
-    posts ||--o{ post_comments : "has"
+    posts ||--o{ post_comments : "has comments"
+    posts ||--o{ post_reactions : "has reactions"
     auth_users ||--o{ connections : "follows / is followed by"
+    auth_users ||--o{ live_classes : "hosts"
+    live_classes ||--o{ class_attendance : "tracks attendees"
+    auth_users ||--o{ user_roadmap_progress : "tracks career roadmap"
+    auth_users ||--o{ user_badges : "earns"
+    badges ||--o{ user_badges : "awarded to"
+    auth_users ||--o{ instant_rooms : "creates"
 ```
 
 ## 7. Authentication & Authorization

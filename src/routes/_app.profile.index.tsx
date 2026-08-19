@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { PostComposer } from "@/components/social/post-composer";
 import { PostCard } from "@/components/social/post-card";
 
-export const Route = createFileRoute("/_app/profile")({
+export const Route = createFileRoute("/_app/profile/")({
   component: ProfileViewPage,
 });
 

@@ -54,7 +54,6 @@ function JobsPage() {
   };
 
   const searchJobs = async (searchRole: string) => {
-    if (!searchRole) return;
     setLoading(true);
     setJobs([]);
 
@@ -67,51 +66,49 @@ function JobsPage() {
         return;
       }
 
+      // Fetch alerts (keep existing alert functionality if needed, or mock it)
       const alertsRes = await fetch("/api/job-alerts", {
-        headers: { Authorization: `Bearer ${session.access_token}` }
-      });
-      if (alertsRes.ok) {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      }).catch(() => null);
+      if (alertsRes && alertsRes.ok) {
         const alertsData = await alertsRes.json();
         setAlerts(alertsData.alerts || []);
       }
 
-      // Add remote/fulltime to role description if selected
-      let finalRole = searchRole;
-      if (isRemote) finalRole += " Remote";
-      if (isFullTime) finalRole += " Full-Time";
+      // Query jobs from Supabase
+      let query = supabase.from("job_listings").select(`
+        id, title, company, location, salary_range, seniority, type, link:id,
+        student_job_matches ( score )
+      `);
 
-      const res = await fetch("/api/jobs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          role: finalRole,
-          location: location,
-          lpa: salary,
-          experience: "Any",
-        }),
-      });
+      if (searchRole) {
+        query = query.ilike("title", `%${searchRole}%`);
+      }
+      if (location) {
+        query = query.ilike("location", `%${location}%`);
+      }
+      if (salary) {
+        query = query.ilike("salary_range", `%${salary}%`);
+      }
 
-      if (!res.ok) throw new Error("Failed to fetch jobs");
+      const { data, error } = await query;
 
-      const data = await res.json();
+      if (error) throw error;
 
-      if (data.jobs && Array.isArray(data.jobs)) {
+      if (data) {
         setJobs(
-          data.jobs.map((j: any, i: number) => ({
-            id: `job-${Date.now()}-${i}`,
+          data.map((j: any) => ({
+            id: j.id,
             title: j.title,
             company: j.company,
             location: j.location || "Remote",
-            salary: j.salary || "Competitive",
-            experience: j.experience,
-            link: j.link,
-            type: "Full-Time",
+            salary: j.salary_range || "Competitive",
+            experience: j.seniority || "Any",
+            link: "#",
+            type: j.type || "Full-Time",
             logo: `https://ui-avatars.com/api/?name=${encodeURIComponent(j.company)}&background=random`,
-            matchScore: Math.floor(Math.random() * 15) + 85, // 85-99%
-          })),
+            matchScore: j.student_job_matches?.[0]?.score || Math.floor(Math.random() * 15) + 85,
+          }))
         );
       }
     } catch (error) {

@@ -1083,3 +1083,130 @@ AS $$
   ORDER BY ai_user_memories.embedding <=> query_embedding
   LIMIT match_count;
 $$;
+
+-- ==============================================================================
+-- PHASE 6 — V2 FEATURE SPEC (Social, Jobs, Rooms SFU, Recording)
+-- ==============================================================================
+
+-- 6.1 Social Graph (Private profiles, follow requests)
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS is_private BOOLEAN DEFAULT false;
+
+CREATE TABLE IF NOT EXISTS follow_requests (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  requester_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  target_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'declined')),
+  created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+  UNIQUE(requester_id, target_id),
+  CHECK (requester_id <> target_id)
+);
+ALTER TABLE follow_requests ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users view own follow requests" ON follow_requests FOR SELECT USING (auth.uid() = requester_id OR auth.uid() = target_id);
+CREATE POLICY "Users create follow requests" ON follow_requests FOR INSERT WITH CHECK (auth.uid() = requester_id);
+CREATE POLICY "Users update own follow requests (target)" ON follow_requests FOR UPDATE USING (auth.uid() = target_id);
+CREATE POLICY "Users delete own follow requests (requester)" ON follow_requests FOR DELETE USING (auth.uid() = requester_id);
+
+-- 6.2 Job Aggregator
+CREATE TABLE IF NOT EXISTS job_ingestion_runs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  started_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+  finished_at TIMESTAMPTZ,
+  jobs_found INTEGER DEFAULT 0,
+  jobs_new INTEGER DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'running',
+  error_log TEXT
+);
+ALTER TABLE job_ingestion_runs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Admins manage job ingestion runs" ON job_ingestion_runs FOR ALL USING (get_user_role() = 'admin');
+
+-- Add columns to job_listings for tracking
+ALTER TABLE job_listings
+  ADD COLUMN IF NOT EXISTS seniority TEXT,
+  ADD COLUMN IF NOT EXISTS skills TEXT[],
+  ADD COLUMN IF NOT EXISTS salary_range TEXT,
+  ADD COLUMN IF NOT EXISTS description TEXT,
+  ADD COLUMN IF NOT EXISTS posted_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS ingested_at TIMESTAMPTZ DEFAULT now(),
+  ADD COLUMN IF NOT EXISTS raw_hash TEXT UNIQUE;
+
+CREATE TABLE IF NOT EXISTS student_job_matches (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  job_id UUID NOT NULL REFERENCES job_listings(id) ON DELETE CASCADE,
+  score FLOAT NOT NULL,
+  matched_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+  dismissed BOOLEAN DEFAULT false,
+  UNIQUE(student_id, job_id)
+);
+ALTER TABLE student_job_matches ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Students view and manage own matches" ON student_job_matches FOR ALL USING (auth.uid() = student_id);
+CREATE POLICY "Admins manage all matches" ON student_job_matches FOR ALL USING (get_user_role() = 'admin');
+
+-- 6.3 AI Interview Tracks
+CREATE TABLE IF NOT EXISTS interview_tracks (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL UNIQUE,
+  description TEXT,
+  system_prompt TEXT NOT NULL,
+  sample_questions JSONB DEFAULT '[]'::jsonb,
+  icon TEXT,
+  created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+);
+ALTER TABLE interview_tracks ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone authenticated can view interview tracks" ON interview_tracks FOR SELECT USING (auth.uid() IS NOT NULL);
+CREATE POLICY "Admins manage interview tracks" ON interview_tracks FOR ALL USING (get_user_role() = 'admin');
+
+ALTER TABLE interview_sessions
+  ADD COLUMN IF NOT EXISTS track_id UUID REFERENCES interview_tracks(id) ON DELETE SET NULL;
+
+-- 6.4 Live Rooms & Recording (SFU upgrades)
+CREATE TABLE IF NOT EXISTS live_classes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  host_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE
+);
+
+DO $$ 
+BEGIN
+  IF EXISTS(SELECT * FROM information_schema.columns WHERE table_name='live_classes' and column_name='teacher_id') THEN
+    ALTER TABLE live_classes RENAME COLUMN teacher_id TO host_id;
+  END IF;
+END $$;
+
+ALTER TABLE live_classes
+  ADD COLUMN IF NOT EXISTS host_role TEXT CHECK (host_role IN ('teacher', 'admin')),
+  ADD COLUMN IF NOT EXISTS room_code TEXT UNIQUE,
+  ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'live', 'ended')),
+  ADD COLUMN IF NOT EXISTS started_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS ended_at TIMESTAMPTZ;
+
+CREATE TABLE IF NOT EXISTS class_recordings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  room_id UUID NOT NULL REFERENCES live_classes(id) ON DELETE CASCADE
+);
+
+ALTER TABLE class_recordings
+  ADD COLUMN IF NOT EXISTS host_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'recording',
+  ADD COLUMN IF NOT EXISTS duration_seconds INTEGER DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS storage_path TEXT,
+  ADD COLUMN IF NOT EXISTS started_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS ended_at TIMESTAMPTZ;
+
+ALTER TABLE class_recordings DROP CONSTRAINT IF EXISTS class_recordings_status_check;
+ALTER TABLE class_recordings ADD CONSTRAINT class_recordings_status_check CHECK (status IN ('recording', 'paused', 'processing', 'uploading', 'done', 'failed', 'ready'));
+
+CREATE TABLE IF NOT EXISTS recording_segments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  recording_id UUID NOT NULL REFERENCES class_recordings(id) ON DELETE CASCADE,
+  started_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+  ended_at TIMESTAMPTZ
+);
+ALTER TABLE recording_segments ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view recording segments for visible recordings" ON recording_segments FOR SELECT
+  USING (
+    EXISTS (SELECT 1 FROM class_recordings cr WHERE cr.id = recording_id)
+  );
+CREATE POLICY "Host manages own recording segments" ON recording_segments FOR ALL
+  USING (
+    EXISTS (SELECT 1 FROM class_recordings cr WHERE cr.id = recording_id AND cr.host_id = auth.uid()) OR get_user_role() = 'admin'
+  );

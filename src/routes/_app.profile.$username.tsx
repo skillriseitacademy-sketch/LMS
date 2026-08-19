@@ -17,23 +17,51 @@ function ProfileRoute() {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ xp: 0, streak: 0, level: 1 });
+  const [connectionStatus, setConnectionStatus] = useState<any>(null);
 
   useEffect(() => {
     async function loadUser() {
       try {
         setLoading(true);
-        // Load profile by username
-        const { data: profData, error: profError } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("username", username)
-          .single();
+        // Load profile by username or ID
+        let query = supabase.from("profiles").select("*");
+        
+        // Simple check for UUID format
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(username);
+        
+        if (isUUID) {
+          query = query.eq("id", username);
+        } else {
+          query = query.eq("username", username);
+        }
+        
+        const { data: profData, error: profError } = await query.single();
 
         if (profError || !profData) {
           setProfile(null);
           return;
         }
         setProfile(profData);
+
+        if (session && session.id !== profData.id) {
+          const { data: conn } = await supabase
+            .from("connections")
+            .select("status, follower_id")
+            .or(
+              `and(follower_id.eq.${session.id},following_id.eq.${profData.id}),and(follower_id.eq.${profData.id},following_id.eq.${session.id})`,
+            )
+            .maybeSingle();
+
+          if (conn) {
+            if (conn.status === "accepted") setConnectionStatus("accepted");
+            else if (conn.status === "pending" && conn.follower_id === session.id)
+              setConnectionStatus("pending");
+            else if (conn.status === "pending" && conn.follower_id === profData.id)
+              setConnectionStatus("received");
+          } else {
+            setConnectionStatus(null);
+          }
+        }
 
         // Fetch XP / Streak
         // Only works if RLS allows or we fetch via edge function / API
@@ -57,7 +85,7 @@ function ProfileRoute() {
     }
 
     loadUser();
-  }, [username]);
+  }, [username, session?.id]);
 
   return (
     <>
@@ -109,7 +137,7 @@ function ProfileRoute() {
               </div>
               <ConnectionButton
                 targetId={profile.id}
-                initialStatus={null}
+                initialStatus={connectionStatus}
                 targetVisibility={profile.visibility}
               />
               {session?.id !== profile.id && (

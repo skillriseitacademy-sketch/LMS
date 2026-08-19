@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { UserPlus, UserCheck, Clock } from "lucide-react";
@@ -21,12 +21,16 @@ export function ConnectionButton({
   const [status, setStatus] = useState<Status>(initialStatus);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    setStatus(initialStatus);
+  }, [initialStatus]);
+
   if (!session || session.id === targetId) return null;
 
   const handleAction = async (action: string) => {
     setIsLoading(true);
     try {
-      const token = (supabase as any).realtime?.accessToken ?? "";
+      const token = session.access_token;
       const res = await fetch("/api/connections", {
         method: "POST",
         headers: {

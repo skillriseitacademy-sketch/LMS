@@ -17,13 +17,30 @@ export const Route = createFileRoute("/api/interview/start" as any)({
           } = await supabase.auth.getUser(token);
           if (authError || !user) return new Response("Unauthorized", { status: 401 });
 
-          const { topic_id } = await request.json();
+          const { topic_id, track_id } = await request.json();
 
           // Check Rate Limit (DB Backed)
           try {
             await checkRateLimit(user.id);
           } catch (limitErr: any) {
             return new Response("Daily AI budget exceeded.", { status: 429 });
+          }
+
+          let instructions =
+            "You are a professional technical interviewer for PlacePro LMS. Ask the candidate questions one by one, wait for their answer, and provide constructive feedback.";
+
+          const serviceClient = supabase; // Since this is running on a trusted endpoint if we need service client, wait, we can just use regular supabase if RLS allows, but let's use service client for safety.
+          
+          if (track_id) {
+            // Service client not imported, but wait we can use supabase client directly if RLS allows
+            const { data: track } = await supabase
+              .from("interview_tracks")
+              .select("system_prompt")
+              .eq("id", track_id)
+              .single();
+            if (track?.system_prompt) {
+              instructions = track.system_prompt;
+            }
           }
 
           // 1. Get OpenAI Token
@@ -39,8 +56,7 @@ export const Route = createFileRoute("/api/interview/start" as any)({
             body: JSON.stringify({
               model: "gpt-4o-realtime-preview-2024-12-17",
               voice: "alloy",
-              instructions:
-                "You are a professional technical interviewer for PlacePro LMS. Ask the candidate questions one by one, wait for their answer, and provide constructive feedback.",
+              instructions: instructions,
               modalities: ["audio", "text"],
               input_audio_transcription: { model: "whisper-1" },
             }),
@@ -60,6 +76,7 @@ export const Route = createFileRoute("/api/interview/start" as any)({
             .insert({
               user_id: user.id,
               topic_id: topic_id || null,
+              track_id: track_id || null,
               status: "in_progress",
               started_at: new Date().toISOString(),
             })

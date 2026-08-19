@@ -35,47 +35,22 @@ export const Route = createFileRoute("/api/classes/create" as any)({
             throw new ApiError(400, "Invalid or empty title after sanitization");
           }
 
-          // Create Daily.co room
-          const dailyKey = process.env.DAILY_API_KEY;
-          if (!dailyKey) throw new ApiError(500, "Missing DAILY_API_KEY configuration");
-
-          const exp = Math.floor(new Date(body.end_time).getTime() / 1000) + 3600; // Room expires 1hr after end
-
-          const dailyRes = await fetch("https://api.daily.co/v1/rooms", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${dailyKey}`,
-            },
-            body: JSON.stringify({
-              properties: {
-                exp,
-                enable_chat: true,
-              },
-            }),
-          });
-
-          if (!dailyRes.ok) {
-            const errorText = await dailyRes.text();
-            console.error("Daily API Error:", errorText);
-            throw new ApiError(500, "Failed to create video room");
-          }
-
-          const room = await dailyRes.json();
+          // Generate a short 6-char alphanumeric room code
+          const room_code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
           // Save to database
           const { data: inserted, error: dbError } = await serviceClient
             .from("live_classes")
             .insert({
-              teacher_id: user.id,
+              host_id: user.id,
               topic_id: body.topic_id,
               title: cleanTitle,
               start_time: body.start_time,
               end_time: body.end_time,
-              daily_room_url: room.url,
-              daily_room_name: room.name,
+              room_code: room_code,
+              status: 'scheduled'
             })
-            .select("id, title, start_time, end_time, daily_room_url")
+            .select("id, title, start_time, end_time, room_code")
             .single();
 
           if (dbError) {

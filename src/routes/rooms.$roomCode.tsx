@@ -95,7 +95,7 @@ function VideoPlayer({
         autoPlay
         playsInline
         muted={muted}
-        className="w-full h-full object-cover"
+        className={`w-full h-full object-contain ${isLocal ? "-scale-x-100" : ""}`}
       />
       {isAudioMuted && !isLocal && (
         <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md p-2 rounded-xl text-white z-10 flex items-center justify-center">
@@ -226,6 +226,7 @@ function RoomView() {
     handRaised,
     myPeerId,
     videoDevices,
+    currentDeviceId,
     initLocalStream,
     joinRoom,
     leaveRoom,
@@ -492,7 +493,7 @@ function RoomView() {
                 autoPlay
                 playsInline
                 muted
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain -scale-x-100"
               />
             ) : (
               <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">

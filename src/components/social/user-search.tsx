@@ -87,7 +87,7 @@ export function UserSearch() {
       </div>
 
       {open && query.length >= 2 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-2xl shadow-xl overflow-hidden z-50">
+        <div className="absolute top-full right-0 w-[400px] sm:w-[500px] mt-2 bg-card border border-border rounded-2xl shadow-xl overflow-hidden z-50">
           <div className="max-h-80 overflow-y-auto">
             {results.length === 0 && !loading ? (
               <div className="p-4 text-center text-sm text-muted-foreground">No users found.</div>
@@ -114,7 +114,7 @@ export function UserSearch() {
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col min-w-0">
-                      <div className="flex items-baseline gap-1 truncate">
+                      <div className="flex items-baseline gap-1">
                         <span className="text-sm font-semibold truncate">{user.name}</span>
                         {user.username && (
                           <span className="text-[10px] text-muted-foreground truncate">

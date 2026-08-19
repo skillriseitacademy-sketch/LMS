@@ -69,26 +69,35 @@ import { Route as MockupAdmin_dashboard_job_placement_analyticsRouteImport } fro
 import { Route as MockupAdmin_dashboard_content_managementRouteImport } from './routes/mockup.admin_dashboard_content_management'
 import { Route as MockupAdmin_dashboardRouteImport } from './routes/mockup.admin_dashboard'
 import { Route as MockupAchievements_rewards_hubRouteImport } from './routes/mockup.achievements_rewards_hub'
+import { Route as AppTeacherRouteImport } from './routes/_app.teacher'
 import { Route as AppRoadmapRouteImport } from './routes/_app.roadmap'
 import { Route as AppResumeRouteImport } from './routes/_app.resume'
 import { Route as AppQuizzesRouteImport } from './routes/_app.quizzes'
-import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppMessagesRouteImport } from './routes/_app.messages'
 import { Route as AppLeaderboardRouteImport } from './routes/_app.leaderboard'
 import { Route as AppJobsRouteImport } from './routes/_app.jobs'
 import { Route as AppInterviewRouteImport } from './routes/_app.interview'
 import { Route as AppFeedRouteImport } from './routes/_app.feed'
+import { Route as AppDirectoryRouteImport } from './routes/_app.directory'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCodeRouteImport } from './routes/_app.code'
 import { Route as AppArenaRouteImport } from './routes/_app.arena'
 import { Route as AppAdminRouteImport } from './routes/_app.admin'
+import { Route as AppTeacherIndexRouteImport } from './routes/_app.teacher.index'
 import { Route as AppRoomsIndexRouteImport } from './routes/_app.rooms.index'
 import { Route as AppResumeIndexRouteImport } from './routes/_app.resume.index'
 import { Route as AppQuizzesIndexRouteImport } from './routes/_app.quizzes.index'
+import { Route as AppProfileIndexRouteImport } from './routes/_app.profile.index'
 import { Route as AppLiveIndexRouteImport } from './routes/_app.live.index'
 import { Route as AppInterviewIndexRouteImport } from './routes/_app.interview.index'
 import { Route as AppFeedIndexRouteImport } from './routes/_app.feed.index'
 import { Route as AppAdminIndexRouteImport } from './routes/_app.admin.index'
+import { Route as AppTeacherTopicsRouteImport } from './routes/_app.teacher.topics'
+import { Route as AppTeacherRecordedSessionsRouteImport } from './routes/_app.teacher.recorded-sessions'
+import { Route as AppTeacherQuizzesRouteImport } from './routes/_app.teacher.quizzes'
+import { Route as AppTeacherProjectsRouteImport } from './routes/_app.teacher.projects'
+import { Route as AppTeacherLiveClassesRouteImport } from './routes/_app.teacher.live-classes'
+import { Route as AppTeacherInterviewsRouteImport } from './routes/_app.teacher.interviews'
 import { Route as AppResumeTemplatesRouteImport } from './routes/_app.resume.templates'
 import { Route as AppResumeCreateRouteImport } from './routes/_app.resume.create'
 import { Route as AppQuizzesQuizIdRouteImport } from './routes/_app.quizzes.$quizId'
@@ -97,13 +106,8 @@ import { Route as AppLiveClassIdRouteImport } from './routes/_app.live.$classId'
 import { Route as AppCodeChallengeIdRouteImport } from './routes/_app.code.$challengeId'
 import { Route as AppArenaTopicIdRouteImport } from './routes/_app.arena.$topicId'
 import { Route as AppAdminUsersRouteImport } from './routes/_app.admin.users'
-import { Route as AppAdminTopicsRouteImport } from './routes/_app.admin.topics'
 import { Route as AppAdminTeachersRouteImport } from './routes/_app.admin.teachers'
-import { Route as AppAdminRecordedSessionsRouteImport } from './routes/_app.admin.recorded-sessions'
-import { Route as AppAdminQuizzesRouteImport } from './routes/_app.admin.quizzes'
-import { Route as AppAdminProjectsRouteImport } from './routes/_app.admin.projects'
-import { Route as AppAdminLiveClassesRouteImport } from './routes/_app.admin.live-classes'
-import { Route as AppAdminInterviewsRouteImport } from './routes/_app.admin.interviews'
+import { Route as AppAdminJobsRouteImport } from './routes/_app.admin.jobs'
 import { Route as AppAdminAnalyticsRouteImport } from './routes/_app.admin.analytics'
 import { Route as AppAdminAdminsRouteImport } from './routes/_app.admin.admins'
 import { Route as AppQuizzesQuizIdResultsRouteImport } from './routes/_app.quizzes.$quizId.results'
@@ -453,6 +457,11 @@ const MockupAchievements_rewards_hubRoute =
     path: '/mockup/achievements_rewards_hub',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AppTeacherRoute = AppTeacherRouteImport.update({
+  id: '/teacher',
+  path: '/teacher',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppRoadmapRoute = AppRoadmapRouteImport.update({
   id: '/roadmap',
   path: '/roadmap',
@@ -466,11 +475,6 @@ const AppResumeRoute = AppResumeRouteImport.update({
 const AppQuizzesRoute = AppQuizzesRouteImport.update({
   id: '/quizzes',
   path: '/quizzes',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppProfileRoute = AppProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
   getParentRoute: () => AppRoute,
 } as any)
 const AppMessagesRoute = AppMessagesRouteImport.update({
@@ -498,6 +502,11 @@ const AppFeedRoute = AppFeedRouteImport.update({
   path: '/feed',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDirectoryRoute = AppDirectoryRouteImport.update({
+  id: '/directory',
+  path: '/directory',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -518,6 +527,11 @@ const AppAdminRoute = AppAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AppRoute,
 } as any)
+const AppTeacherIndexRoute = AppTeacherIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppTeacherRoute,
+} as any)
 const AppRoomsIndexRoute = AppRoomsIndexRouteImport.update({
   id: '/rooms/',
   path: '/rooms/',
@@ -532,6 +546,11 @@ const AppQuizzesIndexRoute = AppQuizzesIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppQuizzesRoute,
+} as any)
+const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppLiveIndexRoute = AppLiveIndexRouteImport.update({
   id: '/live/',
@@ -553,6 +572,37 @@ const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppAdminRoute,
 } as any)
+const AppTeacherTopicsRoute = AppTeacherTopicsRouteImport.update({
+  id: '/topics',
+  path: '/topics',
+  getParentRoute: () => AppTeacherRoute,
+} as any)
+const AppTeacherRecordedSessionsRoute =
+  AppTeacherRecordedSessionsRouteImport.update({
+    id: '/recorded-sessions',
+    path: '/recorded-sessions',
+    getParentRoute: () => AppTeacherRoute,
+  } as any)
+const AppTeacherQuizzesRoute = AppTeacherQuizzesRouteImport.update({
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => AppTeacherRoute,
+} as any)
+const AppTeacherProjectsRoute = AppTeacherProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AppTeacherRoute,
+} as any)
+const AppTeacherLiveClassesRoute = AppTeacherLiveClassesRouteImport.update({
+  id: '/live-classes',
+  path: '/live-classes',
+  getParentRoute: () => AppTeacherRoute,
+} as any)
+const AppTeacherInterviewsRoute = AppTeacherInterviewsRouteImport.update({
+  id: '/interviews',
+  path: '/interviews',
+  getParentRoute: () => AppTeacherRoute,
+} as any)
 const AppResumeTemplatesRoute = AppResumeTemplatesRouteImport.update({
   id: '/templates',
   path: '/templates',
@@ -569,9 +619,9 @@ const AppQuizzesQuizIdRoute = AppQuizzesQuizIdRouteImport.update({
   getParentRoute: () => AppQuizzesRoute,
 } as any)
 const AppProfileUsernameRoute = AppProfileUsernameRouteImport.update({
-  id: '/$username',
-  path: '/$username',
-  getParentRoute: () => AppProfileRoute,
+  id: '/profile/$username',
+  path: '/profile/$username',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppLiveClassIdRoute = AppLiveClassIdRouteImport.update({
   id: '/live/$classId',
@@ -593,40 +643,14 @@ const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AppAdminRoute,
 } as any)
-const AppAdminTopicsRoute = AppAdminTopicsRouteImport.update({
-  id: '/topics',
-  path: '/topics',
-  getParentRoute: () => AppAdminRoute,
-} as any)
 const AppAdminTeachersRoute = AppAdminTeachersRouteImport.update({
   id: '/teachers',
   path: '/teachers',
   getParentRoute: () => AppAdminRoute,
 } as any)
-const AppAdminRecordedSessionsRoute =
-  AppAdminRecordedSessionsRouteImport.update({
-    id: '/recorded-sessions',
-    path: '/recorded-sessions',
-    getParentRoute: () => AppAdminRoute,
-  } as any)
-const AppAdminQuizzesRoute = AppAdminQuizzesRouteImport.update({
-  id: '/quizzes',
-  path: '/quizzes',
-  getParentRoute: () => AppAdminRoute,
-} as any)
-const AppAdminProjectsRoute = AppAdminProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => AppAdminRoute,
-} as any)
-const AppAdminLiveClassesRoute = AppAdminLiveClassesRouteImport.update({
-  id: '/live-classes',
-  path: '/live-classes',
-  getParentRoute: () => AppAdminRoute,
-} as any)
-const AppAdminInterviewsRoute = AppAdminInterviewsRouteImport.update({
-  id: '/interviews',
-  path: '/interviews',
+const AppAdminJobsRoute = AppAdminJobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
   getParentRoute: () => AppAdminRoute,
 } as any)
 const AppAdminAnalyticsRoute = AppAdminAnalyticsRouteImport.update({
@@ -684,15 +708,16 @@ export interface FileRoutesByFullPath {
   '/arena': typeof AppArenaRouteWithChildren
   '/code': typeof AppCodeRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
+  '/directory': typeof AppDirectoryRoute
   '/feed': typeof AppFeedRouteWithChildren
   '/interview': typeof AppInterviewRouteWithChildren
   '/jobs': typeof AppJobsRoute
   '/leaderboard': typeof AppLeaderboardRoute
   '/messages': typeof AppMessagesRoute
-  '/profile': typeof AppProfileRouteWithChildren
   '/quizzes': typeof AppQuizzesRouteWithChildren
   '/resume': typeof AppResumeRouteWithChildren
   '/roadmap': typeof AppRoadmapRoute
+  '/teacher': typeof AppTeacherRouteWithChildren
   '/mockup/achievements_rewards_hub': typeof MockupAchievements_rewards_hubRoute
   '/mockup/admin_dashboard': typeof MockupAdmin_dashboardRoute
   '/mockup/admin_dashboard_content_management': typeof MockupAdmin_dashboard_content_managementRoute
@@ -749,13 +774,8 @@ export interface FileRoutesByFullPath {
   '/settings/security': typeof SettingsSecurityRoute
   '/admin/admins': typeof AppAdminAdminsRoute
   '/admin/analytics': typeof AppAdminAnalyticsRoute
-  '/admin/interviews': typeof AppAdminInterviewsRoute
-  '/admin/live-classes': typeof AppAdminLiveClassesRoute
-  '/admin/projects': typeof AppAdminProjectsRoute
-  '/admin/quizzes': typeof AppAdminQuizzesRoute
-  '/admin/recorded-sessions': typeof AppAdminRecordedSessionsRoute
+  '/admin/jobs': typeof AppAdminJobsRoute
   '/admin/teachers': typeof AppAdminTeachersRoute
-  '/admin/topics': typeof AppAdminTopicsRoute
   '/admin/users': typeof AppAdminUsersRoute
   '/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
   '/code/$challengeId': typeof AppCodeChallengeIdRoute
@@ -764,13 +784,21 @@ export interface FileRoutesByFullPath {
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
+  '/teacher/interviews': typeof AppTeacherInterviewsRoute
+  '/teacher/live-classes': typeof AppTeacherLiveClassesRoute
+  '/teacher/projects': typeof AppTeacherProjectsRoute
+  '/teacher/quizzes': typeof AppTeacherQuizzesRoute
+  '/teacher/recorded-sessions': typeof AppTeacherRecordedSessionsRoute
+  '/teacher/topics': typeof AppTeacherTopicsRoute
   '/admin/': typeof AppAdminIndexRoute
   '/feed/': typeof AppFeedIndexRoute
   '/interview/': typeof AppInterviewIndexRoute
   '/live/': typeof AppLiveIndexRoute
+  '/profile/': typeof AppProfileIndexRoute
   '/quizzes/': typeof AppQuizzesIndexRoute
   '/resume/': typeof AppResumeIndexRoute
   '/rooms/': typeof AppRoomsIndexRoute
+  '/teacher/': typeof AppTeacherIndexRoute
   '/arena/$topicId/$challengeId': typeof AppArenaTopicIdChallengeIdRoute
   '/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
   '/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
@@ -787,10 +815,10 @@ export interface FileRoutesByTo {
   '/arena': typeof AppArenaRouteWithChildren
   '/code': typeof AppCodeRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
+  '/directory': typeof AppDirectoryRoute
   '/jobs': typeof AppJobsRoute
   '/leaderboard': typeof AppLeaderboardRoute
   '/messages': typeof AppMessagesRoute
-  '/profile': typeof AppProfileRouteWithChildren
   '/roadmap': typeof AppRoadmapRoute
   '/mockup/achievements_rewards_hub': typeof MockupAchievements_rewards_hubRoute
   '/mockup/admin_dashboard': typeof MockupAdmin_dashboardRoute
@@ -848,13 +876,8 @@ export interface FileRoutesByTo {
   '/settings/security': typeof SettingsSecurityRoute
   '/admin/admins': typeof AppAdminAdminsRoute
   '/admin/analytics': typeof AppAdminAnalyticsRoute
-  '/admin/interviews': typeof AppAdminInterviewsRoute
-  '/admin/live-classes': typeof AppAdminLiveClassesRoute
-  '/admin/projects': typeof AppAdminProjectsRoute
-  '/admin/quizzes': typeof AppAdminQuizzesRoute
-  '/admin/recorded-sessions': typeof AppAdminRecordedSessionsRoute
+  '/admin/jobs': typeof AppAdminJobsRoute
   '/admin/teachers': typeof AppAdminTeachersRoute
-  '/admin/topics': typeof AppAdminTopicsRoute
   '/admin/users': typeof AppAdminUsersRoute
   '/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
   '/code/$challengeId': typeof AppCodeChallengeIdRoute
@@ -863,13 +886,21 @@ export interface FileRoutesByTo {
   '/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/resume/create': typeof AppResumeCreateRoute
   '/resume/templates': typeof AppResumeTemplatesRoute
+  '/teacher/interviews': typeof AppTeacherInterviewsRoute
+  '/teacher/live-classes': typeof AppTeacherLiveClassesRoute
+  '/teacher/projects': typeof AppTeacherProjectsRoute
+  '/teacher/quizzes': typeof AppTeacherQuizzesRoute
+  '/teacher/recorded-sessions': typeof AppTeacherRecordedSessionsRoute
+  '/teacher/topics': typeof AppTeacherTopicsRoute
   '/admin': typeof AppAdminIndexRoute
   '/feed': typeof AppFeedIndexRoute
   '/interview': typeof AppInterviewIndexRoute
   '/live': typeof AppLiveIndexRoute
+  '/profile': typeof AppProfileIndexRoute
   '/quizzes': typeof AppQuizzesIndexRoute
   '/resume': typeof AppResumeIndexRoute
   '/rooms': typeof AppRoomsIndexRoute
+  '/teacher': typeof AppTeacherIndexRoute
   '/arena/$topicId/$challengeId': typeof AppArenaTopicIdChallengeIdRoute
   '/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
   '/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
@@ -889,15 +920,16 @@ export interface FileRoutesById {
   '/_app/arena': typeof AppArenaRouteWithChildren
   '/_app/code': typeof AppCodeRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/directory': typeof AppDirectoryRoute
   '/_app/feed': typeof AppFeedRouteWithChildren
   '/_app/interview': typeof AppInterviewRouteWithChildren
   '/_app/jobs': typeof AppJobsRoute
   '/_app/leaderboard': typeof AppLeaderboardRoute
   '/_app/messages': typeof AppMessagesRoute
-  '/_app/profile': typeof AppProfileRouteWithChildren
   '/_app/quizzes': typeof AppQuizzesRouteWithChildren
   '/_app/resume': typeof AppResumeRouteWithChildren
   '/_app/roadmap': typeof AppRoadmapRoute
+  '/_app/teacher': typeof AppTeacherRouteWithChildren
   '/mockup/achievements_rewards_hub': typeof MockupAchievements_rewards_hubRoute
   '/mockup/admin_dashboard': typeof MockupAdmin_dashboardRoute
   '/mockup/admin_dashboard_content_management': typeof MockupAdmin_dashboard_content_managementRoute
@@ -954,13 +986,8 @@ export interface FileRoutesById {
   '/settings/security': typeof SettingsSecurityRoute
   '/_app/admin/admins': typeof AppAdminAdminsRoute
   '/_app/admin/analytics': typeof AppAdminAnalyticsRoute
-  '/_app/admin/interviews': typeof AppAdminInterviewsRoute
-  '/_app/admin/live-classes': typeof AppAdminLiveClassesRoute
-  '/_app/admin/projects': typeof AppAdminProjectsRoute
-  '/_app/admin/quizzes': typeof AppAdminQuizzesRoute
-  '/_app/admin/recorded-sessions': typeof AppAdminRecordedSessionsRoute
+  '/_app/admin/jobs': typeof AppAdminJobsRoute
   '/_app/admin/teachers': typeof AppAdminTeachersRoute
-  '/_app/admin/topics': typeof AppAdminTopicsRoute
   '/_app/admin/users': typeof AppAdminUsersRoute
   '/_app/arena/$topicId': typeof AppArenaTopicIdRouteWithChildren
   '/_app/code/$challengeId': typeof AppCodeChallengeIdRoute
@@ -969,13 +996,21 @@ export interface FileRoutesById {
   '/_app/quizzes/$quizId': typeof AppQuizzesQuizIdRouteWithChildren
   '/_app/resume/create': typeof AppResumeCreateRoute
   '/_app/resume/templates': typeof AppResumeTemplatesRoute
+  '/_app/teacher/interviews': typeof AppTeacherInterviewsRoute
+  '/_app/teacher/live-classes': typeof AppTeacherLiveClassesRoute
+  '/_app/teacher/projects': typeof AppTeacherProjectsRoute
+  '/_app/teacher/quizzes': typeof AppTeacherQuizzesRoute
+  '/_app/teacher/recorded-sessions': typeof AppTeacherRecordedSessionsRoute
+  '/_app/teacher/topics': typeof AppTeacherTopicsRoute
   '/_app/admin/': typeof AppAdminIndexRoute
   '/_app/feed/': typeof AppFeedIndexRoute
   '/_app/interview/': typeof AppInterviewIndexRoute
   '/_app/live/': typeof AppLiveIndexRoute
+  '/_app/profile/': typeof AppProfileIndexRoute
   '/_app/quizzes/': typeof AppQuizzesIndexRoute
   '/_app/resume/': typeof AppResumeIndexRoute
   '/_app/rooms/': typeof AppRoomsIndexRoute
+  '/_app/teacher/': typeof AppTeacherIndexRoute
   '/_app/arena/$topicId/$challengeId': typeof AppArenaTopicIdChallengeIdRoute
   '/_app/interview/$sessionId/feedback': typeof AppInterviewSessionIdFeedbackRoute
   '/_app/interview/ai/$sessionId': typeof AppInterviewAiSessionIdRoute
@@ -995,15 +1030,16 @@ export interface FileRouteTypes {
     | '/arena'
     | '/code'
     | '/dashboard'
+    | '/directory'
     | '/feed'
     | '/interview'
     | '/jobs'
     | '/leaderboard'
     | '/messages'
-    | '/profile'
     | '/quizzes'
     | '/resume'
     | '/roadmap'
+    | '/teacher'
     | '/mockup/achievements_rewards_hub'
     | '/mockup/admin_dashboard'
     | '/mockup/admin_dashboard_content_management'
@@ -1060,13 +1096,8 @@ export interface FileRouteTypes {
     | '/settings/security'
     | '/admin/admins'
     | '/admin/analytics'
-    | '/admin/interviews'
-    | '/admin/live-classes'
-    | '/admin/projects'
-    | '/admin/quizzes'
-    | '/admin/recorded-sessions'
+    | '/admin/jobs'
     | '/admin/teachers'
-    | '/admin/topics'
     | '/admin/users'
     | '/arena/$topicId'
     | '/code/$challengeId'
@@ -1075,13 +1106,21 @@ export interface FileRouteTypes {
     | '/quizzes/$quizId'
     | '/resume/create'
     | '/resume/templates'
+    | '/teacher/interviews'
+    | '/teacher/live-classes'
+    | '/teacher/projects'
+    | '/teacher/quizzes'
+    | '/teacher/recorded-sessions'
+    | '/teacher/topics'
     | '/admin/'
     | '/feed/'
     | '/interview/'
     | '/live/'
+    | '/profile/'
     | '/quizzes/'
     | '/resume/'
     | '/rooms/'
+    | '/teacher/'
     | '/arena/$topicId/$challengeId'
     | '/interview/$sessionId/feedback'
     | '/interview/ai/$sessionId'
@@ -1098,10 +1137,10 @@ export interface FileRouteTypes {
     | '/arena'
     | '/code'
     | '/dashboard'
+    | '/directory'
     | '/jobs'
     | '/leaderboard'
     | '/messages'
-    | '/profile'
     | '/roadmap'
     | '/mockup/achievements_rewards_hub'
     | '/mockup/admin_dashboard'
@@ -1159,13 +1198,8 @@ export interface FileRouteTypes {
     | '/settings/security'
     | '/admin/admins'
     | '/admin/analytics'
-    | '/admin/interviews'
-    | '/admin/live-classes'
-    | '/admin/projects'
-    | '/admin/quizzes'
-    | '/admin/recorded-sessions'
+    | '/admin/jobs'
     | '/admin/teachers'
-    | '/admin/topics'
     | '/admin/users'
     | '/arena/$topicId'
     | '/code/$challengeId'
@@ -1174,13 +1208,21 @@ export interface FileRouteTypes {
     | '/quizzes/$quizId'
     | '/resume/create'
     | '/resume/templates'
+    | '/teacher/interviews'
+    | '/teacher/live-classes'
+    | '/teacher/projects'
+    | '/teacher/quizzes'
+    | '/teacher/recorded-sessions'
+    | '/teacher/topics'
     | '/admin'
     | '/feed'
     | '/interview'
     | '/live'
+    | '/profile'
     | '/quizzes'
     | '/resume'
     | '/rooms'
+    | '/teacher'
     | '/arena/$topicId/$challengeId'
     | '/interview/$sessionId/feedback'
     | '/interview/ai/$sessionId'
@@ -1199,15 +1241,16 @@ export interface FileRouteTypes {
     | '/_app/arena'
     | '/_app/code'
     | '/_app/dashboard'
+    | '/_app/directory'
     | '/_app/feed'
     | '/_app/interview'
     | '/_app/jobs'
     | '/_app/leaderboard'
     | '/_app/messages'
-    | '/_app/profile'
     | '/_app/quizzes'
     | '/_app/resume'
     | '/_app/roadmap'
+    | '/_app/teacher'
     | '/mockup/achievements_rewards_hub'
     | '/mockup/admin_dashboard'
     | '/mockup/admin_dashboard_content_management'
@@ -1264,13 +1307,8 @@ export interface FileRouteTypes {
     | '/settings/security'
     | '/_app/admin/admins'
     | '/_app/admin/analytics'
-    | '/_app/admin/interviews'
-    | '/_app/admin/live-classes'
-    | '/_app/admin/projects'
-    | '/_app/admin/quizzes'
-    | '/_app/admin/recorded-sessions'
+    | '/_app/admin/jobs'
     | '/_app/admin/teachers'
-    | '/_app/admin/topics'
     | '/_app/admin/users'
     | '/_app/arena/$topicId'
     | '/_app/code/$challengeId'
@@ -1279,13 +1317,21 @@ export interface FileRouteTypes {
     | '/_app/quizzes/$quizId'
     | '/_app/resume/create'
     | '/_app/resume/templates'
+    | '/_app/teacher/interviews'
+    | '/_app/teacher/live-classes'
+    | '/_app/teacher/projects'
+    | '/_app/teacher/quizzes'
+    | '/_app/teacher/recorded-sessions'
+    | '/_app/teacher/topics'
     | '/_app/admin/'
     | '/_app/feed/'
     | '/_app/interview/'
     | '/_app/live/'
+    | '/_app/profile/'
     | '/_app/quizzes/'
     | '/_app/resume/'
     | '/_app/rooms/'
+    | '/_app/teacher/'
     | '/_app/arena/$topicId/$challengeId'
     | '/_app/interview/$sessionId/feedback'
     | '/_app/interview/ai/$sessionId'
@@ -1775,6 +1821,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MockupAchievements_rewards_hubRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/teacher': {
+      id: '/_app/teacher'
+      path: '/teacher'
+      fullPath: '/teacher'
+      preLoaderRoute: typeof AppTeacherRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/roadmap': {
       id: '/_app/roadmap'
       path: '/roadmap'
@@ -1794,13 +1847,6 @@ declare module '@tanstack/react-router' {
       path: '/quizzes'
       fullPath: '/quizzes'
       preLoaderRoute: typeof AppQuizzesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/profile': {
-      id: '/_app/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AppProfileRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/messages': {
@@ -1838,6 +1884,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFeedRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/directory': {
+      id: '/_app/directory'
+      path: '/directory'
+      fullPath: '/directory'
+      preLoaderRoute: typeof AppDirectoryRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -1866,6 +1919,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/teacher/': {
+      id: '/_app/teacher/'
+      path: '/'
+      fullPath: '/teacher/'
+      preLoaderRoute: typeof AppTeacherIndexRouteImport
+      parentRoute: typeof AppTeacherRoute
+    }
     '/_app/rooms/': {
       id: '/_app/rooms/'
       path: '/rooms'
@@ -1886,6 +1946,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/quizzes/'
       preLoaderRoute: typeof AppQuizzesIndexRouteImport
       parentRoute: typeof AppQuizzesRoute
+    }
+    '/_app/profile/': {
+      id: '/_app/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof AppProfileIndexRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/live/': {
       id: '/_app/live/'
@@ -1915,6 +1982,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminIndexRouteImport
       parentRoute: typeof AppAdminRoute
     }
+    '/_app/teacher/topics': {
+      id: '/_app/teacher/topics'
+      path: '/topics'
+      fullPath: '/teacher/topics'
+      preLoaderRoute: typeof AppTeacherTopicsRouteImport
+      parentRoute: typeof AppTeacherRoute
+    }
+    '/_app/teacher/recorded-sessions': {
+      id: '/_app/teacher/recorded-sessions'
+      path: '/recorded-sessions'
+      fullPath: '/teacher/recorded-sessions'
+      preLoaderRoute: typeof AppTeacherRecordedSessionsRouteImport
+      parentRoute: typeof AppTeacherRoute
+    }
+    '/_app/teacher/quizzes': {
+      id: '/_app/teacher/quizzes'
+      path: '/quizzes'
+      fullPath: '/teacher/quizzes'
+      preLoaderRoute: typeof AppTeacherQuizzesRouteImport
+      parentRoute: typeof AppTeacherRoute
+    }
+    '/_app/teacher/projects': {
+      id: '/_app/teacher/projects'
+      path: '/projects'
+      fullPath: '/teacher/projects'
+      preLoaderRoute: typeof AppTeacherProjectsRouteImport
+      parentRoute: typeof AppTeacherRoute
+    }
+    '/_app/teacher/live-classes': {
+      id: '/_app/teacher/live-classes'
+      path: '/live-classes'
+      fullPath: '/teacher/live-classes'
+      preLoaderRoute: typeof AppTeacherLiveClassesRouteImport
+      parentRoute: typeof AppTeacherRoute
+    }
+    '/_app/teacher/interviews': {
+      id: '/_app/teacher/interviews'
+      path: '/interviews'
+      fullPath: '/teacher/interviews'
+      preLoaderRoute: typeof AppTeacherInterviewsRouteImport
+      parentRoute: typeof AppTeacherRoute
+    }
     '/_app/resume/templates': {
       id: '/_app/resume/templates'
       path: '/templates'
@@ -1938,10 +2047,10 @@ declare module '@tanstack/react-router' {
     }
     '/_app/profile/$username': {
       id: '/_app/profile/$username'
-      path: '/$username'
+      path: '/profile/$username'
       fullPath: '/profile/$username'
       preLoaderRoute: typeof AppProfileUsernameRouteImport
-      parentRoute: typeof AppProfileRoute
+      parentRoute: typeof AppRoute
     }
     '/_app/live/$classId': {
       id: '/_app/live/$classId'
@@ -1971,13 +2080,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminUsersRouteImport
       parentRoute: typeof AppAdminRoute
     }
-    '/_app/admin/topics': {
-      id: '/_app/admin/topics'
-      path: '/topics'
-      fullPath: '/admin/topics'
-      preLoaderRoute: typeof AppAdminTopicsRouteImport
-      parentRoute: typeof AppAdminRoute
-    }
     '/_app/admin/teachers': {
       id: '/_app/admin/teachers'
       path: '/teachers'
@@ -1985,39 +2087,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminTeachersRouteImport
       parentRoute: typeof AppAdminRoute
     }
-    '/_app/admin/recorded-sessions': {
-      id: '/_app/admin/recorded-sessions'
-      path: '/recorded-sessions'
-      fullPath: '/admin/recorded-sessions'
-      preLoaderRoute: typeof AppAdminRecordedSessionsRouteImport
-      parentRoute: typeof AppAdminRoute
-    }
-    '/_app/admin/quizzes': {
-      id: '/_app/admin/quizzes'
-      path: '/quizzes'
-      fullPath: '/admin/quizzes'
-      preLoaderRoute: typeof AppAdminQuizzesRouteImport
-      parentRoute: typeof AppAdminRoute
-    }
-    '/_app/admin/projects': {
-      id: '/_app/admin/projects'
-      path: '/projects'
-      fullPath: '/admin/projects'
-      preLoaderRoute: typeof AppAdminProjectsRouteImport
-      parentRoute: typeof AppAdminRoute
-    }
-    '/_app/admin/live-classes': {
-      id: '/_app/admin/live-classes'
-      path: '/live-classes'
-      fullPath: '/admin/live-classes'
-      preLoaderRoute: typeof AppAdminLiveClassesRouteImport
-      parentRoute: typeof AppAdminRoute
-    }
-    '/_app/admin/interviews': {
-      id: '/_app/admin/interviews'
-      path: '/interviews'
-      fullPath: '/admin/interviews'
-      preLoaderRoute: typeof AppAdminInterviewsRouteImport
+    '/_app/admin/jobs': {
+      id: '/_app/admin/jobs'
+      path: '/jobs'
+      fullPath: '/admin/jobs'
+      preLoaderRoute: typeof AppAdminJobsRouteImport
       parentRoute: typeof AppAdminRoute
     }
     '/_app/admin/analytics': {
@@ -2082,13 +2156,8 @@ declare module '@tanstack/react-router' {
 interface AppAdminRouteChildren {
   AppAdminAdminsRoute: typeof AppAdminAdminsRoute
   AppAdminAnalyticsRoute: typeof AppAdminAnalyticsRoute
-  AppAdminInterviewsRoute: typeof AppAdminInterviewsRoute
-  AppAdminLiveClassesRoute: typeof AppAdminLiveClassesRoute
-  AppAdminProjectsRoute: typeof AppAdminProjectsRoute
-  AppAdminQuizzesRoute: typeof AppAdminQuizzesRoute
-  AppAdminRecordedSessionsRoute: typeof AppAdminRecordedSessionsRoute
+  AppAdminJobsRoute: typeof AppAdminJobsRoute
   AppAdminTeachersRoute: typeof AppAdminTeachersRoute
-  AppAdminTopicsRoute: typeof AppAdminTopicsRoute
   AppAdminUsersRoute: typeof AppAdminUsersRoute
   AppAdminIndexRoute: typeof AppAdminIndexRoute
 }
@@ -2096,13 +2165,8 @@ interface AppAdminRouteChildren {
 const AppAdminRouteChildren: AppAdminRouteChildren = {
   AppAdminAdminsRoute: AppAdminAdminsRoute,
   AppAdminAnalyticsRoute: AppAdminAnalyticsRoute,
-  AppAdminInterviewsRoute: AppAdminInterviewsRoute,
-  AppAdminLiveClassesRoute: AppAdminLiveClassesRoute,
-  AppAdminProjectsRoute: AppAdminProjectsRoute,
-  AppAdminQuizzesRoute: AppAdminQuizzesRoute,
-  AppAdminRecordedSessionsRoute: AppAdminRecordedSessionsRoute,
+  AppAdminJobsRoute: AppAdminJobsRoute,
   AppAdminTeachersRoute: AppAdminTeachersRoute,
-  AppAdminTopicsRoute: AppAdminTopicsRoute,
   AppAdminUsersRoute: AppAdminUsersRoute,
   AppAdminIndexRoute: AppAdminIndexRoute,
 }
@@ -2175,29 +2239,6 @@ const AppInterviewRouteWithChildren = AppInterviewRoute._addFileChildren(
   AppInterviewRouteChildren,
 )
 
-interface AppProfileUsernameRouteChildren {
-  AppProfileUsernameConnectionsRoute: typeof AppProfileUsernameConnectionsRoute
-}
-
-const AppProfileUsernameRouteChildren: AppProfileUsernameRouteChildren = {
-  AppProfileUsernameConnectionsRoute: AppProfileUsernameConnectionsRoute,
-}
-
-const AppProfileUsernameRouteWithChildren =
-  AppProfileUsernameRoute._addFileChildren(AppProfileUsernameRouteChildren)
-
-interface AppProfileRouteChildren {
-  AppProfileUsernameRoute: typeof AppProfileUsernameRouteWithChildren
-}
-
-const AppProfileRouteChildren: AppProfileRouteChildren = {
-  AppProfileUsernameRoute: AppProfileUsernameRouteWithChildren,
-}
-
-const AppProfileRouteWithChildren = AppProfileRoute._addFileChildren(
-  AppProfileRouteChildren,
-)
-
 interface AppQuizzesQuizIdRouteChildren {
   AppQuizzesQuizIdResultsRoute: typeof AppQuizzesQuizIdResultsRoute
 }
@@ -2239,22 +2280,60 @@ const AppResumeRouteWithChildren = AppResumeRoute._addFileChildren(
   AppResumeRouteChildren,
 )
 
+interface AppTeacherRouteChildren {
+  AppTeacherInterviewsRoute: typeof AppTeacherInterviewsRoute
+  AppTeacherLiveClassesRoute: typeof AppTeacherLiveClassesRoute
+  AppTeacherProjectsRoute: typeof AppTeacherProjectsRoute
+  AppTeacherQuizzesRoute: typeof AppTeacherQuizzesRoute
+  AppTeacherRecordedSessionsRoute: typeof AppTeacherRecordedSessionsRoute
+  AppTeacherTopicsRoute: typeof AppTeacherTopicsRoute
+  AppTeacherIndexRoute: typeof AppTeacherIndexRoute
+}
+
+const AppTeacherRouteChildren: AppTeacherRouteChildren = {
+  AppTeacherInterviewsRoute: AppTeacherInterviewsRoute,
+  AppTeacherLiveClassesRoute: AppTeacherLiveClassesRoute,
+  AppTeacherProjectsRoute: AppTeacherProjectsRoute,
+  AppTeacherQuizzesRoute: AppTeacherQuizzesRoute,
+  AppTeacherRecordedSessionsRoute: AppTeacherRecordedSessionsRoute,
+  AppTeacherTopicsRoute: AppTeacherTopicsRoute,
+  AppTeacherIndexRoute: AppTeacherIndexRoute,
+}
+
+const AppTeacherRouteWithChildren = AppTeacherRoute._addFileChildren(
+  AppTeacherRouteChildren,
+)
+
+interface AppProfileUsernameRouteChildren {
+  AppProfileUsernameConnectionsRoute: typeof AppProfileUsernameConnectionsRoute
+}
+
+const AppProfileUsernameRouteChildren: AppProfileUsernameRouteChildren = {
+  AppProfileUsernameConnectionsRoute: AppProfileUsernameConnectionsRoute,
+}
+
+const AppProfileUsernameRouteWithChildren =
+  AppProfileUsernameRoute._addFileChildren(AppProfileUsernameRouteChildren)
+
 interface AppRouteChildren {
   AppAdminRoute: typeof AppAdminRouteWithChildren
   AppArenaRoute: typeof AppArenaRouteWithChildren
   AppCodeRoute: typeof AppCodeRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
+  AppDirectoryRoute: typeof AppDirectoryRoute
   AppFeedRoute: typeof AppFeedRouteWithChildren
   AppInterviewRoute: typeof AppInterviewRouteWithChildren
   AppJobsRoute: typeof AppJobsRoute
   AppLeaderboardRoute: typeof AppLeaderboardRoute
   AppMessagesRoute: typeof AppMessagesRoute
-  AppProfileRoute: typeof AppProfileRouteWithChildren
   AppQuizzesRoute: typeof AppQuizzesRouteWithChildren
   AppResumeRoute: typeof AppResumeRouteWithChildren
   AppRoadmapRoute: typeof AppRoadmapRoute
+  AppTeacherRoute: typeof AppTeacherRouteWithChildren
   AppLiveClassIdRoute: typeof AppLiveClassIdRoute
+  AppProfileUsernameRoute: typeof AppProfileUsernameRouteWithChildren
   AppLiveIndexRoute: typeof AppLiveIndexRoute
+  AppProfileIndexRoute: typeof AppProfileIndexRoute
   AppRoomsIndexRoute: typeof AppRoomsIndexRoute
 }
 
@@ -2263,17 +2342,20 @@ const AppRouteChildren: AppRouteChildren = {
   AppArenaRoute: AppArenaRouteWithChildren,
   AppCodeRoute: AppCodeRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
+  AppDirectoryRoute: AppDirectoryRoute,
   AppFeedRoute: AppFeedRouteWithChildren,
   AppInterviewRoute: AppInterviewRouteWithChildren,
   AppJobsRoute: AppJobsRoute,
   AppLeaderboardRoute: AppLeaderboardRoute,
   AppMessagesRoute: AppMessagesRoute,
-  AppProfileRoute: AppProfileRouteWithChildren,
   AppQuizzesRoute: AppQuizzesRouteWithChildren,
   AppResumeRoute: AppResumeRouteWithChildren,
   AppRoadmapRoute: AppRoadmapRoute,
+  AppTeacherRoute: AppTeacherRouteWithChildren,
   AppLiveClassIdRoute: AppLiveClassIdRoute,
+  AppProfileUsernameRoute: AppProfileUsernameRouteWithChildren,
   AppLiveIndexRoute: AppLiveIndexRoute,
+  AppProfileIndexRoute: AppProfileIndexRoute,
   AppRoomsIndexRoute: AppRoomsIndexRoute,
 }
 
