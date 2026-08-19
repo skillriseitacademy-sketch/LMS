@@ -1,12 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 
-declare global {
-  interface Window {
-    Metered: any;
-  }
-}
-
 export interface RemoteStream {
   peerId: string;
   userName: string;
@@ -35,7 +29,7 @@ export interface Poll {
   active: boolean;
 }
 
-// Rewritten for SFU Architecture (1 Publish, 1 Subscribe connection)
+// True P2P WebRTC using Supabase Realtime for signaling
 export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: () => void) {
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStreams, setRemoteStreams] = useState<Record<string, RemoteStream>>({});
@@ -55,11 +49,9 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
   const [currentDeviceId, setCurrentDeviceId] = useState<string>("");
 
   const localStreamRef = useRef<MediaStream | null>(null);
-  const originalVideoTrackRef = useRef<MediaStreamTrack | null>(null);
   
-  // SFU Connections
-  const meteredMeetingRef = useRef<any>(null);
-  
+  // Peer Connections
+  const peersRef = useRef<Record<string, RTCPeerConnection>>({});
   const channelRef = useRef<any>(null);
   const myPeerId = useRef(Math.random().toString(36).substring(7));
   const iceServersRef = useRef<RTCIceServer[]>([]);
@@ -108,88 +100,140 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     [facingMode, currentDeviceId],
   );
 
+  const createPeerConnection = useCallback((peerId: string, peerName: string, isInitiator: boolean) => {
+    const pc = new RTCPeerConnection({
+      iceServers: iceServersRef.current.length > 0 ? iceServersRef.current : [{ urls: "stun:stun.l.google.com:19302" }]
+    });
+
+    peersRef.current[peerId] = pc;
+
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        channelRef.current?.send({
+          type: "broadcast",
+          event: "signal",
+          payload: { type: "ice-candidate", senderId: myPeerId.current, targetId: peerId, candidate: event.candidate }
+        });
+      }
+    };
+
+    pc.ontrack = (event) => {
+      setRemoteStreams(prev => {
+        const existing = prev[peerId]?.stream || new MediaStream();
+        existing.addTrack(event.track);
+        return {
+          ...prev,
+          [peerId]: {
+            peerId,
+            userName: peerName,
+            stream: existing
+          }
+        };
+      });
+    };
+
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach(track => pc.addTrack(track, localStreamRef.current!));
+    }
+
+    if (isInitiator) {
+      pc.createOffer().then(offer => {
+        return pc.setLocalDescription(offer);
+      }).then(() => {
+        channelRef.current?.send({
+          type: "broadcast",
+          event: "signal",
+          payload: { type: "offer", senderId: myPeerId.current, senderName: userName, targetId: peerId, sdp: pc.localDescription }
+        });
+      });
+    }
+
+    return pc;
+  }, [userName]);
+
   const joinRoom = useCallback(async () => {
-    if (isJoined || meteredMeetingRef.current || channelRef.current) return;
+    if (isJoined || channelRef.current) return;
 
     try {
-      // 1. Fetch Metered Token from our new endpoint
-      const { data: { session } } = await supabase.auth.getSession();
-      const tokenRes = await fetch(`/api/rooms/${roomCode}/media-token`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${session?.access_token}` }
-      });
+      // 1. Get TURN credentials from .env via import.meta.env
+      const turnUrl = import.meta.env.VITE_TURN_URL;
+      const turnUser = import.meta.env.VITE_TURN_USERNAME;
+      const turnCred = import.meta.env.VITE_TURN_CREDENTIAL;
       
-      if (!tokenRes.ok) throw new Error("Failed to get media token");
-      const { roomURL } = await tokenRes.json();
-      
-      const meeting = new window.Metered.Meeting();
-      meteredMeetingRef.current = meeting;
-
-      meeting.on("remoteTrackStarted", (remoteTrackItem: any) => {
-        const streamId = remoteTrackItem.participantSessionId;
-        console.log(`[SFU] Received remote track from SFU for stream: ${streamId}`);
-        setRemoteStreams((prev) => {
-          const existing = prev[streamId]?.stream || new MediaStream();
-          existing.addTrack(remoteTrackItem.track);
-          return {
-            ...prev,
-            [streamId]: {
-              peerId: streamId,
-              userName: remoteTrackItem.name || `Participant`,
-              stream: existing,
-            }
-          };
-        });
-      });
-
-      meeting.on("participantLeft", (participantInfo: any) => {
-        setRemoteStreams((prev) => {
-          const next = { ...prev };
-          delete next[participantInfo.sessionId];
-          return next;
-        });
-      });
-
-      await meeting.join({
-        roomURL,
-        name: userName
-      });
-      
-      console.log(`[SFU] Authenticated for room: ${roomURL}`);
-      
-      const stream = await initLocalStream();
-      if (stream) {
-        // Metered API to share local tracks if possible, or startVideo
-        try {
-          if (stream.getVideoTracks().length > 0) {
-            await meeting.startVideo();
-          }
-          if (stream.getAudioTracks().length > 0) {
-            await meeting.startAudio();
-          }
-        } catch (e) {
-          console.warn("[SFU] Metered startVideo/Audio error", e);
-        }
+      if (turnUrl && turnUser && turnCred) {
+        iceServersRef.current = [{
+          urls: turnUrl,
+          username: turnUser,
+          credential: turnCred
+        }];
+      } else {
+        iceServersRef.current = [{ urls: "stun:stun.l.google.com:19302" }];
       }
-      
-      // 3. Fallback DataChannel over Supabase (since we are mocking SFU data messages)
+
+      const stream = await initLocalStream();
+      if (!stream) return;
+
+      // 2. Setup Supabase Realtime Channel
       const channel = supabase.channel(`room:${roomCode}`);
       channelRef.current = channel;
+      
+      channel.on("broadcast", { event: "signal" }, async ({ payload }) => {
+        const { type, senderId, senderName, targetId, sdp, candidate } = payload;
+        
+        // Ignore messages not for us (unless it's a general peer-joined broadcast)
+        if (targetId && targetId !== myPeerId.current) return;
+
+        if (type === "peer-joined") {
+          // A new peer joined, let's create a connection as the initiator
+          createPeerConnection(senderId, senderName, true);
+        } else if (type === "offer") {
+          // Received an offer, create connection as receiver
+          const pc = createPeerConnection(senderId, senderName, false);
+          await pc.setRemoteDescription(new RTCSessionDescription(sdp));
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+          channel.send({
+            type: "broadcast",
+            event: "signal",
+            payload: { type: "answer", senderId: myPeerId.current, targetId: senderId, sdp: pc.localDescription }
+          });
+        } else if (type === "answer") {
+          // Received an answer
+          const pc = peersRef.current[senderId];
+          if (pc) await pc.setRemoteDescription(new RTCSessionDescription(sdp));
+        } else if (type === "ice-candidate") {
+          // Received an ICE candidate
+          const pc = peersRef.current[senderId];
+          if (pc) await pc.addIceCandidate(new RTCIceCandidate(candidate));
+        }
+      });
       
       channel.on("broadcast", { event: "chat" }, ({ payload }) => {
         setChatMessages(prev => [...prev, payload]);
       }).on("broadcast", { event: "hand_raise" }, ({ payload }) => {
         setHandRaised(prev => ({ ...prev, [payload.peerId]: payload.isRaised }));
+      }).on("presence", { event: "leave" }, ({ key, leftPresences }) => {
+        // Handle peer leave
+        // Supabase presence can be used for reliable leave tracking, but we'll stick to a simple signaling for now
       });
       
-      await channel.subscribe();
-      setIsJoined(true);
+      await channel.subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          // Announce ourselves to existing peers
+          channel.send({
+            type: "broadcast",
+            event: "signal",
+            payload: { type: "peer-joined", senderId: myPeerId.current, senderName: userName }
+          });
+          setIsJoined(true);
+        }
+      });
       
     } catch (err: any) {
-      console.error("[SFU] Failed to join room", err);
-      setStreamError(`Failed to join room via SFU: ${err?.message || 'Unknown error'}`);
+      console.error("[WebRTC] Failed to join room", err);
+      setStreamError(`Failed to join room: ${err?.message || 'Unknown error'}`);
     }
-  }, [roomCode, userName, isJoined, initLocalStream]);
+  }, [roomCode, userName, isJoined, initLocalStream, createPeerConnection]);
 
   const leaveRoom = useCallback(() => {
     if (channelRef.current) {
@@ -197,12 +241,8 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
       channelRef.current = null;
     }
 
-    if (meteredMeetingRef.current) {
-      try {
-        meteredMeetingRef.current.leaveMeeting();
-      } catch (e) {}
-      meteredMeetingRef.current = null;
-    }
+    Object.values(peersRef.current).forEach(pc => pc.close());
+    peersRef.current = {};
 
     setRemoteStreams({});
     setIsJoined(false);
@@ -225,7 +265,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     }
   }, []);
 
-  // Media Controls (Simplified for SFU)
+  // Media Controls
   const toggleMic = useCallback(() => {
     if (!localStreamRef.current) return;
     localStreamRef.current.getAudioTracks().forEach(t => t.enabled = !t.enabled);
@@ -248,34 +288,28 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
   const switchCamera = useCallback(async (deviceId: string) => {}, []);
   const toggleScreenShare = useCallback(async () => {}, []);
 
-  useEffect(() => {
-    return () => leaveRoom();
-  }, [leaveRoom]);
-
   return {
     localStream,
     remoteStreams: Object.values(remoteStreams),
     isJoined,
-    isMicMuted,
-    isCamOff,
-    isScreenSharing,
-    streamError,
-    facingMode,
-    chatMessages,
-    polls,
-    handRaised,
-    myPeerId: myPeerId.current,
-    videoDevices,
-    currentDeviceId,
-    initLocalStream,
     joinRoom,
     leaveRoom,
     endMeeting,
+    isMicMuted,
+    isCamOff,
+    isScreenSharing,
     toggleMic,
     toggleCam,
-    toggleScreenShare,
     flipCamera,
     switchCamera,
+    toggleScreenShare,
+    streamError,
+    videoDevices,
+    currentDeviceId,
+    chatMessages,
     broadcastData,
+    polls,
+    handRaised,
+    initLocalStream,
   };
 }
