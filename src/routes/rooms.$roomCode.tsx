@@ -155,64 +155,13 @@ function RoomView() {
 
   const handleStartRecording = async () => {
     try {
-      const videos = Array.from(document.querySelectorAll('.participant-video')) as HTMLVideoElement[];
-      if (videos.length === 0) {
-        alert("No active video streams to record.");
-        return;
-      }
+      // 1. Capture the entire tab/screen (video) to get the UI, grid, and screen shares exactly as seen
+      const displayStream = await navigator.mediaDevices.getDisplayMedia({
+        video: { displaySurface: "browser" } as any,
+        audio: false // We will mix the WebRTC audio manually
+      });
 
-      const canvas = document.createElement("canvas");
-      canvas.width = 1280;
-      canvas.height = 720;
-      const ctx = canvas.getContext("2d");
-
-      const drawFrame = () => {
-        if (!ctx) return;
-        ctx.fillStyle = "#0F1115";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        const currentVideos = Array.from(document.querySelectorAll('.participant-video')) as HTMLVideoElement[];
-        const count = currentVideos.length;
-
-        if (count > 0) {
-          let cols = Math.ceil(Math.sqrt(count));
-          let rows = Math.ceil(count / cols);
-          let w = canvas.width / cols;
-          let h = canvas.height / rows;
-
-          currentVideos.forEach((video, i) => {
-            if (video.readyState >= 2) {
-              const col = i % cols;
-              const row = Math.floor(i / cols);
-
-              const vRatio = video.videoWidth / video.videoHeight;
-              const cRatio = w / h;
-              let drawW = w;
-              let drawH = h;
-              let offsetX = 0;
-              let offsetY = 0;
-
-              if (vRatio > cRatio) {
-                drawH = w / vRatio;
-                offsetY = (h - drawH) / 2;
-              } else {
-                drawW = h * vRatio;
-                offsetX = (w - drawW) / 2;
-              }
-
-              ctx.drawImage(video, col * w + offsetX, row * h + offsetY, drawW, drawH);
-            }
-          });
-        }
-
-        animationFrameRef.current = requestAnimationFrame(drawFrame);
-      };
-
-      drawFrame();
-      const canvasStream = (canvas as any).captureStream(30);
-      let recordStream = canvasStream;
-      
-      // Mix audio if there are remote streams
+      // 2. Mix all audio tracks (local microphone + remote participants)
       const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const dest = audioCtx.createMediaStreamDestination();
       let hasAudio = false;
@@ -231,6 +180,10 @@ function RoomView() {
         }
       });
 
+      // 3. Combine Display Video and Mixed Audio
+      const recordStream = new MediaStream();
+      displayStream.getVideoTracks().forEach(track => recordStream.addTrack(track));
+      
       if (hasAudio) {
         dest.stream.getAudioTracks().forEach(track => recordStream.addTrack(track));
       }
@@ -256,7 +209,9 @@ function RoomView() {
       };
 
       mediaRecorder.onstop = () => {
-        if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+        // Stop the display capture tracks when recording stops
+        displayStream.getTracks().forEach(track => track.stop());
+        
         const blob = new Blob(recordedChunksRef.current, { type: mimeType });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -271,10 +226,15 @@ function RoomView() {
 
       mediaRecorder.start(1000);
       setIsRecording(true);
+      
+      // Stop recording if user manually stops sharing the tab via browser UI
+      displayStream.getVideoTracks()[0].onended = () => {
+        handleStopRecording();
+      };
+      
     } catch (err) {
       console.error("Error starting recording:", err);
-      alert("Could not start recording.");
-      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+      // User might have canceled the screen share prompt
     }
   };
 
