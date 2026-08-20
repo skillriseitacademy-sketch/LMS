@@ -132,6 +132,7 @@ function RoomView() {
   const [isChatExpanded, setIsChatExpanded] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [meetingEnded, setMeetingEnded] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
 
@@ -153,12 +154,42 @@ function RoomView() {
 
   const handleStartRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: { displaySurface: "browser" } as any,
-        audio: true
-      });
+      if (!localStream) {
+        alert("Camera or screen must be active to start recording.");
+        return;
+      }
       
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+      let recordStream = localStream;
+      
+      // Mix audio if there are remote streams
+      if (remoteStreams.length > 0) {
+        try {
+          const audioCtx = new window.AudioContext();
+          const dest = audioCtx.createMediaStreamDestination();
+          
+          localStream.getAudioTracks().forEach(track => {
+            const source = audioCtx.createMediaStreamSource(new MediaStream([track]));
+            source.connect(dest);
+          });
+
+          remoteStreams.forEach(remote => {
+            if (remote.stream.getAudioTracks().length > 0) {
+              const source = audioCtx.createMediaStreamSource(remote.stream);
+              source.connect(dest);
+            }
+          });
+
+          const mixedStream = new MediaStream();
+          localStream.getVideoTracks().forEach(track => mixedStream.addTrack(track));
+          dest.stream.getAudioTracks().forEach(track => mixedStream.addTrack(track));
+          
+          recordStream = mixedStream;
+        } catch (e) {
+          console.error("Audio mixing failed, falling back to local stream only", e);
+        }
+      }
+      
+      const mediaRecorder = new MediaRecorder(recordStream, { mimeType: 'video/webm' });
       mediaRecorderRef.current = mediaRecorder;
       recordedChunksRef.current = [];
 
@@ -181,15 +212,11 @@ function RoomView() {
         setIsRecording(false);
       };
 
-      stream.getVideoTracks()[0].onended = () => {
-        handleStopRecording();
-      };
-
       mediaRecorder.start(1000);
       setIsRecording(true);
     } catch (err) {
       console.error("Error starting recording:", err);
-      alert("Could not start recording. Please ensure you grant screen share permissions.");
+      alert("Could not start recording.");
     }
   };
 
@@ -238,8 +265,7 @@ function RoomView() {
     endMeeting,
     broadcastData,
   } = useWebRTC(roomCode, userName, () => {
-    alert("The host has ended the meeting.");
-    navigate({ to: "/rooms" });
+    setMeetingEnded(true);
   });
 
   useEffect(() => {
@@ -432,6 +458,24 @@ function RoomView() {
         <h3 className="text-xl font-semibold mb-2">Oops!</h3>
         <p className="text-muted-foreground mb-6">{error}</p>
         <Button onClick={() => navigate({ to: "/rooms" })}>Return Home</Button>
+      </div>
+    );
+  }
+
+  if (meetingEnded) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-[#0F1115] z-50 p-6 text-center text-white">
+        <div className="w-16 h-16 bg-brand/20 text-brand rounded-full flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(var(--brand),0.5)]">
+          <PhoneOff className="w-8 h-8" />
+        </div>
+        <h3 className="text-2xl font-bold mb-2">Meeting Ended</h3>
+        <p className="text-white/60 mb-8">The host has ended this meeting for everyone.</p>
+        <Button 
+          onClick={() => navigate({ to: "/rooms" })}
+          className="bg-brand hover:bg-brand/90 text-brand-foreground px-8 py-6 text-lg rounded-xl transition-all font-semibold"
+        >
+          Return to Dashboard
+        </Button>
       </div>
     );
   }
