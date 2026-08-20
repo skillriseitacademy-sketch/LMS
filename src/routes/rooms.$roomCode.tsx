@@ -1044,13 +1044,11 @@ function RoomView() {
                 myPeerId={myPeerId}
                 onSendMessage={(text) => {
                   broadcastData("chat", {
-                    message: {
-                      id: Math.random().toString(36).substring(7),
-                      senderId: myPeerId,
-                      senderName: userName,
-                      text,
-                      timestamp: Date.now(),
-                    },
+                    id: Math.random().toString(36).substring(7),
+                    senderId: myPeerId,
+                    senderName: userName,
+                    text,
+                    timestamp: Date.now(),
                   });
                 }}
               />
