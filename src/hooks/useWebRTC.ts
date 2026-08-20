@@ -272,11 +272,36 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     setIsMicMuted(!localStreamRef.current.getAudioTracks()[0]?.enabled);
   }, []);
 
-  const toggleCam = useCallback(() => {
+  const toggleCam = useCallback(async () => {
     if (!localStreamRef.current) return;
-    localStreamRef.current.getVideoTracks().forEach(t => t.enabled = !t.enabled);
-    setIsCamOff(!localStreamRef.current.getVideoTracks()[0]?.enabled);
-  }, []);
+    
+    if (!isCamOff) {
+      // Turning OFF - stop track to turn off camera light
+      localStreamRef.current.getVideoTracks().forEach(t => t.stop());
+      setIsCamOff(true);
+    } else {
+      // Turning ON - request new track
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: currentDeviceId ? { deviceId: { exact: currentDeviceId } } : { facingMode: facingMode },
+        });
+        const newTrack = stream.getVideoTracks()[0];
+        
+        localStreamRef.current.getVideoTracks().forEach(t => localStreamRef.current?.removeTrack(t));
+        localStreamRef.current.addTrack(newTrack);
+        
+        Object.values(peersRef.current).forEach(pc => {
+          const sender = pc.getSenders().find(s => s.track?.kind === "video");
+          if (sender) sender.replaceTrack(newTrack);
+        });
+        
+        setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
+        setIsCamOff(false);
+      } catch (err) {
+        console.error("Error turning camera back on:", err);
+      }
+    }
+  }, [isCamOff, currentDeviceId, facingMode]);
 
   const endMeeting = useCallback(() => {
     // Ideally ping backend to close room
@@ -286,7 +311,77 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
 
   const flipCamera = useCallback(async () => {}, []);
   const switchCamera = useCallback(async (deviceId: string) => {}, []);
-  const toggleScreenShare = useCallback(async () => {}, []);
+
+  const revertToCamera = useCallback(async () => {
+    if (!localStreamRef.current) return;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: currentDeviceId ? { deviceId: { exact: currentDeviceId } } : { facingMode: facingMode },
+      });
+      const newTrack = stream.getVideoTracks()[0];
+      
+      localStreamRef.current.getVideoTracks().forEach(t => {
+        t.stop();
+        localStreamRef.current?.removeTrack(t);
+      });
+      localStreamRef.current.addTrack(newTrack);
+      
+      Object.values(peersRef.current).forEach(pc => {
+        const sender = pc.getSenders().find(s => s.track?.kind === "video");
+        if (sender) sender.replaceTrack(newTrack);
+      });
+      
+      setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
+      setIsScreenSharing(false);
+      setIsCamOff(false);
+    } catch (err) {
+      console.error("Error reverting to camera:", err);
+    }
+  }, [currentDeviceId, facingMode]);
+
+  const toggleScreenShare = useCallback(async () => {
+    if (!localStreamRef.current) return;
+
+    if (!isScreenSharing) {
+      try {
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+        const screenTrack = screenStream.getVideoTracks()[0];
+
+        screenTrack.onended = () => {
+          revertToCamera();
+        };
+
+        localStreamRef.current.getVideoTracks().forEach(t => {
+          t.stop();
+          localStreamRef.current?.removeTrack(t);
+        });
+        localStreamRef.current.addTrack(screenTrack);
+
+        Object.values(peersRef.current).forEach(pc => {
+          const sender = pc.getSenders().find(s => s.track?.kind === "video");
+          if (sender) sender.replaceTrack(screenTrack);
+        });
+
+        setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
+        setIsScreenSharing(true);
+        setIsCamOff(true);
+      } catch (e) {
+        console.error("Error sharing screen:", e);
+      }
+    } else {
+      revertToCamera();
+    }
+  }, [isScreenSharing, revertToCamera]);
+
+  // Cleanup tracks when component unmounts
+  useEffect(() => {
+    return () => {
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach((track) => track.stop());
+      }
+      Object.values(peersRef.current).forEach(pc => pc.close());
+    };
+  }, []);
 
   return {
     localStream,
