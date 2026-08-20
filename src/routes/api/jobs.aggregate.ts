@@ -5,30 +5,36 @@ export const Route = createFileRoute("/api/jobs/aggregate" as any)({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        // Authenticate as a service role or check cron secret
         const authHeader = request.headers.get("Authorization");
+        const cronSecret = process.env.CRON_SECRET;
         const token = authHeader?.replace("Bearer ", "");
-        if (!token) return new Response("Unauthorized", { status: 401 });
+        
+        const isCronCall = !!cronSecret && token === cronSecret;
 
         const serviceClient = createClient(
           process.env.VITE_SUPABASE_URL!,
           process.env.SUPABASE_SERVICE_ROLE_KEY!,
         );
 
-        const {
-          data: { user },
-          error: authError,
-        } = await serviceClient.auth.getUser(token);
-        if (authError || !user) return new Response("Unauthorized", { status: 401 });
+        if (!isCronCall) {
+          if (!token) return new Response("Unauthorized", { status: 401 });
+          const {
+            data: { user },
+            error: authError,
+          } = await serviceClient.auth.getUser(token);
+          if (authError || !user) return new Response("Unauthorized", { status: 401 });
 
-        // Ensure user is admin
-        const { data: profile } = await serviceClient
-          .from("profiles")
-          .select("role")
-          .eq("id", user.id)
-          .single();
+          // Ensure user is admin
+          const { data: profile } = await serviceClient
+            .from("profiles")
+            .select("role")
+            .eq("id", user.id)
+            .single();
 
-        if (profile?.role !== "admin") {
-          return new Response("Forbidden", { status: 403 });
+          if (profile?.role !== "admin") {
+            return new Response("Forbidden", { status: 403 });
+          }
         }
 
         // Create an ingestion run record
@@ -44,65 +50,74 @@ export const Route = createFileRoute("/api/jobs/aggregate" as any)({
           });
         }
 
-        // Mock fetching jobs from an external aggregator
-        const mockJobs = [
-          {
-            title: "Frontend Developer",
-            company: "TechCorp",
-            location: "Remote",
-            seniority: "Mid-level",
-            salary_range: "$100k - $120k",
-            skills: ["React", "TypeScript", "CSS"],
-            description: "Looking for an experienced frontend developer.",
-            raw_hash: `mock-hash-${Date.now()}-1`,
-          },
-          {
-            title: "Backend Engineer",
-            company: "DataSystems",
-            location: "New York, NY",
-            seniority: "Senior",
-            salary_range: "$120k - $140k",
-            skills: ["Node.js", "PostgreSQL", "API Design"],
-            description: "Join our core backend team.",
-            raw_hash: `mock-hash-${Date.now()}-2`,
-          },
-          {
-            title: "UI/UX Designer",
-            company: "CreativeStudio",
-            location: "Remote",
-            seniority: "Mid-level",
-            salary_range: "$60/hr - $80/hr",
-            skills: ["Figma", "Prototyping", "User Research"],
-            description: "Contract position for an upcoming project.",
-            raw_hash: `mock-hash-${Date.now()}-3`,
-          },
-        ];
+        try {
+          // Fetch real jobs from an external aggregator (Remotive API is free and public)
+          const remotiveRes = await fetch("https://remotive.com/api/remote-jobs?limit=50");
+          const remotiveData = await remotiveRes.json();
+          const fetchedJobs = remotiveData.jobs || [];
 
-        let jobsFound = mockJobs.length;
-        let jobsNew = 0;
+          let jobsFound = fetchedJobs.length;
+          let jobsNew = 0;
 
-        for (const job of mockJobs) {
-          // Upsert based on raw_hash
-          const { error } = await serviceClient.from("job_listings").insert([job]);
-          if (!error) {
-            jobsNew++;
+          for (const job of fetchedJobs) {
+            const external_id = job.id.toString();
+            const source = "remotive";
+            const raw_hash = `${source}-${external_id}`;
+
+            const jobListing = {
+              title: job.title,
+              company: job.company_name,
+              location: job.candidate_required_location || "Remote",
+              seniority: "Any", // Remotive doesn't explicitly provide this in all jobs
+              salary_range: job.salary || null,
+              skills: job.tags || [],
+              description: job.description,
+              url: job.url,
+              source: source,
+              external_id: external_id,
+              type: job.job_type,
+              raw_hash: raw_hash,
+            };
+
+            // Upsert based on raw_hash
+            const { error } = await serviceClient
+              .from("job_listings")
+              .upsert(jobListing, { onConflict: 'raw_hash' });
+              
+            if (!error) {
+              jobsNew++;
+            } else {
+              console.error("Error inserting job", error);
+            }
           }
+
+          // Update run record
+          await serviceClient
+            .from("job_ingestion_runs")
+            .update({
+              status: "finished",
+              finished_at: new Date().toISOString(),
+              jobs_found: jobsFound,
+              jobs_new: jobsNew,
+            })
+            .eq("id", run.id);
+
+          return new Response(JSON.stringify({ success: true, runId: run.id, jobsFound, jobsNew }), {
+            headers: { "Content-Type": "application/json" },
+          });
+        } catch (err: any) {
+          // Update run record with error
+          await serviceClient
+            .from("job_ingestion_runs")
+            .update({
+              status: "failed",
+              finished_at: new Date().toISOString(),
+              error_log: err.message,
+            })
+            .eq("id", run.id);
+
+          return new Response(JSON.stringify({ error: "Ingestion failed" }), { status: 500 });
         }
-
-        // Update run record
-        await serviceClient
-          .from("job_ingestion_runs")
-          .update({
-            status: "finished",
-            finished_at: new Date().toISOString(),
-            jobs_found: jobsFound,
-            jobs_new: jobsNew,
-          })
-          .eq("id", run.id);
-
-        return new Response(JSON.stringify({ success: true, runId: run.id, jobsFound, jobsNew }), {
-          headers: { "Content-Type": "application/json" },
-        });
       },
     },
   },

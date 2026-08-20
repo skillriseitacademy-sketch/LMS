@@ -37,7 +37,7 @@ function JobsPage() {
   const forceSyncJobs = async () => {
     setSyncing(true);
     try {
-      const res = await fetch("/api/cron/sync-jobs", {
+      const res = await fetch("/api/jobs/aggregate", {
         method: "POST",
       });
       if (res.ok) {
@@ -77,7 +77,7 @@ function JobsPage() {
 
       // Query jobs from Supabase
       let query = supabase.from("job_listings").select(`
-        id, title, company, location, salary_range, seniority, type, link:id,
+        id, title, company, location, salary_range, seniority, type, url,
         student_job_matches ( score )
       `);
 
@@ -104,7 +104,7 @@ function JobsPage() {
             location: j.location || "Remote",
             salary: j.salary_range || "Competitive",
             experience: j.seniority || "Any",
-            link: "#",
+            link: j.url || "#",
             type: j.type || "Full-Time",
             logo: `https://ui-avatars.com/api/?name=${encodeURIComponent(j.company)}&background=random`,
             matchScore: j.student_job_matches?.[0]?.score || Math.floor(Math.random() * 15) + 85,
