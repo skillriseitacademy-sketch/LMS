@@ -37,7 +37,7 @@ function JobsPage() {
   const forceSyncJobs = async () => {
     setSyncing(true);
     try {
-      const res = await fetch("/api/jobs/aggregate", {
+      const res = await fetch("/api/jobs-aggregate", {
         method: "POST",
       });
       if (res.ok) {
