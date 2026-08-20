@@ -19,9 +19,9 @@ function Login() {
 
   useEffect(() => {
     if (session) {
-      window.location.href = "/dashboard";
+      navigate({ to: "/dashboard" });
     }
-  }, [session]);
+  }, [session, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +47,9 @@ function Login() {
       data: { session: newSession },
     } = await supabase.auth.getSession();
     if (newSession?.user) {
-      window.location.href = "/dashboard";
+      navigate({ to: "/dashboard" });
+    } else {
+      setLoading(false);
     }
   };
 

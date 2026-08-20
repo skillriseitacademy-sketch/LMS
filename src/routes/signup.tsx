@@ -13,6 +13,7 @@ function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -147,14 +148,23 @@ function Signup() {
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   placeholder="••••••••"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-8 pr-2 py-2 bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200 outline-none"
+                  className="block w-full pl-8 pr-10 py-2 bg-surface-bright border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 sm:text-sm sm:leading-6 transition-colors duration-200 outline-none"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-outline hover:text-on-surface transition-colors focus:outline-none"
+                >
+                  <span className="material-symbols-outlined text-[20px]">
+                    {showPassword ? "visibility_off" : "visibility"}
+                  </span>
+                </button>
               </div>
             </div>
 

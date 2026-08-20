@@ -26,7 +26,7 @@ function JobsPage() {
   const [alerts, setAlerts] = useState<any[]>([]);
 
   // Search state
-  const [role, setRole] = useState("CYBER SECURITY");
+  const [role, setRole] = useState("");
   const [location, setLocation] = useState("");
   const [salary, setSalary] = useState("");
   const [isRemote, setIsRemote] = useState(false);
