@@ -55,33 +55,73 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const remotiveRes = await fetch("https://remotive.com/api/remote-jobs?limit=50");
-    const remotiveData = await remotiveRes.json();
-    const fetchedJobs = remotiveData.jobs || [];
+    let allNormalizedJobs: any[] = [];
 
-    let jobsFound = fetchedJobs.length;
+    // 1. Fetch from Remotive (Free)
+    try {
+      const remotiveRes = await fetch("https://remotive.com/api/remote-jobs?limit=50");
+      if (remotiveRes.ok) {
+        const remotiveData = await remotiveRes.json();
+        const jobs = remotiveData.jobs || [];
+        for (const job of jobs) {
+          allNormalizedJobs.push({
+            title: job.title,
+            company: job.company_name,
+            location: job.candidate_required_location || "Remote",
+            seniority: "Any",
+            salary_range: job.salary || null,
+            skills: job.tags || [],
+            description: job.description,
+            url: job.url,
+            source: "remotive",
+            external_id: job.id.toString(),
+            type: job.job_type,
+            raw_hash: `remotive-${job.id}`,
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Remotive fetch error:", e);
+    }
+
+    // 2. Fetch from RapidAPI JSearch (if configured)
+    if (process.env.RAPIDAPI_KEY) {
+      try {
+        const jsearchRes = await fetch("https://jsearch.p.rapidapi.com/search?query=developer%20jobs&num_pages=1", {
+          headers: {
+            "x-rapidapi-key": process.env.RAPIDAPI_KEY,
+            "x-rapidapi-host": "jsearch.p.rapidapi.com"
+          }
+        });
+        if (jsearchRes.ok) {
+          const jsearchData = await jsearchRes.json();
+          const jobs = jsearchData.data || [];
+          for (const job of jobs) {
+            allNormalizedJobs.push({
+              title: job.job_title,
+              company: job.employer_name,
+              location: job.job_city ? `${job.job_city}, ${job.job_country}` : (job.job_is_remote ? "Remote" : "Unknown"),
+              seniority: "Any",
+              salary_range: job.job_min_salary ? `${job.job_salary_currency} ${job.job_min_salary} - ${job.job_max_salary}` : null,
+              skills: [],
+              description: job.job_description,
+              url: job.job_apply_link,
+              source: "jsearch",
+              external_id: job.job_id,
+              type: job.job_employment_type,
+              raw_hash: `jsearch-${job.job_id}`,
+            });
+          }
+        }
+      } catch (e) {
+        console.error("JSearch fetch error:", e);
+      }
+    }
+
+    let jobsFound = allNormalizedJobs.length;
     let jobsNew = 0;
 
-    for (const job of fetchedJobs) {
-      const external_id = job.id.toString();
-      const source = "remotive";
-      const raw_hash = `${source}-${external_id}`;
-
-      const jobListing = {
-        title: job.title,
-        company: job.company_name,
-        location: job.candidate_required_location || "Remote",
-        seniority: "Any",
-        salary_range: job.salary || null,
-        skills: job.tags || [],
-        description: job.description,
-        url: job.url,
-        source: source,
-        external_id: external_id,
-        type: job.job_type,
-        raw_hash: raw_hash,
-      };
-
+    for (const jobListing of allNormalizedJobs) {
       const { error } = await serviceClient
         .from("job_listings")
         .upsert(jobListing, { onConflict: 'raw_hash' });
