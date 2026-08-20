@@ -79,6 +79,12 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
           video: currentDeviceId ? { deviceId: { exact: currentDeviceId } } : { facingMode: currentFacingMode },
           audio: true,
         });
+
+        // Ensure old tracks are stopped before replacing
+        if (localStreamRef.current) {
+          localStreamRef.current.getTracks().forEach(t => t.stop());
+        }
+
         localStreamRef.current = stream;
         
         if (!currentDeviceId && stream.getVideoTracks().length > 0) {
@@ -277,8 +283,12 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     
     if (!isCamOff) {
       // Turning OFF - stop track to turn off camera light
-      localStreamRef.current.getVideoTracks().forEach(t => t.stop());
+      localStreamRef.current.getVideoTracks().forEach(t => {
+        t.stop();
+        localStreamRef.current?.removeTrack(t);
+      });
       setIsCamOff(true);
+      setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
     } else {
       // Turning ON - request new track
       try {

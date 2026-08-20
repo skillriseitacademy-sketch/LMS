@@ -268,10 +268,17 @@ function RoomView() {
     setMeetingEnded(true);
   });
 
+  const hasFetchedRoom = useRef(false);
+
   useEffect(() => {
     async function checkRoom() {
       if (authLoading) return;
       if (!session && !hasEnteredGuestInfo) {
+        setDbLoading(false);
+        return;
+      }
+      
+      if (hasFetchedRoom.current) {
         setDbLoading(false);
         return;
       }
@@ -287,6 +294,7 @@ function RoomView() {
       if (dbError || !data) {
         setError("Room not found or has ended.");
       } else {
+        hasFetchedRoom.current = true;
         const roomAgeHours =
           (new Date().getTime() - new Date(data.created_at).getTime()) / (1000 * 60 * 60);
         if (roomAgeHours > 24) {
