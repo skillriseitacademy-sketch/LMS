@@ -27,8 +27,17 @@ function AdminJobs() {
   const handleRunIngestion = async () => {
     setSyncing(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alert("You must be logged in.");
+        return;
+      }
+      
       const res = await fetch("/api/jobs-aggregate", {
         method: "POST",
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`
+        }
       });
       if (res.ok) {
         alert("Ingestion triggered successfully!");
