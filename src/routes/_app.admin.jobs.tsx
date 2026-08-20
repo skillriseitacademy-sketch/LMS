@@ -10,16 +10,39 @@ export const Route = createFileRoute("/_app/admin/jobs")({
 function AdminJobs() {
   const [runs, setRuns] = useState<any[]>([]);
 
+  const [syncing, setSyncing] = useState(false);
+
+  const loadRuns = async () => {
+    const { data } = await supabase
+      .from("job_ingestion_runs")
+      .select("*")
+      .order("started_at", { ascending: false });
+    if (data) setRuns(data);
+  };
+
   useEffect(() => {
-    async function loadRuns() {
-      const { data } = await supabase
-        .from("job_ingestion_runs")
-        .select("*")
-        .order("started_at", { ascending: false });
-      if (data) setRuns(data);
-    }
     loadRuns();
   }, []);
+
+  const handleRunIngestion = async () => {
+    setSyncing(true);
+    try {
+      const res = await fetch("/api/jobs-aggregate", {
+        method: "POST",
+      });
+      if (res.ok) {
+        alert("Ingestion triggered successfully!");
+        loadRuns(); // Refresh table
+      } else {
+        alert("Failed to trigger ingestion. Check Vercel logs.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error triggering ingestion");
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   return (
     <>
@@ -32,8 +55,13 @@ function AdminJobs() {
               Monitor and trigger job ingestion runs from integrated API feeds.
             </p>
           </div>
-          <button className="rounded-xl bg-brand px-4 py-2 font-semibold text-brand-foreground shadow hover:opacity-90 transition">
-            Run Ingestion Now
+          <button 
+            onClick={handleRunIngestion}
+            disabled={syncing}
+            className="rounded-xl bg-brand px-4 py-2 font-semibold text-brand-foreground shadow hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {syncing && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
+            {syncing ? "Running..." : "Run Ingestion Now"}
           </button>
         </div>
 
