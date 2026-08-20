@@ -95,7 +95,7 @@ function VideoPlayer({
         autoPlay
         playsInline
         muted={muted}
-        className={`w-full h-full object-contain ${isLocal ? "-scale-x-100" : ""}`}
+        className={`participant-video w-full h-full object-contain ${isLocal ? "-scale-x-100" : ""}`}
       />
       {isAudioMuted && !isLocal && (
         <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md p-2 rounded-xl text-white z-10 flex items-center justify-center">
@@ -135,6 +135,7 @@ function RoomView() {
   const [meetingEnded, setMeetingEnded] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
+  const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -154,42 +155,97 @@ function RoomView() {
 
   const handleStartRecording = async () => {
     try {
-      if (!localStream) {
-        alert("Camera or screen must be active to start recording.");
+      const videos = Array.from(document.querySelectorAll('.participant-video')) as HTMLVideoElement[];
+      if (videos.length === 0) {
+        alert("No active video streams to record.");
         return;
       }
-      
-      let recordStream = localStream;
-      
-      // Mix audio if there are remote streams
-      if (remoteStreams.length > 0) {
-        try {
-          const audioCtx = new window.AudioContext();
-          const dest = audioCtx.createMediaStreamDestination();
-          
-          localStream.getAudioTracks().forEach(track => {
-            const source = audioCtx.createMediaStreamSource(new MediaStream([track]));
-            source.connect(dest);
-          });
 
-          remoteStreams.forEach(remote => {
-            if (remote.stream.getAudioTracks().length > 0) {
-              const source = audioCtx.createMediaStreamSource(remote.stream);
-              source.connect(dest);
+      const canvas = document.createElement("canvas");
+      canvas.width = 1280;
+      canvas.height = 720;
+      const ctx = canvas.getContext("2d");
+
+      const drawFrame = () => {
+        if (!ctx) return;
+        ctx.fillStyle = "#0F1115";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const currentVideos = Array.from(document.querySelectorAll('.participant-video')) as HTMLVideoElement[];
+        const count = currentVideos.length;
+
+        if (count > 0) {
+          let cols = Math.ceil(Math.sqrt(count));
+          let rows = Math.ceil(count / cols);
+          let w = canvas.width / cols;
+          let h = canvas.height / rows;
+
+          currentVideos.forEach((video, i) => {
+            if (video.readyState >= 2) {
+              const col = i % cols;
+              const row = Math.floor(i / cols);
+
+              const vRatio = video.videoWidth / video.videoHeight;
+              const cRatio = w / h;
+              let drawW = w;
+              let drawH = h;
+              let offsetX = 0;
+              let offsetY = 0;
+
+              if (vRatio > cRatio) {
+                drawH = w / vRatio;
+                offsetY = (h - drawH) / 2;
+              } else {
+                drawW = h * vRatio;
+                offsetX = (w - drawW) / 2;
+              }
+
+              ctx.drawImage(video, col * w + offsetX, row * h + offsetY, drawW, drawH);
             }
           });
-
-          const mixedStream = new MediaStream();
-          localStream.getVideoTracks().forEach(track => mixedStream.addTrack(track));
-          dest.stream.getAudioTracks().forEach(track => mixedStream.addTrack(track));
-          
-          recordStream = mixedStream;
-        } catch (e) {
-          console.error("Audio mixing failed, falling back to local stream only", e);
         }
-      }
+
+        animationFrameRef.current = requestAnimationFrame(drawFrame);
+      };
+
+      drawFrame();
+      const canvasStream = (canvas as any).captureStream(30);
+      let recordStream = canvasStream;
       
-      const mediaRecorder = new MediaRecorder(recordStream, { mimeType: 'video/webm' });
+      // Mix audio if there are remote streams
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const dest = audioCtx.createMediaStreamDestination();
+      let hasAudio = false;
+
+      if (localStream && localStream.getAudioTracks().length > 0) {
+        const source = audioCtx.createMediaStreamSource(new MediaStream(localStream.getAudioTracks()));
+        source.connect(dest);
+        hasAudio = true;
+      }
+
+      remoteStreams.forEach(remote => {
+        if (remote.stream.getAudioTracks().length > 0) {
+          const source = audioCtx.createMediaStreamSource(new MediaStream(remote.stream.getAudioTracks()));
+          source.connect(dest);
+          hasAudio = true;
+        }
+      });
+
+      if (hasAudio) {
+        dest.stream.getAudioTracks().forEach(track => recordStream.addTrack(track));
+      }
+
+      let mimeType = 'video/webm';
+      let ext = 'webm';
+      if (MediaRecorder.isTypeSupported('video/mp4')) {
+        mimeType = 'video/mp4';
+        ext = 'mp4';
+      } else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264')) {
+        mimeType = 'video/webm;codecs=h264';
+        ext = 'mp4';
+      }
+
+      const mediaRecorder = new MediaRecorder(recordStream, { mimeType });
       mediaRecorderRef.current = mediaRecorder;
       recordedChunksRef.current = [];
 
@@ -200,13 +256,14 @@ function RoomView() {
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+        if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+        const blob = new Blob(recordedChunksRef.current, { type: mimeType });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         document.body.appendChild(a);
         a.style.display = 'none';
         a.href = url;
-        a.download = `Meeting_Recording_${new Date().getTime()}.webm`;
+        a.download = `Meeting_Recording_${new Date().getTime()}.${ext}`;
         a.click();
         window.URL.revokeObjectURL(url);
         setIsRecording(false);
@@ -217,6 +274,7 @@ function RoomView() {
     } catch (err) {
       console.error("Error starting recording:", err);
       alert("Could not start recording.");
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     }
   };
 
