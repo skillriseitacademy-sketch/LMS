@@ -406,5 +406,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     polls,
     handRaised,
     initLocalStream,
+    facingMode,
+    myPeerId: myPeerId.current,
   };
 }
