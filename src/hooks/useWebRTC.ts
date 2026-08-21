@@ -1,5 +1,14 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
+
+export interface ParticipantMediaState {
+  audioEnabled: boolean;
+  videoEnabled: boolean;
+  screenSharing: boolean;
+  handRaised: boolean;
+}
+
 
 export interface RemoteStream {
   peerId: string;
@@ -30,7 +39,7 @@ export interface Poll {
 }
 
 // True P2P WebRTC using Supabase Realtime for signaling
-export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: () => void) {
+export function useWebRTC(roomCode: string, userName: string, isHost: boolean = false, onMeetingEnded?: () => void) {
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStreams, setRemoteStreams] = useState<Record<string, RemoteStream>>({});
   const [isJoined, setIsJoined] = useState(false);
@@ -44,6 +53,10 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [polls, setPolls] = useState<Poll[]>([]);
   const [handRaised, setHandRaised] = useState<Record<string, boolean>>({});
+  const [participantStates, setParticipantStates] = useState<Record<string, ParticipantMediaState>>({});
+  const isMicMutedRef = useRef(isMicMuted);
+  useEffect(() => { isMicMutedRef.current = isMicMuted; }, [isMicMuted]);
+
 
   const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
   const [currentDeviceId, setCurrentDeviceId] = useState<string>("");
@@ -69,6 +82,15 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     getDevices();
     navigator.mediaDevices.addEventListener("devicechange", getDevices);
     return () => navigator.mediaDevices.removeEventListener("devicechange", getDevices);
+  }, []);
+
+  const updateMyState = useCallback((partial: Partial<ParticipantMediaState>) => {
+    setParticipantStates(prev => {
+      const current = prev[myPeerId.current] || { audioEnabled: true, videoEnabled: true, screenSharing: false, handRaised: false };
+      const updated = { ...current, ...partial };
+      channelRef.current?.send({ type: "broadcast", event: "participant_state", payload: { peerId: myPeerId.current, state: updated } });
+      return { ...prev, [myPeerId.current]: updated };
+    });
   }, []);
 
   const initLocalStream = useCallback(
@@ -123,6 +145,25 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
       }
     };
 
+    
+    pc.onconnectionstatechange = () => {
+      if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed' || pc.connectionState === 'closed') {
+         toast.info(`${peerName} left the meeting`);
+         setRemoteStreams(prev => {
+            const next = { ...prev };
+            delete next[peerId];
+            return next;
+         });
+         setParticipantStates(prev => {
+            const next = { ...prev };
+            delete next[peerId];
+            return next;
+         });
+         pc.close();
+         delete peersRef.current[peerId];
+      }
+    };
+    
     pc.ontrack = (event) => {
       setRemoteStreams(prev => {
         const existing = prev[peerId]?.stream || new MediaStream();
@@ -192,6 +233,8 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
         if (type === "peer-joined") {
           // A new peer joined, let's create a connection as the initiator
           createPeerConnection(senderId, senderName, true);
+          channel.send({ type: "broadcast", event: "participant_state", payload: { peerId: myPeerId.current, state: participantStates[myPeerId.current] || { audioEnabled: !isMicMutedRef.current, videoEnabled: !isCamOff, screenSharing: isScreenSharing, handRaised: false } } });
+          toast.success(`${senderName} joined the meeting`);
         } else if (type === "offer") {
           // Received an offer, create connection as receiver
           const pc = createPeerConnection(senderId, senderName, false);
@@ -214,9 +257,39 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
         }
       });
       
+      
+      channel.on("broadcast", { event: "participant_state" }, ({ payload }) => {
+        setParticipantStates(prev => ({ ...prev, [payload.peerId]: payload.state }));
+      });
+
+      channel.on("broadcast", { event: "control" }, ({ payload }) => {
+        if (payload.targetId === myPeerId.current || payload.targetId === "all") {
+          if (payload.action === "mute" && !isMicMutedRef.current) {
+            toast("Host muted your microphone");
+            localStreamRef.current?.getAudioTracks().forEach(t => t.enabled = false);
+            setIsMicMuted(true);
+            updateMyState({ audioEnabled: false });
+          } else if (payload.action === "remove") {
+            toast.error("You were removed from the meeting");
+            leaveRoom();
+            if (onMeetingEnded) onMeetingEnded();
+          } else if (payload.action === "lower_hand") {
+            toast("Host lowered your hand");
+            setHandRaised(prev => ({ ...prev, [myPeerId.current]: false }));
+            updateMyState({ handRaised: false });
+          } else if (payload.action === "end_meeting") {
+            toast.error("The host ended the meeting.");
+            leaveRoom();
+            if (onMeetingEnded) onMeetingEnded();
+          }
+        }
+      });
+      
       channel.on("broadcast", { event: "chat" }, ({ payload }) => {
+        if (payload.senderId !== myPeerId.current) toast.message(`${payload.senderName}: ${payload.text}`);
         setChatMessages(prev => [...prev, payload]);
       }).on("broadcast", { event: "hand_raise" }, ({ payload }) => {
+        if (payload.isRaised && payload.peerId !== myPeerId.current) toast(`${payload.senderName || "Someone"} raised their hand`, { icon: "✋" });
         setHandRaised(prev => ({ ...prev, [payload.peerId]: payload.isRaised }));
       }).on("presence", { event: "leave" }, ({ key, leftPresences }) => {
         // Handle peer leave
@@ -232,6 +305,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
             payload: { type: "peer-joined", senderId: myPeerId.current, senderName: userName }
           });
           setIsJoined(true);
+          updateMyState({ audioEnabled: !isMicMutedRef.current, videoEnabled: !isCamOff, screenSharing: isScreenSharing, handRaised: false });
         }
       });
       
@@ -261,22 +335,29 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
   }, []);
 
   const broadcastData = useCallback((type: string, payload: any) => {
+    if (type === "control") {
+      channelRef.current?.send({ type: "broadcast", event: "control", payload });
+      return;
+    }
     if (type === "chat") {
       const msg = { ...payload, type: "chat" };
       channelRef.current?.send({ type: "broadcast", event: "chat", payload: msg });
       setChatMessages(prev => [...prev, msg]);
     } else if (type === "hand_raise") {
-      channelRef.current?.send({ type: "broadcast", event: "hand_raise", payload });
+      channelRef.current?.send({ type: "broadcast", event: "hand_raise", payload: { ...payload, senderName: userName } });
+      updateMyState({ handRaised: payload.isRaised });
       setHandRaised(prev => ({ ...prev, [payload.peerId]: payload.isRaised }));
     }
   }, []);
 
   // Media Controls
-  const toggleMic = useCallback(() => {
+    const toggleMic = useCallback(() => {
     if (!localStreamRef.current) return;
     localStreamRef.current.getAudioTracks().forEach(t => t.enabled = !t.enabled);
-    setIsMicMuted(!localStreamRef.current.getAudioTracks()[0]?.enabled);
-  }, []);
+    const isMuted = !localStreamRef.current.getAudioTracks()[0]?.enabled;
+    setIsMicMuted(isMuted);
+    updateMyState({ audioEnabled: !isMuted });
+  }, [updateMyState]);
 
   const toggleCam = useCallback(async () => {
     if (!localStreamRef.current) return;
@@ -285,9 +366,10 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
       // Turning OFF - stop track to turn off camera light
       localStreamRef.current.getVideoTracks().forEach(t => {
         t.stop();
-        localStreamRef.current?.removeTrack(t);
+        if (localStreamRef.current) localStreamRef.current.removeTrack(t);
       });
       setIsCamOff(true);
+      updateMyState({ videoEnabled: false });
       setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
     } else {
       // Turning ON - request new track
@@ -307,6 +389,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
         
         setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
         setIsCamOff(false);
+        updateMyState({ videoEnabled: true });
       } catch (err) {
         console.error("Error turning camera back on:", err);
       }
@@ -332,7 +415,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
       
       localStreamRef.current.getVideoTracks().forEach(t => {
         t.stop();
-        localStreamRef.current?.removeTrack(t);
+        if (localStreamRef.current) localStreamRef.current.removeTrack(t);
       });
       localStreamRef.current.addTrack(newTrack);
       
@@ -343,13 +426,22 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
       
       setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
       setIsScreenSharing(false);
+      updateMyState({ screenSharing: false });
       setIsCamOff(false);
+        updateMyState({ videoEnabled: true });
     } catch (err) {
       console.error("Error reverting to camera:", err);
     }
   }, [currentDeviceId, facingMode]);
 
   const toggleScreenShare = useCallback(async () => {
+    if (!localStreamRef.current) return;
+    
+    const anyoneSharing = Object.entries(participantStates).some(([id, s]) => s.screenSharing && id !== myPeerId.current);
+    if (anyoneSharing && !isScreenSharing) {
+        toast.error("Someone is already presenting");
+        return;
+    }
     if (!localStreamRef.current) return;
 
     if (!isScreenSharing) {
@@ -363,7 +455,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
 
         localStreamRef.current.getVideoTracks().forEach(t => {
           t.stop();
-          localStreamRef.current?.removeTrack(t);
+          if (localStreamRef.current) localStreamRef.current.removeTrack(t);
         });
         localStreamRef.current.addTrack(screenTrack);
 
@@ -374,14 +466,16 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
 
         setLocalStream(new MediaStream(localStreamRef.current.getTracks()));
         setIsScreenSharing(true);
+        updateMyState({ screenSharing: true });
         setIsCamOff(true);
+      updateMyState({ videoEnabled: false });
       } catch (e) {
         console.error("Error sharing screen:", e);
       }
     } else {
       revertToCamera();
     }
-  }, [isScreenSharing, revertToCamera]);
+  }, [isScreenSharing, revertToCamera, participantStates]);
 
   // Cleanup tracks when component unmounts
   useEffect(() => {
@@ -412,6 +506,7 @@ export function useWebRTC(roomCode: string, userName: string, onMeetingEnded?: (
     videoDevices,
     currentDeviceId,
     chatMessages,
+    participantStates,
     broadcastData,
     polls,
     handRaised,

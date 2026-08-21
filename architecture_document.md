@@ -16,8 +16,9 @@ PlacePro LMS is a full-stack, AI-powered Learning Management System targeted at 
 | **Auth**          | Supabase Auth (JWT based)                                               |
 | **Hosting**       | Vercel (indicated by `vercel.json`), Cloudflare R2 for media            |
 | **Build**         | Vite 8, Bun                                                             |
-| **Third-party**   | MediaPipe (Proctoring face detection)                                   |
-| **Live Video**    | Custom Peer-to-Peer WebRTC with Supabase Realtime (Broadcast) signaling |
+| **Third-party**   | MediaPipe, Remotive API, RapidAPI JSearch                               |
+| **Live Video**    | Custom Peer-to-Peer WebRTC, Metered SDK, Local Screen Recording         |
+| **Emails**        | Nodemailer                                                              |
 
 ## 2. Folder Structure
 
@@ -95,6 +96,7 @@ c:\Users\Mani\Projects\pixel-perfect-preview
 | `/onboarding`              | `onboarding.tsx`                   | Personalized onboarding flow    |
 | `/dashboard`               | `_app.dashboard.tsx`               | Main student dashboard          |
 | `/interview/ai/:sessionId` | `_app.interview.ai.$sessionId.tsx` | Active AI voice interview room  |
+| `/messages`                | `_app.messages.tsx`                | Direct messaging and chat dock  |
 | `/admin/users`             | `admin.users.tsx`                  | Admin panel for user management |
 
 ### Code Snippet: State Management (`src/lib/store.ts`)
@@ -122,6 +124,7 @@ export function saveProfile(profile: ProfileData) {
 | `POST` | `/api/interview/start`     | Fetches OpenAI ephemeral key and creates DB session | Yes            |
 | `POST` | `/api/onboarding/complete` | Updates user profile and topics                     | Yes            |
 | `POST` | `/api/roadmap`             | Generates career roadmap via OpenRouter             | Yes            |
+| `POST` | `/api/jobs/aggregate`      | Triggers Remotive/JSearch job aggregation           | Yes (Admin)    |
 
 ### Code Snippet: Route Handler (`src/routes/api/interview.start.ts`)
 
@@ -154,8 +157,8 @@ The application uses PostgreSQL (via Supabase). The full schema is maintained in
 - **User Activity:** `student_topics`, `quiz_attempts`, `code_submissions`, `interview_sessions`, `projects`, `resumes`.
 - **Live Classes & Rooms:** `live_classes`, `class_attendance`, `class_recordings`, `instant_rooms`.
 - **Gamification & Rewards:** `xp_transactions`, `badges`, `user_badges`, `streak_history`, `daily_missions`, `topic_leaderboards`, `leaderboard_snapshots`.
-- **Career & Jobs:** `job_listings`, `career_roles`, `user_roadmap_progress`, `roadmap_nodes`, `roadmap_cache`.
-- **Social & Communications:** `posts`, `post_reactions`, `post_comments`, `stories`, `reports`, `notifications`.
+- **Career & Jobs:** `job_listings` (with location & type), `career_roles`, `user_roadmap_progress`, `roadmap_nodes`, `roadmap_cache`.
+- **Social & Communications:** `posts`, `post_reactions`, `post_comments`, `stories`, `messages`, `reports`, `notifications`.
 - **Proctoring:** `proctor_flags`.
 
 ### ER Diagram (Mermaid)
@@ -199,6 +202,8 @@ erDiagram
 2. **OpenAI (Realtime API):** Used for AI voice interviews. Generates an ephemeral WebRTC token for the client.
 3. **OpenRouter (Vercel AI SDK):** Used for generating structured Career Roadmaps (`/api/roadmap`) with dynamic model selection.
 4. **Cloudflare R2:** Used for media storage (images/recordings). Configured via AWS S3 SDK compatibility (`@aws-sdk/client-s3`).
+5. **Job Aggregators:** **Remotive API** and **RapidAPI JSearch** used for automated daily job ingestion.
+6. **Metered SDK:** Integrated for enhanced SFU connections alongside the P2P mesh setup.
 
 ### Code Snippet: OpenRouter Integration (`api/roadmap.ts`)
 
@@ -573,5 +578,5 @@ setKpis([
 
 ---
 
-_Document Generation Date: 2026-07-22_
+_Document Generation Date: 2026-08-21_
 _Codebase Version/Branch: Local Development Workspace_

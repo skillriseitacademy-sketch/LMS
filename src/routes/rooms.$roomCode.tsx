@@ -34,7 +34,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { useWebRTC } from "@/hooks/useWebRTC";
+import { useWebRTC, ParticipantMediaState } from "@/hooks/useWebRTC";
+import { toast } from "sonner";
 import { ChatPanel } from "@/components/room/ChatPanel";
 import { PollsPanel } from "@/components/room/PollsPanel";
 import { ClassRoomView } from "@/components/room/ClassRoomView";
@@ -54,17 +55,19 @@ function VideoPlayer({
   muted = false,
   userName,
   isLocal = false,
+  mediaState,
 }: {
   stream: MediaStream;
   muted?: boolean;
   userName?: string;
   isLocal?: boolean;
+  mediaState?: ParticipantMediaState;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Check if track is muted/disabled
   const audioTrack = stream.getAudioTracks()[0];
-  const isAudioMuted = audioTrack ? !audioTrack.enabled : true;
+  const isAudioMuted = mediaState ? !mediaState.audioEnabled : (audioTrack ? !audioTrack.enabled : true);
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -267,6 +270,7 @@ function RoomView() {
     isScreenSharing,
     facingMode,
     chatMessages,
+    participantStates,
     polls,
     handRaised,
     myPeerId,
@@ -282,7 +286,7 @@ function RoomView() {
     switchCamera,
     endMeeting,
     broadcastData,
-  } = useWebRTC(roomCode, userName, () => {
+  } = useWebRTC(roomCode, userName, Boolean(isHost), () => {
     setMeetingEnded(true);
   });
 
@@ -852,22 +856,60 @@ function RoomView() {
         </header>
 
         {/* Video Grid */}
-        <div className="flex-1 p-2 pt-0 pb-2 min-h-0 min-w-0 overflow-hidden flex items-center justify-center">
-          <div className={`w-full h-full max-w-full max-h-full grid gap-4 ${gridClass}`}>
-            {/* Local User */}
-            <div className="relative w-full h-full min-h-0 min-w-0">
-              {localStream && (
-                <VideoPlayer stream={localStream} muted userName="You" isLocal={true} />
-              )}
-            </div>
+        <div className="flex-1 p-2 pt-0 pb-2 min-h-0 min-w-0 overflow-hidden flex flex-col md:flex-row gap-4">
+          {(() => {
+            const presentingPeerId = Object.keys(participantStates).find(id => participantStates[id]?.screenSharing);
+            const isLocalPresenting = isScreenSharing;
+            const hasPresenter = isLocalPresenting || !!presentingPeerId;
 
-            {/* Remote Users */}
-            {remoteStreams.map((remote) => (
-              <div key={remote.peerId} className="relative w-full h-full min-h-0 min-w-0">
-                <VideoPlayer stream={remote.stream} userName={remote.userName} />
+            if (hasPresenter) {
+              const presenterStream = isLocalPresenting ? localStream : remoteStreams.find(r => r.peerId === presentingPeerId)?.stream;
+              const presenterName = isLocalPresenting ? "You (Presenting)" : (remoteStreams.find(r => r.peerId === presentingPeerId)?.userName + " (Presenting)");
+              
+              return (
+                <>
+                  <div className="flex-1 min-w-0 min-h-0 bg-[#1A1D24] rounded-3xl overflow-hidden relative shadow-2xl">
+                    {presenterStream && (
+                      <VideoPlayer 
+                        stream={presenterStream} 
+                        muted={isLocalPresenting} 
+                        userName={presenterName} 
+                        isLocal={isLocalPresenting} 
+                        mediaState={isLocalPresenting ? undefined : participantStates[presentingPeerId!]} 
+                      />
+                    )}
+                  </div>
+                  <div className="w-full md:w-64 shrink-0 flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-y-auto">
+                    {!isLocalPresenting && localStream && (
+                      <div className="h-32 md:h-40 shrink-0 relative w-48 md:w-full">
+                        <VideoPlayer stream={localStream} muted userName="You" isLocal={true} />
+                      </div>
+                    )}
+                    {remoteStreams.filter(r => r.peerId !== presentingPeerId).map(remote => (
+                      <div key={remote.peerId} className="h-32 md:h-40 shrink-0 relative w-48 md:w-full">
+                        <VideoPlayer stream={remote.stream} userName={remote.userName} mediaState={participantStates[remote.peerId]} />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              );
+            }
+
+            return (
+              <div className={`w-full h-full max-w-full max-h-full grid gap-4 ${gridClass} items-center justify-center`}>
+                <div className="relative w-full h-full min-h-0 min-w-0 max-h-full">
+                  {localStream && (
+                    <VideoPlayer stream={localStream} muted userName="You" isLocal={true} />
+                  )}
+                </div>
+                {remoteStreams.map((remote) => (
+                  <div key={remote.peerId} className="relative w-full h-full min-h-0 min-w-0 max-h-full">
+                    <VideoPlayer stream={remote.stream} userName={remote.userName} mediaState={participantStates[remote.peerId]} />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            );
+          })()}
         </div>
       </main>
 
@@ -942,9 +984,24 @@ function RoomView() {
 
               {/* In Call Section */}
               <div>
-                <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-3">
-                  In Call ({totalParticipants})
-                </h3>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider">
+                    In Call ({totalParticipants})
+                  </h3>
+                  {isHost && (
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="h-7 text-xs bg-white/5 border-white/10 text-white hover:bg-white/10"
+                      onClick={() => {
+                        broadcastData("control", { action: "mute", targetId: "all" });
+                        toast.success("Muted all participants");
+                      }}
+                    >
+                      Mute All
+                    </Button>
+                  )}
+                </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between group">
                     <div className="flex items-center gap-3">
@@ -966,19 +1023,66 @@ function RoomView() {
                   </div>
 
                   {remoteStreams.map((remote) => (
-                    <div key={remote.peerId} className="flex items-center justify-between group">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 font-medium">
-                          {remote.userName[0].toUpperCase()}
+                    <div key={remote.peerId} className="flex flex-col gap-2 group p-2 hover:bg-white/5 rounded-xl transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 font-medium">
+                            {remote.userName[0].toUpperCase()}
+                          </div>
+                          <span className="font-medium text-sm text-white/90">{remote.userName}</span>
                         </div>
-                        <span className="font-medium text-sm text-white/90">{remote.userName}</span>
+                        <div className="flex items-center gap-3">
+                          {participantStates[remote.peerId]?.handRaised && (
+                            <Hand className="w-4 h-4 text-yellow-500 fill-yellow-500 animate-bounce" />
+                          )}
+                          {participantStates[remote.peerId]?.audioEnabled ? (
+                             <Mic className="w-4 h-4 text-white/70" />
+                          ) : (
+                             <MicOff className="w-4 h-4 text-red-500" />
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        {handRaised[remote.peerId] && (
-                          <Hand className="w-4 h-4 text-yellow-500 fill-yellow-500 animate-bounce" />
-                        )}
-                        <Mic className="w-4 h-4 text-white/30" />
-                      </div>
+                      
+                      {isHost && (
+                        <div className="flex gap-2 pl-12 opacity-0 group-hover:opacity-100 transition-opacity">
+                          {participantStates[remote.peerId]?.audioEnabled && (
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="h-7 text-xs bg-black/20 hover:bg-black/40 border-white/10"
+                              onClick={() => {
+                                broadcastData("control", { action: "mute", targetId: remote.peerId });
+                                toast.success(`Muted ${remote.userName}`);
+                              }}
+                            >
+                              Mute
+                            </Button>
+                          )}
+                          {participantStates[remote.peerId]?.handRaised && (
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="h-7 text-xs bg-black/20 hover:bg-black/40 border-white/10"
+                              onClick={() => {
+                                broadcastData("control", { action: "lower_hand", targetId: remote.peerId });
+                              }}
+                            >
+                              Lower Hand
+                            </Button>
+                          )}
+                          <Button 
+                            size="sm" 
+                            variant="destructive" 
+                            className="h-7 text-xs"
+                            onClick={() => {
+                              broadcastData("control", { action: "remove", targetId: remote.peerId });
+                              toast.success(`Removed ${remote.userName}`);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
